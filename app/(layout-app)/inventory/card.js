@@ -21,7 +21,7 @@ const LIMIT_PRODUCTS_VIEW = 50
 export default function Card () {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
-    const [selectedCategoryID, setSelectedCategoryID] = useState(null)
+    const [selectedCategoryID, setSelectedCategoryID] = useState('24')
     const [listInventory, setListInventory] = useState([])
     const [listInventoryComplete, setListInventoryComplete] = useState([])
     const [sectionSearch, setSectionSearch] = useState(false)
@@ -155,11 +155,8 @@ export default function Card () {
                                 <Skeleton className="w-full h-8 rounded-lg"></Skeleton>
                             </section>
 
-                            : <TabsCustom
-                                items={listCategories}
-                                selectedKey={selectedCategoryID}
-                                onSelectionChange={setSelectedCategoryID}
-                            />
+                            : null
+
                         }
                     </div>
                     <Button
