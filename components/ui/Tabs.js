@@ -50,7 +50,7 @@ export const Tabs = ({
             {
                 isClient
                     ? <section>
-                        <Menu open={openMenu} handler={setOpenMenu} allowHover placement="right-start">
+                        {/* <Menu open={openMenu} handler={setOpenMenu} allowHover placement="right-start">
                             <MenuHandler className='font-semibold'>
                                 <Button
                                     onPress={() => setOpenMenu(!openMenu)}
@@ -68,8 +68,7 @@ export const Tabs = ({
                             </MenuHandler>
                             <MenuList className="w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-20">
                                 <Card className="grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
-                                    AAA
-                                    {/*  {itemsTabs.sort((a, b) => {
+                                    {itemsTabs.sort((a, b) => {
                                         if (a?.label < b?.label) {
                                             return -1
                                         }
@@ -95,10 +94,11 @@ export const Tabs = ({
 
                                             </Button>
                                         </div>
-                                    })} */}
+                                    })}
                                 </Card>
                             </MenuList>
-                        </Menu>
+                        </Menu> */}
+                        AAA
                     </section>
                     : null
             }
