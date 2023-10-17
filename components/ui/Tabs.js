@@ -21,6 +21,7 @@ export const Tabs = ({
         setIsClient(true)
     }, [])
 
+    /*
     useEffect(() => {
         let itemSelected = null
         if (isClient && items?.length) {
@@ -33,7 +34,7 @@ export const Tabs = ({
 
             setSelectedItemLabel(itemSelected?.label || null)
         }
-    }, [isClient, items, selectedKey])
+    }, [isClient, items, selectedKey]) */
 
     return (
         <section {...props} className='flex flex-row w-full z-auto'>
@@ -57,7 +58,7 @@ export const Tabs = ({
                                 </Button>
                             </MenuHandler>
                             <MenuList className="w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-20">
-                                {/*  <Card className="grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
+                                <Card className="grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
                                     {items.sort((a, b) => {
                                         if (a?.label < b?.label) {
                                             return -1
@@ -85,7 +86,7 @@ export const Tabs = ({
                                             </Button>
                                         </div>
                                     })}
-                                </Card> */}
+                                </Card>
                             </MenuList>
                         </Menu>
                     </section>
