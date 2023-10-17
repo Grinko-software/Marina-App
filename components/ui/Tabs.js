@@ -68,7 +68,8 @@ export const Tabs = ({
                             </MenuHandler>
                             <MenuList className="w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-20">
                                 <Card className="grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
-                                    {itemsTabs.sort((a, b) => {
+                                    AAA
+                                    {/*  {itemsTabs.sort((a, b) => {
                                         if (a?.label < b?.label) {
                                             return -1
                                         }
@@ -79,8 +80,7 @@ export const Tabs = ({
                                     }).map(({ label, id }) => {
                                         const selected = selectedKey?.toString() === id.toString()
                                         return <div href="#" key={label}>
-                                            {label}
-                                            {/* <Button className={`w-full  ${selected ? 'text-primary-50 bg-green-400' : ''}`}
+                                            <Button className={`w-full  ${selected ? 'text-primary-50 bg-green-400' : ''}`}
                                                 onClick={() => {
                                                     setOpenMenu(false)
                                                     setTimeout(() => {
@@ -93,9 +93,9 @@ export const Tabs = ({
                                             >
                                                 {label}
 
-                                            </Button> */}
+                                            </Button>
                                         </div>
-                                    })}
+                                    })} */}
                                 </Card>
                             </MenuList>
                         </Menu>
