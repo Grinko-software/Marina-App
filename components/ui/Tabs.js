@@ -79,7 +79,8 @@ export const Tabs = ({
                                     }).map(({ label, id }) => {
                                         const selected = selectedKey?.toString() === id.toString()
                                         return <div href="#" key={label}>
-                                            <Button className={`w-full  ${selected ? 'text-primary-50 bg-green-400' : ''}`}
+                                            {label}
+                                            {/* <Button className={`w-full  ${selected ? 'text-primary-50 bg-green-400' : ''}`}
                                                 onClick={() => {
                                                     setOpenMenu(false)
                                                     setTimeout(() => {
@@ -92,7 +93,7 @@ export const Tabs = ({
                                             >
                                                 {label}
 
-                                            </Button>
+                                            </Button> */}
                                         </div>
                                     })}
                                 </Card>
