@@ -1,7 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CardUi from '@/components/ui/Card'
-import { Tabs, Tab, useDisclosure, Input, Skeleton, ScrollShadow, Button } from '@nextui-org/react'
+import { useDisclosure, Input, Skeleton, ScrollShadow, Button } from '@nextui-org/react'
 import useInventoryStore from './store'
 import CreateProduct from './components/NewProduct/createProduct'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
@@ -11,15 +11,28 @@ import ProductDetail from './components/productDetail'
 import LoadingCard from '@/components/ui/Loading'
 import Offers from './components/Offer/offers'
 import CreateCategory from './components/NewCategory/newCategory'
+import TabsCustom from '@/components/ui/Tabs'
+import { useIsInViewport } from '@/utils/viewportObserver'
+// import toast from 'react-hot-toast'
+
+const LIMIT_PRODUCTS_VIEW = 50
+// const notify = (text) => toast.success(text)
 
 export default function Card () {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
-    const [selected, setSelected] = useState(1)
+    const [selectedCategoryID, setSelectedCategoryID] = useState(null)
     const [listInventory, setListInventory] = useState([])
+    const [listInventoryComplete, setListInventoryComplete] = useState([])
     const [sectionSearch, setSectionSearch] = useState(false)
     const [searchInput, setSearchInput] = useState(null)
     const [messageSearch, setMessageSearch] = useState('')
+    const [showMoreEnable, setShowMoreEnable] = useState(false)
+    const [pageNumber, setPageNumber] = useState(1)
+    const [lastInViewPort, setLastInViewPort] = useState(false)
+    const refShowMore = useRef(null)
+
+    useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
     const listEmpty = new Array(20).fill(null)
     const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
@@ -29,17 +42,60 @@ export default function Card () {
         setSearchInput(event.target.value)
     }
     const [filteredList, setFilteredList] = useState([])
+
+    // FILTER
     useEffect(() => {
-        if (selected) {
-            setListInventory(list?.filter((item) => item.productCategoryId === parseInt(selected)))
+        if (selectedCategoryID) {
+            const filteredLisInventory = list?.filter((item) => item.productCategoryId === parseInt(selectedCategoryID))
+            setListInventoryComplete([...filteredLisInventory])
+            if (filteredLisInventory.length > LIMIT_PRODUCTS_VIEW) {
+                setShowMoreEnable(true)
+            } else {
+                setShowMoreEnable(false)
+            }
+            setPageNumber(1)
         }
-    }, [selected, list])
+    }, [selectedCategoryID, list])
 
     useEffect(() => {
-        if (selected) {
+        if (listInventoryComplete) {
+            const currentItems = pageNumber * LIMIT_PRODUCTS_VIEW
+            if (currentItems < listInventoryComplete.length) {
+                setListInventory(listInventoryComplete.slice(0, currentItems))
+                setShowMoreEnable(true)
+            } else {
+                setListInventory(listInventoryComplete)
+                setShowMoreEnable(false)
+            }
+        }
+    }, [listInventoryComplete, pageNumber])
+
+    useEffect(() => {
+        if (lastInViewPort && (pageNumber * LIMIT_PRODUCTS_VIEW) < listInventoryComplete?.length) {
+            // notify('Cargando más productos...')
+            setTimeout(() => {
+                setPageNumber(pageNumber + 1)
+            }, 500)
+
+            console.log(pageNumber)
+        }
+    }, [listInventoryComplete, lastInViewPort, pageNumber])
+
+    /* async function updatedFilteredListByCategory (filteredLisInventory) {
+        await timeout(100)
+
+        console.log('hello')
+    } */
+
+    useEffect(() => {
+        if (selectedCategoryID) {
             setSectionSearch(false)
         }
-    }, [selected])
+    }, [selectedCategoryID])
+
+    useEffect(() => {
+        console.log(refShowMore)
+    }, [refShowMore])
 
     useEffect(() => {
         if (targeProduct) {
@@ -92,39 +148,20 @@ export default function Card () {
     return (
         <section className='h-full flex flex-col'>
             <section className="flex items-center justify-between  z-10">
-                <section className='flex flex-row rounded-t-[12px] space-x-5 bg-secondary-50 dark:bg-secondary-450 pr-3 pt-1 items-center  '>
-                    <div className='h-[3rem] w-[900px] top-[0px] overflow-x-auto mx-2 rounded-r-2xl overflow-hidden flex items-center'>
+                <section className='flex flex-row rounded-t-[12px] space-x-3 bg-secondary-50 dark:bg-secondary-450 pl-3 pr-3 pt-2 items-center'>
+                    <div className='h-[3rem] overflow-x-auto rounded-r-2xl overflow-hidden flex items-center'>
                         {loadingCategories && loading
-                            ? <section className="pt-1 pl-3 pr-3 w-full flex ">
+                            ? <section className="w-full min-w-[10rem] flex">
                                 <Skeleton className="w-full h-8 rounded-lg"></Skeleton>
                             </section>
 
-                            : <Tabs
-                                aria-label="Options"
+                            : <TabsCustom
                                 items={listCategories}
-                                selectedKey={selected}
-                                onSelectionChange={setSelected}
-                                className="pt-3 pl-3 bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450 pb-3 px-5 "
-                                color={!sectionSearch ? '' : ''}
-                                classNames={{
-                                    cursor: sectionSearch ? 'w-full bg-secondary-200' : 'w-full bg-green-400',
-                                    tabContent: 'group-data-[selected=true]:text-primary-50'
-                                }}
-                                onClick={() => setSectionSearch(false)}
-                            >
-                                {listCategories
-                                    ? listCategories.map(
-                                        (item) => (
-                                            <Tab key={item.id} size={'lg'} title={item.label}/>
-                                        )
-                                    )
-                                    : null}
-
-                            </Tabs>
+                                selectedKey={selectedCategoryID}
+                                onSelectionChange={setSelectedCategoryID}
+                            />
                         }
-
                     </div>
-
                     <Button
                         isDisabled={loadingCategories || loading}
                         isLoading={loadingCategories || loading}
@@ -180,7 +217,8 @@ export default function Card () {
                             />
                             <section style={{ scrollbarGutter: 'stable' }} className='max-h-[38rem] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start'>
                                 {filteredList?.map((item, index) => (
-                                    <div key={'productSearch' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0'>
+                                    <div key={'productSearch' + index}
+                                        className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0'>
                                         <div className='mx-1 my-1 h-[90%] w-auto'>
                                             <CardUi item={item} setTargetProduct={setTargetProduct}/>
                                         </div>
@@ -196,7 +234,7 @@ export default function Card () {
                         </section>
                         : <section style={{ scrollbarGutter: 'stable' }} className='max-h-[44rem] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start'>
                             {listInventory?.map((item, index) => (
-                                <div key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0'>
+                                <div ref={index + 1 === listInventory.length && showMoreEnable ? refShowMore : null} key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0'>
                                     <div className='mx-1 my-1'>
                                         <CardUi item={item} setTargetProduct={setTargetProduct}/>
                                     </div>

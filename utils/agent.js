@@ -7,9 +7,9 @@ const mobileDevicesArray = [
     'BlackBerry',
     'Windows Phone'
 ]
+
 export const isMobileDevice = () => {
     return mobileDevicesArray.some((device) => {
         return navigator?.userAgent.match(device)
     })
 }
-/* hola */

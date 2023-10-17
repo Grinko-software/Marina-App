@@ -5,6 +5,8 @@ import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger,
 import toast, { Toaster } from 'react-hot-toast'
 import useStore from './store'
 import useInventoryStore from '../../store'
+import { BiSolidCategory } from 'react-icons/bi'
+
 export const notify = (text) => toast(text)
 export default function CreateCategory () {
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -40,7 +42,10 @@ export default function CreateCategory () {
                     }
                 }} />
             <header className="flex justify-end">
-                <Button className='bg-primary-400 dark:bg-primary-400' color='primary' onClick={onOpen}>Crear nueva categoría</Button>
+                <Button className='bg-primary-400 dark:bg-primary-400 font-semibold' color='primary' onClick={onOpen}
+                    startContent={<BiSolidCategory size={25}/>}>
+                        CATEGORÍAS
+                </Button>
             </header>
             <Modal size={'2xl'}
                 isOpen={isOpen}

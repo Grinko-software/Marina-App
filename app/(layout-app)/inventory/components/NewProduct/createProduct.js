@@ -10,6 +10,7 @@ import useProductFormStore from './store'
 import useInventoryStore from '../../store'
 import useSalesStore from '@/app/(layout-app)/sales/store'
 import toast, { Toaster } from 'react-hot-toast'
+import { BiSolidShoppingBags } from 'react-icons/bi'
 
 const notify = (text) => toast(text)
 export const SectionProduct = ({ title, children, showDivider }) => {
@@ -146,7 +147,10 @@ export default function CreateProduct () {
                     }
                 }} />
             <header className="flex justify-end">
-                <Button className='bg-primary-400 dark:bg-emerald-600 font-bold' color='primary' onClick={onOpen}>Crear nuevo producto</Button>
+                <Button className='bg-primary-400 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
+                    startContent={<BiSolidShoppingBags size={25} />}>
+                    NUEVO PRODUCTO
+                </Button>
             </header>
             <Modal size={'2xl'}
                 isOpen={isOpen}

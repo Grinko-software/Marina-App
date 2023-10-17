@@ -79,7 +79,7 @@ const SalesMenu = () => {
                                 onSelectionChange={setSelectedSaleId}
                                 className="py-2 "
                                 classNames={{
-                                    cursor: 'bg-green-400',
+                                    cursor: 'bg-green-400 dark:bg-green-400',
                                     tabContent: 'group-data-[selected=true]:text-primary-50'
                                 }}
                             >
@@ -125,8 +125,6 @@ const SalesMenu = () => {
                     setPaymentTarget={setPaymentTarget}
                     setSearchInput={setSearchInput}
                     setPaymentTargetValue={setPaymentTargetValue}
-                    setVoucherTargetValue={setVoucherTargetValue}
-
                 />
             </div>
         </section>

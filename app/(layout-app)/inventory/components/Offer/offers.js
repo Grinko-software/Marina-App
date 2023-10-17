@@ -14,6 +14,7 @@ import CreateOffer from './createOffer'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { deleteOffer } from '@/services/offers'
 import toast, { Toaster } from 'react-hot-toast'
+import { BiSolidOffer } from 'react-icons/bi'
 
 const notify = (text) => toast(text)
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
@@ -185,7 +186,10 @@ export default function Offers () {
     return (
         <section>
             <header className="flex justify-end">
-                <Button className='bg-amber-400 dark:bg-amber-400 font-bold' color='danger' variant="bordered" onClick={onOpen}>OFERTAS</Button>
+                <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={onOpen}
+                    startContent={<BiSolidOffer size={25}/>}>
+                    OFERTAS
+                </Button>
             </header>
             <Modal size={'3xl'}
                 isOpen={isOpen}
