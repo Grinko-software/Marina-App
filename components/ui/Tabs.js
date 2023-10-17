@@ -15,13 +15,13 @@ export const Tabs = ({
 }) => {
     const [openMenu, setOpenMenu] = useState(false)
     const [isClient, setIsClient] = useState(false)
+    const [itemsTabs, setItemsTabs] = useState([])
     const [selectedItemLabel, setSelectedItemLabel] = useState(null)
 
-    useEffect(() => {
+    /* useEffect(() => {
         setIsClient(true)
     }, [])
 
-    /*
     useEffect(() => {
         let itemSelected = null
         if (isClient && items?.length) {
