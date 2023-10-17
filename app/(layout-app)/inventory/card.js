@@ -155,8 +155,11 @@ export default function Card () {
                                 <Skeleton className="w-full h-8 rounded-lg"></Skeleton>
                             </section>
 
-                            : null
-
+                            : <TabsCustom
+                                items={listCategories}
+                                selectedKey={selectedCategoryID}
+                                onSelectionChange={setSelectedCategoryID}
+                            />
                         }
                     </div>
                     <Button
