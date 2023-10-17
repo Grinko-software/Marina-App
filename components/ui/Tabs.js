@@ -18,7 +18,14 @@ export const Tabs = ({
     const [itemsTabs, setItemsTabs] = useState([])
     const [selectedItemLabel, setSelectedItemLabel] = useState(null)
 
-    /* useEffect(() => {
+    useEffect(() => {
+        if (items) {
+            setItemsTabs(items)
+        }
+    }, [items])
+
+    /*
+    useEffect(() => {
         setIsClient(true)
     }, [])
 
@@ -59,7 +66,7 @@ export const Tabs = ({
                             </MenuHandler>
                             <MenuList className="w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-20">
                                 <Card className="grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
-                                    {items.sort((a, b) => {
+                                    {itemsTabs.sort((a, b) => {
                                         if (a?.label < b?.label) {
                                             return -1
                                         }
