@@ -26,3 +26,5 @@ export const PRODUCT_OFFER = BASE_MARKET_API_URL + '/product/offer'
 
 // Creat list
 export const SALE_TICKET_CREATE = BASE_MARKET_API_URL + '/sale-ticket/create'
+// DTEMITE ENDPOINTS
+export const GET_DOCUMENT_DTEMITE = 'https://www.dtemite.cl/sistema/Backend/WsMaster/ApiIntegracionController.php/Api/Documento'
