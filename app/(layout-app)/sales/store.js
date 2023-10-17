@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
-import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
+import { TYPE_PAYMENT_API_URL, TYPE_VOUCHER_API_URL, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 
@@ -145,170 +145,39 @@ const useSalesStore = create(
                 payment_type_id: paymentTarget,
                 voucher_type_id: voucherTarget
             }
-            const dataBody = {
-                Sistema: {
-                    nombre: 'demo',
-                    rut: '11111111-1',
-                    usuario: 'integracion',
-                    clave: 'MW50M2dyNGMxMG4='
-                },
-                Documento: {
-                    Encabezado: {
-                        IdDoc: {
-                            TipoDTE: '33',
-                            Folio: '0',
-                            FchEmis: '2022-03-01',
-                            FchVenc: '2022-03-01'
-                        },
-                        Emisor: {
-                            RUTEmisor: '11111111-1',
-                            RznSocEmisor: 'EMPRESA DE PRUEBA',
-                            GiroEmisor: 'DESARROLLO DE SISTEMAS',
-                            DirOrigen: 'Avenida del Software #11001101',
-                            CmnaOrigen: 'PROVIDENCIA',
-                            CiudadOrigen: 'SANTIAGO'
-                        },
-                        Receptor: {
-                            RUTRecep: '76399744-8',
-                            CdgIntRecep: '1000215-220',
-                            RznSocRecep: 'CLIENTE DE PRUEBA',
-                            CorreoRecep: 'prueba@dtemite.cl',
-                            Contacto: 'correo@prueba.cl',
-                            DirRecep: 'CALLE A 50',
-                            CmnaRecep: 'SANTIAGO',
-                            CiudadRecep: 'SANTIAGO'
-                        },
-                        Totales: {
-                            MntNeto: '90610',
-                            MntExe: '0',
-                            TasaIVA: '19',
-                            IVA: '17216',
-                            MntTotal: '107826'
-                        }
-                    },
-                    Detalle: [
-                        {
-                            NroLinDet: '1',
-                            CdgItem: {
-                                TpoCodigo: 'INT1',
-                                VlrCodigo: 'WWW'
-                            },
-                            NmbItem: 'Descripción de producto WWW',
-                            QtyItem: '2',
-                            PrcItem: '45305',
-                            MontoItem: '90610'
-                        }
-                    ]
-                }
-            }
-            /*    const dataBody = {
-                Sistema: {
-                    nombre: 'webbasico',
-                    rut: '29282726-1',
-                    usuario: 'integrado_webbasico',
-                    clave: 'd2ViYmFzaWNvMjAyMQ=='
-                },
-                Documento: {
-                    Encabezado: {
-                        IdDoc: {
-                            TipoDTE: '39',
-                            Folio: '0',
-                            FchEmis: '2022-10-20',
-                            FchVenc: '2022-04-26'
-                        },
-                        Emisor: {
-                            RUTEmisor: '77426986-K',
-                            RznSocEmisor: 'MARINA MARKET',
-                            GiroEmisor: 'MINIMARKET',
-                            DirOrigen: 'LA MARINA 200 #11001101',
-                            CmnaOrigen: 'COQUIMBO',
-                            CiudadOrigen: 'COQUIMO'
-                        },
-                        Receptor: {
-                            RUTRecep: '76399744-8',
-                            CdgIntRecep: '1000215-220',
-                            RznSocRecep: 'CLIENTE DE PRUEBA',
-                            CorreoRecep: 'prueba@dtemite.cl',
-                            Contacto: 'correo@prueba.cl',
-                            DirRecep: 'CALLE A 50',
-                            CmnaRecep: 'COQUIMBO',
-                            CiudadRecep: 'COQUIMBO'
-                        },
-                        Totales: {
-                            MntNeto: '10000',
-                            MntExe: '0',
-                            IVA: '1900',
-                            MntTotal: '11900'
-                        }
-                    },
-                    Detalle: saleProductsList?.map((item, index) => {
-                        return {
-                            NroLinDet: index,
-                            CdgItem: {
-                                TpoCodigo: item?.product?.code,
-                                VlrCodigo: item?.product?.id
-                            },
-                            NmbItem: item?.product?.name,
-                            QtyItem: item?.quantity,
-                            PrcItem: item?.total,
-                            MontoItem: item?.total
-                        }
-                    })
-                }
-            } */
             set({ loadingSale: true, error: null })
-            if (pageTarget === 1) {
-                try {
-                    fetchPost(GET_DOCUMENT_DTEMITE, dataBody, true).then(result => {
-                        // Get result from DTEMITE
-                        setPageTarget(false)
+            try {
+                fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                    setPageTarget(false)
+                    // setPaymentTarget(sales, saleId, null)
+                    set({ loadingSale: false })
+                    if (result?.code === 200) {
+                        generatePdfDocument({ listSales: saleProductsList, totalPay })
+                        if (pageTarget) {
+                            notify('✅ Pago con tarjeta con éxito')
+                        } else {
+                            notify('✅ Pago con éxito')
+                        }
+
                         setPayment(false)
                         onClose()
                         setGoPay(false)
-                        set({ loadingSale: false })
                         removeSale(sales, saleId)
-                        if (result?.LinkPDF) {
-                            window.open(result?.LinkPDF, 'Boleta.pdf')
-                            console.log(result)
-                        }
-                    })
-                } catch {
-                    set({ loadingSale: false })
-                }
-            } else if (pageTarget === 2) {
-                try {
-                    fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                        setPageTarget(false)
-                        // setPaymentTarget(sales, saleId, null)
-                        set({ loadingSale: false })
-                        if (result?.code === 200) {
-                            generatePdfDocument({ listSales: saleProductsList, totalPay })
-                            if (pageTarget) {
-                                notify('✅ Pago con tarjeta con éxito')
-                            } else {
-                                notify('✅ Pago con éxito')
-                            }
-
-                            setPayment(false)
-                            onClose()
-                            setGoPay(false)
-                            removeSale(sales, saleId)
                         // clearList()
+                    } else {
+                        if (pageTarget) {
+                            notify('❌ Problemas con el pago con la tarjeta')
                         } else {
-                            if (pageTarget) {
-                                notify('❌ Problemas con el pago con la tarjeta')
-                            } else {
-                                notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
-                            }
-
-                            onClose()
-                            setGoPay(false)
-                            setPageTarget(null)
+                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                         }
-                    })
-                } catch {
-                    set({ loadingSale: false })
-                }
+
+                        onClose()
+                        setGoPay(false)
+                        setPageTarget(null)
+                    }
+                })
+            } catch {
+                set({ loadingSale: false })
             }
         }
     }),
