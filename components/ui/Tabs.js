@@ -1,7 +1,7 @@
 'use client'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import { MenuHandler, MenuList, Menu } from '@material-tailwind/react'
-import { /* Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, */ Button, Card } from '@nextui-org/react'
+import { /* Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, */ Button, Card, Dropdown, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
 import React, { useEffect, useState } from 'react'
 
 export const Tabs = ({
@@ -24,8 +24,8 @@ export const Tabs = ({
         }
     }, [items])
 
-    /*
     useEffect(() => {
+        console.log('client true')
         setIsClient(true)
     }, [])
 
@@ -41,31 +41,29 @@ export const Tabs = ({
 
             setSelectedItemLabel(itemSelected?.label || null)
         }
-    }, [isClient, items, selectedKey]) */
+    }, [isClient, items, selectedKey])
 
     return (
-        <section {...props} className='flex flex-row w-full z-auto'>
+        <section {...props} className='flex flex-row w-full z-30'>
             {
                 isClient
-                    ? <section>
-                        <Menu open={openMenu} handler={setOpenMenu} allowHover placement="right-start">
-                            <MenuHandler className='font-semibold'>
-                                <Button
-                                    onPress={() => setOpenMenu(!openMenu)}
-                                    variant="bordered"
-                                    className="flex items-center gap-3 text-base font-semibold capitalize tracking-normal"
-                                >
-                                    {`${selectedItemLabel || ''}`}
-                                    <ChevronDownIcon
-                                        strokeWidth={2.5}
-                                        className={`h-3.5 w-3.5 transition-transform stroke-current ${
-                                            openMenu ? 'rotate-180' : ''
-                                        }`}
-                                    />
-                                </Button>
-                            </MenuHandler>
-                            <MenuList className="w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-20">
-                                <Card className="grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
+                    ? <section className='flex flex-auto flex-row'>
+                        <Button
+                            onPress={() => setOpenMenu(!openMenu)}
+                            variant="bordered"
+                            className="flex items-center gap-3 text-base font-semibold capitalize tracking-normal "
+                        >
+                            {`${selectedItemLabel || ''}`}
+                            <ChevronDownIcon
+                                strokeWidth={2.5}
+                                className={`h-3.5 w-3.5 transition-transform stroke-current ${
+                                    openMenu ? 'rotate-180' : ''
+                                }`}
+                            />
+                        </Button>
+                        <div className='z-10 ml-[1rem]'>
+                            <div className={'w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-10 absolute  ' + (!openMenu ? 'hidden' : '')}>
+                                <Card className=" z-10 grid grid-cols-4 gap-4 p-5 border-2 border-primary-300 dark:border-primary-400">
                                     {itemsTabs.sort((a, b) => {
                                         if (a?.label < b?.label) {
                                             return -1
@@ -76,7 +74,7 @@ export const Tabs = ({
                                         return 0
                                     }).map(({ label, id }) => {
                                         const selected = selectedKey?.toString() === id.toString()
-                                        return <div href="#" key={label}>
+                                        return <div href="#" key={label} className='z-10'>
                                             <Button className={`w-full  ${selected ? 'text-primary-50 bg-green-400' : ''}`}
                                                 onClick={() => {
                                                     setOpenMenu(false)
@@ -94,8 +92,8 @@ export const Tabs = ({
                                         </div>
                                     })}
                                 </Card>
-                            </MenuList>
-                        </Menu>
+                            </div>
+                        </div>
                     </section>
                     : null
             }

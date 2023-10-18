@@ -149,7 +149,7 @@ export default function CreateProduct () {
             <header className="flex justify-end">
                 <Button className='bg-primary-400 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
                     startContent={<BiSolidShoppingBags size={25} />}>
-                    NUEVO PRODUCTO
+                    CREAR PRODUCTO
                 </Button>
             </header>
             <Modal size={'2xl'}
