@@ -23,7 +23,7 @@ export default function PayDetailed ({ loadingSale, setPageTarget, setPayment, i
             setSearchInput(null)
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
             createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale)
-            setPaymentTarget(listSalesActives, saleIdActive, null)
+            // setPaymentTarget(listSalesActives, saleIdActive, null)
         }
     }, [paymentTarget])
     useEffect(() => {
@@ -139,7 +139,7 @@ export default function PayDetailed ({ loadingSale, setPageTarget, setPayment, i
                                         setPayDetailed(null)
                                         setSearchInput(null)
                                         setPaymentTarget(listSalesActives, saleIdActive, null)
-                                        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale)
+                                        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale)
                                         // createSale(paymentTarget, voucherTarget, listSales, notify, setPayment, onClose, setGoPay, clearList, setPayment, totalPay)
                                     } else {
                                         setSearchInput(null)

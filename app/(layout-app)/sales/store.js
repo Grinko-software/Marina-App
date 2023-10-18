@@ -128,11 +128,12 @@ const useSalesStore = create(
         createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
-            const saleProductsList = sale.saleProductsList
-            const paymentTarget = sale.paymentTarget
-            const voucherTarget = sale.voucherTarget
-            const totalPay = sale.totalPrice
-            const date = today().format('DD-MM-YYYY')
+            const saleProductsList = sale?.saleProductsList
+            const paymentTarget = sale?.paymentTarget || pageTarget
+            const voucherTarget = sale?.voucherTarget
+            const totalPay = sale?.totalPrice
+            const date = today().format('YYYY-MM-DD')
+            const netTotal = Math.round(totalPay / 1.19 / 10) * 10
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -144,62 +145,6 @@ const useSalesStore = create(
                 payment_type_id: paymentTarget,
                 voucher_type_id: voucherTarget
             }
-            /*     const dataBody = {
-                Sistema: {
-                    nombre: 'demo',
-                    rut: '11111111-1',
-                    usuario: 'integracion',
-                    clave: 'MW50M2dyNGMxMG4='
-                },
-                Documento: {
-                    Encabezado: {
-                        IdDoc: {
-                            TipoDTE: '33',
-                            Folio: '0',
-                            FchEmis: '2022-03-01',
-                            FchVenc: '2022-03-01'
-                        },
-                        Emisor: {
-                            RUTEmisor: '11111111-1',
-                            RznSocEmisor: 'EMPRESA DE PRUEBA',
-                            GiroEmisor: 'DESARROLLO DE SISTEMAS',
-                            DirOrigen: 'Avenida del Software #11001101',
-                            CmnaOrigen: 'PROVIDENCIA',
-                            CiudadOrigen: 'SANTIAGO'
-                        },
-                        Receptor: {
-                            RUTRecep: '76399744-8',
-                            CdgIntRecep: '1000215-220',
-                            RznSocRecep: 'CLIENTE DE PRUEBA',
-                            CorreoRecep: 'prueba@dtemite.cl',
-                            Contacto: 'correo@prueba.cl',
-                            DirRecep: 'CALLE A 50',
-                            CmnaRecep: 'SANTIAGO',
-                            CiudadRecep: 'SANTIAGO'
-                        },
-                        Totales: {
-                            MntNeto: '90610',
-                            MntExe: '0',
-                            TasaIVA: '19',
-                            IVA: '17216',
-                            MntTotal: '107826'
-                        }
-                    },
-                    Detalle: [
-                        {
-                            NroLinDet: '1',
-                            CdgItem: {
-                                TpoCodigo: 'INT1',
-                                VlrCodigo: 'WWW'
-                            },
-                            NmbItem: 'Descripción de producto WWW',
-                            QtyItem: '2',
-                            PrcItem: '45305',
-                            MontoItem: '90610'
-                        }
-                    ]
-                }
-            } */
             const dataBody = {
                 Sistema: {
                     nombre: 'webbasico',
@@ -211,7 +156,7 @@ const useSalesStore = create(
                     Encabezado: {
                         IdDoc: {
                             TipoDTE: '39',
-                            Folio: '1002',
+                            Folio: '1015', // added number from endpoint
                             FchEmis: date,
                             FchVenc: date
                         },
@@ -224,28 +169,21 @@ const useSalesStore = create(
                             CiudadOrigen: 'COQUIMO'
                         },
                         Receptor: {
-                            RUTRecep: '76399744-8',
-                            CdgIntRecep: '1000215-220',
-                            RznSocRecep: 'CLIENTE DE PRUEBA',
-                            CorreoRecep: 'prueba@dtemite.cl',
-                            Contacto: 'correo@prueba.cl',
-                            DirRecep: 'CALLE A 50',
-                            CmnaRecep: 'COQUIMBO',
-                            CiudadRecep: 'COQUIMBO'
+                            RUTRecep: '66666666-6'
                         },
                         Totales: {
-                            MntNeto: '10000',
+                            MntNeto: netTotal,
                             MntExe: '0',
-                            IVA: '1900',
-                            MntTotal: '11900'
+                            IVA: totalPay - netTotal,
+                            MntTotal: totalPay
                         }
                     },
                     Detalle: saleProductsList?.map((item, index) => {
                         return {
                             NroLinDet: index,
                             CdgItem: {
-                                TpoCodigo: item?.product?.code,
-                                VlrCodigo: item?.product?.id
+                                TpoCodigo: item?.product?.id,
+                                VlrCodigo: item?.product?.code
                             },
                             NmbItem: item?.product?.name,
                             QtyItem: item?.quantity,
@@ -258,7 +196,7 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
             if (pageTarget === 1) {
                 try {
-                    fetchPost(GET_DOCUMENT_DTEMITE, dataBody, true).then(result => {
+                    fetchPost(GET_DOCUMENT_DTEMITE, dataBody, true).then(resultDtemite => {
                         // Get result from DTEMITE
                         setPageTarget(false)
                         setPayment(false)
@@ -266,9 +204,41 @@ const useSalesStore = create(
                         setGoPay(false)
                         set({ loadingSale: false })
                         removeSale(sales, saleId)
-                        if (result?.LinkPDF) {
-                            window.open(result?.LinkPDF, 'Boleta.pdf')
-                            console.log(result)
+                        if (resultDtemite?.LinkPDF) {
+                            try {
+                                fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                                    setPageTarget(false)
+                                    // setPaymentTarget(sales, saleId, null)
+                                    set({ loadingSale: false })
+                                    if (result?.code === 200) {
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay })
+                                        window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                        if (pageTarget) {
+                                            notify('✅ Pago con tarjeta con éxito')
+                                        } else {
+                                            notify('✅ Pago con éxito')
+                                        }
+
+                                        setPayment(false)
+                                        onClose()
+                                        setGoPay(false)
+                                        removeSale(sales, saleId)
+                                    // clearList()
+                                    } else {
+                                        if (pageTarget) {
+                                            notify('❌ Problemas con el pago con la tarjeta')
+                                        } else {
+                                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        }
+
+                                        onClose()
+                                        setGoPay(false)
+                                        setPageTarget(null)
+                                    }
+                                })
+                            } catch {
+                                set({ loadingSale: false })
+                            }
                         }
                     })
                 } catch {
