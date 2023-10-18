@@ -26,7 +26,12 @@ export default function PayDetailed ({ loadingSale, setPageTarget, setPayment, i
             setPaymentTarget(listSalesActives, saleIdActive, null)
         }
     }, [paymentTarget])
-
+    useEffect(() => {
+        if (voucherTarget === 2) {
+            // es factura open modal para agregar el cliente
+            setOpenModal(true)
+        }
+    }, [voucherTarget])
     useEffect(() => {
         setPayDetailed(0)
     }, [])

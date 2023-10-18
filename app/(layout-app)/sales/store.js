@@ -4,7 +4,7 @@ import { create } from 'zustand'
 import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
-
+import { today } from '@/utils/date'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -132,7 +132,7 @@ const useSalesStore = create(
             const paymentTarget = sale.paymentTarget
             const voucherTarget = sale.voucherTarget
             const totalPay = sale.totalPrice
-
+            const date = today().format('DD-MM-YYYY')
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -144,7 +144,7 @@ const useSalesStore = create(
                 payment_type_id: paymentTarget,
                 voucher_type_id: voucherTarget
             }
-            const dataBody = {
+            /*     const dataBody = {
                 Sistema: {
                     nombre: 'demo',
                     rut: '11111111-1',
@@ -199,8 +199,8 @@ const useSalesStore = create(
                         }
                     ]
                 }
-            }
-            /*    const dataBody = {
+            } */
+            const dataBody = {
                 Sistema: {
                     nombre: 'webbasico',
                     rut: '29282726-1',
@@ -211,9 +211,9 @@ const useSalesStore = create(
                     Encabezado: {
                         IdDoc: {
                             TipoDTE: '39',
-                            Folio: '0',
-                            FchEmis: '2022-10-20',
-                            FchVenc: '2022-04-26'
+                            Folio: '1002',
+                            FchEmis: date,
+                            FchVenc: date
                         },
                         Emisor: {
                             RUTEmisor: '77426986-K',
@@ -254,7 +254,7 @@ const useSalesStore = create(
                         }
                     })
                 }
-            } */
+            }
             set({ loadingSale: true, error: null })
             if (pageTarget === 1) {
                 try {
