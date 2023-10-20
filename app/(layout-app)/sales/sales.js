@@ -108,7 +108,9 @@ const SalesMenu = () => {
                         keyFocus={keyFocus}
                     />
                 </section>
-                <PayDetailed isOpen={isOpen}
+                <PayDetailed
+                    payment={payment}
+                    isOpen={isOpen}
                     onClose={onClose}
                     onOpen={onOpen}
                     totalPay={totalPrice}
@@ -126,6 +128,7 @@ const SalesMenu = () => {
                     setPaymentTarget={setPaymentTarget}
                     setSearchInput={setSearchInput}
                     setPaymentTargetValue={setPaymentTargetValue}
+                    setVoucherTargetValue={setVoucherTargetValue}
                 />
             </div>
         </section>
