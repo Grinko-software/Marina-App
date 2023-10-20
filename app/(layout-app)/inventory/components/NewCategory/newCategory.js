@@ -42,9 +42,9 @@ export default function CreateCategory () {
                     }
                 }} />
             <header className="flex justify-end">
-                <Button className='bg-primary-400 dark:bg-primary-400 font-semibold' color='primary' onClick={onOpen}
+                <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
                     startContent={<BiSolidCategory size={25}/>}>
-                        CATEGORÍAS
+                        CREAR CATEGORÍAS
                 </Button>
             </header>
             <Modal size={'2xl'}
