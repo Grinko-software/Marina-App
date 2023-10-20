@@ -101,6 +101,7 @@ const SalesMenu = () => {
                         setPageTarget={setPageTarget}
                         payment={payment} setPayment={setPayment}
                         setSearchInput={setSearchInput}
+                        searchInput={searchInput}
                         paymentTarget={paymentTargetValue}
                         voucherTarget={voucherTargetValue}
                         setGoPay={setGoPay}
