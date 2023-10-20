@@ -6,7 +6,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { formatter } from '@/utils/number'
 import useSalesStore from '../store'
 import InvoiceDetailed from './invoice/invoice'
-export default function PayDetailed ({ loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue }) {
+export default function PayDetailed ({ payment, loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue }) {
     const [openModal, setOpenModal] = useState(false)
     const notify = (text) => toast(text)
     const {
@@ -22,12 +22,13 @@ export default function PayDetailed ({ loadingSale, setPageTarget, setPayment, i
         } else if (paymentTarget === 2) {
             setSearchInput(null)
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
-            createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale)
+            createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget)
             // setPaymentTarget(listSalesActives, saleIdActive, null)
         }
     }, [paymentTarget])
     useEffect(() => {
-        if (voucherTarget === 2) {
+        if (voucherTarget === 2 && payment) {
+            console.log(payment, 'voucher tap')
             // es factura open modal para agregar el cliente
             setOpenModal(true)
         }
@@ -139,8 +140,7 @@ export default function PayDetailed ({ loadingSale, setPageTarget, setPayment, i
                                         setPayDetailed(null)
                                         setSearchInput(null)
                                         setPaymentTarget(listSalesActives, saleIdActive, null)
-                                        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale)
-                                        // createSale(paymentTarget, voucherTarget, listSales, notify, setPayment, onClose, setGoPay, clearList, setPayment, totalPay)
+                                        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget)
                                     } else {
                                         setSearchInput(null)
                                         setPayDetailed(null)

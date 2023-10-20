@@ -5,6 +5,7 @@ import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
+import { roundValue } from '@/utils/number'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -125,15 +126,15 @@ const useSalesStore = create(
             set({ listSalesActives: sales })
         },
         /* Create sale */
-        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale) => {
+        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget || pageTarget
-            const voucherTarget = sale?.voucherTarget
+            const voucherTarget = sale?.voucherTarget || targetGeneral
             const totalPay = sale?.totalPrice
             const date = today().format('YYYY-MM-DD')
-            const netTotal = Math.round(totalPay / 1.19 / 10) * 10
+            const netTotal = parseInt(roundValue(totalPay / 1.19, 0, 0))
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -145,18 +146,19 @@ const useSalesStore = create(
                 payment_type_id: paymentTarget,
                 voucher_type_id: voucherTarget
             }
+            /* Boleta model */
             const dataBody = {
                 Sistema: {
-                    nombre: 'webbasico',
-                    rut: '29282726-1',
-                    usuario: 'integrado_webbasico',
-                    clave: 'd2ViYmFzaWNvMjAyMQ=='
+                    nombre: 'rion',
+                    rut: '77426986-K',
+                    usuario: 'integrado_rion',
+                    clave: 'cmlvbjIwMjM='
                 },
                 Documento: {
                     Encabezado: {
                         IdDoc: {
-                            TipoDTE: '39',
-                            Folio: '1015', // added number from endpoint
+                            TipoDTE: voucherTarget === 1 ? '39' : '33',
+                            Folio: 0, // added number from endpoint
                             FchEmis: date,
                             FchVenc: date
                         },
