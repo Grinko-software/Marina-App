@@ -232,7 +232,7 @@ const useSalesStore = create(
                                 },
                                 NmbItem: item?.product?.name,
                                 QtyItem: item?.quantity,
-                                PrcItem: roundValueWithMath(roundValueWithMath(item?.total / 1.19, 0, 0) / item?.quantity, 0, 0),
+                                PrcItem: roundValueWithMath(item?.product?.price / 1.19, 0, 0),
                                 MontoItem: roundValueWithMath(item?.total / 1.19, 0, 0)
                             }
                         })
