@@ -60,8 +60,8 @@ export default function DetailedProduct ({ targeProduct, isOpen, onClose, setTar
                                         setEdit(false)
                                         setTargetProduct(null)
                                         onClose()
-                                    }
-                                    }>
+                                    }}
+                                    >
                             Guardar
                                     </Button>
                                     <Button color="danger" variant="light"

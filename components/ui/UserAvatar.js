@@ -1,9 +1,11 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Card, CardHeader, Avatar, Button } from '@nextui-org/react'
+import { Card, CardHeader, Button } from '@nextui-org/react'
 import useAuthStore from '@/stores/user'
 import ThemeButton from './ThemeButton'
-import ShortcutButton from './ShortcutButton'
+import imgSrc from '@/app/icon.png'
+import Image from 'next/image'
+// import ShortcutButton from './ShortcutButton'
 
 export default function UserAvatar () {
     const [userName, setUserName] = useState(null)
@@ -18,11 +20,11 @@ export default function UserAvatar () {
         }
     }, [fullName])
     return (
-        <div className="flex w-full">
-            <Card className="flex gap-1">
+        <div>
+            <Card >
                 <CardHeader className="justify-between space-x-1">
-                    <div className="flex gap-3 ">
-                        <Avatar className="flex pr-12 sm:scale-100 scale-75" isBordered color="warning" radius="full" size="lg" src="/avatars/avatar-1.png" />
+                    <div className="flex gap-3">
+                        <Image className="w-16 h-16 p-1 rounded-full ring-4 ring-amber-600" src={imgSrc} alt="Bordered avatar"/>
                         <div className="flex flex-col items-start justify-center">
                             <h4 className="sm:text-xl  text-tiny font-semibold leading-none text-default-600">{userName?.toUpperCase() }</h4>
                             <h5 className="sm:text-xl text-tiny tracking-tight text-default-400">{admin ? 'Administrador' : 'Trabajador'}</h5>
@@ -31,14 +33,13 @@ export default function UserAvatar () {
                     <div className="col-start-1 col-end-1">
                         <ThemeButton/>
                     </div>
-                    <div className="col-start-2 col-end-2">
+                    {/* <div className="col-start-2 col-end-2">
                         <ShortcutButton />
-                    </div>
+                    </div> */}
                     <Button
                         className={'text-xs sm:text-lg bg-transparent text-foreground border-default-200'}
                         color="primary"
                         radius="full"
-
                         variant={'solid'}
                         onClick={() => signOut()}
                     >

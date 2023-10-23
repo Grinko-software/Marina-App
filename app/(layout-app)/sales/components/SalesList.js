@@ -11,7 +11,7 @@ import { formatter } from '@/utils/number'
 import useScannerStore from '@/stores/scanner'
 export default function SaleList (props) {
     const {
-        setPayment, payment, setSearchInput,
+        setPayment, payment, setSearchInput, searchInput,
         paymentTarget,
         voucherTarget, setGoPay, keyFocus,
         setPageTarget, loadingSale
@@ -33,6 +33,10 @@ export default function SaleList (props) {
         setListSales(sale.saleProductsList)
         setTotalPrice(sale.totalPrice)
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
+
+    useEffect(() => {
+        onClear()
+    }, [totalPrice])
 
     const { loading } = useInventoryStore()
     const [inputValue, setInputValue] = useState(1)
@@ -76,7 +80,7 @@ export default function SaleList (props) {
         <section className='flex flex-1 flex-col items-center w-full animation-fade-in'>
             <section className='w-full h-full rounded-xl rounded-tr-[0px] bg-primary-50 shadow  dark:bg-secondary-450'>
                 <section className='flex flex-row px-1'>
-                    <SearchBar onChange={onChange} onClear={onClear}/>
+                    <SearchBar onChange={onChange} onClear={onClear} defaultValue={searchInput}/>
                     <Input
                         onFocus={''}
                         className='w-auto mt-3 px-1'

@@ -113,7 +113,6 @@ export default function tableProducts (props) {
         <section className='animation-fade-in h-full w-full flex flex-col'>
             {/* <section className='flex flex-row rounded-t-[12px] w-full space-x-5 bg-secondary-50 dark:bg-secondary-450 pt-1 items-center'> */}
             <div style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }} className='rounded-t-[12px] top-[0px] overflow-x-auto overflow-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full'>
-
                 {loadingCategories
                     ? <section className="pt-3 px-3  flex bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
@@ -135,7 +134,7 @@ export default function tableProducts (props) {
                         items={listCategories?.length > 0 ? listCategories?.filter((element) => element?.label === 'FRUTAS' || element?.label === 'VERDURAS' || element?.label === 'CARNES' || element?.label === 'PAN' || element?.label === 'MASCOTAS' || element?.label === 'CIGARROS' || element?.label === 'DULCES' || element?.label === 'BAZAR' || element?.label === 'OTROS' || element?.label === 'PROMOS' || element?.label === 'REMEDIOS') : [] }
                         selectedKey={categoryTabSelected}
                         onSelectionChange={setCategoryTabSelected}
-                        variant={'bordered'}
+                        variant={'solid'}
                         className="pt-3 px-3 bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450"
                         classNames={{
                             cursor: 'w-full bg-green-400',
@@ -145,11 +144,11 @@ export default function tableProducts (props) {
                     >
 
                         {(item) => (
-
                             <Tab color="primary" variant="shadow" key={item.id} size="xl" title={item.label}>
                             </Tab>
                         )}
-                    </Tabs>}
+                    </Tabs>
+                }
             </div>
             {/*         </section> */}
             <section className='flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450'>

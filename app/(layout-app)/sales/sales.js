@@ -44,17 +44,6 @@ const SalesMenu = () => {
         setTotalPrice(sale.totalPrice)
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
 
-    /*
-    useEffect(() => {
-        console.log(selectedId, saleIdActive)
-        if (selectedId !== saleIdActive.toString()) {
-            setSelectedId(saleIdActive)
-        }
-    }, [saleIdActive])
- */
-    useEffect(() => {
-        console.log('payment' + paymentTargetValue)
-    }, [paymentTargetValue])
     return (
         <section className='h-full w-full flex md:flex-col'>
             <div className="flex h-full w-full space-x-2">
@@ -79,7 +68,7 @@ const SalesMenu = () => {
                                 onSelectionChange={setSelectedSaleId}
                                 className="py-2 "
                                 classNames={{
-                                    cursor: 'bg-green-400',
+                                    cursor: 'bg-green-400 dark:bg-green-400',
                                     tabContent: 'group-data-[selected=true]:text-primary-50'
                                 }}
                             >
@@ -101,13 +90,16 @@ const SalesMenu = () => {
                         setPageTarget={setPageTarget}
                         payment={payment} setPayment={setPayment}
                         setSearchInput={setSearchInput}
+                        searchInput={searchInput}
                         paymentTarget={paymentTargetValue}
                         voucherTarget={voucherTargetValue}
                         setGoPay={setGoPay}
                         keyFocus={keyFocus}
                     />
                 </section>
-                <PayDetailed isOpen={isOpen}
+                <PayDetailed
+                    payment={payment}
+                    isOpen={isOpen}
                     onClose={onClose}
                     onOpen={onOpen}
                     totalPay={totalPrice}
@@ -125,7 +117,7 @@ const SalesMenu = () => {
                     setPaymentTarget={setPaymentTarget}
                     setSearchInput={setSearchInput}
                     setPaymentTargetValue={setPaymentTargetValue}
-
+                    setVoucherTargetValue={setVoucherTargetValue}
                 />
             </div>
         </section>

@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
-import { TYPE_PAYMENT_API_URL, TYPE_VOUCHER_API_URL, SALE_TICKET_CREATE } from '@/settings/constants'
+import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
-
+import { today } from '@/utils/date'
+import { roundValueWithMath } from '@/utils/number'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -19,7 +20,6 @@ const useSalesStore = create(
             paymentTarget: null,
             voucherTarget: 1
         }],
-
         scannerEnabled: false,
         enabledRedirect: false,
         enabledScanner: (value) => set({ scannerEnabled: true, enabledRedirect: false }),
@@ -126,14 +126,119 @@ const useSalesStore = create(
             set({ listSalesActives: sales })
         },
         /* Create sale */
-        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale) => {
+        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
-            const saleProductsList = sale.saleProductsList
-            const paymentTarget = sale.paymentTarget
-            const voucherTarget = sale.voucherTarget
-            const totalPay = sale.totalPrice
-
+            const saleProductsList = sale?.saleProductsList
+            const paymentTarget = sale?.paymentTarget || pageTarget
+            const voucherTarget = sale?.voucherTarget || targetGeneral
+            /*  DTEMITE */
+            const totalPay = sale?.totalPrice
+            const date = today().format('YYYY-MM-DD')
+            const netTotal = roundValueWithMath(totalPay / 1.19, 0, 0)
+            /* 1: Boleta model  2: factura model */
+            const modelBody = voucherTarget === 1
+                ? {
+                    Sistema: {
+                        nombre: 'rion',
+                        rut: '77426986-K',
+                        usuario: 'integrado_rion',
+                        clave: 'cmlvbjIwMjM='
+                    },
+                    Documento: {
+                        Encabezado: {
+                            IdDoc: {
+                                TipoDTE: '39',
+                                Folio: 0,
+                                FchEmis: date,
+                                FchVenc: date
+                            },
+                            Emisor: {
+                                RUTEmisor: '77426986-K',
+                                RznSocEmisor: 'MARINA MARKET',
+                                GiroEmisor: 'MINIMARKET',
+                                DirOrigen: 'LA MARINA 200 #11001101',
+                                CmnaOrigen: 'COQUIMBO',
+                                CiudadOrigen: 'COQUIMO'
+                            },
+                            Receptor: { RUTRecep: '66666666-6' },
+                            Totales: {
+                                MntNeto: netTotal,
+                                MntExe: '0',
+                                IVA: totalPay - netTotal,
+                                MntTotal: totalPay
+                            }
+                        },
+                        Detalle: saleProductsList?.map((item, index) => {
+                            return {
+                                NroLinDet: index,
+                                CdgItem: {
+                                    TpoCodigo: item?.product?.id,
+                                    VlrCodigo: item?.product?.code
+                                },
+                                NmbItem: item?.product?.name,
+                                QtyItem: item?.quantity,
+                                PrcItem: roundValueWithMath(item?.total / item?.quantity, 0, 0),
+                                MontoItem: item?.total
+                            }
+                        })
+                    }
+                }
+                : {
+                    Sistema: {
+                        nombre: 'rion',
+                        rut: '77426986-K',
+                        usuario: 'integrado_rion',
+                        clave: 'cmlvbjIwMjM='
+                    },
+                    Documento: {
+                        Encabezado: {
+                            IdDoc: {
+                                TipoDTE: '33',
+                                Folio: 0,
+                                FchEmis: date,
+                                FchVenc: date
+                            },
+                            Emisor: {
+                                RUTEmisor: '77426986-K',
+                                RznSocEmisor: 'MARINA MARKET',
+                                GiroEmisor: 'MINIMARKET',
+                                DirOrigen: 'LA MARINA 200 #11001101',
+                                CmnaOrigen: 'COQUIMBO',
+                                CiudadOrigen: 'COQUIMO'
+                            },
+                            Receptor: {
+                                RUTRecep: targetCustomer?.rut,
+                                CdgIntRecep: targetCustomer?.code,
+                                RznSocRecep: targetCustomer?.business_name,
+                                DirRecep: targetCustomer?.address,
+                                CmnaRecep: targetCustomer?.commune,
+                                CiudadRecep: targetCustomer?.commune
+                            },
+                            Totales: {
+                                MntNeto: netTotal,
+                                MntExe: '0',
+                                TasaIVA: '19',
+                                IVA: totalPay - netTotal,
+                                MntTotal: totalPay
+                            }
+                        },
+                        Detalle: saleProductsList?.map((item, index) => {
+                            return {
+                                NroLinDet: index,
+                                CdgItem: {
+                                    TpoCodigo: item?.product?.id,
+                                    VlrCodigo: item?.product?.code
+                                },
+                                NmbItem: item?.product?.name,
+                                QtyItem: item?.quantity,
+                                PrcItem: roundValueWithMath(roundValueWithMath(item?.total / 1.19, 0, 0) / item?.quantity, 0, 0),
+                                MontoItem: roundValueWithMath(item?.total / 1.19, 0, 0)
+                            }
+                        })
+                    }
+                }
+            /* Model to send endpoint our bd */
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -146,38 +251,87 @@ const useSalesStore = create(
                 voucher_type_id: voucherTarget
             }
             set({ loadingSale: true, error: null })
-            try {
-                fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                    setPageTarget(false)
-                    // setPaymentTarget(sales, saleId, null)
-                    set({ loadingSale: false })
-                    if (result?.code === 200) {
-                        generatePdfDocument({ listSales: saleProductsList, totalPay })
-                        if (pageTarget) {
-                            notify('✅ Pago con tarjeta con éxito')
-                        } else {
-                            notify('✅ Pago con éxito')
-                        }
-
+            if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
+                try {
+                    fetchPost(GET_DOCUMENT_DTEMITE, modelBody, true).then(resultDtemite => {
+                        // Get result from DTEMITE
+                        setPageTarget(false)
                         setPayment(false)
                         onClose()
                         setGoPay(false)
                         removeSale(sales, saleId)
-                        // clearList()
-                    } else {
-                        if (pageTarget) {
-                            notify('❌ Problemas con el pago con la tarjeta')
-                        } else {
-                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
-                        }
+                        setTargetCustomer(null)
+                        if (resultDtemite?.LinkPDF) {
+                            try {
+                                fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                                    setPageTarget(false)
+                                    // setPaymentTarget(sales, saleId, null)
+                                    set({ loadingSale: false })
+                                    if (result?.code === 200) {
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay })
+                                        window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                        notify('✅ Pago con éxito')
+                                        setPayment(false)
+                                        onClose()
+                                        setGoPay(false)
+                                        removeSale(sales, saleId)
+                                    // clearList()
+                                    } else {
+                                        if (pageTarget) {
+                                            notify('❌ Problemas con el pago con la tarjeta')
+                                        } else {
+                                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        }
 
-                        onClose()
-                        setGoPay(false)
-                        setPageTarget(null)
-                    }
-                })
-            } catch {
-                set({ loadingSale: false })
+                                        onClose()
+                                        setGoPay(false)
+                                        setPageTarget(null)
+                                    }
+                                })
+                            } catch {
+                                set({ loadingSale: false })
+                            }
+                        } else {
+                            notify('❌ ' + resultDtemite?.Mensaje ?? 'Error al generar la boleta o factura')
+                        }
+                    })
+                } catch {
+                    set({ loadingSale: false })
+                }
+            } else if (pageTarget === 2 || voucherTarget === 3) {
+                try {
+                    fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                        setPageTarget(false)
+                        // setPaymentTarget(sales, saleId, null)
+                        set({ loadingSale: false })
+                        if (result?.code === 200) {
+                            generatePdfDocument({ listSales: saleProductsList, totalPay })
+                            if (pageTarget) {
+                                notify('✅ Pago con tarjeta con éxito')
+                            } else {
+                                notify('✅ Pago con éxito')
+                            }
+
+                            setPayment(false)
+                            onClose()
+                            setGoPay(false)
+                            removeSale(sales, saleId)
+                        // clearList()
+                        } else {
+                            if (pageTarget) {
+                                notify('❌ Problemas con el pago con la tarjeta')
+                            } else {
+                                notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                            }
+
+                            onClose()
+                            setGoPay(false)
+                            setPageTarget(null)
+                        }
+                    })
+                } catch {
+                    set({ loadingSale: false })
+                }
             }
         }
     }),

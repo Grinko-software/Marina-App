@@ -46,12 +46,12 @@ export default function WeighingScaleModal ({ isOpen, onClose, product }) {
     }
     /* Last message ws from fleet status */
     useEffect(() => {
-        if (lastMessage) {
+        if (lastMessage && !manualMode) {
             const message = lastMessage?.data.substring(0, 5)
             const data = parseFloat(message)
             setValueKg(data)
         }
-    }, [lastMessage])
+    }, [lastMessage, manualMode])
 
     useEffect(() => {
         if (isOpen) {
