@@ -8,3 +8,11 @@ export const roundValue = (value, decimal, errorValue = '-') => {
     const result = parseFloat(value.toFixed(decimal)).toLocaleString('es-CL')
     return result
 }
+
+export const roundValueWithMath = (value, decimal, errorValue = '-') => {
+    if (value === null || value === undefined) return errorValue
+    if (typeof value === 'string') value = Number(value.replaceAll(',', '.'))
+    const result = parseFloat(value.toFixed(decimal))
+    const math = Math.round(result)
+    return math
+}

@@ -44,17 +44,6 @@ const SalesMenu = () => {
         setTotalPrice(sale.totalPrice)
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
 
-    /*
-    useEffect(() => {
-        console.log(selectedId, saleIdActive)
-        if (selectedId !== saleIdActive.toString()) {
-            setSelectedId(saleIdActive)
-        }
-    }, [saleIdActive])
- */
-    useEffect(() => {
-        console.log('payment' + paymentTargetValue)
-    }, [paymentTargetValue])
     return (
         <section className='h-full w-full flex md:flex-col'>
             <div className="flex h-full w-full space-x-2">

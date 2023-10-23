@@ -29,7 +29,9 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     const [searchInput, setSearchInput] = useState('')
     const [filteredList, setFilteredList] = useState([])
     const notify = (text) => toast(text)
-    const { defaultForm, create, setFormData, getCustomers, customers } = useInventoryStore(({ defaultForm, create, setFormData, getCustomers, customers }) => ({ defaultForm, create, setFormData, getCustomers, customers }))
+    const { defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer } =
+     useInventoryStore(({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer }
+     ) => ({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer }))
     const onClose = () => {
         setOpenModal(false)
     }
@@ -37,7 +39,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
         const newFormValues = { ...defaultForm, [field]: !isNaN(value) ? parseInt(value) : value }
         setFormData(newFormValues)
     }
-    const CardRow = ({ item }) => {
+    const CardRow = ({ item, setTargetCustomer }) => {
         const { ID, business_name } = item
         return <div className="flex gap-2 flex-row w-full items-center border rounded-xl pr-2">
             <Toaster
@@ -59,7 +61,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                     }
                 }} />
             <section className='flex-1 flex gap-2 flex-wrap p-5 cursor-pointer' onClick={() => {
-                setFormData(item)
+                setTargetCustomer(item)
                 setOpenModal(false)
             }}>
                 <div className="flex flex-1 min-w-[8rem] flex-col">
@@ -160,7 +162,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                         <section className='flex flex-col gap-2'>
                                             {(filteredList)?.length
                                                 ? filteredList.map((item) => {
-                                                    return (<div key={item.id}><CardRow item={item}/></div>)
+                                                    return (<div key={item.id}><CardRow item={item} setTargetCustomer={setTargetCustomer}/></div>)
                                                 })
                                                 : <div>No se ha encontrado el cliente</div>}
 
@@ -295,7 +297,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                 <ModalFooter>
                                     <Button className =" bg-green-500 text-primary-50" onClick={() => {
                                         if (defaultForm?.rut && defaultForm?.businessLine && defaultForm?.businessName) {
-                                            create(defaultForm, notify)
+                                            create(defaultForm, notify, setTargetCustomer)
                                         }
                                         onClose()
                                         setCreateCustomer(false)
@@ -320,34 +322,3 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
         </>
     )
 }
-{ /*
-
-                        "business_name": "Grinko",
-                        "business_line": "Desarrollo de software",
-
-                        "rut": "77816445-0",
-
-                        "code": "77816445-0",
-                        "phone": "97097753",
-
-                        "region": "Coquimbo",
-                        "commune": "Coquimbo",
-                        "province": "Elqui",
-
-                        "legal_representative": "Juan",
-                        "email": "contacto@grinko.cl",
-                        "address": "El faro 15"
-}
-                     */ }
-{ /*  <TableRow key="1">
-                                                <TableCell><p className="text-primary-500 dark:text-primary-200 font-bold mt-[1rem]">{ 'Nombre empresa'}</p></TableCell>
-                                                <TableCell><Input type="email" variant={'underlined'} defaultValue={ ''} /></TableCell>
-                                            </TableRow>
-                                            <TableRow key="2">
-                                                <TableCell><p className="text-primary-500 dark:text-primary-200 font-bold  mt-[1rem]"> { 'Stock'}</p></TableCell>
-                                                <TableCell><Input type="email" variant={'underlined'} defaultValue={ ''} /></TableCell>
-                                            </TableRow>
-                                            <TableRow key="3">
-                                                <TableCell><p className="text-primary-500 dark:text-primary-200 font-bold  mt-[1rem]"> { 'Precio'}</p></TableCell>
-                                                <TableCell><Input type="email" variant={'underlined'} defaultValue={ ''} /></TableCell>
-                                            </TableRow> */ }

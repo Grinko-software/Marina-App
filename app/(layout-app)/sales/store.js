@@ -5,7 +5,7 @@ import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
-import { roundValue } from '@/utils/number'
+import { roundValue, roundValueWithMath } from '@/utils/number'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -126,15 +126,119 @@ const useSalesStore = create(
             set({ listSalesActives: sales })
         },
         /* Create sale */
-        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral) => {
+        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget || pageTarget
             const voucherTarget = sale?.voucherTarget || targetGeneral
+            /*  DTEMITE */
             const totalPay = sale?.totalPrice
             const date = today().format('YYYY-MM-DD')
-            const netTotal = parseInt(roundValue(totalPay / 1.19, 0, 0))
+            const netTotal = roundValueWithMath(totalPay / 1.19, 0, 0)
+            /* 1: Boleta model  2: factura model */
+            const modelBody = voucherTarget === 1
+                ? {
+                    Sistema: {
+                        nombre: 'rion',
+                        rut: '77426986-K',
+                        usuario: 'integrado_rion',
+                        clave: 'cmlvbjIwMjM='
+                    },
+                    Documento: {
+                        Encabezado: {
+                            IdDoc: {
+                                TipoDTE: '39',
+                                Folio: 0,
+                                FchEmis: date,
+                                FchVenc: date
+                            },
+                            Emisor: {
+                                RUTEmisor: '77426986-K',
+                                RznSocEmisor: 'MARINA MARKET',
+                                GiroEmisor: 'MINIMARKET',
+                                DirOrigen: 'LA MARINA 200 #11001101',
+                                CmnaOrigen: 'COQUIMBO',
+                                CiudadOrigen: 'COQUIMO'
+                            },
+                            Receptor: { RUTRecep: '66666666-6' },
+                            Totales: {
+                                MntNeto: netTotal,
+                                MntExe: '0',
+                                IVA: totalPay - netTotal,
+                                MntTotal: totalPay
+                            }
+                        },
+                        Detalle: saleProductsList?.map((item, index) => {
+                            return {
+                                NroLinDet: index,
+                                CdgItem: {
+                                    TpoCodigo: item?.product?.id,
+                                    VlrCodigo: item?.product?.code
+                                },
+                                NmbItem: item?.product?.name,
+                                QtyItem: item?.quantity,
+                                PrcItem: roundValueWithMath(item?.total / item?.quantity, 0, 0),
+                                MontoItem: item?.total
+                            }
+                        })
+                    }
+                }
+                : {
+                    Sistema: {
+                        nombre: 'rion',
+                        rut: '77426986-K',
+                        usuario: 'integrado_rion',
+                        clave: 'cmlvbjIwMjM='
+                    },
+                    Documento: {
+                        Encabezado: {
+                            IdDoc: {
+                                TipoDTE: '33',
+                                Folio: 0,
+                                FchEmis: date,
+                                FchVenc: date
+                            },
+                            Emisor: {
+                                RUTEmisor: '77426986-K',
+                                RznSocEmisor: 'MARINA MARKET',
+                                GiroEmisor: 'MINIMARKET',
+                                DirOrigen: 'LA MARINA 200 #11001101',
+                                CmnaOrigen: 'COQUIMBO',
+                                CiudadOrigen: 'COQUIMO'
+                            },
+                            Receptor: {
+                                RUTRecep: targetCustomer?.rut,
+                                CdgIntRecep: targetCustomer?.code,
+                                RznSocRecep: targetCustomer?.business_name,
+                                DirRecep: targetCustomer?.address,
+                                CmnaRecep: targetCustomer?.commune,
+                                CiudadRecep: targetCustomer?.commune
+                            },
+                            Totales: {
+                                MntNeto: netTotal,
+                                MntExe: '0',
+                                TasaIVA: '19',
+                                IVA: totalPay - netTotal,
+                                MntTotal: totalPay
+                            }
+                        },
+                        Detalle: saleProductsList?.map((item, index) => {
+                            return {
+                                NroLinDet: index,
+                                CdgItem: {
+                                    TpoCodigo: item?.product?.id,
+                                    VlrCodigo: item?.product?.code
+                                },
+                                NmbItem: item?.product?.name,
+                                QtyItem: item?.quantity,
+                                PrcItem: roundValueWithMath(roundValueWithMath(item?.total / 1.19, 0, 0) / item?.quantity, 0, 0),
+                                MontoItem: roundValueWithMath(item?.total / 1.19, 0, 0)
+                            }
+                        })
+                    }
+                }
+            /* Model to send endpoint our bd */
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -146,59 +250,10 @@ const useSalesStore = create(
                 payment_type_id: paymentTarget,
                 voucher_type_id: voucherTarget
             }
-            /* Boleta model */
-            const dataBody = {
-                Sistema: {
-                    nombre: 'rion',
-                    rut: '77426986-K',
-                    usuario: 'integrado_rion',
-                    clave: 'cmlvbjIwMjM='
-                },
-                Documento: {
-                    Encabezado: {
-                        IdDoc: {
-                            TipoDTE: voucherTarget === 1 ? '39' : '33',
-                            Folio: 0, // added number from endpoint
-                            FchEmis: date,
-                            FchVenc: date
-                        },
-                        Emisor: {
-                            RUTEmisor: '77426986-K',
-                            RznSocEmisor: 'MARINA MARKET',
-                            GiroEmisor: 'MINIMARKET',
-                            DirOrigen: 'LA MARINA 200 #11001101',
-                            CmnaOrigen: 'COQUIMBO',
-                            CiudadOrigen: 'COQUIMO'
-                        },
-                        Receptor: {
-                            RUTRecep: '66666666-6'
-                        },
-                        Totales: {
-                            MntNeto: netTotal,
-                            MntExe: '0',
-                            IVA: totalPay - netTotal,
-                            MntTotal: totalPay
-                        }
-                    },
-                    Detalle: saleProductsList?.map((item, index) => {
-                        return {
-                            NroLinDet: index,
-                            CdgItem: {
-                                TpoCodigo: item?.product?.id,
-                                VlrCodigo: item?.product?.code
-                            },
-                            NmbItem: item?.product?.name,
-                            QtyItem: item?.quantity,
-                            PrcItem: item?.total,
-                            MontoItem: item?.total
-                        }
-                    })
-                }
-            }
             set({ loadingSale: true, error: null })
-            if (pageTarget === 1) {
+            if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
-                    fetchPost(GET_DOCUMENT_DTEMITE, dataBody, true).then(resultDtemite => {
+                    fetchPost(GET_DOCUMENT_DTEMITE, modelBody, true).then(resultDtemite => {
                         // Get result from DTEMITE
                         setPageTarget(false)
                         setPayment(false)
@@ -206,6 +261,7 @@ const useSalesStore = create(
                         setGoPay(false)
                         set({ loadingSale: false })
                         removeSale(sales, saleId)
+                        setTargetCustomer(null)
                         if (resultDtemite?.LinkPDF) {
                             try {
                                 fetchPost(SALE_TICKET_CREATE, body).then(result => {
@@ -215,12 +271,7 @@ const useSalesStore = create(
                                     if (result?.code === 200) {
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay })
                                         window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
-                                        if (pageTarget) {
-                                            notify('✅ Pago con tarjeta con éxito')
-                                        } else {
-                                            notify('✅ Pago con éxito')
-                                        }
-
+                                        notify('✅ Pago con éxito')
                                         setPayment(false)
                                         onClose()
                                         setGoPay(false)
@@ -241,12 +292,14 @@ const useSalesStore = create(
                             } catch {
                                 set({ loadingSale: false })
                             }
+                        } else {
+                            notify('❌ ' + resultDtemite?.Mensaje ?? 'Error al generar la boleta o factura')
                         }
                     })
                 } catch {
                     set({ loadingSale: false })
                 }
-            } else if (pageTarget === 2) {
+            } else if (pageTarget === 2 || voucherTarget === 3) {
                 try {
                     fetchPost(SALE_TICKET_CREATE, body).then(result => {
                         setPageTarget(false)

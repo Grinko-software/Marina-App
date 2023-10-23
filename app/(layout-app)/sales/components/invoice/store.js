@@ -20,20 +20,22 @@ const useInvoiceStore = create(
             email: null,
             address: null
         },
+        targetCustomer: null,
         loading: false,
         error: null,
         complete: false,
+        setTargetCustomer: (value) => set({ targetCustomer: value }),
         setFormData: (newData) => set({ defaultForm: { ...newData } }),
         setLoading: (value) => set({ loading: value }),
         setError: (value) => set({ error: value }),
         customers: [],
         setCustomers: (customers) => set({ customers }),
-        create: (customer, notify) => {
+        create: (customer, notify, setTargetCustomer) => {
             const dataBody = {
                 business_name: customer?.businessName ?? '-',
                 business_line: customer?.businessLine ?? '-',
-                rut: customer?.rut ? toString(customer?.ru) : '-',
-                code: customer?.code ?? '-',
+                rut: customer?.rut ? toString(customer?.rut) : '-',
+                code: customer?.rut ?? '-',
                 phone: customer?.phone ? toString(customer?.phone) : '-',
                 region: customer?.region ?? 'Elqui',
                 commune: customer?.commune ?? 'Coquimbo',
@@ -45,8 +47,9 @@ const useInvoiceStore = create(
             try {
                 fetchPost(CREATE_CUSTOMER, dataBody).then(result => {
                     // Get result from DTEMITE
-                    if (result?.data) {
-                        notify('✅ Ingreso cliente exitoso')
+                    if (result?.data === 'registry created successfully') {
+                        notify('✅ Cliente creado exitosamente')
+                        setTargetCustomer(dataBody)
                     } else if (result?.error || result?.data === null) {
                         notify('❌ El cliente no fue creado con éxito, intenta otra vez!')
                     }
