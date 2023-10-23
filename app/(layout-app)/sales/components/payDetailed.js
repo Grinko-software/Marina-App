@@ -166,6 +166,11 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <InvoiceDetailed
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                setVoucherTargetValue={setVoucherTargetValue}
+            />
         </>
     )
 }

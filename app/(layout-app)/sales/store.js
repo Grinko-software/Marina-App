@@ -5,7 +5,7 @@ import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
-import { roundValueWithMath } from '@/utils/number'
+import { roundValue, roundValueWithMath } from '@/utils/number'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -259,6 +259,7 @@ const useSalesStore = create(
                         setPayment(false)
                         onClose()
                         setGoPay(false)
+                        set({ loadingSale: false })
                         removeSale(sales, saleId)
                         setTargetCustomer(null)
                         if (resultDtemite?.LinkPDF) {
@@ -292,7 +293,8 @@ const useSalesStore = create(
                                 set({ loadingSale: false })
                             }
                         } else {
-                            notify('❌ ' + resultDtemite?.Mensaje ?? 'Error al generar la boleta o factura')
+                            notify('❌ ' + resultDtemite ? resultDtemite?.Mensaje : 'Error al generar la boleta o factura')
+                            set({ loadingSale: false })
                         }
                     })
                 } catch {
@@ -323,7 +325,7 @@ const useSalesStore = create(
                             } else {
                                 notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                             }
-
+                            set({ loadingSale: false })
                             onClose()
                             setGoPay(false)
                             setPageTarget(null)
