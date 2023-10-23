@@ -73,7 +73,7 @@ const useSalesStore = create(
                 }
             } else {
                 if (!searhProduct) {
-                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: product?.price * 1 }]
+                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: product?.price * parseFloat(units) }]
                 } else {
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: product?.price * (searhProduct?.quantity + units) }]
@@ -178,7 +178,7 @@ const useSalesStore = create(
                                 },
                                 NmbItem: item?.product?.name,
                                 QtyItem: item?.quantity,
-                                PrcItem: roundValueWithMath(item?.total / item?.quantity, 0, 0),
+                                PrcItem: roundValueWithMath(item?.product?.price, 0, 0),
                                 MontoItem: item?.total
                             }
                         })
