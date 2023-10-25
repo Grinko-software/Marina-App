@@ -64,19 +64,23 @@ const useSalesStore = create(
                     const offersOfProduct = Math.trunc(quantitySale / offersProduct.quantity)
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const total = ((product?.price * offersProduct?.quantity) - (offersProduct?.quantity * offersProduct?.unitPrice)) * offersOfProduct
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + units, offers: offersOfProduct, discount: offersOfProduct > 0 ? total : 0, total: product?.price * quantitySale }]
+                    const currentTotal = roundValueWithMath(product?.price * quantitySale, 0, 0)
+                    listSales = [...newList, { product, quantity: searhProduct?.quantity + units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: currentTotal }]
                 } else {
                     const quantitySale = units
                     const offersOfProduct = Math.trunc(quantitySale / offersProduct.quantity)
                     const total = ((product?.price * offersProduct?.quantity) - (offersProduct?.quantity * offersProduct?.unitPrice)) * offersOfProduct
-                    listSales = [...listSales, { product, quantity: units, offers: offersOfProduct, discount: offersOfProduct > 0 ? total : 0, total: product?.price * quantitySale }]
+                    const currentTotal = roundValueWithMath(product?.price * quantitySale, 0, 0)
+                    listSales = [...listSales, { product, quantity: units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: currentTotal }]
                 }
             } else {
                 if (!searhProduct) {
-                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: product?.price * parseFloat(units) }]
+                    const currentTotal = roundValueWithMath(product?.price * parseFloat(units), 0, 0)
+                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: currentTotal }]
                 } else {
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: product?.price * (searhProduct?.quantity + units) }]
+                    const currentTotal = roundValueWithMath(product?.price * (searhProduct?.quantity + units), 0, 0)
+                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: currentTotal }]
                 }
             }
 
