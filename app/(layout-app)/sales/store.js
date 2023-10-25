@@ -182,8 +182,8 @@ const useSalesStore = create(
                                 },
                                 NmbItem: item?.product?.name,
                                 QtyItem: item?.quantity,
-                                PrcItem: roundValueWithMath(item?.product?.price, 0, 0),
-                                MontoItem: item?.total
+                                PrcItem: item?.discount > 0 ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0) : roundValueWithMath(item?.product?.price, 0, 0),
+                                MontoItem: roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
                             }
                         })
                     }
@@ -307,7 +307,7 @@ const useSalesStore = create(
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 try {
                     fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                        setPageTarget(false)
+                        setPageTarget(null)
                         // setPaymentTarget(sales, saleId, null)
                         set({ loadingSale: false })
                         if (result?.code === 200) {
@@ -332,7 +332,6 @@ const useSalesStore = create(
                             set({ loadingSale: false })
                             onClose()
                             setGoPay(false)
-                            setPageTarget(null)
                         }
                     })
                 } catch {
