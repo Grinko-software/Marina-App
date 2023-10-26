@@ -16,3 +16,7 @@ export const roundValueWithMath = (value, decimal, errorValue = '-') => {
     const math = Math.round(result)
     return math
 }
+
+export const roundPrice = (value) => {
+    return Math.round(value / 10) * 10
+}
