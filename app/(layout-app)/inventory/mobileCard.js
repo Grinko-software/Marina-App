@@ -1,10 +1,9 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import CardUi from '@/components/ui/Card'
-import { useDisclosure, Input, Skeleton, ScrollShadow, Button } from '@nextui-org/react'
+import { useDisclosure, Input, ScrollShadow, Skeleton } from '@nextui-org/react'
 import useInventoryStore from './store'
 import CreateProduct from './components/NewProduct/createProduct'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 import useSalesStore from '../sales/store'
 import ProductDetail from './components/productDetail'
@@ -150,6 +149,17 @@ export default function Card () {
         <section className='w-11/12 items-center touch-none fixed' >
             <section className='flex flex-col gap-2'>
                 <div className='flex flex-row gap-1 justify-between'>
+                    {loadingCategories && loading
+                        ? <section className="w-full">
+                            <Skeleton className="w-full rounded-lg bg-slate-600"></Skeleton>
+                        </section>
+
+                        : <TabsCustom
+                            items={listCategories}
+                            selectedKey={selectedCategoryID}
+                            onSelectionChange={setSelectedCategoryID}
+                        />
+                    }
                     <Offers isMobile={true}/>
                     <CreateProduct isMobile={true}/>
                     <CreateCategory isMobile={true}/>

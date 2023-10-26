@@ -6,14 +6,23 @@ import toast, { Toaster } from 'react-hot-toast'
 import useStore from './store'
 import useInventoryStore from '../../store'
 import { BiSolidCategory } from 'react-icons/bi'
+import { isMobileDevice } from '@/utils/agent'
 
 export const notify = (text) => toast(text)
-export default function CreateCategory (isMobile) {
+export default function CreateCategory () {
     const { isOpen, onClose, onOpen } = useDisclosure()
+    const [isMobile, setIsMobile] = useState(true)
     const { error, name, setName, requestCreateCategory, clearStore, complete } = useStore(
         ({ error, name, setName, requestCreateCategory, clearStore, complete }) =>
             ({ error, name, setName, requestCreateCategory, clearStore, complete }))
     const { getCategories } = useInventoryStore(({ getCategories }) => ({ getCategories }))
+    useEffect(() => {
+        if (navigator) {
+            const view = isMobileDevice()
+            setIsMobile(view)
+        }
+    }, [])
+
     useEffect(() => {
         if (complete && !error) {
             clearStore()
@@ -44,7 +53,7 @@ export default function CreateCategory (isMobile) {
             <header className="flex justify-end">
                 <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
                     startContent={<BiSolidCategory size={25}/>}>
-                    {isMobile ? 'C. CTG.' : 'CREAR CATEGORÍAS'}
+                    {isMobile ? '' : 'CREAR CATEGORÍAS'}
                 </Button>
             </header>
             <Modal size={'2xl'}

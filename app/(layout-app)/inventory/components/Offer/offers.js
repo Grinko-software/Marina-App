@@ -15,6 +15,7 @@ import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { deleteOffer } from '@/services/offers'
 import toast, { Toaster } from 'react-hot-toast'
 import { BiSolidOffer } from 'react-icons/bi'
+import { isMobileDevice } from '@/utils/agent'
 
 const notify = (text) => toast(text)
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
@@ -43,7 +44,6 @@ const OffertCard = ({ item, deleteAction }) => {
     const totalPriceNormal = quantity * product?.price
     const dctoOffer = product?.price - unitPrice
     const pctgOffer = Math.round((dctoOffer / product?.price) * 100)
-
     const [loadingDelete, setLoadingDelete] = useState(false)
 
     const handleDeleteOffer = (id) => {
@@ -110,18 +110,24 @@ const OffertCard = ({ item, deleteAction }) => {
     </div>
 }
 
-export default function Offers (isMobile) {
+export default function Offers () {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [searchInput, setSearchInput] = useState('')
     const [filteredList, setFilteredList] = useState([])
     const [listOffersWithProducts, setListOffersWithProducts] = useState([])
     const [sectionCreateOffer, setSectionCreateOffer] = useState(false)
     const [messageSearch, setMessageSearch] = useState('')
-
+    const [isMobile, setIsMobile] = useState(true)
     const { data, setFormData, requestCreateOffer, loading, error, setError, complete, hasRequeredValues, clearStore } = useOfferFormStore()
     const { listInventory } = useInventoryStore()
     const { offers, getOffers, loadingOffers } = useOffersStore()
 
+    useEffect(() => {
+        if (navigator) {
+            const view = isMobileDevice()
+            setIsMobile(view)
+        }
+    }, [])
     useEffect(() => {
         if (isOpen) {
             useSalesStore.getState()?.disabledRedirectSales()

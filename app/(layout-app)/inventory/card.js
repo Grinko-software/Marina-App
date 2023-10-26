@@ -179,8 +179,8 @@ export default function Card () {
                 <div className="flex space-x-2">
                     {/* <ScannerDetection/> */}
                     <Offers/>
-                    <CreateProduct/>
-                    <CreateCategory/>
+                    <CreateProduct />
+                    <CreateCategory />
                 </div>
             </section>
             <section className="flex flex-1 p-[1rem] w-auto shadow-md hover:shadow-lg  rounded-tl-[0px]  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]">
