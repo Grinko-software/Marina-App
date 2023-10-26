@@ -8,7 +8,7 @@ import useInventoryStore from '../../store'
 import { BiSolidCategory } from 'react-icons/bi'
 
 export const notify = (text) => toast(text)
-export default function CreateCategory () {
+export default function CreateCategory (isMobile) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const { error, name, setName, requestCreateCategory, clearStore, complete } = useStore(
         ({ error, name, setName, requestCreateCategory, clearStore, complete }) =>
@@ -44,7 +44,7 @@ export default function CreateCategory () {
             <header className="flex justify-end">
                 <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
                     startContent={<BiSolidCategory size={25}/>}>
-                        CREAR CATEGORÍAS
+                    {isMobile ? 'C. CTG.' : 'CREAR CATEGORÍAS'}
                 </Button>
             </header>
             <Modal size={'2xl'}

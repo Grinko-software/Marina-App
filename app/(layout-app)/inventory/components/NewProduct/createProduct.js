@@ -67,7 +67,7 @@ export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, .
     )
 }
 
-export default function CreateProduct () {
+export default function CreateProduct (isMobile) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [scanProduct, setScanProduct] = useState(false)
 
@@ -147,9 +147,9 @@ export default function CreateProduct () {
                     }
                 }} />
             <header className="flex justify-end">
-                <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
+                <Button className={'bg-emerald-600 dark:bg-emerald-600 font-semibold'} color='primary' onClick={onOpen}
                     startContent={<BiSolidShoppingBags size={25} />}>
-                    CREAR PRODUCTO
+                    {isMobile ? 'C. PROD.' : 'CREAR PRODUCTO'}
                 </Button>
             </header>
             <Modal size={'2xl'}

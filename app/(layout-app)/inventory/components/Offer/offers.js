@@ -110,7 +110,7 @@ const OffertCard = ({ item, deleteAction }) => {
     </div>
 }
 
-export default function Offers () {
+export default function Offers (isMobile) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [searchInput, setSearchInput] = useState('')
     const [filteredList, setFilteredList] = useState([])
@@ -188,7 +188,7 @@ export default function Offers () {
             <header className="flex justify-end">
                 <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={onOpen}
                     startContent={<BiSolidOffer size={25}/>}>
-                    OFERTAS
+                    {isMobile ? '' : 'OFERTAS'}
                 </Button>
             </header>
             <Modal size={'3xl'}
