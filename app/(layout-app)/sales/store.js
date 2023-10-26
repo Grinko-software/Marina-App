@@ -5,7 +5,7 @@ import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
-import { roundValue, roundValueWithMath } from '@/utils/number'
+import { roundPrice, roundValue, roundValueWithMath } from '@/utils/number'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -65,22 +65,22 @@ const useSalesStore = create(
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const total = ((product?.price * offersProduct?.quantity) - (offersProduct?.quantity * offersProduct?.unitPrice)) * offersOfProduct
                     const currentTotal = roundValueWithMath(product?.price * quantitySale, 0, 0)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: currentTotal }]
+                    listSales = [...newList, { product, quantity: searhProduct?.quantity + units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: roundPrice(currentTotal) || currentTotal }]
                 } else {
                     const quantitySale = units
                     const offersOfProduct = Math.trunc(quantitySale / offersProduct.quantity)
                     const total = ((product?.price * offersProduct?.quantity) - (offersProduct?.quantity * offersProduct?.unitPrice)) * offersOfProduct
                     const currentTotal = roundValueWithMath(product?.price * quantitySale, 0, 0)
-                    listSales = [...listSales, { product, quantity: units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: currentTotal }]
+                    listSales = [...listSales, { product, quantity: units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: roundPrice(currentTotal) || currentTotal }]
                 }
             } else {
                 if (!searhProduct) {
                     const currentTotal = roundValueWithMath(product?.price * parseFloat(units), 0, 0)
-                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: currentTotal }]
+                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
                 } else {
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const currentTotal = roundValueWithMath(product?.price * (searhProduct?.quantity + units), 0, 0)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: currentTotal }]
+                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
                 }
             }
 
