@@ -259,13 +259,6 @@ const useSalesStore = create(
                 try {
                     fetchPost(GET_DOCUMENT_DTEMITE, modelBody, true).then(resultDtemite => {
                         // Get result from DTEMITE
-                        setPageTarget(false)
-                        setPayment(false)
-                        onClose()
-                        setGoPay(false)
-                        set({ loadingSale: false })
-                        removeSale(sales, saleId)
-                        setTargetCustomer(null)
                         if (resultDtemite?.LinkPDF) {
                             try {
                                 fetchPost(SALE_TICKET_CREATE, body).then(result => {
@@ -280,6 +273,12 @@ const useSalesStore = create(
                                         onClose()
                                         setGoPay(false)
                                         removeSale(sales, saleId)
+                                        setPageTarget(false)
+                                        setPayment(false)
+                                        onClose()
+                                        setGoPay(false)
+                                        set({ loadingSale: false })
+                                        setTargetCustomer(null)
                                     // clearList()
                                     } else {
                                         if (pageTarget) {
@@ -287,10 +286,8 @@ const useSalesStore = create(
                                         } else {
                                             notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                                         }
-
+                                        set({ loadingSale: false })
                                         onClose()
-                                        setGoPay(false)
-                                        setPageTarget(null)
                                     }
                                 })
                             } catch {
@@ -299,10 +296,12 @@ const useSalesStore = create(
                         } else {
                             notify('❌ ' + resultDtemite ? resultDtemite?.Mensaje : 'Error al generar la boleta o factura')
                             set({ loadingSale: false })
+                            onClose()
                         }
                     })
                 } catch {
                     set({ loadingSale: false })
+                    onClose()
                 }
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 try {
