@@ -311,7 +311,7 @@ const useSalesStore = create(
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 try {
                     fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                        setPageTarget(false)
+                        setPageTarget(null)
                         // setPaymentTarget(sales, saleId, null)
                         set({ loadingSale: false })
                         if (result?.code === 200) {
@@ -336,7 +336,6 @@ const useSalesStore = create(
                             set({ loadingSale: false })
                             onClose()
                             setGoPay(false)
-                            setPageTarget(null)
                         }
                     })
                 } catch {

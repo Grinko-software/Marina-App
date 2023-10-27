@@ -24,7 +24,7 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
             setSearchInput(null)
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
             createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer)
-            // setPaymentTarget(listSalesActives, saleIdActive, null)
+            setPaymentTarget(listSalesActives, saleIdActive, null)
         }
     }, [paymentTarget])
     useEffect(() => {

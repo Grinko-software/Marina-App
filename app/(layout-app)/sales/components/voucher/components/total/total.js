@@ -2,7 +2,7 @@
 import { Text, View } from '@react-pdf/renderer'
 // Create StylePdf
 import { StylePdf } from './styleTotal'
-import { formatter, roundValue } from '@/utils/number'
+import { formatter, roundValue, roundValueWithMath } from '@/utils/number'
 
 const WrapperComponent = ({ totalPay, totalDiscount }) =>
     (
@@ -12,7 +12,7 @@ const WrapperComponent = ({ totalPay, totalDiscount }) =>
                     <Text style={StylePdf.textRow}>{'Monto IVA (19%)'}</Text>
                 </View>
                 <View style={StylePdf.tableColumn2}>
-                    <Text style={StylePdf.textRow}>{totalPay ? (parseInt(totalPay) - parseInt(roundValue(totalPay / 1.19, 0, 0))) : '-'}</Text>
+                    <Text style={StylePdf.textRow}>{totalPay ? formatter.format(totalPay - roundValueWithMath(totalPay / 1.19, 0, 0)) : '-'}</Text>
                 </View>
             </View>
             {totalDiscount > 0
