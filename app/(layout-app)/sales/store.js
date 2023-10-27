@@ -174,6 +174,11 @@ const useSalesStore = create(
                             }
                         },
                         Detalle: saleProductsList?.map((item, index) => {
+                            const priceItem = item?.discount > 0
+                                ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
+                                : roundValueWithMath(item?.product?.price, 0, 0)
+                            const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
+                            const quantityItem = totalItem / priceItem
                             return {
                                 NroLinDet: index,
                                 CdgItem: {
@@ -181,9 +186,9 @@ const useSalesStore = create(
                                     VlrCodigo: item?.product?.code
                                 },
                                 NmbItem: item?.product?.name,
-                                QtyItem: item?.quantity,
-                                PrcItem: roundValueWithMath(item?.product?.price, 0, 0),
-                                MontoItem: item?.total
+                                QtyItem: quantityItem,
+                                PrcItem: priceItem,
+                                MontoItem: totalItem
                             }
                         })
                     }
