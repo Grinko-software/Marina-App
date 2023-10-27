@@ -178,7 +178,7 @@ const useSalesStore = create(
                                 ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
                                 : roundValueWithMath(item?.product?.price, 0, 0)
                             const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
-                            const quantityItem = totalItem / priceItem
+                            const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
                             return {
                                 NroLinDet: index,
                                 CdgItem: {
