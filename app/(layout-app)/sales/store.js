@@ -5,7 +5,7 @@ import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
-import { roundValue, roundValueWithMath } from '@/utils/number'
+import { roundPrice, roundValue, roundValueWithMath } from '@/utils/number'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -65,22 +65,22 @@ const useSalesStore = create(
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const total = ((product?.price * offersProduct?.quantity) - (offersProduct?.quantity * offersProduct?.unitPrice)) * offersOfProduct
                     const currentTotal = roundValueWithMath(product?.price * quantitySale, 0, 0)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: currentTotal }]
+                    listSales = [...newList, { product, quantity: searhProduct?.quantity + units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: roundPrice(currentTotal) || currentTotal }]
                 } else {
                     const quantitySale = units
                     const offersOfProduct = Math.trunc(quantitySale / offersProduct.quantity)
                     const total = ((product?.price * offersProduct?.quantity) - (offersProduct?.quantity * offersProduct?.unitPrice)) * offersOfProduct
                     const currentTotal = roundValueWithMath(product?.price * quantitySale, 0, 0)
-                    listSales = [...listSales, { product, quantity: units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: currentTotal }]
+                    listSales = [...listSales, { product, quantity: units, offers: offersOfProduct, discount: offersOfProduct > 0 ? (roundValueWithMath(total, 0, null) || total) : 0, total: roundPrice(currentTotal) || currentTotal }]
                 }
             } else {
                 if (!searhProduct) {
                     const currentTotal = roundValueWithMath(product?.price * parseFloat(units), 0, 0)
-                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: currentTotal }]
+                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
                 } else {
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const currentTotal = roundValueWithMath(product?.price * (searhProduct?.quantity + units), 0, 0)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: currentTotal }]
+                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
                 }
             }
 
@@ -174,6 +174,11 @@ const useSalesStore = create(
                             }
                         },
                         Detalle: saleProductsList?.map((item, index) => {
+                            const priceItem = item?.discount > 0
+                                ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
+                                : roundValueWithMath(item?.product?.price, 0, 0)
+                            const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
+                            const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
                             return {
                                 NroLinDet: index,
                                 CdgItem: {
@@ -181,9 +186,9 @@ const useSalesStore = create(
                                     VlrCodigo: item?.product?.code
                                 },
                                 NmbItem: item?.product?.name,
-                                QtyItem: item?.quantity,
-                                PrcItem: roundValueWithMath(item?.product?.price, 0, 0),
-                                MontoItem: item?.total
+                                QtyItem: quantityItem,
+                                PrcItem: priceItem,
+                                MontoItem: totalItem
                             }
                         })
                     }
@@ -259,13 +264,6 @@ const useSalesStore = create(
                 try {
                     fetchPost(GET_DOCUMENT_DTEMITE, modelBody, true).then(resultDtemite => {
                         // Get result from DTEMITE
-                        setPageTarget(false)
-                        setPayment(false)
-                        onClose()
-                        setGoPay(false)
-                        set({ loadingSale: false })
-                        removeSale(sales, saleId)
-                        setTargetCustomer(null)
                         if (resultDtemite?.LinkPDF) {
                             try {
                                 fetchPost(SALE_TICKET_CREATE, body).then(result => {
@@ -280,6 +278,12 @@ const useSalesStore = create(
                                         onClose()
                                         setGoPay(false)
                                         removeSale(sales, saleId)
+                                        setPageTarget(false)
+                                        setPayment(false)
+                                        onClose()
+                                        setGoPay(false)
+                                        set({ loadingSale: false })
+                                        setTargetCustomer(null)
                                     // clearList()
                                     } else {
                                         if (pageTarget) {
@@ -287,10 +291,8 @@ const useSalesStore = create(
                                         } else {
                                             notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                                         }
-
+                                        set({ loadingSale: false })
                                         onClose()
-                                        setGoPay(false)
-                                        setPageTarget(null)
                                     }
                                 })
                             } catch {
@@ -299,15 +301,17 @@ const useSalesStore = create(
                         } else {
                             notify('❌ ' + resultDtemite ? resultDtemite?.Mensaje : 'Error al generar la boleta o factura')
                             set({ loadingSale: false })
+                            onClose()
                         }
                     })
                 } catch {
                     set({ loadingSale: false })
+                    onClose()
                 }
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 try {
                     fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                        setPageTarget(false)
+                        setPageTarget(null)
                         // setPaymentTarget(sales, saleId, null)
                         set({ loadingSale: false })
                         if (result?.code === 200) {
@@ -332,7 +336,6 @@ const useSalesStore = create(
                             set({ loadingSale: false })
                             onClose()
                             setGoPay(false)
-                            setPageTarget(null)
                         }
                     })
                 } catch {

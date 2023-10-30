@@ -132,7 +132,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
-                <ModalContent>
+                <ModalContent className=' overflow-y-scroll'>
                     <section>
                         <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Detalles del producto</ModalHeader>
                         <ModalBody>
