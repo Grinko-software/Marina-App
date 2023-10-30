@@ -34,9 +34,9 @@ const useInvoiceStore = create(
             const dataBody = {
                 business_name: customer?.businessName ?? '-',
                 business_line: customer?.businessLine ?? '-',
-                rut: customer?.rut ? toString(customer?.rut) : '-',
+                rut: customer?.rut ?? '-',
                 code: customer?.rut ?? '-',
-                phone: customer?.phone ? toString(customer?.phone) : '-',
+                phone: customer?.phone ?? '-',
                 region: customer?.region ?? 'Elqui',
                 commune: customer?.commune ?? 'Coquimbo',
                 province: customer?.commune ?? 'Coquimbo',

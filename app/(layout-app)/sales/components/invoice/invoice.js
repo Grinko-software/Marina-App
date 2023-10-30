@@ -36,7 +36,8 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
         setOpenModal(false)
     }
     const handleInputChange = ({ field, value }) => {
-        const newFormValues = { ...defaultForm, [field]: !isNaN(value) ? parseInt(value) : value }
+        const newFormValues = { ...defaultForm, [field]: value }
+        // const newFormValues = { ...defaultForm, [field]: !isNaN(value) ? parseInt(value) : value }
         setFormData(newFormValues)
     }
     const CardRow = ({ item, setTargetCustomer }) => {
@@ -87,7 +88,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                 return item?.meta?.toLowerCase().includes(searchInput?.toLowerCase())
             })
             if (!updatedList?.length) {
-                setMessageSearch('Ups.. no lo hemos podido encontrar, intenta buscar otro producto.')
+                setMessageSearch('Ups.. no lo hemos podido encontrar, intenta buscar otro cliente')
             } else {
                 setMessageSearch(null)
             }
