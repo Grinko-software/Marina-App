@@ -13,10 +13,8 @@ import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
 import SearchBar from '@/components/ui/SearchBar'
-// import toast from 'react-hot-toast'
 
 const LIMIT_PRODUCTS_VIEW = 50
-// const notify = (text) => toast.success(text)
 
 export default function Card () {
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -47,6 +45,7 @@ export default function Card () {
     }
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
+
     useEffect(() => {
         /* Add in the future refreshToken in this useEffect */
         getCategories()
@@ -177,7 +176,7 @@ export default function Card () {
                                         autoFocus
                                         isClearable
                                         radius="lg"
-                                        onChange={onChangeValue}
+                                        onChange={onChange}
                                         onFocusChange={(value) =>
                                             value
                                                 ? useSalesStore.getState()?.disabledRedirectSales()
