@@ -54,7 +54,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     }, [listCategories, listStockTypes])
 
     useEffect(() => {
-        if (image !== targeProduct.image) {
+        if (image !== targeProduct?.image) {
             const newProductValues = { ...newProductData, image }
             console.log(newProductValues)
             setNewProductData(newProductValues)
