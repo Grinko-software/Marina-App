@@ -54,10 +54,18 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     }, [listCategories, listStockTypes])
 
     useEffect(() => {
-        const newProductValues = { ...newProductData, image }
-        console.log(newProductValues)
-        setNewProductData(newProductValues)
-    }, [image])
+        if (image !== targeProduct?.image) {
+            const newProductValues = { ...newProductData, image }
+            console.log(newProductValues)
+            setNewProductData(newProductValues)
+        }
+    }, [image, targeProduct])
+
+    useEffect(() => {
+        if (!targeProduct) {
+            setNewProductData(defaultState)
+        }
+    }, [targeProduct])
 
     const handleInputChange = ({ field, value, isSalePrice, isCode }) => {
         const newProductValues = { ...newProductData, [field]: !isNaN(value) && !isCode ? parseInt(value) : value }
@@ -132,7 +140,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
-                <ModalContent>
+                <ModalContent className=' overflow-y-scroll'>
                     <section>
                         <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Detalles del producto</ModalHeader>
                         <ModalBody>
