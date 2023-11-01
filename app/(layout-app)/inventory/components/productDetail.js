@@ -54,10 +54,18 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     }, [listCategories, listStockTypes])
 
     useEffect(() => {
-        const newProductValues = { ...newProductData, image }
-        console.log(newProductValues)
-        setNewProductData(newProductValues)
-    }, [image])
+        if (image !== targeProduct.image) {
+            const newProductValues = { ...newProductData, image }
+            console.log(newProductValues)
+            setNewProductData(newProductValues)
+        }
+    }, [image, targeProduct])
+
+    useEffect(() => {
+        if (!targeProduct) {
+            setNewProductData(defaultState)
+        }
+    }, [targeProduct])
 
     const handleInputChange = ({ field, value, isSalePrice, isCode }) => {
         const newProductValues = { ...newProductData, [field]: !isNaN(value) && !isCode ? parseInt(value) : value }
