@@ -6,6 +6,7 @@ import ReactApexChart from 'apexcharts'
 import Chart from 'react-apexcharts'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
+import PieChart from '@/components/ui/pieChart'
 
 const ReportView = () => {
     const data = {
@@ -43,20 +44,23 @@ const ReportView = () => {
         <section className='h-full w-full flex flex-col gap-4' >
             <div className='flex flex-row gap-4 justify-between'>
                 <div className='flex flex-col gap-4'>
-                    <InfoCard
-                        title = {'Ingresos diarios'}
-                        unit ={'$'}
-                        quantity = {'80'}
-                        subUnit = {'mil.'}
-                        color={'bg-green-400'}
-                    />
-                    <InfoCard
-                        title = {'Ventas Realizadas'}
-                        unit ={''}
-                        quantity = {'120'}
-                        subUnit = {''}
-                        color={'bg-yellow-400'}
-                    />
+                    <div className='flex flex-row gap-4'>
+                        <InfoCard
+                            title = {'Ingresos diarios'}
+                            unit ={'$'}
+                            quantity = {'80'}
+                            subUnit = {'mil.'}
+                            color={'bg-green-400'}
+                        />
+                        <InfoCard
+                            title = {'Ventas Realizadas'}
+                            unit ={''}
+                            quantity = {'120'}
+                            subUnit = {''}
+                            color={'bg-yellow-400'}
+                        />
+                    </div>
+                    <PieChart></PieChart>
                 </div>
                 <Card className='w-9/12 h-full bg-white'>
                     <CardBody>

@@ -38,24 +38,6 @@ export default function TableSales () {
             hora: '2023-09-19 23:00:00',
             total: '$40.000',
             tipo: 'Credito'
-        },
-        {
-            key: '7',
-            hora: '2023-09-19 23:00:00',
-            total: '$40.000',
-            tipo: 'Credito'
-        },
-        {
-            key: '8',
-            hora: '2023-09-19 23:00:00',
-            total: '$40.000',
-            tipo: 'Credito'
-        },
-        {
-            key: '9',
-            hora: '2023-09-19 23:00:00',
-            total: '$40.000',
-            tipo: 'Credito'
         }
     ]
     const columns = [
