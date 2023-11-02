@@ -12,7 +12,6 @@ import Offers from './components/Offer/offers'
 import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
-import SearchBar from '@/components/ui/SearchBar'
 
 const LIMIT_PRODUCTS_VIEW = 50
 
@@ -33,16 +32,11 @@ export default function Card () {
         setSearchInput(event.target.value)
         console.log(event.target.value)
     }
-    const onClear = () => {
-        setSearchInput('')
-    }
     const listEmpty = new Array(20).fill(null)
     const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
         ({ listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }) => (
             { listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }))
-    const onChangeValue = (event) => {
-        setSearchInput(event.target.value)
-    }
+
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
@@ -164,39 +158,44 @@ export default function Card () {
                     <CreateCategory isMobile={true}/>
                 </div>
                 <div >
-                    <SearchBar onChange={onChangeValue} onClear={onClear} defaultValue={searchInput}/>
-                    <section className="flex p-2 shadow-md hover:shadow-lg bg-secondary-50 dark:bg-secondary-450 rounded-b-md ">
+                    <section className="flex flex-col p-2 shadow-md hover:shadow-lg bg-secondary-50 dark:bg-secondary-450 rounded-md ">
+                        <Input
+                            label="Busqueda"
+                            autoFocus
+                            isClearable
+                            radius="lg"
+                            onChange={onChange}
+                            onFocusChange={(value) =>
+                                value
+                                    ? useSalesStore.getState()?.disabledRedirectSales()
+                                    : useSalesStore.getState()?.enabledRedirectSales()
+                            }
+                            classNames={{
+                                label: 'text-black/50 dark:text-white/90',
+                                input: [
+                                    'bg-transparent',
+                                    'text-black/90 dark:text-white/90',
+                                    'placeholder:text-default-700/50 dark:placeholder:text-white/60'
+                                ],
+                                innerWrapper: 'bg-transparent'
+                            }}
+                            className='my-4 w-full'
+                            placeholder="Toca para buscar un producto..."
+                            startContent={
+                                <SearchIcon className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+                            }
+                            onClear={() => setSearchInput('')}
+                        />
                         { loadingCategories && loading
-                            ? <ScrollShadow className="w-full pb-4">
-                                <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1">{listEmpty?.map((item, key) => (<LoadingCard key={key}/>))}</div> </ScrollShadow>
-                            : sectionSearch
+                            ? <div>
+                                <ScrollShadow className="w-full pb-4">
+                                    <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1">
+                                        {listEmpty?.map((item, key) => (<LoadingCard key={key}/>))}
+                                    </div>
+                                </ScrollShadow>
+                            </div>
+                            : searchInput
                                 ? <section className='h-full w-full'>
-                                    <Input
-                                        label="Busqueda"
-                                        autoFocus
-                                        isClearable
-                                        radius="lg"
-                                        onChange={onChange}
-                                        onFocusChange={(value) =>
-                                            value
-                                                ? useSalesStore.getState()?.disabledRedirectSales()
-                                                : useSalesStore.getState()?.enabledRedirectSales()
-                                        }
-                                        classNames={{
-                                            label: 'text-black/50 dark:text-white/90',
-                                            input: [
-                                                'bg-transparent',
-                                                'text-black/90 dark:text-white/90',
-                                                'placeholder:text-default-700/50 dark:placeholder:text-white/60'
-                                            ],
-                                            innerWrapper: 'bg-transparent'
-                                        }}
-                                        className='my-4 w-full'
-                                        placeholder="Toca para buscar un producto..."
-                                        startContent={
-                                            <SearchIcon className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-                                        }
-                                    />
                                     <section style={{ scrollbarGutter: 'stable' }} className='max-h-[60vh] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start'>
                                         {filteredList?.map((item, index) => (
                                             <div key={'productSearch' + index}
