@@ -19,6 +19,7 @@
     "@nextui-org/react": "^2.0.19",
     "@react-pdf/renderer": "^3.1.12",
     "@serialport/parser-readline": "^12.0.0",
+    "antd": "^5.11.0",
     "autoprefixer": "10.4.15",
     "barcode-react-scanner": "^1.2.0",
     "body-parser": "^1.20.2",

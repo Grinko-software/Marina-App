@@ -4,6 +4,7 @@ import Auth from '@/app/auth'
 import TableProducs from './card'
 import { useEffect } from 'react'
 import useSalesStore from '../sales/store'
+import Filter from '@/components/filter/filter'
 
 export default function Inventory () {
     useEffect(() => {
@@ -16,6 +17,7 @@ export default function Inventory () {
         <section className='h-full'>
             <Auth/>
             <section className='h-full'>
+                <Filter></Filter>
                 <TableProducs />
             </section>
         </section>
