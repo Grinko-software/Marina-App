@@ -81,7 +81,11 @@ export const fetchGetOffers = async () => {
                 })
             }).then(response => {
             try {
-                return response.json()
+                if (response.status === 200) {
+                    return response.json()
+                } else {
+                    return null
+                }
             } catch {
                 return null
             }
