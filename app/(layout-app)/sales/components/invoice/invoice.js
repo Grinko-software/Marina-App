@@ -298,7 +298,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                 <ModalFooter>
                                     <Button className =" bg-green-500 text-primary-50" onClick={() => {
                                         if (defaultForm?.rut && defaultForm?.businessLine && defaultForm?.businessName) {
-                                            create(defaultForm, notify, setTargetCustomer)
+                                            create(defaultForm, notify, setTargetCustomer, getCustomers)
                                         }
                                         onClose()
                                         setCreateCustomer(false)
