@@ -1,7 +1,6 @@
 'use client'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
-import { MenuHandler, MenuList, Menu } from '@material-tailwind/react'
-import { /* Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, */ Button, Card, Dropdown, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
+import { /* Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, */ Button, Card } from '@nextui-org/react'
 import React, { useEffect, useState } from 'react'
 
 export const Tabs = ({
@@ -75,7 +74,7 @@ export const Tabs = ({
                                     }).map(({ label, id }) => {
                                         const selected = selectedKey?.toString() === id.toString()
                                         return <div href="#" key={label} className='z-10'>
-                                            <Button className={`w-full sm:text-xl text-[10px] ${selected ? 'text-primary-50 bg-green-400' : ''}`}
+                                            <Button className={`w-full sm:text-base text-[10px] ${selected ? 'text-primary-50 bg-green-400' : ''}`}
                                                 onClick={() => {
                                                     setOpenMenu(false)
                                                     setTimeout(() => {
