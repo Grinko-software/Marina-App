@@ -18,11 +18,11 @@ export default function Home () {
         }
     }, [])
     return (
-        <section className="bg-primary-300 dark:bg-secondary-500 mx-10" >
+        <section className="bg-primary-300 dark:bg-secondary-500 sm:mx-10" >
             <Auth/>
             <div>
                 <main>
-                    <div className="sm:mt-36 sm:mr-0 mr-5 sm:ml-0 ml-5 mt-5">
+                    <div className="sm:mt-36 sm:mr-0 sm:ml-0 mt-4">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -31,7 +31,7 @@ export default function Home () {
                                 delay: 0.2,
                                 ease: [0, 0.71, 0.2, 1.01]
                             }}
-                            className="gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] mx-5 "
+                            className="gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
                         >
                             <MainTittleCard
                                 disabled={salesDisabled}
@@ -61,7 +61,7 @@ export default function Home () {
                                 delay: 0.2,
                                 ease: [0, 0.71, 0.2, 1.01]
                             }}
-                            className="flex sm:flex-col-reverse sm:m-0 m-5  items-end px-5"
+                            className="flex sm:flex-col-reverse sm:m-0 m-4  items-center sm:items-end sm:x-5"
                         >
                             <UserAvatar />
                         </motion.div>

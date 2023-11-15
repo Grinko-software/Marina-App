@@ -2,15 +2,28 @@
 import ThemeButton from '@/components/ui/ThemeButton'
 import { HomeButton } from '@/components/ui/HomeButton'
 import ScaleStatus from '@/components/ui/ScaleStatus'
+import React, { useState, useEffect } from 'react'
 import hubScale from './sales/components/store/connectionScale'
 import { usePathname } from 'next/navigation'
+import { isMobileDevice } from '@/utils/agent'
+import MobileNavBar from '@/components/ui/mobileNavBar'
 
 export function Header () {
     const { isConnected } = hubScale()
+    const [isMobile, setIsMobile] = useState(true)
+    useEffect(() => {
+        console.log('Inventory')
+        if (navigator) {
+            const view = isMobileDevice()
+            setIsMobile(view)
+        }
+    }, [])
     return (
         <section className={'flex flex-row-reverse py-2 mx-[1rem] xl:mx-[6rem] xlg:mx-[6rem] gap-x-unit-1 animation-fade-in'}>
+
             <HomeButton/>
             <ThemeButton/>
+            {isMobile ? <MobileNavBar></MobileNavBar> : <></>}
             {usePathname() === '/sales' ? <ScaleStatus scaleStatus = {isConnected}/> : <></>}
         </section>
     )

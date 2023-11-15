@@ -142,7 +142,8 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
             >
                 <ModalContent className=' overflow-y-scroll'>
                     <section>
-                        <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Detalles del producto</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Detalles del producto
+                        </ModalHeader>
                         <ModalBody>
                             <section>
                                 <SectionProduct title={null}>

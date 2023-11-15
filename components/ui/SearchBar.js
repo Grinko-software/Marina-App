@@ -16,7 +16,6 @@ export default function SearchBar (props) {
                 onFocusChange={(value) => {
                     if (value) {
                         onClear()
-                        // useSalesStore.getState()?.disabledScanner()
                     } else {
                         useSalesStore.getState()?.enabledScanner()
                     }
