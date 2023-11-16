@@ -4,7 +4,7 @@ import DeleteButton from './DeleteButton'
 import { formatter } from '@/utils/number'
 export default function SaleListItem (props) {
     const { product: productDetail } = props
-    const { product, quantity, discount } = productDetail
+    const { product, quantity, discount, total } = productDetail
     const { id, name, code, price } = product
     return (
         <li className="py-3 sm:py-2 animation-fade-in">
@@ -21,7 +21,7 @@ export default function SaleListItem (props) {
                     <div className='flex flex-row gap-4 items-center'>
                         <div className='flex flex-col items-end '>
                             <p className="text-xl font-bold text-gray-900 truncate dark:text-white">
-                                {formatter.format(price * quantity)}
+                                {formatter.format(total)}
                             </p>
                             <div className="flex flex-col items items-end min-w-0  text-sm text-gray-500 truncate dark:text-gray-400">
                                 <div className='flex items flex-row items-end  gap-3'>

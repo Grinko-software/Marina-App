@@ -2,24 +2,30 @@
 'use client'
 import Auth from '@/app/auth'
 import TableProducs from './card'
-import { useEffect } from 'react'
+import MobileTableProducs from './mobileCard'
+import { useEffect, useState } from 'react'
 import useSalesStore from '../sales/store'
-import Filter from '@/components/filter/filter'
+import { isMobileDevice } from '@/utils/agent'
 
 export default function Inventory () {
+    const [isMobile, setIsMobile] = useState(true)
     useEffect(() => {
         console.log('Inventory')
+        if (navigator) {
+            const view = isMobileDevice()
+            setIsMobile(view)
+        }
         useSalesStore.getState()?.disabledScanner()
         useSalesStore.getState()?.enabledRedirectSales()
     }, [])
 
     return (
-        <section className='h-full'>
+        <section >
             <Auth/>
-            <section className='h-full'>
-                <Filter></Filter>
-                <TableProducs />
-            </section>
+            {!isMobile
+                ? <TableProducs />
+                : <MobileTableProducs/>
+            }
         </section>
     )
 }

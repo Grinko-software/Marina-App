@@ -21,16 +21,17 @@ const useInvoiceStore = create(
             address: null
         },
         targetCustomer: null,
-        loading: false,
+        loadingCustomer: false,
         error: null,
         complete: false,
         setTargetCustomer: (value) => set({ targetCustomer: value }),
         setFormData: (newData) => set({ defaultForm: { ...newData } }),
-        setLoading: (value) => set({ loading: value }),
+        setLoadingCustomer: (value) => set({ loadingCustomer: value }),
         setError: (value) => set({ error: value }),
         customers: [],
         setCustomers: (customers) => set({ customers }),
-        create: (customer, notify, setTargetCustomer) => {
+        create: (customer, notify, setTargetCustomer, getCustomers) => {
+            set({ loadingCustomer: true })
             const dataBody = {
                 business_name: customer?.businessName ?? '-',
                 business_line: customer?.businessLine ?? '-',
@@ -50,21 +51,22 @@ const useInvoiceStore = create(
                     if (result?.data === 'registry created successfully') {
                         notify('✅ Cliente creado exitosamente')
                         setTargetCustomer(dataBody)
+                        getCustomers()
                     } else if (result?.error || result?.data === null) {
                         notify('❌ El cliente no fue creado con éxito, intenta otra vez!')
                     }
-                    set({ loadingSale: false })
+                    set({ loadingCustomer: false })
                 })
             } catch {
-                set({ loadingSale: false })
+                set({ loadingCustomer: false })
             }
         },
         getCustomers: () => {
+            set({ loadingCustomer: true })
             try {
                 fetchGet({ url: CUSTOMER_API_URL }).then(result => {
                     // Get result from DTEMITE
                     if (result?.data) {
-                        console.log(result)
                         set({
                             customers: result?.data?.map((e) => {
                                 return {
@@ -73,10 +75,10 @@ const useInvoiceStore = create(
                             })
                         })
                     }
-                    set({ loadingSale: false })
+                    set({ loadingCustomer: false })
                 })
             } catch {
-                set({ loadingSale: false })
+                set({ loadingCustomer: false })
             }
         }
 
