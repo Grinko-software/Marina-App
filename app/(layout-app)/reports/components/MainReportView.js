@@ -78,7 +78,7 @@ const ReportView = () => {
                     </CardBody>
                 </Card>
             </div>
-            <TableSales className='h-full '></TableSales>
+            <TableSales />
         </section>
     )
 }

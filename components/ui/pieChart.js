@@ -15,7 +15,7 @@ const PieChart = () => {
             },
             labels: ['Abarrotes', 'Bebestibles', 'Frutas', 'Verduras', 'Otros'],
             responsive: [{
-                breakpoint: 480,
+                breakpoint: 180,
                 options: {
                     chart: {
                         width: 200
