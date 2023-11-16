@@ -55,7 +55,7 @@ export default function TableSales () {
         }
     ]
     return (
-        <Table aria-label="Example table with dynamic content">
+        <Table aria-label="Example table with dynamic content" className='transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100  bg-primary-50/80 dark:bg-secondary-400 hover:bg-primary-50 transform hover:scale-105 text-black dark:text-white rounded-xl'>
             <TableHeader columns={columns}>
                 {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
             </TableHeader>
