@@ -47,7 +47,7 @@ export default function Filter () {
 
     return <section>
         <ConfigProvider locale={locale}>
-            <Card>
+            <Card className='w-full overflow-hidden'>
                 <CardBody className='flex flex-row gap-5'>
                     <Accordion
 

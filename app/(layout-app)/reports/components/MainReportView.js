@@ -7,6 +7,18 @@ import Chart from 'react-apexcharts'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
 import PieChart from '@/components/ui/pieChart'
+import Filter from '@/components/filter/filter'
+
+const WidgetReport = ({ children, className, title }) => {
+    return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
+        <CardHeader >
+            <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
+        </CardHeader>
+        <CardBody>
+            {children}
+        </CardBody>
+    </Card>
+}
 
 const ReportView = () => {
     const data = {
@@ -41,32 +53,38 @@ const ReportView = () => {
     }
 
     return (
-        <section className='h-full w-full flex flex-col gap-4 my-5' >
-            <div className='flex flex-row gap-4 justify-between'>
-                <div className='flex flex-col gap-4'>
-                    <div className='flex flex-row gap-4'>
-                        <InfoCard
-                            title = {'Ingresos diarios'}
-                            unit ={'$'}
-                            quantity = {'80'}
-                            subUnit = {'mil.'}
-                            color={'green-400'}
-                        />
-                        <InfoCard
-                            title = {'Ventas Realizadas'}
-                            unit ={''}
-                            quantity = {'120'}
-                            subUnit = {''}
-                            color={'yellow-400'}
-                        />
+        <section className='h-auto max-h-full flex-1 flex flex-col' >
+            <div className='flex-1 mb-1'>
+                <Filter/>
+            </div>
+            <section className='max-h-auto overflow-auto overflow-x-hidden flex-1 bg-slate-40010 space-y-5 pt-4'>
+                <div className='flex flex-1 flex-row justify-between gap-5'>
+                    <div className='flex flex-col content-between gap-5 w-1/3'>
+                        <div className='flex-1 flex flex-row items-center gap-5'>
+                            <div className='flex-1 h-full w-full'>
+                                <InfoCard
+                                    title={'Ingresos promedios (diarios)'}
+                                    unit={'$'}
+                                    quantity={'80'}
+                                    subUnit={'mil.'}
+                                    color={'green-400'}
+                                />
+                            </div>
+                            <div className='flex-1 h-full w-full'>
+                                <InfoCard
+                                    title={'Ventas totales realizadas'}
+                                    unit={''}
+                                    quantity={'120'}
+                                    subUnit={''}
+                                    color={'yellow-400'}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <PieChart></PieChart>
+                        </div>
                     </div>
-                    <PieChart></PieChart>
-                </div>
-                <Card className='w-9/12 h-full transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-105 text-black'>
-                    <CardHeader >
-                        <h4 className="text-primary-500 dark:text-white font-semibold text-2xl">Ventas por dia</h4>
-                    </CardHeader>
-                    <CardBody>
+                    <WidgetReport title={'Ventas por periodo'}>
                         <div id="chart">
                             <Chart
                                 options={data?.options}
@@ -75,10 +93,13 @@ const ReportView = () => {
                                 height={350}
                             />
                         </div>
-                    </CardBody>
-                </Card>
-            </div>
-            <TableSales />
+
+                    </WidgetReport>
+                </div>
+
+                <TableSales />
+            </section>
+
         </section>
     )
 }

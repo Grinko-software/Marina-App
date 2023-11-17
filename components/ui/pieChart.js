@@ -29,7 +29,7 @@ const PieChart = () => {
     }
 
     return (
-        <section className='h-full w-full flex flex-col gap-4 ' >
+        <section className='h-full w-full flex' >
             <Card className='w-full bg-white transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-105 text-black dark:text-white'>
                 <CardHeader>
                     <h4 className='font-extrabold text-primary-500 dark:text-white'>Ventas por categoria</h4>
