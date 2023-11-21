@@ -17,9 +17,6 @@ const PieChart = () => {
             responsive: [{
                 breakpoint: 180,
                 options: {
-                    chart: {
-                        width: 200
-                    },
                     legend: {
                         position: 'bottom'
                     }
@@ -29,8 +26,8 @@ const PieChart = () => {
     }
 
     return (
-        <section className='h-full w-full flex flex-col gap-4 ' >
-            <Card className='w-full bg-white transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-105 text-black dark:text-white'>
+        <section className='flex flex-col ' >
+            <Card className=' bg-white transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  text-black dark:text-white'>
                 <CardHeader>
                     <h4 className='font-extrabold text-primary-500 dark:text-white'>Ventas por categoria</h4>
                 </CardHeader>
@@ -39,7 +36,6 @@ const PieChart = () => {
                         options={data?.options}
                         series={data?.series}
                         type="pie"
-                        height={200}
                     />
                 </CardBody>
             </Card>

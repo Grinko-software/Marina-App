@@ -2,11 +2,10 @@
 'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-org/react'
-import ReactApexChart from 'apexcharts'
-import Chart from 'react-apexcharts'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
 import PieChart from '@/components/ui/pieChart'
+import AreaChart from '@/components/ui/areaChart'
 
 const ReportView = () => {
     const data = {
@@ -41,10 +40,10 @@ const ReportView = () => {
     }
 
     return (
-        <section className='h-full w-full flex flex-col gap-4 my-5' >
-            <div className='flex flex-row gap-4 justify-between'>
-                <div className='flex flex-col gap-4'>
-                    <div className='flex flex-row gap-4'>
+        <section className='h-full w-full flex flex-col' >
+            <div className='flex flex-row justify-between'>
+                <div className='flex flex-col '>
+                    <div className='flex flex-row'>
                         <InfoCard
                             title = {'Ingresos diarios'}
                             unit ={'$'}
@@ -60,23 +59,9 @@ const ReportView = () => {
                             color={'yellow-400'}
                         />
                     </div>
-                    <PieChart></PieChart>
+                    <PieChart/>
                 </div>
-                <Card className='w-9/12 h-full transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-105 text-black'>
-                    <CardHeader >
-                        <h4 className="text-primary-500 dark:text-white font-semibold text-2xl">Ventas por dia</h4>
-                    </CardHeader>
-                    <CardBody>
-                        <div id="chart">
-                            <Chart
-                                options={data?.options}
-                                series={data?.series}
-                                type="area"
-                                height={350}
-                            />
-                        </div>
-                    </CardBody>
-                </Card>
+                <AreaChart data = {data} />
             </div>
             <TableSales />
         </section>
