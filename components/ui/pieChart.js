@@ -10,7 +10,7 @@ const PieChart = () => {
         series: [44, 55, 13, 43, 22],
         options: {
             chart: {
-                width: 380,
+                width: 'auto',
                 type: 'pie'
             },
             labels: ['Abarrotes', 'Bebestibles', 'Frutas', 'Verduras', 'Otros'],
@@ -26,7 +26,7 @@ const PieChart = () => {
     }
 
     return (
-        <section className='flex flex-col ' >
+        <section className='flex flex-col w-full h-full' >
             <Card className=' bg-white transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  text-black dark:text-white'>
                 <CardHeader>
                     <h4 className='font-extrabold text-primary-500 dark:text-white'>Ventas por categoria</h4>

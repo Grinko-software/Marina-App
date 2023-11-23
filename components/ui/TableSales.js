@@ -62,7 +62,7 @@ export default function TableSales () {
         }
     }, [])
     return (
-        <>
+        <section>
             {!isMobile
                 ? <Table className='transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100  bg-primary-50/80 dark:bg-secondary-400 hover:bg-primary-50 transform  text-black dark:text-white rounded-xl '>
                     <TableHeader columns={columns}>
@@ -88,6 +88,6 @@ export default function TableSales () {
                         )}
                     </TableBody>
                 </Table>}
-        </>
+        </section>
     )
 }
