@@ -19,6 +19,7 @@
     "@nextui-org/react": "^2.0.19",
     "@react-pdf/renderer": "^3.1.12",
     "@serialport/parser-readline": "^12.0.0",
+    "antd": "^5.11.1",
     "apexcharts": "^3.44.0",
     "autoprefixer": "10.4.15",
     "axios": "^1.6.0",
