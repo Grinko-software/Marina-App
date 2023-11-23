@@ -7,7 +7,7 @@ import TableSales from '@/components/ui/TableSales'
 import PieChart from '@/components/ui/pieChart'
 import AreaChart from '@/components/ui/areaChart'
 import Chart from 'react-apexcharts'
-import Filter from '@/components/filter/filter'
+import Filter from './Filter/Filter'
 const WidgetReport = ({ children, className, title }) => {
     return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
         <CardHeader >
