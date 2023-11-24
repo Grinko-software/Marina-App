@@ -77,7 +77,7 @@ export default function tableProducts (props) {
         if (listSales?.length > 0) {
             let currentTotal = 0
             listSales?.forEach((item) => {
-                currentTotal += item?.total
+                currentTotal += item?.total - item?.discount
             })
             setTotalPrice(listSalesActives, saleIdActive, Math.round(currentTotal / 10) * 10)
         } else {

@@ -31,3 +31,6 @@ export const GET_DOCUMENT_DTEMITE = 'https://www.dtemite.cl/sistema/Backend/WsMa
 // Get customers
 export const CUSTOMER_API_URL = BASE_MARKET_API_URL + '/customer'
 export const CREATE_CUSTOMER = BASE_MARKET_API_URL + '/customer/create'
+
+// REPORTS
+export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-type-sales'

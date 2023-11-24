@@ -9,6 +9,10 @@ import dayjs from 'dayjs'
 import DateTypeSelector from './DateTypeSelector/DateTypeSelector'
 import useDateTypeStore from './DateTypeSelector/store'
 import RangeDatePicker from './RangeDatePicker/RangeDatePicker'
+import useFilterStore from './store'
+import useRangeDateStore from './RangeDatePicker/store'
+import moment from 'moment-timezone'
+import useReportsStore from '../store'
 
 dayjs.locale('es')
 
@@ -25,7 +29,47 @@ export default function Filter () {
     const [filterKeyIsOpen, setFilterKeyIsOpen] = useState(true)
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
     const dateTypeState = useDateTypeStore((state) => state)
+    const rangeDateState = useRangeDateStore((state) => state)
 
+    const { valueFrom, valueTo } = useRangeDateStore()
+    const { data: reportsData, onChange: updateReportData } = useReportsStore()
+    const { value: rangeType } = useDateTypeStore()
+    const { setRangeType, setFromDate, requestData, setPeriodQuantity } = useFilterStore()
+
+    useEffect(() => {
+        setRangeType(rangeType)
+
+        if (valueFrom || valueTo) {
+            const from = moment(valueFrom)?.startOf('day').utc()
+            const to = moment(valueTo)?.endOf('day').utc()
+            const periodCount = to?.diff(from, 'days')
+            setFromDate(valueFrom)
+            setPeriodQuantity(periodCount)
+
+            console.log(from, to, periodCount)
+        }
+    }, [valueFrom, valueTo, rangeType])
+
+    // const { setRangeType, setFromDate, setToDate } = useFilterStore()
+
+    const requestDataReports = async () => {
+        // const state = useFilterStore.getState()
+        const data = await requestData(
+            '2023-10-01T03:00:00Z',
+            'Day',
+            30
+        )
+
+        console.log(data)
+        updateReportData(data?.data)
+        /*  await requestData(
+            state?.fromDate,
+            state?.rangeType,
+            state?.periodQuantity
+        ) */
+
+        setFilterKeyIsOpen(false)
+    }
     useEffect(() => {
         console.log('filterKeyIsOpen: ', filterKeyIsOpen)
         if (filterKeyIsOpen) {
@@ -38,6 +82,10 @@ export default function Filter () {
     useEffect(() => {
         console.log('selectedKeys: ', selectedKeys)
     }, [selectedKeys])
+
+    useEffect(() => {
+        console.log('Report Data: ', reportsData)
+    }, [reportsData])
 
     return <section>
         <ConfigProvider locale={locale}>
@@ -63,14 +111,14 @@ export default function Filter () {
                         >
                             <div className='flex flex-row gap-5 items-end'>
                                 <FilterItem title={'Tipo de rango'}>
-                                    <DateTypeSelector {...dateTypeState} />
+                                    <DateTypeSelector {...dateTypeState} /* setRangeType={setRangeType} *//>
                                 </FilterItem>
                                 <FilterItem title={'Rango de búsqueda'}>
                                     <section className='w-full flex'>
-                                        <RangeDatePicker {...dateTypeState}/>
+                                        <RangeDatePicker {...dateTypeState} {...rangeDateState}/>
                                     </section>
                                 </FilterItem>
-                                <Button className='mr-auto ' onClick={() => setFilterKeyIsOpen(false)}>
+                                <Button className='mr-auto ' onClick={() => requestDataReports()}>
                                     {'Buscar'}
                                 </Button>
                             </div>
