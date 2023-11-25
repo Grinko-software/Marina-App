@@ -20,7 +20,44 @@ const WidgetReport = ({ children, className, title }) => {
     </Card>
 }
 const ReportView = () => {
-    const { pieChart: dataPieChart } = useReportsStore()
+    const { pieChart: dataPieChart, periodIndicators: dataIndicators } = useReportsStore()
+    const [dataModelPieChart, setDataModelPieChart] = useState(null)
+    const [dataModelIndicator, setDataModelIndicator] = useState(null)
+
+    useEffect(() => {
+        if (dataPieChart) {
+            const labels = dataPieChart?.map((item) => { return item?.category_name })
+            const series = dataPieChart?.map((item) => { return item?.percentage })
+
+            const dataChartPie = {
+                series,
+                options: {
+                    chart: {
+                        width: 'auto',
+                        type: 'pie'
+                    },
+                    labels,
+                    responsive: [{
+                        breakpoint: 180,
+                        options: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            }
+            setDataModelPieChart(dataChartPie)
+        }
+    }, [dataPieChart])
+
+    useEffect(() => {
+        if (dataIndicators) {
+            const IndicatorsData = dataIndicators.data
+            setDataModelIndicator(dataIndicators)
+        }
+    }, [dataIndicators])
+
     const data = {
         series: [{
             name: 'Efectivo',
@@ -51,50 +88,19 @@ const ReportView = () => {
             }
         }
     }
-
-    const [dataModelPieChart, setDataModelPieChart] = useState(null)
-
-    useEffect(() => {
-        if (dataPieChart) {
-            const labels = dataPieChart?.map((item) => { return item?.category_name })
-            const series = dataPieChart?.map((item) => { return item?.percentage })
-
-            const dataChartPie = {
-                series,
-                options: {
-                    chart: {
-                        width: 'auto',
-                        type: 'pie'
-                    },
-                    labels,
-                    responsive: [{
-                        breakpoint: 180,
-                        options: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }]
-                }
-            }
-            setDataModelPieChart(dataChartPie)
-        }
-    }, [dataPieChart])
-
     return (
         <section className='grid grid-cols-1 w-full gap-3'>
             <div className=''>
                 <Filter/>
             </div>
             <section className='grid grid-cols-1 w-full gap-3' >
-
                 <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
                     <section className="grid grid-cols-2 gap-3  h-full w-full col-span-1">
                         <div className='col-span-1 w-full h-full'>
                             <InfoCard
                                 title = {'Ingresos diarios'}
                                 unit ={'$'}
-                                quantity = {'80'}
+                                quantity = {Math.floor(dataModelIndicator?.total_money / 1000)}
                                 subUnit = {'mil.'}
                                 color={'green-400'}
                             />
@@ -103,7 +109,7 @@ const ReportView = () => {
                             <InfoCard
                                 title = {'Ventas Realizadas'}
                                 unit ={''}
-                                quantity = {'120'}
+                                quantity = {dataModelIndicator?.total_sales}
                                 subUnit = {''}
                                 color={'yellow-400'}
                             />

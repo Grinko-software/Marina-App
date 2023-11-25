@@ -35,3 +35,4 @@ export const CREATE_CUSTOMER = BASE_MARKET_API_URL + '/customer/create'
 // REPORTS
 export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-type-sales'
 export const REPORTS_CATEGORY_API_URL = BASE_MARKET_API_URL + '/report/period-category-sales'
+export const REPORTS_INDICATORS_API_URL = BASE_MARKET_API_URL + '/report/period'

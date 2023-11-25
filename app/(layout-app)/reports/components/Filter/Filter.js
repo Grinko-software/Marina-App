@@ -13,7 +13,7 @@ import useFilterStore from './store'
 import useRangeDateStore from './RangeDatePicker/store'
 import moment from 'moment-timezone'
 import useReportsStore from '../store'
-import { requestDataByCategory } from './service'
+import { requestDataByCategory, requestDataIndicators } from './service'
 
 dayjs.locale('es')
 
@@ -33,7 +33,7 @@ export default function Filter () {
     const rangeDateState = useRangeDateStore((state) => state)
 
     const { valueFrom, valueTo } = useRangeDateStore()
-    const { data: reportsData, updatePieChart } = useReportsStore()
+    const { data: reportsData, updatePieChart, updatePeriodIndicators } = useReportsStore()
     const { value: rangeType } = useDateTypeStore()
     const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
@@ -63,12 +63,18 @@ export default function Filter () {
         ) */
 
         const dataReportByCategory = await requestDataByCategory(
-            '2023-10-01T03:00:00Z',
+            '2023-11-25T03:00:00Z',
+            'Day',
+            30
+        )
+        const dataIndicators = await requestDataIndicators(
+            '2023-11-25T03:00:00Z',
             'Day',
             30
         )
 
         updatePieChart(dataReportByCategory?.data)
+        updatePeriodIndicators(dataIndicators)
         /*  await requestData(
             state?.fromDate,
             state?.rangeType,
