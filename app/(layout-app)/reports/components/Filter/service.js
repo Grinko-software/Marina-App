@@ -1,3 +1,4 @@
+import { fetchGetReports, fetchGetReportsByCategoty } from '@/services/reports'
 import { getMoment } from 'utils/date'
 
 export const equivalentDateUnit = {
@@ -87,5 +88,30 @@ export const mapDateQuantityProperties = (x) => {
     return {
         value: x,
         label: `${x}`
+    }
+}
+
+export const requestData = async (from, rangeType, periodQuantity) => {
+    try {
+        console.log('fetchData')
+        return fetchGetReports({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+export const requestDataByCategory = async (from, rangeType, periodQuantity) => {
+    try {
+        console.log('fetchData')
+        return fetchGetReportsByCategoty({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
     }
 }

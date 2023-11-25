@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-org/react'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
@@ -8,6 +8,7 @@ import PieChart from '@/components/ui/pieChart'
 import AreaChart from '@/components/ui/areaChart'
 import Chart from 'react-apexcharts'
 import Filter from './Filter/Filter'
+import useReportsStore from './store'
 const WidgetReport = ({ children, className, title }) => {
     return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
         <CardHeader >
@@ -19,6 +20,7 @@ const WidgetReport = ({ children, className, title }) => {
     </Card>
 }
 const ReportView = () => {
+    const { pieChart: dataPieChart } = useReportsStore()
     const data = {
         series: [{
             name: 'Efectivo',
@@ -49,24 +51,36 @@ const ReportView = () => {
             }
         }
     }
-    const dataChartPie = {
-        series: [44, 55, 13, 43, 22],
-        options: {
-            chart: {
-                width: 'auto',
-                type: 'pie'
-            },
-            labels: ['Abarrotes', 'Bebestibles', 'Frutas', 'Verduras', 'Otros'],
-            responsive: [{
-                breakpoint: 180,
+
+    const [dataModelPieChart, setDataModelPieChart] = useState(null)
+
+    useEffect(() => {
+        if (dataPieChart) {
+            const labels = dataPieChart?.map((item) => { return item?.category_name })
+            const series = dataPieChart?.map((item) => { return item?.percentage })
+
+            const dataChartPie = {
+                series,
                 options: {
-                    legend: {
-                        position: 'bottom'
-                    }
+                    chart: {
+                        width: 'auto',
+                        type: 'pie'
+                    },
+                    labels,
+                    responsive: [{
+                        breakpoint: 180,
+                        options: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
                 }
-            }]
+            }
+            setDataModelPieChart(dataChartPie)
         }
-    }
+    }, [dataPieChart])
+
     return (
         <section className='grid grid-cols-1 w-full gap-3'>
             <div className=''>
@@ -98,11 +112,14 @@ const ReportView = () => {
                         <div className='col-span-2 w-full h-full'>
                             <WidgetReport title={'Ventas por categoría'}>
                                 <div id="chart">
-                                    <Chart
-                                        options={dataChartPie?.options}
-                                        series={dataChartPie?.series}
-                                        type="pie"
-                                    />
+                                    {dataModelPieChart
+                                        ? <Chart
+                                            options={dataModelPieChart?.options}
+                                            series={dataModelPieChart?.series}
+                                            type="pie"
+                                        />
+                                        : null}
+
                                 </div>
 
                             </WidgetReport>

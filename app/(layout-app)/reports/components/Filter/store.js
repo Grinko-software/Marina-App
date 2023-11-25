@@ -1,4 +1,3 @@
-import { fetchGetReports } from '@/services/reports'
 import { create } from 'zustand'
 
 const useFilterStore = create((set) => ({
@@ -13,19 +12,7 @@ const useFilterStore = create((set) => ({
     ),
     setFromDate: () => set((state) => ({ fromDate: state })),
     setToDate: () => set((state) => ({ toDate: state })),
-    setPeriodQuantity: () => set((state) => ({ periodQuantity: state })),
-    requestData: async (from, rangeType, periodQuantity) => {
-        try {
-            console.log('fetchData')
-            return fetchGetReports({
-                periodStart: from,
-                periodType: rangeType,
-                periodQuantity
-            })
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    setPeriodQuantity: () => set((state) => ({ periodQuantity: state }))
 }))
 
 export default useFilterStore

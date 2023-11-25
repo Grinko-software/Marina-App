@@ -1,9 +1,16 @@
 import { create } from 'zustand'
 
 const useReportsStore = create((set) => ({
-    data: undefined,
-    onChange: (value) => {
-        set({ data: value })
+    periodIndicators: {
+        totalSales: 0,
+        totalMoney: 0
+    },
+    pieChart: undefined,
+    barChart: undefined,
+    areaChart: undefined,
+    table: undefined,
+    updatePieChart: (value) => {
+        set({ pieChart: value })
     }
 }))
 
