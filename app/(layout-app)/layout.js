@@ -32,8 +32,8 @@ export default function LayoutApp ({ children }) {
                 <header className="sticky z-20 bg-primary-200 dark:bg-secondary-500 top-0">
                     <Header/>
                 </header>
-                <div className="flex-1 flex flex-row">
-                    <main className="flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem]">
+                <div className="h-auto flex-1 max-h-full overflow-hidden flex">
+                    <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem]">
                         {children}
                     </main>
                 </div>
