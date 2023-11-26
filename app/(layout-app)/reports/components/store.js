@@ -10,7 +10,10 @@ const useReportsStore = create((set) => ({
         set({ pieChart: value })
     },
     updatePeriodIndicators: (value) => {
-        set({ periodIndicators: value.data })
+        set({ periodIndicators: value })
+    },
+    updateAreaChart: (value) => {
+        set({ areaChart: value })
     }
 }))
 

@@ -21,9 +21,10 @@ const WidgetReport = ({ children, className, title }) => {
     </Card>
 }
 const ReportView = () => {
-    const { pieChart: dataPieChart, periodIndicators: dataIndicators } = useReportsStore()
+    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes } = useReportsStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
+    const [dataModelSalesTypes, setDataModelSalesTypes] = useState(null)
     const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
 
     useEffect(() => {
@@ -77,36 +78,44 @@ const ReportView = () => {
         }
     }, [dataModelIndicator])
 
-    const data = {
-        series: [{
-            name: 'Efectivo',
-            data: [31000, 4000, 28000, 5100, 42000, 109000, 100000]
-        }, {
-            name: 'Debito/Credito',
-            data: [11000, 32000, 45000, 32000, 34000, 52000, 41000]
-        }],
-        options: {
-            chart: {
-                height: 350,
-                type: 'area'
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'smooth'
-            },
-            xaxis: {
-                type: 'datetime',
-                categories: ['2018-09-19T00:00:00.000Z', '2018-09-20T00:00:00.000Z', '2018-09-21T00:00:00.000Z', '2018-09-22T00:00:00.000Z', '2018-09-23T00:00:00.000Z', '2018-09-24T00:00:00.000Z', '2018-09-25T00:00:00.000Z']
-            },
-            tooltip: {
-                x: {
-                    format: 'dd/MM/yy HH:mm'
+    useEffect(() => {
+        if (dataSalesTypes) {
+            const seriesCash = dataSalesTypes?.map((item) => { return item?.cash_sales_amount })
+            const seriesCard = dataSalesTypes?.map((item) => { return item?.card_sales_amount })
+            const seriesDate = dataSalesTypes?.map((item) => { return item?.start_time })
+            const data = {
+                series: [{
+                    name: 'Efectivo',
+                    data: [...seriesCash]
+                }, {
+                    name: 'Debito/Credito',
+                    data: [...seriesCard]
+                }],
+                options: {
+                    chart: {
+                        height: 350,
+                        type: 'area'
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: 'smooth'
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        categories: [...seriesDate]
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'dd/MM/yy HH:mm'
+                        }
+                    }
                 }
             }
+            setDataModelSalesTypes(data)
         }
-    }
+    }, [dataSalesTypes])
 
     return (
         <section className='grid grid-cols-1 w-full gap-3'>
@@ -154,7 +163,9 @@ const ReportView = () => {
 
                     </section>
                     <section className="col-span-2 mt-3 md:mt-0">
-                        <AreaChart data = {data} />
+                        {dataModelSalesTypes
+                            ? <AreaChart data = {dataModelSalesTypes} />
+                            : null}
                     </section>
                 </section>
                 <sectionn className="h-full">
