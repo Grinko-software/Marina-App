@@ -9,6 +9,7 @@ import AreaChart from '@/components/ui/areaChart'
 import Chart from 'react-apexcharts'
 import Filter from './Filter/Filter'
 import useReportsStore from './store'
+import { roundValueWithUnit } from '@/utils/number'
 const WidgetReport = ({ children, className, title }) => {
     return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
         <CardHeader >
@@ -23,20 +24,30 @@ const ReportView = () => {
     const { pieChart: dataPieChart, periodIndicators: dataIndicators } = useReportsStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
+    const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
 
     useEffect(() => {
         if (dataPieChart) {
-            const labels = dataPieChart?.map((item) => { return item?.category_name })
-            const series = dataPieChart?.map((item) => { return item?.percentage })
+            const itemsSort = dataPieChart?.sort((a, b) => b?.percentage - a?.percentage)
+            const principal = itemsSort.slice(0, 10)
+            const others = itemsSort.slice(10)
+
+            const labels = principal?.map((item) => { return item?.category_name })
+            const series = principal?.map((item) => { return item?.percentage })
+
+            const othersTotal = others?.reduce(
+                (accumulator, currentValue) => accumulator + currentValue?.percentage,
+                0
+            )
 
             const dataChartPie = {
-                series,
+                series: [...series, othersTotal || []],
                 options: {
                     chart: {
                         width: 'auto',
                         type: 'pie'
                     },
-                    labels,
+                    labels: [...labels, othersTotal ? 'OTROS' : []],
                     responsive: [{
                         breakpoint: 180,
                         options: {
@@ -57,6 +68,14 @@ const ReportView = () => {
             setDataModelIndicator(dataIndicators)
         }
     }, [dataIndicators])
+
+    useEffect(() => {
+        if (dataModelIndicator) {
+            const total = dataModelIndicator?.total_money
+            const indicator = roundValueWithUnit(total)
+            setTotalMoneyIndicator(indicator)
+        }
+    }, [dataModelIndicator])
 
     const data = {
         series: [{
@@ -88,6 +107,7 @@ const ReportView = () => {
             }
         }
     }
+
     return (
         <section className='grid grid-cols-1 w-full gap-3'>
             <div className=''>
@@ -100,8 +120,8 @@ const ReportView = () => {
                             <InfoCard
                                 title = {'Ingresos diarios'}
                                 unit ={'$'}
-                                quantity = {Math.floor(dataModelIndicator?.total_money / 1000)}
-                                subUnit = {'mil.'}
+                                quantity = {totalMoneyIndicator?.value}
+                                subUnit = {totalMoneyIndicator?.unit}
                                 color={'green-400'}
                             />
                         </div>

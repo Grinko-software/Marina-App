@@ -21,7 +21,12 @@ const RangeDatePicker = (props) => {
             locale={locale}
             className='flex-1'
             picker={rangeType}
-            // value={[valueFrom, valueTo]}
+            value={valueFrom
+                ? [
+                    dayjs(valueFrom),
+                    dayjs(valueTo)
+                ]
+                : []}
             onChange={(value) => {
                 onChange(
                     moment(value?.[0].format('YYYY-MM-DD HH:mm:ss')),

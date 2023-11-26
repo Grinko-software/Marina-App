@@ -54,32 +54,25 @@ export default function Filter () {
     // const { setRangeType, setFromDate, setToDate } = useFilterStore()
 
     const requestDataReports = async () => {
-        // const state = useFilterStore.getState()
+        const state = useFilterStore.getState()
 
-        /*  const dataReport = await requestData(
-            '2023-10-01T03:00:00Z',
-            'Day',
-            30
-        ) */
+        const periodStart = state?.fromDate
+        const periodRange = 'Day' || state?.rangeType
+        const periodQuantity = state?.periodQuantity
 
         const dataReportByCategory = await requestDataByCategory(
-            '2023-11-25T03:00:00Z',
-            'Day',
-            30
+            periodStart,
+            periodRange,
+            periodQuantity
         )
         const dataIndicators = await requestDataIndicators(
-            '2023-11-25T03:00:00Z',
-            'Day',
-            30
+            periodStart,
+            periodRange,
+            periodQuantity
         )
 
         updatePieChart(dataReportByCategory?.data)
         updatePeriodIndicators(dataIndicators)
-        /*  await requestData(
-            state?.fromDate,
-            state?.rangeType,
-            state?.periodQuantity
-        ) */
 
         setFilterKeyIsOpen(false)
     }

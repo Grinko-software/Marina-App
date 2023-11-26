@@ -7,12 +7,10 @@ const useFilterStore = create((set) => ({
     periodQuantity: undefined,
     error: null,
     loading: false,
-    setRangeType: () => set(
-        (state) => ({ rangeType: state })
-    ),
-    setFromDate: () => set((state) => ({ fromDate: state })),
-    setToDate: () => set((state) => ({ toDate: state })),
-    setPeriodQuantity: () => set((state) => ({ periodQuantity: state }))
+    setRangeType: (value) => set({ rangeType: value }),
+    setFromDate: (value) => set({ fromDate: value }),
+    setToDate: () => (value) => set({ toDate: value }),
+    setPeriodQuantity: (value) => set({ periodQuantity: value })
 }))
 
 export default useFilterStore
