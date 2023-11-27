@@ -14,6 +14,7 @@ import useRangeDateStore from './RangeDatePicker/store'
 import moment from 'moment-timezone'
 import useReportsStore from '../store'
 import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators } from './service'
+import { getMoment, today } from '@/utils/date'
 
 dayjs.locale('es')
 
@@ -28,6 +29,7 @@ const FilterItem = ({ title, children }) => {
 
 export default function Filter () {
     const [filterKeyIsOpen, setFilterKeyIsOpen] = useState(true)
+    const [isFirstSearch, setIsFirstSearch] = useState(true)
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
     const dateTypeState = useDateTypeStore((state) => state)
     const rangeDateState = useRangeDateStore((state) => state)
@@ -38,18 +40,23 @@ export default function Filter () {
     const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
     useEffect(() => {
-        setRangeType(rangeType)
+        let from = moment.utc(getMoment(today().startOf('day').add(-1, 'day'), 'YYYY-MM-DD'))
+        let to = moment.utc(getMoment(today()))
 
         if (valueFrom || valueTo) {
-            const from = moment(valueFrom)?.startOf('day').utc()
-            const to = moment(valueTo)?.endOf('day').utc()
-            const periodCount = to?.diff(from, 'days')
-            setFromDate(valueFrom)
-            setPeriodQuantity(periodCount)
-
-            console.log(from, to, periodCount)
+            from = moment.utc(moment(valueFrom)?.startOf('day'))
+            to = moment.utc(moment(valueTo)?.endOf('day').utc())
         }
-    }, [valueFrom, valueTo, rangeType])
+
+        const periodCount = to?.diff(from, 'days') + 1
+        const periodStart = from?.format()
+        setFromDate(periodStart)
+        setPeriodQuantity(periodCount)
+    }, [valueFrom, valueTo])
+
+    useEffect(() => {
+        setRangeType(rangeType)
+    }, [rangeType])
 
     // const { setRangeType, setFromDate, setToDate } = useFilterStore()
 
@@ -60,21 +67,20 @@ export default function Filter () {
         const periodRange = 'Day' || state?.rangeType
         const periodQuantity = state?.periodQuantity
 
-        const dataReportByCategory = await requestDataByCategory(
+        const [dataReportByCategory, dataIndicators, dataSalesTypes] = await
+        Promise.all([requestDataByCategory(
             periodStart,
             periodRange,
             periodQuantity
-        )
-        const dataIndicators = await requestDataIndicators(
+        ), requestDataIndicators(
             periodStart,
             periodRange,
             periodQuantity
-        )
-        const dataSalesTypes = await requestDatSalesTypes(
+        ), requestDatSalesTypes(
             periodStart,
             periodRange,
             periodQuantity
-        )
+        )])
 
         updatePieChart(dataReportByCategory?.data)
         updatePeriodIndicators(dataIndicators?.data)
@@ -90,6 +96,15 @@ export default function Filter () {
             setSelectedKeys([])
         }
     }, [filterKeyIsOpen])
+
+    useEffect(() => {
+        const state = useFilterStore.getState()
+        const periodStart = state?.fromDate
+        if (isFirstSearch && periodStart) {
+            requestDataReports()
+            setIsFirstSearch(false)
+        }
+    }, [isFirstSearch, useFilterStore.getState()])
 
     useEffect(() => {
         console.log('selectedKeys: ', selectedKeys)

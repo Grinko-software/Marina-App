@@ -8,6 +8,7 @@ import moment from 'moment'
 import locale from 'antd/locale/es_ES'
 import 'dayjs/locale/es-us'
 import dayjs from 'dayjs'
+import { getMoment, today } from '@/utils/date'
 
 dayjs.locale('es')
 
@@ -21,16 +22,14 @@ const RangeDatePicker = (props) => {
             locale={locale}
             className='flex-1'
             picker={rangeType}
-            value={valueFrom
-                ? [
-                    dayjs(valueFrom),
-                    dayjs(valueTo)
-                ]
-                : []}
+            value={[
+                dayjs(valueFrom),
+                dayjs(valueTo)
+            ]}
             onChange={(value) => {
                 onChange(
-                    moment(value?.[0].format('YYYY-MM-DD HH:mm:ss')),
-                    moment(value?.[1].format('YYYY-MM-DD HH:mm:ss'))
+                    moment(value?.[0].format()),
+                    moment(value?.[1].format())
                 )
             }}
         />
