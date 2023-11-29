@@ -10,24 +10,44 @@ import Chart from 'react-apexcharts'
 import Filter from './Filter/Filter'
 import useReportsStore from './store'
 import { roundValueWithUnit } from '@/utils/number'
+import { Carousel } from 'react-bootstrap'
+import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation } from 'swiper/modules'
-const WidgetReport = ({ children, className, title }) => {
-    return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
-        <CardHeader >
-            <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
-        </CardHeader>
-        <CardBody>
-            {children}
-        </CardBody>
-    </Card>
-}
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+
 const ReportView = () => {
     const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes } = useReportsStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
     const [dataModelSalesTypes, setDataModelSalesTypes] = useState(null)
     const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
+    const [index, setIndex] = useState(0)
+    const slideSettings = {
+        0: {
+            slidesPerView: 1.4,
+            spaceBetween: 10
+        },
+        1024: {
+            slidesPerView: 2,
+            spaceBetween: 10
+        }
+    }
+    const handleSelect = (selectedIndex, e) => {
+        setIndex(selectedIndex)
+    }
+
+    const WidgetReport = ({ children, className, title }) => {
+        return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  text-black ' + className}>
+            <CardHeader >
+                <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
+            </CardHeader>
+            <CardBody>
+                {children}
+            </CardBody>
+        </Card>
+    }
 
     useEffect(() => {
         if (dataPieChart) {
@@ -121,69 +141,68 @@ const ReportView = () => {
 
     return (
         <>
-            <Swiper navigation={true} modules={[Navigation]}>
+            <section className='grid grid-cols-1 w-full gap-3'>
+                <Filter/>
+            </section>
+            <Swiper
+                modules={[Navigation, Pagination, Autoplay]}
+                slidesPerView={'auto'}
+                centeredSlides={true}
+                navigation
+                pagination={{
+                    clickable: true
+                }}
+            >
                 <SwiperSlide>
-                    <section className='grid grid-cols-1 w-full gap-11'>
-                        <div className=''>
-                            <Filter/>
-                        </div>
-                    </section>
+                    <section className='grid grid-cols-1 w-full gap-3 mt-3'>
+                        <section className='grid grid-cols w-full gap-3 ' >
+                            <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
+                                <section className="grid grid-cols-2 gap-3  h-full w-full col-span-1">
+                                    <div className='col-span-1 w-full h-full'>
+                                        <InfoCard
+                                            title = {'Ingresos diarios'}
+                                            unit ={'$'}
+                                            quantity = {totalMoneyIndicator?.value}
+                                            subUnit = {totalMoneyIndicator?.unit}
+                                            color={'green-400'}
+                                        />
+                                    </div>
+                                    <div className='col-span-1 w-full h-full'>
+                                        <InfoCard
+                                            title = {'Ventas Realizadas'}
+                                            unit ={''}
+                                            quantity = {dataModelIndicator?.total_sales}
+                                            subUnit = {''}
+                                            color={'yellow-400'}
+                                        />
+                                    </div>
 
-                    <section className='grid grid-cols w-full gap-3 ' >
-                        <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
-                            <section className="grid grid-cols-2 gap-8  h-full w-full col-span-1">
-                                <div className='col-span-1 w-full h-full'>
-                                    <InfoCard
-                                        title = {'Ingresos diarios'}
-                                        unit ={'$'}
-                                        quantity = {totalMoneyIndicator?.value}
-                                        subUnit = {totalMoneyIndicator?.unit}
-                                        color={'green-400'}
-                                    />
-                                </div>
-                                <div className='col-span-1 w-full h-full'>
-                                    <InfoCard
-                                        title = {'Ventas Realizadas'}
-                                        unit ={''}
-                                        quantity = {dataModelIndicator?.total_sales}
-                                        subUnit = {''}
-                                        color={'yellow-400'}
-                                    />
-                                </div>
-
-                                <div className='col-span-2 w-full h-full'>
-                                    <WidgetReport title={'Ventas por categoría'}>
-                                        <div id="chart">
-                                            {dataModelPieChart
-                                                ? <Chart
-                                                    options={dataModelPieChart?.options}
-                                                    series={dataModelPieChart?.series}
-                                                    type="pie"
-                                                />
-                                                : null}
-                                        </div>
-                                    </WidgetReport>
-                                </div>
-                            </section>
-                            <section className="col-span-2 mt-3 md:mt-0">
-                                {dataModelSalesTypes
-                                    ? <AreaChart data = {dataModelSalesTypes} />
-                                    : null}
+                                    <div className='col-span-2 w-full h-full'>
+                                        <WidgetReport title={'Ventas por categoría'}>
+                                            <div id="chart">
+                                                {dataModelPieChart
+                                                    ? <Chart
+                                                        options={dataModelPieChart?.options}
+                                                        series={dataModelPieChart?.series}
+                                                        type="pie"
+                                                    />
+                                                    : null}
+                                            </div>
+                                        </WidgetReport>
+                                    </div>
+                                </section>
+                                <section className="col-span-2 mt-3 md:mt-0">
+                                    {dataModelSalesTypes
+                                        ? <AreaChart data = {dataModelSalesTypes} />
+                                        : null}
+                                </section>
                             </section>
                         </section>
                     </section>
                 </SwiperSlide>
-                <SwiperSlide>Slide 1</SwiperSlide>
-                <SwiperSlide>Slide 2</SwiperSlide>
-                <SwiperSlide>Slide 3</SwiperSlide>
-                <SwiperSlide>Slide 4</SwiperSlide>
-                <SwiperSlide>Slide 5</SwiperSlide>
-                <SwiperSlide>Slide 6</SwiperSlide>
-                <SwiperSlide>Slide 7</SwiperSlide>
-                <SwiperSlide>Slide 8</SwiperSlide>
-                <SwiperSlide>Slide 9</SwiperSlide>
             </Swiper>
         </>
     )
 }
+
 export default ReportView

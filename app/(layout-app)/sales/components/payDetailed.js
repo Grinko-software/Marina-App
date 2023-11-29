@@ -128,10 +128,8 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                                 <h1 className={`text-2xl font-bold ${(totalPay - payDetailed) < 0 ? 'text-green-700' : 'text-red-700'}`}>{((totalPay - payDetailed) < 0 ? formatter.format((payDetailed - totalPay)) : formatter.format((totalPay - payDetailed)))}</h1>
                             </div>
                         </div>
-
                     </ModalBody>
                     <ModalFooter>
-
                         <Button className =" bg-green-500 text-primary-50"
                             onClick={
                                 () => {
@@ -147,12 +145,10 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                                         setPaymentTarget(listSalesActives, saleIdActive, null)
                                     }
                                 }
-
                             }
                             isLoading={loadingSale}>
                             {((totalPay - payDetailed) <= 0 ? 'Pagar' : 'Verificar pago')}
                         </Button>
-
                         <Button color="danger" variant="flat"
                             onClick={() => {
                                 setPaymentTarget(listSalesActives, saleIdActive, null)
