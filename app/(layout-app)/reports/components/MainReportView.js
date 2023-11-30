@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-org/react'
+import { Card, CardBody, CardHeader, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue, CardFooter, Image, Button } from '@nextui-org/react'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
 import PieChart from '@/components/ui/pieChart'
@@ -16,6 +16,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
+import StockTable from '@/components/ui/StockTable'
 
 const ReportView = () => {
     const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes } = useReportsStore()
@@ -148,7 +149,7 @@ const ReportView = () => {
                 modules={[Navigation, Pagination, Autoplay]}
                 slidesPerView={'auto'}
                 centeredSlides={true}
-                navigation
+
                 pagination={{
                     clickable: true
                 }}
@@ -198,6 +199,12 @@ const ReportView = () => {
                                 </section>
                             </section>
                         </section>
+                    </section>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <section className='grid grid-cols-2 w-full  gap-3 mt-3'>
+                        <StockTable></StockTable>
+                        <WidgetReport></WidgetReport>
                     </section>
                 </SwiperSlide>
             </Swiper>
