@@ -2,7 +2,6 @@
 'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-org/react'
-import ReactApexChart from 'apexcharts'
 import Chart from 'react-apexcharts'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
