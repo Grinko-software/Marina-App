@@ -15,7 +15,8 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import StockTable from '@/components/ui/StockTable'
 // 최신 버전인 경우
 import 'swiper/css'
-import 'swiper/css/navigation'; import 'swiper/css/scrollbar'
+import 'swiper/css/navigation'
+import 'swiper/css/scrollbar'
 
 const ReportView = () => {
     const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore } = useReportsStore()
