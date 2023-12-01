@@ -153,7 +153,7 @@ export default function tableProducts (props) {
             {/*         </section> */}
             <section className='flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450'>
                 <section style={{ scrollbarGutter: 'stable' }} className='max-h-[44rem] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start '>
-                    {loading
+                    {loading && listInventory?.length < 0
                         ? <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1 w-full">
                             {listEmpty?.map((item, key) => (<LoadingCard key={key}/>))}
                         </div>
