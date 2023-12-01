@@ -44,20 +44,40 @@ export const fetchPost = async (url, body, notAuth = false, xApiKey = false) => 
         }
     } if (xApiKey) {
         try {
-            return await fetch('https://integrations.payment.haulmer.com/PaymentRequest/Create',
-                {
-                    method: 'POST',
-                    headers: new Headers({ 'X-API-Key': X_API_KEY_POSMACHINE }),
-                    mode: 'no-cors',
-                    cache: 'no-store',
-                    body: JSON.stringify(body)
-                }).then(response => {
-                try {
-                    return response.json()
-                } catch {
-                    return null
+            const myHeaders = new Headers()
+            myHeaders.append('X-API-Key', 'LnAr8mW3sqibCkp9BX1q5nu5UYAuu035k0KVcGMcPjTylbFB3OUFSQZgxaLOxxJHnumhWAC5EwWNY5ZH9fw7ondlRsRK5UNxFSAlEGZ7vhQmMMWc5EjqJLcgFAb4Dp')
+            myHeaders.append('Content-Type', 'application/json')
+
+            const raw = JSON.stringify({
+                device: 'PN75233630974',
+                amount: 15000,
+                dteType: 48,
+                extraData: {
+                    taxIdnValidation: '77426986-K',
+                    sourceName: 'Marina APP',
+                    sourceVersion: '2023.01.20-6',
+                    method: 0,
+                    customFields: [
+                        {
+                            name: 'idXX',
+                            value: '245023-2342-2',
+                            print: true
+                        }
+                    ]
                 }
             })
+
+            const requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            }
+
+            return await fetch('https://integrations.payment.haulmer.com/PaymentRequest/Create', requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error))
         } catch {
             return null
         }

@@ -48,7 +48,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                             <ModalBody>
                                 <p className="text-primary-500 dark:text-primary-200">Seleccionar TUU principal</p>
                                 {postMachinesData?.map((item, index) => {
-                                    const isSelected = SelectedPostMachine.ID === item.ID
+                                    const isSelected = SelectedPostMachine?.ID === item.ID
                                     return (
                                         <Checkbox
                                             key={index}
