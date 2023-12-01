@@ -31,3 +31,7 @@ export const GET_DOCUMENT_DTEMITE = 'https://www.dtemite.cl/sistema/Backend/WsMa
 // Get customers
 export const CUSTOMER_API_URL = BASE_MARKET_API_URL + '/customer'
 export const CREATE_CUSTOMER = BASE_MARKET_API_URL + '/customer/create'
+// Endpoint Haulmer
+export const CREATE_PAYMENT_REQUEST_POSMACHINE = 'https://integrations.payment.haulmer.com/PaymentRequest/Create'
+// Endpoint Haulmer
+export const X_API_KEY_POSMACHINE = 'LnAr8mW3sqibCkp9BX1q5nu5UYAuu035k0KVcGMcPjTylbFB3OUFSQZgxaLOxxJHnumhWAC5EwWNY5ZH9fw7ondlRsRK5UNxFSAlEGZ7vhQmMMWc5EjqJLcgFAb4Dp'

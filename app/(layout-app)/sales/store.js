@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
-import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
+import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE, CREATE_PAYMENT_REQUEST_POSMACHINE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
@@ -311,7 +311,52 @@ const useSalesStore = create(
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 /* Its is when pageTarget is Debit or Credit */
                 try {
-                    fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                    // le mando la solictud la maquina
+                    /*
+                    1. Queda guardando el loading en la pantalla del usuario
+                    2. mientras esta cargando hay que pegarle al endpiunt para el estatus de la maquina..
+                    3. si tira error, se debe hacer desde la maquina.
+                    //estados que tiene la maquina
+                    "paymentRequest": {
+                        "paymentRequestId": 599,
+                        "amount": 15000,
+                        "device": "PN75233630974",
+                        "dteType": 48,
+                        "extraData": {
+                            "exemptAmount": null,
+                            "customFields": [
+                                {
+                                    "name": "idXX",
+                                    "value": "245023-2342-2",
+                                    "print": true
+                                }
+                            ],
+                            "sourceName": "Marina APP",
+                            "sourceVersion": "2023.01.20-6"
+                        },
+                        "status": "Canceled"// "Pending",
+                        "sequenceNumber": null
+                    }
+                    */
+                    const bodyPosMachine = {
+                        device: 'PN75233630974',
+                        amount: 15000,
+                        dteType: 48,
+                        extraData: {
+                            taxIdnValidation: '77426986-K',
+                            sourceName: 'Marina APP',
+                            sourceVersion: '2023.01.20-6',
+                            method: 0,
+                            customFields: [
+                                {
+                                    name: 'idXX',
+                                    value: '245023-2342-2',
+                                    print: true
+                                }
+                            ]
+                        }
+                    }
+                    fetchPost(CREATE_PAYMENT_REQUEST_POSMACHINE, bodyPosMachine, false, true).then(result => {
                         setPageTarget(null)
                         // setPaymentTarget(sales, saleId, null)
                         set({ loadingSale: false })
@@ -339,6 +384,34 @@ const useSalesStore = create(
                             setGoPay(false)
                         }
                     })
+                    /*    fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                        setPageTarget(null)
+
+                        set({ loadingSale: false })
+                        if (result?.code === 200) {
+                            generatePdfDocument({ listSales: saleProductsList, totalPay })
+                            if (pageTarget) {
+                                notify('✅ Pago con tarjeta con éxito')
+                            } else {
+                                notify('✅ Pago con éxito')
+                            }
+
+                            setPayment(false)
+                            onClose()
+                            setGoPay(false)
+                            removeSale(sales, saleId)
+                        // clearList()
+                        } else {
+                            if (pageTarget) {
+                                notify('❌ Problemas con el pago con la tarjeta')
+                            } else {
+                                notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                            }
+                            set({ loadingSale: false })
+                            onClose()
+                            setGoPay(false)
+                        }
+                    }) */
                 } catch {
                     set({ loadingSale: false })
                 }
