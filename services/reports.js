@@ -1,4 +1,4 @@
-import { REPORTS_API_URL, REPORTS_CATEGORY_API_URL, REPORTS_INDICATORS_API_URL, REPORTS_SALES_TYPES_API_URL } from '@/settings/constants'
+import { REPORTS_API_URL, REPORTS_CATEGORY_API_URL, REPORTS_INDICATORS_API_URL, REPORTS_SALES_TYPES_API_URL, REPORTS_CRITICAL_STOCK_API_URL } from '@/settings/constants'
 import { getToken } from './user'
 
 export const fetchGetReports = async ({ periodStart, periodType, periodQuantity }) => {
@@ -96,6 +96,27 @@ export const fetchGetReportsSalesTypes = async ({ periodStart, periodType, perio
                     period_start: periodStart,
                     period_type: periodType,
                     period_quantity: periodQuantity
+                })
+            }).then(response => {
+            try {
+                return response.json()
+            } catch {
+                return null
+            }
+        })
+    } catch {
+        return null
+    }
+}
+
+export const fetchGetReportsCriticalStock = async () => {
+    try {
+        return await fetch(`${REPORTS_CRITICAL_STOCK_API_URL}`,
+            {
+                method: 'get',
+                headers: new Headers({
+                    Authorization: 'Bearer ' + getToken(),
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 })
             }).then(response => {
             try {

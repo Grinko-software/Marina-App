@@ -6,6 +6,7 @@ const useReportsStore = create((set) => ({
     barChart: undefined,
     areaChart: undefined,
     table: undefined,
+    criticalStore: undefined,
     updatePieChart: (value) => {
         set({ pieChart: value })
     },
@@ -14,6 +15,9 @@ const useReportsStore = create((set) => ({
     },
     updateAreaChart: (value) => {
         set({ areaChart: value })
+    },
+    updateCriticalStore: (value) => {
+        set({ criticalStore: value })
     }
 }))
 

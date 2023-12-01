@@ -37,3 +37,4 @@ export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-typ
 export const REPORTS_CATEGORY_API_URL = BASE_MARKET_API_URL + '/report/period-category-sales'
 export const REPORTS_INDICATORS_API_URL = BASE_MARKET_API_URL + '/report/period'
 export const REPORTS_SALES_TYPES_API_URL = BASE_MARKET_API_URL + '/report/period-sales-types'
+export const REPORTS_CRITICAL_STOCK_API_URL = BASE_MARKET_API_URL + '/report/product-stock'

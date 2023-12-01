@@ -1,12 +1,41 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Card, CardHeader, CardBody } from '@nextui-org/react'
-import { DefaultImageMarinaMarket } from '@/utils/image'
+import { DefaultImageMarinaMarket, ConvertBytesToImage } from '@/utils/image'
+import useReportsStore from '../../app/(layout-app)/reports/components/store'
+
 const StockTable = () => {
+    const { criticalStore } = useReportsStore()
+    const [dataModelCriticalStore, setDataModelCriticalStore] = useState(null)
     const statusColorMap = {
-        bajo: 'danger',
-        critico: 'warning'
+        Bajo: 'warning',
+        Crítico: 'danger'
     }
+    useEffect(() => {
+        if (criticalStore) {
+            const data = criticalStore?.map(
+                (item) => {
+                    let image
+                    if (item?.image.length > 0) {
+                        image = ConvertBytesToImage(item?.image)
+                    } else {
+                        image = DefaultImageMarinaMarket()
+                    }
+                    return {
+                        id: item?.id_product,
+                        product: item?.name_product,
+                        category: item?.name_category,
+                        state: item?.stock_classification,
+                        stock: item?.stock,
+                        base_stock: item?.stock_min,
+                        avatar: image
+                    }
+                }
+            )
+            setDataModelCriticalStore(data?.slice(1, 10))
+        }
+    }, [criticalStore])
+
     const renderCell = React.useCallback((user, columnKey) => {
         const cellValue = user[columnKey]
         switch (columnKey) {
@@ -63,7 +92,7 @@ const StockTable = () => {
         default:
             return cellValue
         }
-    }, [])
+    }, [dataModelCriticalStore])
 
     const columns = [
         { name: 'PRODUCTO', uid: 'product' },
@@ -71,59 +100,6 @@ const StockTable = () => {
         { name: 'ESTADO', uid: 'state' },
         { name: 'STOCK', uid: 'stock' },
         { name: 'STOCK ESPERADO', uid: 'base_stock' }
-    ]
-
-    const users = [
-        {
-            id: 1,
-            product: 'mankeke',
-            category: 'abarrotes',
-            un: 'unidad',
-            state: 'critico',
-            stock: '29',
-            base_stock: '29',
-            avatar: DefaultImageMarinaMarket()
-        },
-        {
-            id: 2,
-            product: 'pepsi',
-            category: 'bebestible',
-            un: 'unidad',
-            state: 'critico',
-            stock: '25',
-            base_stock: '25',
-            avatar: DefaultImageMarinaMarket()
-        },
-        {
-            id: 3,
-            product: 'pan',
-            category: 'pan',
-            un: 'kilos',
-            state: 'critico',
-            stock: '22',
-            base_stock: '22',
-            avatar: DefaultImageMarinaMarket()
-        },
-        {
-            id: 4,
-            product: 'platano',
-            category: 'frutas',
-            un: 'unidad',
-            state: 'bajo',
-            stock: '28',
-            base_stock: '22',
-            avatar: DefaultImageMarinaMarket()
-        },
-        {
-            id: 5,
-            product: 'pollo',
-            category: 'congelados',
-            un: 'unidad',
-            state: 'critico',
-            stock: '24',
-            base_stock: '22',
-            avatar: DefaultImageMarinaMarket()
-        }
     ]
 
     const WidgetReport = ({ children, className, title }) => {
@@ -150,13 +126,15 @@ const StockTable = () => {
                             </TableColumn>
                         )}
                     </TableHeader>
-                    <TableBody items={users}>
-                        {(item) => (
-                            <TableRow key={item.id}>
-                                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                            </TableRow>
-                        )}
-                    </TableBody>
+                    {dataModelCriticalStore
+                        ? <TableBody items={dataModelCriticalStore}>
+                            {(item) => (
+                                <TableRow key={item.id}>
+                                    {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                </TableRow>
+                            )}
+                        </TableBody>
+                        : <TableBody ></TableBody>}
                 </Table>
             </WidgetReport>
         </div>

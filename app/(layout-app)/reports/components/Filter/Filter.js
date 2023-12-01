@@ -13,7 +13,7 @@ import useFilterStore from './store'
 import useRangeDateStore from './RangeDatePicker/store'
 import moment from 'moment-timezone'
 import useReportsStore from '../store'
-import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators } from './service'
+import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators, requestDataCriticalStore } from './service'
 import { getMoment, today } from '@/utils/date'
 
 dayjs.locale('es')
@@ -35,7 +35,7 @@ export default function Filter () {
     const rangeDateState = useRangeDateStore((state) => state)
 
     const { valueFrom, valueTo } = useRangeDateStore()
-    const { data: reportsData, updatePieChart, updatePeriodIndicators, updateAreaChart } = useReportsStore()
+    const { data: reportsData, updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore } = useReportsStore()
     const { value: rangeType } = useDateTypeStore()
     const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
@@ -67,7 +67,7 @@ export default function Filter () {
         const periodRange = 'Day' || state?.rangeType
         const periodQuantity = state?.periodQuantity
 
-        const [dataReportByCategory, dataIndicators, dataSalesTypes] = await
+        const [dataReportByCategory, dataIndicators, dataSalesTypes, dataCriticalStore] = await
         Promise.all([requestDataByCategory(
             periodStart,
             periodRange,
@@ -80,11 +80,13 @@ export default function Filter () {
             periodStart,
             periodRange,
             periodQuantity
+        ), requestDataCriticalStore(
         )])
 
         updatePieChart(dataReportByCategory?.data)
         updatePeriodIndicators(dataIndicators?.data)
         updateAreaChart(dataSalesTypes?.data)
+        updateCriticalStore(dataCriticalStore?.data)
 
         setFilterKeyIsOpen(false)
     }

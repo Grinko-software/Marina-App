@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Card, CardBody, CardHeader, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue, CardFooter, Image, Button } from '@nextui-org/react'
+import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-org/react'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
 import PieChart from '@/components/ui/pieChart'
@@ -10,45 +10,20 @@ import Chart from 'react-apexcharts'
 import Filter from './Filter/Filter'
 import useReportsStore from './store'
 import { roundValueWithUnit } from '@/utils/number'
-import { Carousel } from 'react-bootstrap'
-import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import StockTable from '@/components/ui/StockTable'
+// 최신 버전인 경우
+import 'swiper/css'
+import 'swiper/css/navigation'; import 'swiper/css/scrollbar'
 
 const ReportView = () => {
-    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes } = useReportsStore()
+    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore } = useReportsStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
     const [dataModelSalesTypes, setDataModelSalesTypes] = useState(null)
     const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
-    const [index, setIndex] = useState(0)
-    const slideSettings = {
-        0: {
-            slidesPerView: 1.4,
-            spaceBetween: 10
-        },
-        1024: {
-            slidesPerView: 2,
-            spaceBetween: 10
-        }
-    }
-    const handleSelect = (selectedIndex, e) => {
-        setIndex(selectedIndex)
-    }
-
-    const WidgetReport = ({ children, className, title }) => {
-        return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  text-black ' + className}>
-            <CardHeader >
-                <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
-            </CardHeader>
-            <CardBody>
-                {children}
-            </CardBody>
-        </Card>
-    }
+    const [dataModelCriticalStore, setDataModelCriticalStore] = useState({})
 
     useEffect(() => {
         if (dataPieChart) {
@@ -140,6 +115,12 @@ const ReportView = () => {
         }
     }, [dataSalesTypes])
 
+    useEffect(() => {
+        if (dataCriticalStore) {
+            setDataModelCriticalStore(dataCriticalStore)
+        }
+    }, [dataCriticalStore])
+
     return (
         <>
             <section className='grid grid-cols-1 w-full gap-3'>
@@ -149,7 +130,10 @@ const ReportView = () => {
                 modules={[Navigation, Pagination, Autoplay]}
                 slidesPerView={'auto'}
                 centeredSlides={true}
-
+                Loop={true} // 슬라이드 무한 반복 여부
+                autoplay={false}// 슬라이드 자동 재생 여부
+                navigation // prev, next button 18
+                scrollbar={{ draggable: true }}
                 pagination={{
                     clickable: true
                 }}
@@ -212,4 +196,14 @@ const ReportView = () => {
     )
 }
 
+const WidgetReport = ({ children, className, title }) => {
+    return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
+        <CardHeader >
+            <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
+        </CardHeader>
+        <CardBody>
+            {children}
+        </CardBody>
+    </Card>
+}
 export default ReportView
