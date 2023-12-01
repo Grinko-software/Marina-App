@@ -11,8 +11,10 @@ import useInventoryStore from '../../store'
 import useSalesStore from '@/app/(layout-app)/sales/store'
 import toast, { Toaster } from 'react-hot-toast'
 import { BiSolidShoppingBags } from 'react-icons/bi'
+import { isMobileDevice } from '@/utils/agent'
 
 const notify = (text) => toast(text)
+
 export const SectionProduct = ({ title, children, showDivider }) => {
     return (
         <section className="mt-3 space-y-2">
@@ -68,6 +70,7 @@ export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, .
 }
 
 export default function CreateProduct () {
+    const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [scanProduct, setScanProduct] = useState(false)
 
@@ -79,6 +82,13 @@ export default function CreateProduct () {
 
     const { data, setFormData, requestCreateProduct, loadingStock, loadingCategories, error, setError, complete, hasRequeredValues, clearStore } = useProductFormStore()
     const { listCategories, listStockTypes, getCategories, getStockTypes, getListInventory } = useInventoryStore()
+
+    useEffect(() => {
+        if (navigator) {
+            const view = isMobileDevice()
+            setIsMobile(view)
+        }
+    }, [])
 
     useEffect(() => {
         if (isOpen) {
@@ -147,9 +157,9 @@ export default function CreateProduct () {
                     }
                 }} />
             <header className="flex justify-end">
-                <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
+                <Button className={'bg-emerald-600 dark:bg-emerald-600 font-semibold'} color='primary' onClick={onOpen}
                     startContent={<BiSolidShoppingBags size={25} />}>
-                    CREAR PRODUCTO
+                    {isMobile ? '' : 'CREAR PRODUCTO'}
                 </Button>
             </header>
             <Modal size={'2xl'}

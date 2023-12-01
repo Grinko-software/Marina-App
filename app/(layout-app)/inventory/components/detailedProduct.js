@@ -28,6 +28,7 @@ export default function DetailedProduct ({ targeProduct, isOpen, onClose, setTar
             <div className="flex flex-wrap gap-3">
             </div>
             <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+
                 {edit
                     ? <ModalContent>
                         {(onClose) => (

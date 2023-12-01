@@ -5,6 +5,7 @@ import useAuthStore from '@/stores/user'
 import ThemeButton from './ThemeButton'
 import imgSrc from '@/app/icon.png'
 import Image from 'next/image'
+import ShortcutButton from './ShortcutButton'
 // import ShortcutButton from './ShortcutButton'
 
 export default function UserAvatar () {
@@ -33,9 +34,9 @@ export default function UserAvatar () {
                     <div className="col-start-1 col-end-1">
                         <ThemeButton/>
                     </div>
-                    {/* <div className="col-start-2 col-end-2">
+                    <div className="col-start-2 col-end-2">
                         <ShortcutButton />
-                    </div> */}
+                    </div>
                     <Button
                         className={'text-xs sm:text-lg bg-transparent text-foreground border-default-200'}
                         color="primary"

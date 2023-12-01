@@ -32,7 +32,6 @@ export function Navigation () {
     return (
         <footer className={'flex flex-col items-center w-full'}>
             <Tabs
-                disabledKeys={['reports']}
                 aria-label="Options"
                 items={tabs}
                 selectedKey={selected}
