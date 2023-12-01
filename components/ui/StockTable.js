@@ -45,6 +45,7 @@ const StockTable = () => {
                     avatarProps={{ radius: 'lg', src: user.avatar }}
                     description={user.email}
                     name={cellValue}
+                    classNames={'text-white'}
                 >
                     {user.email}
                 </User>
@@ -52,7 +53,7 @@ const StockTable = () => {
         case 'category':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize">{cellValue}</p>
+                    <p className="text-bold text-sm capitalize dark:text-white">{cellValue}</p>
                     <p className="text-bold text-sm capitalize text-default-400">{user.un}</p>
                 </div>
             )
@@ -64,7 +65,7 @@ const StockTable = () => {
             )
         case 'stock':
             return (
-                <div className="relative flex items-center gap-2">
+                <div className="relative flex items-center gap-2 text-white">
                     <Chip
                         color={statusColorMap[user.state]}
                         size="sm"
@@ -79,7 +80,7 @@ const StockTable = () => {
             )
         case 'base_stock':
             return (
-                <div className="relative flex items-center">
+                <div className="relative flex items-center text-white">
                     <Chip
                         variant="flat"
                         color="success"

@@ -132,7 +132,6 @@ const ReportView = () => {
                 centeredSlides={true}
                 Loop={true} // 슬라이드 무한 반복 여부
                 autoplay={false}// 슬라이드 자동 재생 여부
-                navigation // prev, next button 18
                 scrollbar={{ draggable: true }}
                 pagination={{
                     clickable: true
