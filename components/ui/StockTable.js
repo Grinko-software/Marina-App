@@ -32,7 +32,8 @@ const StockTable = () => {
                     }
                 }
             )
-            setDataModelCriticalStore(data?.slice(1, 10))
+            /* setDataModelCriticalStore(data?.slice(1, 10)) */
+            setDataModelCriticalStore(data?.slice(0, 9))
         }
     }, [criticalStore])
 
@@ -45,7 +46,6 @@ const StockTable = () => {
                     avatarProps={{ radius: 'lg', src: user.avatar }}
                     description={user.email}
                     name={cellValue}
-                    classNames={'text-white'}
                 >
                     {user.email}
                 </User>
@@ -104,7 +104,7 @@ const StockTable = () => {
     ]
 
     const WidgetReport = ({ children, className, title }) => {
-        return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  text-black ' + className}>
+        return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  ' + className}>
             <CardHeader >
                 <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
             </CardHeader>
@@ -119,6 +119,7 @@ const StockTable = () => {
             <WidgetReport title={'Productos con stock critico'}>
                 <Table
                     isStriped
+                    isHeaderSticky
                 >
                     <TableHeader columns={columns}>
                         {(column) => (
@@ -129,11 +130,15 @@ const StockTable = () => {
                     </TableHeader>
                     {dataModelCriticalStore
                         ? <TableBody items={dataModelCriticalStore}>
+
                             {(item) => (
+
                                 <TableRow key={item.id}>
                                     {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                                 </TableRow>
+
                             )}
+
                         </TableBody>
                         : <TableBody ></TableBody>}
                 </Table>

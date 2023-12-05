@@ -131,8 +131,8 @@ const ReportView = () => {
                 modules={[Navigation, Pagination, Autoplay]}
                 slidesPerView={'auto'}
                 centeredSlides={true}
-                Loop={true} // 슬라이드 무한 반복 여부
-                autoplay={false}// 슬라이드 자동 재생 여부
+                Loop={true}
+                autoplay={false}
                 scrollbar={{ draggable: true }}
                 pagination={{
                     clickable: true
@@ -145,25 +145,27 @@ const ReportView = () => {
                                 <section className="grid grid-cols-2 gap-3  h-full w-full col-span-1">
                                     <div className='col-span-1 w-full h-full'>
                                         <InfoCard
-                                            title = {'Ingresos diarios'}
+                                            title = {'Ingresos'}
                                             unit ={'$'}
                                             quantity = {totalMoneyIndicator?.value}
                                             subUnit = {totalMoneyIndicator?.unit}
+                                            pct = {dataModelIndicator?.total_money_percent_indicator}
                                             color={'green-400'}
                                         />
                                     </div>
                                     <div className='col-span-1 w-full h-full'>
                                         <InfoCard
-                                            title = {'Ventas Realizadas'}
+                                            title = {'Ventas'}
                                             unit ={''}
                                             quantity = {dataModelIndicator?.total_sales}
                                             subUnit = {''}
+                                            pct = {dataModelIndicator?.total_sales_percent_indicator}
                                             color={'yellow-400'}
                                         />
                                     </div>
 
                                     <div className='col-span-2 w-full h-full'>
-                                        <WidgetReport title={'Ventas por categoría'}>
+                                        <WidgetReport title={'VENTAS POR CATEGORÍAS'}>
                                             <div id="chart">
                                                 {dataModelPieChart
                                                     ? <Chart
