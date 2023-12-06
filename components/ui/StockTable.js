@@ -3,14 +3,23 @@ import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Card, CardHeader, CardBody } from '@nextui-org/react'
 import { DefaultImageMarinaMarket, ConvertBytesToImage } from '@/utils/image'
 import useReportsStore from '../../app/(layout-app)/reports/components/store'
-
+import { isMobileDevice } from '@/utils/agent'
 const StockTable = () => {
     const { criticalStore } = useReportsStore()
     const [dataModelCriticalStore, setDataModelCriticalStore] = useState(null)
+    const [mobile, setMobile] = useState(false)
     const statusColorMap = {
         Bajo: 'warning',
         Crítico: 'danger'
     }
+    useEffect(() => {
+        if (navigator) {
+            const isMobile = isMobileDevice()
+            if (isMobile) {
+                setMobile(true)
+            }
+        }
+    }, [])
     useEffect(() => {
         if (criticalStore) {
             const data = criticalStore?.map(
@@ -101,6 +110,10 @@ const StockTable = () => {
         { name: 'STOCK', uid: 'stock' },
         { name: 'STOCK ESPERADO', uid: 'base_stock' }
     ]
+    const mobileColumns = [
+        { name: 'PRODUCTO', uid: 'product' },
+        { name: 'ESTADO', uid: 'state' }
+    ]
 
     const WidgetReport = ({ children, className, title }) => {
         return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  ' + className}>
@@ -120,13 +133,21 @@ const StockTable = () => {
                     isStriped
                     isHeaderSticky
                 >
-                    <TableHeader columns={columns}>
-                        {(column) => (
-                            <TableColumn key={column.uid} >
-                                {column.name}
-                            </TableColumn>
-                        )}
-                    </TableHeader>
+                    {mobile
+                        ? <TableHeader columns={mobileColumns}>
+                            {(column) => (
+                                <TableColumn key={column.uid} >
+                                    {column.name}
+                                </TableColumn>
+                            )}
+                        </TableHeader>
+                        : <TableHeader columns={columns}>
+                            {(column) => (
+                                <TableColumn key={column.uid} >
+                                    {column.name}
+                                </TableColumn>
+                            )}
+                        </TableHeader>}
                     {dataModelCriticalStore
                         ? <TableBody items={dataModelCriticalStore}>
                             {(item) => (
