@@ -25,6 +25,9 @@ export const getStateSaleMachine = (url) => {
                     if (data?.data?.paymentRequest?.status === 'Completed') {
                         clearInterval(intervalId)
                         resolve(data)
+                    } else if (data?.data?.paymentRequest?.status === 'Canceled') {
+                        clearInterval(intervalId)
+                        reject(new Error('Venta cancelada desde la máquina'))
                     }
                 })
                 .catch(error => {
@@ -37,6 +40,6 @@ export const getStateSaleMachine = (url) => {
                 clearInterval(intervalId)
                 reject(new Error('Tiempo de espera agotado (más de 2 minutos).'))
             }
-        }, 1000) // Consulta cada 500ms
+        }, 1000) // Consulta cada 1000ms
     })
 }
