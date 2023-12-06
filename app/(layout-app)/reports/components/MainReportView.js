@@ -183,8 +183,12 @@ const ReportView = () => {
                     </section>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <section className='grid grid-cols-2 w-full  gap-3 mt-3'>
-                        <StockTable/>
+                    <section className='grid grid-cols-1 w-full gap-3 mt-3'>
+                        <section className='grid grid-cols w-full gap-3 ' >
+                            <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
+                                <StockTable/>
+                            </section>
+                        </section>
                     </section>
                 </SwiperSlide>
             </Swiper>

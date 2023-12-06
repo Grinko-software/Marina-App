@@ -25,7 +25,7 @@ const WidgetReport = ({ children, className, title, isLoading, data }) => {
         </CardHeader>
         <CardBody>
             {isLoading
-                ? <Skeleton className="h-[20rem] w-[32rem] rounded-md"></Skeleton>
+                ? <Skeleton className="h-[20rem] w-[20rem] rounded-md"></Skeleton>
                 : <div id="chart">
                     <Chart
                         options={data?.options}
