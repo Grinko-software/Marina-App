@@ -50,13 +50,23 @@ const StockTable = () => {
         switch (columnKey) {
         case 'product':
             return (
-                <User
-                    avatarProps={{ radius: 'lg', src: user.avatar }}
-                    description={user.email}
-                    name={cellValue}
-                >
-                    {user.email}
-                </User>
+                <>
+                    {mobile
+                        ? <User
+                            avatarProps={{ radius: 'xl', src: user.avatar }}
+                            description={user.email}
+                            name={cellValue.slice(0, 12)}
+                        >
+                            {user.email}
+                        </User>
+                        : <User
+                            avatarProps={{ radius: 'lg', src: user.avatar }}
+                            description={user.email}
+                            name={cellValue}
+                        >
+                            {user.email}
+                        </User>}
+                </>
             )
         case 'category':
             return (
@@ -67,7 +77,7 @@ const StockTable = () => {
             )
         case 'state':
             return (
-                <Chip className="capitalize" color={statusColorMap[user.state]} size="sm" variant="flat">
+                <Chip className="capitalize" color={statusColorMap[user.state] === '' ? 'danger' : statusColorMap[user.state]} size="sm" variant="flat">
                     {cellValue}
                 </Chip>
             )
