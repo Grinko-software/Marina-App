@@ -5,8 +5,9 @@ import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE, CREATE_PAYMENT_POSMACHINE, GE
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
-import { roundPrice, roundValue, roundValueWithMath } from '@/utils/number'
+import { roundPrice, roundValueWithMath } from '@/utils/number'
 import { getStateSaleMachine } from './services'
+import { getDeviceTuu } from '@/services/settings'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -312,8 +313,9 @@ const useSalesStore = create(
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 /* Its is when pageTarget is Debit or Credit */
                 try {
+                    const device = getDeviceTuu()
                     const bodyPosMachine = {
-                        device: 'PN75233630974',
+                        device,
                         amount: totalPay,
                         dteType: 48,
                         extraData: {

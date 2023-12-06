@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { GET_POST_MACHINE } from '@/settings/constants'
 import { getToken } from '@/services/user'
+import useSettingsStore from '@/stores/settings'
 /* GET GENERAL */
 export const GetPostMachines = async () => {
     try {
@@ -25,4 +26,8 @@ export const GetPostMachines = async () => {
     } catch {
         return null
     }
+}
+export const getDeviceTuu = () => {
+    const { SelectedPostMachine } = useSettingsStore.getState()
+    return SelectedPostMachine?.serial_number
 }
