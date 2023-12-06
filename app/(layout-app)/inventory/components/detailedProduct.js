@@ -106,7 +106,7 @@ export default function DetailedProduct ({ targeProduct, isOpen, onClose, setTar
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button className =" bg-blue-500 text-primary-50" onClick={() => { setEdit(!edit) }}>
-                            Editar
+                                        Editar
                                     </Button>
                                     <Button color="danger" variant="light"
                                         onClick={() => {
@@ -115,7 +115,7 @@ export default function DetailedProduct ({ targeProduct, isOpen, onClose, setTar
                                             onClose()
                                         }}
                                     >
-                            Cerrar
+                                        Cerrar
                                     </Button>
                                 </ModalFooter>
                             </section>

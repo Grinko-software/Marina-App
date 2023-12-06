@@ -13,7 +13,6 @@ import { roundValueWithUnit } from '@/utils/number'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import StockTable from '@/components/ui/StockTable'
-// 최신 버전인 경우
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/scrollbar'
@@ -21,8 +20,11 @@ import 'swiper/css/scrollbar'
 const ReportView = () => {
     const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore } = useReportsStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
+    const [dataModelPieChartLoading, setDataModelPieChartLoading] = useState(true)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
+    const [dataModelIndicatorLoading, setDataModelIndicatorLoading] = useState(true)
     const [dataModelSalesTypes, setDataModelSalesTypes] = useState(null)
+    const [dataModelSalesTypesLoading, setDataModelSalesTypesLoading] = useState(true)
     const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
     const [dataModelCriticalStore, setDataModelCriticalStore] = useState({})
 
@@ -59,6 +61,7 @@ const ReportView = () => {
                 }
             }
             setDataModelPieChart(dataChartPie)
+            setDataModelPieChartLoading(false)
         }
     }, [dataPieChart])
 
@@ -74,6 +77,7 @@ const ReportView = () => {
             const total = dataModelIndicator?.total_money
             const indicator = roundValueWithUnit(total)
             setTotalMoneyIndicator(indicator)
+            setDataModelIndicatorLoading(false)
         }
     }, [dataModelIndicator])
 
@@ -113,6 +117,7 @@ const ReportView = () => {
                 }
             }
             setDataModelSalesTypes(data)
+            setDataModelSalesTypesLoading(false)
         }
     }, [dataSalesTypes])
 
@@ -151,6 +156,7 @@ const ReportView = () => {
                                             subUnit = {totalMoneyIndicator?.unit}
                                             pct = {dataModelIndicator?.total_money_percent_indicator}
                                             color={'green-400'}
+                                            isLoading ={dataModelIndicatorLoading}
                                         />
                                     </div>
                                     <div className='col-span-1 w-full h-full'>
@@ -161,27 +167,16 @@ const ReportView = () => {
                                             subUnit = {''}
                                             pct = {dataModelIndicator?.total_sales_percent_indicator}
                                             color={'yellow-400'}
+                                            isLoading ={dataModelIndicatorLoading}
                                         />
                                     </div>
 
                                     <div className='col-span-2 w-full h-full'>
-                                        <WidgetReport title={'VENTAS POR CATEGORÍAS'}>
-                                            <div id="chart">
-                                                {dataModelPieChart
-                                                    ? <Chart
-                                                        options={dataModelPieChart?.options}
-                                                        series={dataModelPieChart?.series}
-                                                        type="pie"
-                                                    />
-                                                    : null}
-                                            </div>
-                                        </WidgetReport>
+                                        <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />
                                     </div>
                                 </section>
                                 <section className="col-span-2 mt-3 md:mt-0">
-                                    {dataModelSalesTypes
-                                        ? <AreaChart data = {dataModelSalesTypes} />
-                                        : null}
+                                    <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
                                 </section>
                             </section>
                         </section>
@@ -189,8 +184,7 @@ const ReportView = () => {
                 </SwiperSlide>
                 <SwiperSlide>
                     <section className='grid grid-cols-2 w-full  gap-3 mt-3'>
-                        <StockTable></StockTable>
-                        <WidgetReport></WidgetReport>
+                        <StockTable/>
                     </section>
                 </SwiperSlide>
             </Swiper>
@@ -198,14 +192,4 @@ const ReportView = () => {
     )
 }
 
-const WidgetReport = ({ children, className, title }) => {
-    return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
-        <CardHeader >
-            <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
-        </CardHeader>
-        <CardBody>
-            {children}
-        </CardBody>
-    </Card>
-}
 export default ReportView

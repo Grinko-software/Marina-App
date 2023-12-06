@@ -32,8 +32,7 @@ const StockTable = () => {
                     }
                 }
             )
-            /* setDataModelCriticalStore(data?.slice(1, 10)) */
-            setDataModelCriticalStore(data?.slice(0, 9))
+            setDataModelCriticalStore(data?.slice(0, 8))
         }
     }, [criticalStore])
 
@@ -130,7 +129,6 @@ const StockTable = () => {
                     </TableHeader>
                     {dataModelCriticalStore
                         ? <TableBody items={dataModelCriticalStore}>
-
                             {(item) => (
 
                                 <TableRow key={item.id}>
@@ -138,7 +136,6 @@ const StockTable = () => {
                                 </TableRow>
 
                             )}
-
                         </TableBody>
                         : <TableBody ></TableBody>}
                 </Table>
