@@ -12,7 +12,6 @@ export function Header () {
     const { isConnected } = hubScale()
     const [isMobile, setIsMobile] = useState(true)
     useEffect(() => {
-        console.log('Inventory')
         if (navigator) {
             const view = isMobileDevice()
             setIsMobile(view)

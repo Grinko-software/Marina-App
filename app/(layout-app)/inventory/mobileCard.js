@@ -30,7 +30,6 @@ export default function Card () {
     const refShowMore = useRef(null)
     const onChange = (event) => {
         setSearchInput(event.target.value)
-        console.log(event.target.value)
     }
     const listEmpty = new Array(20).fill(null)
     const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
@@ -79,8 +78,6 @@ export default function Card () {
             setTimeout(() => {
                 setPageNumber(pageNumber + 1)
             }, 500)
-
-            console.log(pageNumber)
         }
     }, [listInventoryComplete, lastInViewPort, pageNumber])
 
@@ -91,7 +88,6 @@ export default function Card () {
     }, [selectedCategoryID])
 
     useEffect(() => {
-        console.log(refShowMore)
     }, [refShowMore])
 
     useEffect(() => {

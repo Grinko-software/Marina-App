@@ -2,12 +2,12 @@
 import { Document, Page, Text, View, Svg, G, Line, Image } from '@react-pdf/renderer'
 // Create StylePdf
 import { StylePdf } from './StylePdf'
-import { DefaultImageMarinaMarket } from '@/utils/image'
+import { DefaultImageMarinaMarket, ConvertBytesToImagePNG } from '@/utils/image'
 import { TableProductVoucher } from './components/table/table'
 import ViewTotal from './components/total/total'
 
 // Create Document Component
-export const Voucher = ({ listSales, totalPay, date, totalDiscount }) => (
+export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp }) => (
     <Document>
         <Page size={[180]} style={StylePdf.page}>
             <View style={StylePdf.container}>
@@ -29,6 +29,11 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount }) => (
             <View style={StylePdf.container}>
                 <Text style={StylePdf.titleSecondary}>{'COMPROBANTE DE VENTA'}</Text>
                 <Text style={StylePdf.subtitle}>{date}</Text>
+                <View className="w-96 h-96">
+                    <Image className="w-96 h-96"
+                        src={'data:image/png;base64,' + stamp}
+                    />
+                </View>
 
             </View>
             {/* Table products */}

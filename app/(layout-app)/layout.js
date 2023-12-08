@@ -9,7 +9,6 @@ import { isMobileDevice } from '@/utils/agent'
 export default function LayoutApp ({ children }) {
     const [isMobile, setIsMobile] = useState(true)
     useEffect(() => {
-        console.log('Inventory')
         if (navigator) {
             const view = isMobileDevice()
             setIsMobile(view)

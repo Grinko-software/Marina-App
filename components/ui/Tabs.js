@@ -24,7 +24,6 @@ export const Tabs = ({
     }, [items])
 
     useEffect(() => {
-        console.log('client true')
         setIsClient(true)
     }, [])
 

@@ -25,7 +25,6 @@ export default function ScannerDetection () {
     } = useScannerStore()
 
     useEffect(() => {
-        console.log('units: ', units)
     }, [units])
 
     const addProduct = ({ code }) => {
@@ -41,13 +40,9 @@ export default function ScannerDetection () {
             code
         )
 
-        console.log(currentListSales)
-        console.log(product)
-
         if (product) {
             if (enabledRedirectSales) {
                 router.push('/sales')
-                console.log('/sales')
             }
             addFromNewSales(listSalesActives, saleIdActive, product, units, offers)
         } else {
@@ -58,12 +53,10 @@ export default function ScannerDetection () {
     const onComplete = (barcode) => {
         // check avaible scan
         const ms = getMillisecondsSinceLastScan(useScannerStore.getState().datetimeLastScan)
-        console.log('ms:', ms)
         useScannerStore.getState().disableSetUnits()
 
         if (!ms || ms > msRangeScan) {
             // for units input
-            console.log('code: ', barcode, ' units: ', useSalesStore.getState().units)
 
             if (useScannerStore.getState().scanFromInputUnits) {
                 addProduct({ code: barcode })
@@ -76,7 +69,6 @@ export default function ScannerDetection () {
             setDatetimeLastScan()
         }
         setTimeout(() => {
-            console.log('set units')
             setUnits(1)
             useScannerStore.getState().enableSetUnits()
         }, 100)

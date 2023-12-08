@@ -117,7 +117,6 @@ const useSalesStore = create(
                 sales[saleIndex].totalPrice = 0
                 set({ listSalesActives: sales })
             }
-            console.log(newSaleList)
         },
         setPaymentTarget: (sales, saleId, value) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
@@ -184,7 +183,7 @@ const useSalesStore = create(
                             const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
                             const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
                             return {
-                                NroLinDet: index,
+                                NroLinDet: index + 1,
                                 NmbItem: item?.product?.name,
                                 QtyItem: quantityItem,
                                 PrcItem: priceItem,
@@ -274,47 +273,39 @@ const useSalesStore = create(
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
                     fetchPost(GET_DOCUMENT_HAULMER, modelBody, true).then(resultDtemite => {
-                        // Get result from DTEMITE
-                        console.log(JSON.stringify(modelBody))
-                        console.log(resultDtemite)
-                        if (resultDtemite?.LinkPDF) {
-                            try {
-                                fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                                    setPageTarget(false)
-                                    // setPaymentTarget(sales, saleId, null)
-                                    set({ loadingSale: false })
-                                    if (result?.code === 200) {
-                                        // generatePdfDocument({ listSales: saleProductsList, totalPay })
-                                        window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
-                                        notify('✅ Pago con éxito')
-                                        setPayment(false)
-                                        onClose()
-                                        setGoPay(false)
-                                        removeSale(sales, saleId)
-                                        setPageTarget(false)
-                                        setPayment(false)
-                                        onClose()
-                                        setGoPay(false)
-                                        set({ loadingSale: false })
-                                        setTargetCustomer(null)
-                                    // clearList()
-                                    } else {
-                                        if (pageTarget) {
-                                            notify('❌ Problemas con el pago con la tarjeta')
-                                        } else {
-                                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
-                                        }
-                                        set({ loadingSale: false })
-                                        onClose()
-                                    }
-                                })
-                            } catch {
+                        try {
+                            fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                                setPageTarget(false)
+                                // setPaymentTarget(sales, saleId, null)
                                 set({ loadingSale: false })
-                            }
-                        } else {
-                            notify('❌ ' + resultDtemite ? resultDtemite?.Mensaje : 'Error al generar la boleta o factura')
+                                if (result?.code === 200) {
+                                    const stamp = resultDtemite.data.TIMBRE
+                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp })
+                                    // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                    notify('✅ Pago con éxito')
+                                    setPayment(false)
+                                    onClose()
+                                    setGoPay(false)
+                                    removeSale(sales, saleId)
+                                    setPageTarget(false)
+                                    setPayment(false)
+                                    onClose()
+                                    setGoPay(false)
+                                    set({ loadingSale: false })
+                                    setTargetCustomer(null)
+                                    // clearList()
+                                } else {
+                                    if (pageTarget) {
+                                        notify('❌ Problemas con el pago con la tarjeta')
+                                    } else {
+                                        notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                    }
+                                    set({ loadingSale: false })
+                                    onClose()
+                                }
+                            })
+                        } catch {
                             set({ loadingSale: false })
-                            onClose()
                         }
                     })
                 } catch {

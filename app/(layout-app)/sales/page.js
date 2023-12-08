@@ -19,7 +19,6 @@ export default function Sales () {
     }, [])
 
     useEffect(() => {
-        console.log('Sales')
         useSalesStore.getState()?.enabledScanner()
     }, [])
 
