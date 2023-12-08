@@ -322,6 +322,7 @@ const useSalesStore = create(
                     onClose()
                 }
             } else if (pageTarget === 2 || voucherTarget === 3) {
+                /* Its is when pageTarget is Debit or Credit */
                 try {
                     fetchPost(SALE_TICKET_CREATE, body).then(result => {
                         setPageTarget(null)
