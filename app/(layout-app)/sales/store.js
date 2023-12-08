@@ -141,6 +141,8 @@ const useSalesStore = create(
             const date = today().format('YYYY-MM-DD')
             const netTotal = roundValueWithMath(totalPay / 1.19, 0, 0)
             /* 1: Boleta model  2: factura model */
+
+            // TODO:integrar factura
             const modelBody = voucherTarget === 1
                 ? {
                     response: [
@@ -148,49 +150,48 @@ const useSalesStore = create(
                     ],
                     dte: {
                         Encabezado: {
-                            TipoDTE: 39,
-                            Folio: 0,
-                            FechaEmision: date,
-                            IndServicio: 3
-                        },
-                        Emisor: {
-                            RUTEmisor: '77426986-K',
-                            RznSocEmisor: 'MARINA MARKET',
-                            GiroEmisor: 'MINIMARKET',
-                            DirOrigen: 'LA MARINA 200 #11001101',
-                            CmnaOrigen: 'COQUIMBO',
-                            CiudadOrigen: 'COQUIMBO'
-                        },
-                        Receptor: {
-                            RUTRecep: '66666666-6'
-                        },
-                        Totales: {
-                            MntNeto: netTotal,
-                            MntExe: '0',
-                            IVA: totalPay - netTotal,
-                            MntTotal: totalPay,
-                            TotalPeriodo: totalPay,
-                            VlrPagar: totalPay
-                        }
-                    },
-                    Detalle: saleProductsList?.map((item, index) => {
-                        const priceItem = item?.discount > 0
-                            ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
-                            : roundValueWithMath(item?.product?.price, 0, 0)
-                        const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
-                        const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
-                        return {
-                            NroLinDet: index,
-                            CdgItem: {
-                                TpoCodigo: item?.product?.id,
-                                VlrCodigo: item?.product?.code
+                            IdDoc: {
+                                TipoDTE: 39,
+                                Folio: 0,
+                                FchEmis: '2023-12-08',
+                                IndServicio: '3'
                             },
-                            NmbItem: item?.product?.name,
-                            QtyItem: quantityItem,
-                            PrcItem: priceItem,
-                            MontoItem: totalItem
-                        }
-                    })
+                            Emisor: {
+                                RUTEmisor: '76795561-8',
+                                RznSocEmisor: 'HAULMERSPA',
+                                GiroEmisor: 'VENTA AL POR MENOR EN EMPRESAS DE VENTA A DISTANCIA VÍA INTERNET',
+                                CdgSIISucur: '81303347',
+                                DirOrigen: 'ARTURO PRAT 527 CURICO',
+                                CmnaOrigen: 'Curicó'
+                            },
+                            Receptor: {
+                                RUTRecep: '66666666-6'
+                            },
+                            Totales: {
+                                MntNeto: netTotal,
+                                MntExe: '0',
+                                IVA: totalPay - netTotal,
+                                MntTotal: totalPay,
+                                TotalPeriodo: totalPay,
+                                VlrPagar: totalPay
+                            }
+                        },
+
+                        Detalle: saleProductsList?.map((item, index) => {
+                            const priceItem = item?.discount > 0
+                                ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
+                                : roundValueWithMath(item?.product?.price, 0, 0)
+                            const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
+                            const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                            return {
+                                NroLinDet: index,
+                                NmbItem: item?.product?.name,
+                                QtyItem: quantityItem,
+                                PrcItem: priceItem,
+                                MontoItem: totalItem
+                            }
+                        })
+                    }
                 }
                 : {
                     Sistema: {
@@ -208,13 +209,21 @@ const useSalesStore = create(
                                 FchVenc: date,
                                 IndServicio: '3'
                             },
-                            Emisor: {
+                            /* Emisor: {
                                 RUTEmisor: '77426986-K',
                                 RznSocEmisor: 'MARINA MARKET',
                                 GiroEmisor: 'MINIMARKET',
                                 DirOrigen: 'LA MARINA 200 #11001101',
                                 CmnaOrigen: 'COQUIMBO',
                                 CiudadOrigen: 'COQUIMO'
+                            }, */
+                            Emisor: {
+                                RUTEmisor: '76795561-8',
+                                RznSocEmisor: 'HAULMERSPA',
+                                GiroEmisor: 'VENTA AL POR MENOR EN EMPRESAS DE VENTA A DISTANCIA VÍA INTERNET',
+                                CdgSIISucur: '81303347',
+                                DirOrigen: 'ARTURO PRAT 527 CURICO',
+                                CmnaOrigen: 'Curicó'
                             },
                             Receptor: {
                                 RUTRecep: targetCustomer?.rut,
@@ -232,21 +241,21 @@ const useSalesStore = create(
                                 MntTotal: totalPay,
                                 TotalPeriodo: totalPay,
                                 VlrPagar: totalPay
-                            }
-                        },
-                        Detalle: saleProductsList?.map((item, index) => {
-                            return {
-                                NroLinDet: index,
-                                CdgItem: {
-                                    TpoCodigo: item?.product?.id,
-                                    VlrCodigo: item?.product?.code
-                                },
-                                NmbItem: item?.product?.name,
-                                QtyItem: item?.quantity,
-                                PrcItem: roundValueWithMath(item?.product?.price / 1.19, 0, 0),
-                                MontoItem: roundValueWithMath(item?.total / 1.19, 0, 0)
-                            }
-                        })
+                            },
+                            Detalle: saleProductsList?.map((item, index) => {
+                                return {
+                                    NroLinDet: index,
+                                    CdgItem: {
+                                        TpoCodigo: item?.product?.id,
+                                        VlrCodigo: item?.product?.code
+                                    },
+                                    NmbItem: item?.product?.name,
+                                    QtyItem: item?.quantity,
+                                    PrcItem: roundValueWithMath(item?.product?.price / 1.19, 0, 0),
+                                    MontoItem: roundValueWithMath(item?.total / 1.19, 0, 0)
+                                }
+                            })
+                        }
                     }
                 }
             /* Model to send endpoint our bd */
