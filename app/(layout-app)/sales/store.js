@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
-import { GET_DOCUMENT_DTEMITE, SALE_TICKET_CREATE } from '@/settings/constants'
+import { GET_DOCUMENT_HAULMER, SALE_TICKET_CREATE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
@@ -143,55 +143,54 @@ const useSalesStore = create(
             /* 1: Boleta model  2: factura model */
             const modelBody = voucherTarget === 1
                 ? {
-                    Sistema: {
-                        nombre: 'rion',
-                        rut: '77426986-K',
-                        usuario: 'integrado_rion',
-                        clave: 'cmlvbjIwMjM='
-                    },
-                    Documento: {
+                    response: [
+                        'PDF', 'TIMBRE'
+                    ],
+                    dte: {
                         Encabezado: {
-                            IdDoc: {
-                                TipoDTE: '39',
-                                Folio: 0,
-                                FchEmis: date,
-                                FchVenc: date
-                            },
-                            Emisor: {
-                                RUTEmisor: '77426986-K',
-                                RznSocEmisor: 'MARINA MARKET',
-                                GiroEmisor: 'MINIMARKET',
-                                DirOrigen: 'LA MARINA 200 #11001101',
-                                CmnaOrigen: 'COQUIMBO',
-                                CiudadOrigen: 'COQUIMO'
-                            },
-                            Receptor: { RUTRecep: '66666666-6' },
-                            Totales: {
-                                MntNeto: netTotal,
-                                MntExe: '0',
-                                IVA: totalPay - netTotal,
-                                MntTotal: totalPay
-                            }
+                            TipoDTE: 39,
+                            Folio: 0,
+                            FechaEmision: date,
+                            IndServicio: 3
                         },
-                        Detalle: saleProductsList?.map((item, index) => {
-                            const priceItem = item?.discount > 0
-                                ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
-                                : roundValueWithMath(item?.product?.price, 0, 0)
-                            const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
-                            const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
-                            return {
-                                NroLinDet: index,
-                                CdgItem: {
-                                    TpoCodigo: item?.product?.id,
-                                    VlrCodigo: item?.product?.code
-                                },
-                                NmbItem: item?.product?.name,
-                                QtyItem: quantityItem,
-                                PrcItem: priceItem,
-                                MontoItem: totalItem
-                            }
-                        })
-                    }
+                        Emisor: {
+                            RUTEmisor: '77426986-K',
+                            RznSocEmisor: 'MARINA MARKET',
+                            GiroEmisor: 'MINIMARKET',
+                            DirOrigen: 'LA MARINA 200 #11001101',
+                            CmnaOrigen: 'COQUIMBO',
+                            CiudadOrigen: 'COQUIMBO'
+                        },
+                        Receptor: {
+                            RUTRecep: '66666666-6'
+                        },
+                        Totales: {
+                            MntNeto: netTotal,
+                            MntExe: '0',
+                            IVA: totalPay - netTotal,
+                            MntTotal: totalPay,
+                            TotalPeriodo: totalPay,
+                            VlrPagar: totalPay
+                        }
+                    },
+                    Detalle: saleProductsList?.map((item, index) => {
+                        const priceItem = item?.discount > 0
+                            ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
+                            : roundValueWithMath(item?.product?.price, 0, 0)
+                        const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
+                        const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                        return {
+                            NroLinDet: index,
+                            CdgItem: {
+                                TpoCodigo: item?.product?.id,
+                                VlrCodigo: item?.product?.code
+                            },
+                            NmbItem: item?.product?.name,
+                            QtyItem: quantityItem,
+                            PrcItem: priceItem,
+                            MontoItem: totalItem
+                        }
+                    })
                 }
                 : {
                     Sistema: {
@@ -206,7 +205,8 @@ const useSalesStore = create(
                                 TipoDTE: '33',
                                 Folio: 0,
                                 FchEmis: date,
-                                FchVenc: date
+                                FchVenc: date,
+                                IndServicio: '3'
                             },
                             Emisor: {
                                 RUTEmisor: '77426986-K',
@@ -229,7 +229,9 @@ const useSalesStore = create(
                                 MntExe: '0',
                                 TasaIVA: '19',
                                 IVA: totalPay - netTotal,
-                                MntTotal: totalPay
+                                MntTotal: totalPay,
+                                TotalPeriodo: totalPay,
+                                VlrPagar: totalPay
                             }
                         },
                         Detalle: saleProductsList?.map((item, index) => {
@@ -262,8 +264,10 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
-                    fetchPost(GET_DOCUMENT_DTEMITE, modelBody, true).then(resultDtemite => {
+                    fetchPost(GET_DOCUMENT_HAULMER, modelBody, true).then(resultDtemite => {
                         // Get result from DTEMITE
+                        console.log(JSON.stringify(modelBody))
+                        console.log(resultDtemite)
                         if (resultDtemite?.LinkPDF) {
                             try {
                                 fetchPost(SALE_TICKET_CREATE, body).then(result => {
