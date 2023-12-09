@@ -1,4 +1,4 @@
-import { fetchGetReports, fetchGetReportsByCategoty, fetchGetReportsIndicators, fetchGetReportsSalesTypes, fetchGetReportsCriticalStock } from '@/services/reports'
+import { fetchGetReportsSales, fetchGetReportsByCategoty, fetchGetReportsIndicators, fetchGetReportsSalesTypes, fetchGetReportsCriticalStock } from '@/services/reports'
 import { getMoment } from 'utils/date'
 
 export const equivalentDateUnit = {
@@ -6,7 +6,6 @@ export const equivalentDateUnit = {
     weekly: 'week',
     monthly: 'month',
     quarterly: 'quarter',
-    // biyearly: 'month', // not supported by momentjs
     yearly: 'year'
 }
 
@@ -91,9 +90,9 @@ export const mapDateQuantityProperties = (x) => {
     }
 }
 
-export const requestData = async (from, rangeType, periodQuantity) => {
+export const requestDataSales = async (from, rangeType, periodQuantity) => {
     try {
-        return fetchGetReports({
+        return fetchGetReportsSales({
             periodStart: from,
             periodType: rangeType,
             periodQuantity

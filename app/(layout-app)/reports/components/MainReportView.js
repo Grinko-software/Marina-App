@@ -18,12 +18,13 @@ import 'swiper/css/navigation'
 import 'swiper/css/scrollbar'
 
 const ReportView = () => {
-    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore } = useReportsStore()
+    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore, table: dataSalesTable } = useReportsStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelPieChartLoading, setDataModelPieChartLoading] = useState(true)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
     const [dataModelIndicatorLoading, setDataModelIndicatorLoading] = useState(true)
     const [dataModelSalesTypes, setDataModelSalesTypes] = useState(null)
+    const [dataModelTable, setDataModelTable] = useState(null)
     const [dataModelSalesTypesLoading, setDataModelSalesTypesLoading] = useState(true)
     const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
     const [dataModelCriticalStore, setDataModelCriticalStore] = useState({})
@@ -71,6 +72,12 @@ const ReportView = () => {
             setDataModelIndicator(dataIndicators)
         }
     }, [dataIndicators])
+
+    useEffect(() => {
+        if (dataSalesTable) {
+            setDataModelTable(dataSalesTable)
+        }
+    }, [dataSalesTable])
 
     useEffect(() => {
         if (dataModelIndicator) {
@@ -131,67 +138,85 @@ const ReportView = () => {
         <>
             <section className='grid grid-cols-1 w-full gap-3'>
                 <Filter/>
-            </section>
-            <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                slidesPerView={'auto'}
-                centeredSlides={true}
-                Loop={true}
-                autoplay={false}
-                scrollbar={{ draggable: true }}
-                pagination={{
-                    clickable: true
-                }}
-            >
-                <SwiperSlide>
-                    <section className='grid grid-cols-1 w-full gap-3 mt-3'>
-                        <section className='grid grid-cols w-full gap-3 ' >
-                            <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
-                                <section className="grid grid-cols-2 gap-3  h-full w-full col-span-1">
-                                    <div className='col-span-1 w-full h-full'>
-                                        <InfoCard
-                                            title = {'Ingresos'}
-                                            unit ={'$'}
-                                            quantity = {totalMoneyIndicator?.value}
-                                            subUnit = {totalMoneyIndicator?.unit}
-                                            pct = {dataModelIndicator?.total_money_percent_indicator}
-                                            color={'green-400'}
-                                            isLoading ={dataModelIndicatorLoading}
-                                        />
-                                    </div>
-                                    <div className='col-span-1 w-full h-full'>
-                                        <InfoCard
-                                            title = {'Ventas'}
-                                            unit ={''}
-                                            quantity = {dataModelIndicator?.total_sales}
-                                            subUnit = {''}
-                                            pct = {dataModelIndicator?.total_sales_percent_indicator}
-                                            color={'yellow-400'}
-                                            isLoading ={dataModelIndicatorLoading}
-                                        />
-                                    </div>
+                <Swiper
+                    className=''
+                    modules={[Navigation, Pagination, Autoplay]}
+                    slidesPerView={'auto'}
+                    centeredSlides={true}
+                    Loop={true}
+                    autoplay={false}
+                    scrollbar={{ draggable: true }}
+                    pagination={{
+                        clickable: true
+                    }}
+                >
+                    <SwiperSlide>
+                        <section className='grid grid-cols-1 w-full gap-3 mt-3'>
+                            <section className='grid grid-cols w-full gap-3 ' >
+                                <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
+                                    <section className="grid grid-cols-2 gap-3  h-full w-full col-span-1">
+                                        <div className='col-span-1 w-full h-full'>
+                                            <InfoCard
+                                                title = {'Ingresos'}
+                                                unit ={'$'}
+                                                quantity = {totalMoneyIndicator?.value}
+                                                subUnit = {totalMoneyIndicator?.unit}
+                                                pct = {dataModelIndicator?.total_money_percent_indicator}
+                                                color={'green-400'}
+                                                isLoading ={dataModelIndicatorLoading}
+                                            />
+                                        </div>
+                                        <div className='col-span-1 w-full h-full'>
+                                            <InfoCard
+                                                title = {'Ventas'}
+                                                unit ={''}
+                                                quantity = {dataModelIndicator?.total_sales}
+                                                subUnit = {''}
+                                                pct = {dataModelIndicator?.total_sales_percent_indicator}
+                                                color={'yellow-400'}
+                                                isLoading ={dataModelIndicatorLoading}
+                                            />
+                                        </div>
 
-                                    <div className='col-span-2 w-full h-full'>
-                                        <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />
-                                    </div>
-                                </section>
-                                <section className="col-span-2 mt-3 md:mt-0">
-                                    <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
+                                        <div className='col-span-2 w-full h-full'>
+                                            <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />
+                                        </div>
+                                    </section>
+                                    <section className="col-span-2 mt-3 md:mt-0">
+                                        <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
+                                    </section>
                                 </section>
                             </section>
                         </section>
-                    </section>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <section className='grid grid-cols-1 w-full gap-3 mt-3'>
-                        <section className='grid grid-cols w-full gap-3 ' >
-                            <StockTable/>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <section className='grid grid-cols-1 w-full gap-3 mt-3'>
+                            <section className='grid grid-cols w-full gap-3 ' >
+                                <StockTable/>
+                            </section>
                         </section>
-                    </section>
-                </SwiperSlide>
-            </Swiper>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <section className='grid grid-cols-1 w-full gap-3 mt-3'>
+                            <section className='grid grid-cols w-full gap-3 ' >
+                                <TableSales/>
+                            </section>
+                        </section>
+                    </SwiperSlide>
+                </Swiper>
+            </section>
         </>
     )
 }
 
+const WidgetReport = ({ children, className, title }) => {
+    return <Card className={'w-auto flex-1 text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 text-black ' + className}>
+        <CardHeader >
+            <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
+        </CardHeader>
+        <CardBody>
+            {children}
+        </CardBody>
+    </Card>
+}
 export default ReportView
