@@ -61,11 +61,11 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                             secondary: 'black'
                         }
                     }
-                }} />
-            <div className="flex flex-wrap gap-3">
-            </div>
+                }}
+            />
             <Modal
-                size={'4xl'}
+                size='5xl'
+                className='h-[40rem]'
                 isOpen={isOpen}
                 backdrop='opaque'
                 onClose={() => {
@@ -76,66 +76,59 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
-                <ModalContent className='gap-'>
-                    <ModalHeader className="flex flex-col gap-3 text-primary-500 dark:text-primary-200 gap-y-7">
-                        <h1 className='text-4xl font-bold'>Herramienta de Pago en Efectivo</h1>
-                        <section className="flex flex-row items-center justify-center content-between gap-5">
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-green-600 text-white font-extrabold text-3xl'
+                <ModalContent className='items-center content-center py-10'>
+                    <ModalHeader className="flex flex-col text-primary-500 dark:text-primary-200">
+                        <section className="flex flex-row space-x-3">
+                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
                                 onClick={() => setPayDetailed(payDetailed + 1000) }>
                                 $1.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl'
+                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 2000) }>
                                 $2.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl'
+                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 5000) }>
                                 $5.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl'
+                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 10000) }>
                                 $10.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl'
+                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 20000) }>
                                 $20.000
                             </Button>
                         </section>
                     </ModalHeader>
-                    <ModalBody >
-                        <div className=''>
-                            <div className='py-10'>
-                                <Input
-                                    size='lg'
-                                    type="number"
-                                    variant="faded"
-                                    label={
-                                        <h1 className='text-xl'>Pago del Cliente</h1>
-                                    }
-                                    labelPlacement={'outside'}
-                                    placeholder={
-                                        payDetailed === 0 ? 'Ingrese monto de pago' : payDetailed
-                                    }
-                                    startContent={
-                                        <div className="pointer-events-none flex items-center">
-                                            <span className="text-default-400 text-small">$</span>
-                                        </div>}
-                                    min={totalPay}
-                                    onValueChange={(value) => {
-                                        setPayDetailed(parseInt(value))
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div className='grid grid-rows-2 grid-flow-col justify-center gap-2'>
-                            <h1 className='text-3xl font-bold'>{'PAGO TOTAL:'}</h1>
+                    <ModalBody className='gap-4 w-8/12 items-center justify-around' >
+                        <Input
+                            size='lg'
+                            type="number"
+                            variant="faded"
+                            labelPlacement={'outside'}
+                            placeholder={
+                                payDetailed === 0 || payDetailed === null ? 'Ingrese monto de pago' : payDetailed
+                            }
+                            startContent={
+                                <div className="pointer-events-none flex items-center">
+                                    <span className="text-default-400 text-small">$</span>
+                                </div>}
+                            min={totalPay}
+                            onValueChange={(value) => {
+                                setPayDetailed(parseInt(value))
+                            }}
+                        />
+
+                        <div className='grid grid-rows-2 grid-flow-col py-4 w-8/12 content-end justify-between'>
+                            <h1 className='text-3xl font-bold'>{'TOTAL:'}</h1>
                             <h1 className={`text-3xl font-bold ${(totalPay - payDetailed) < 0 ? 'text-green-700' : 'text-red-700'}`}>{((totalPay - payDetailed) < 0 ? 'VUELTO:' : 'SALDO PENDIENTE:')}</h1>
                             <h1 className='text-3xl font-bold '>{ formatter.format(totalPay)}</h1>
                             <h1 className={`text-3xl font-bold ${(totalPay - payDetailed) < 0 ? 'text-green-700' : 'text-red-700'}`}>{((totalPay - payDetailed) < 0 ? formatter.format((payDetailed - totalPay)) : formatter.format((totalPay - payDetailed)))}</h1>
                         </div>
                     </ModalBody>
                     <ModalFooter className='justify-center'>
-                        <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[14rem] h-[6rem] text-2xl font-extrabold "
+                        <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
                             onClick={
                                 () => {
                                     const result = totalPay - payDetailed
@@ -152,9 +145,9 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                                 }
                             }
                             isLoading={loadingSale}>
-                            {((totalPay - payDetailed) <= 0 ? 'PAGAR' : 'VERIFICAR PAGO')}
+                            {((totalPay - payDetailed) <= 0 || payDetailed === null ? 'PAGAR' : 'VERIFICANDO PAGO')}
                         </Button>
-                        <Button color="danger" variant="shadow" className="w-[14rem] h-[6rem] text-2xl font-extrabold"
+                        <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
                             onClick={() => {
                                 setPaymentTarget(listSalesActives, saleIdActive, null)
                                 setPayDetailed(null)
@@ -162,7 +155,7 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                                 setGoPay(false)
                             }}
                         >
-                            Cancelar
+                            CANCELAR
                         </Button>
                     </ModalFooter>
                 </ModalContent>
