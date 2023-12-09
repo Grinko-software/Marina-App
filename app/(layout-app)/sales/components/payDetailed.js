@@ -76,26 +76,26 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
-                <ModalContent className='items-center content-center py-10'>
+                <ModalContent className='items-center content-center py-10' >
                     <ModalHeader className="flex flex-col text-primary-500 dark:text-primary-200">
                         <section className="flex flex-row space-x-3">
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
+                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
                                 onClick={() => setPayDetailed(payDetailed + 1000) }>
                                 $1.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
+                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 2000) }>
                                 $2.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
+                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 5000) }>
                                 $5.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
+                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 10000) }>
                                 $10.000
                             </Button>
-                            <Button variant="shadow" className=' w-[12rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
+                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 20000) }>
                                 $20.000
                             </Button>
