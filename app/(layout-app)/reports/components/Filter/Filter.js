@@ -13,7 +13,7 @@ import useFilterStore from './store'
 import useRangeDateStore from './RangeDatePicker/store'
 import moment from 'moment-timezone'
 import useReportsStore from '../store'
-import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators, requestDataCriticalStore } from './service'
+import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators, requestDataCriticalStore, requestDataSales } from './service'
 import { getMoment, today } from '@/utils/date'
 
 dayjs.locale('es')
@@ -35,7 +35,7 @@ export default function Filter () {
     const rangeDateState = useRangeDateStore((state) => state)
 
     const { valueFrom, valueTo } = useRangeDateStore()
-    const { data: reportsData, updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore } = useReportsStore()
+    const { data: reportsData, updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore, updateTable } = useReportsStore()
     const { value: rangeType } = useDateTypeStore()
     const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
@@ -67,8 +67,13 @@ export default function Filter () {
         const periodRange = 'Day' || state?.rangeType
         const periodQuantity = state?.periodQuantity
 
-        const [dataReportByCategory, dataIndicators, dataSalesTypes, dataCriticalStore] = await
-        Promise.all([requestDataByCategory(
+        const [dataReportSales, dataReportByCategory, dataIndicators, dataSalesTypes, dataCriticalStore] = await
+        Promise.all([requestDataSales(
+            periodStart,
+            periodRange,
+            periodQuantity
+        ),
+        requestDataByCategory(
             periodStart,
             periodRange,
             periodQuantity
@@ -83,6 +88,7 @@ export default function Filter () {
         ), requestDataCriticalStore(
         )])
 
+        updateTable(dataReportSales?.data)
         updatePieChart(dataReportByCategory?.data)
         updatePeriodIndicators(dataIndicators?.data)
         updateAreaChart(dataSalesTypes?.data)

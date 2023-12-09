@@ -16,7 +16,7 @@
     "@material-tailwind/react": "^2.1.0",
     "@next/eslint-plugin-next": "^13.4.19",
     "@next/font": "^13.4.15",
-    "@nextui-org/react": "^2.0.19",
+    "@nextui-org/react": "2.2.9",
     "@react-pdf/renderer": "^3.1.12",
     "@serialport/parser-readline": "^12.0.0",
     "antd": "^5.11.1",

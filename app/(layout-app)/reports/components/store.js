@@ -18,6 +18,9 @@ const useReportsStore = create((set) => ({
     },
     updateCriticalStore: (value) => {
         set({ criticalStore: value })
+    },
+    updateTable: (value) => {
+        set({ table: value })
     }
 }))
 

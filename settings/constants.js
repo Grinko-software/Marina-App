@@ -38,3 +38,5 @@ export const REPORTS_CATEGORY_API_URL = BASE_MARKET_API_URL + '/report/period-ca
 export const REPORTS_INDICATORS_API_URL = BASE_MARKET_API_URL + '/report/period'
 export const REPORTS_SALES_TYPES_API_URL = BASE_MARKET_API_URL + '/report/period-sales-types'
 export const REPORTS_CRITICAL_STOCK_API_URL = BASE_MARKET_API_URL + '/report/product-stock'
+export const REPORTS_LAST_SALES_API_URL = BASE_MARKET_API_URL + '/report/last-sales'
+export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
