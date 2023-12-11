@@ -138,6 +138,7 @@ const ReportView = () => {
         <>
             <section className='grid grid-cols-1 w-full gap-3'>
                 <Filter/>
+                {(typeof window !== 'undefined') &&
                 <Swiper
                     className=''
                     modules={[Navigation, Pagination, Autoplay]}
@@ -204,6 +205,7 @@ const ReportView = () => {
                         </section>
                     </SwiperSlide>
                 </Swiper>
+                }
             </section>
         </>
     )
