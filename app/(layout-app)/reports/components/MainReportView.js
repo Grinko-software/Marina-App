@@ -135,7 +135,6 @@ const ReportView = () => {
 
     return (
         <>
-            {(typeof window !== 'undefined') &&
             <section className='grid grid-cols-1 w-full gap-3'>
                 <Filter/>
                 <Swiper
@@ -205,7 +204,6 @@ const ReportView = () => {
                     </SwiperSlide>
                 </Swiper>
             </section>
-            }
         </>
     )
 }
