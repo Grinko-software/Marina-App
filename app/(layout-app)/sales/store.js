@@ -253,7 +253,8 @@ const useSalesStore = create(
                     return {
                         product_id: item?.product?.id,
                         quantity: item?.quantity,
-                        total_price: item?.total
+                        total_price: item?.total,
+                        total_discount: item?.discount
                     }
                 }),
                 payment_type_id: paymentTarget,
