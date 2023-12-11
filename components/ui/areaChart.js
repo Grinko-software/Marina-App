@@ -4,8 +4,6 @@ import React from 'react'
 import { Card, CardBody, CardHeader, Skeleton } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
-
 const AreaChart = ({ data, isLoading }) => {
     return (
         <section className='h-full w-full flex' >
@@ -19,6 +17,7 @@ const AreaChart = ({ data, isLoading }) => {
 }
 
 const WidgetReport = ({ children, className, title, isLoading, data }) => {
+    const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
     return <>
 
         <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
