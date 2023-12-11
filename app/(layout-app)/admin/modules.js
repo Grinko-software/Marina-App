@@ -1,6 +1,6 @@
 import { FaChartLine, FaClipboardList, FaShoppingCart, FaTruck, FaUsersCog } from 'react-icons/fa'
-import ReportView from '../reports/components/MainReportView'
-import Sales from './[module]/components/Sales/Sales'
+// import ReportView from '../reports/components/MainReportView'
+// import Sales from './[module]/components/Sales/Sales'
 
 export const modules = [
     {
@@ -8,7 +8,8 @@ export const modules = [
         path: 'sales',
         name: 'Ventas',
         description: 'Descripción del módulo',
-        content: <Sales/>,
+        // content: <Sales/>,
+        content: <div>Ventas</div>,
         icon: <FaClipboardList />
     },
     {
@@ -16,7 +17,8 @@ export const modules = [
         path: 'reports',
         name: 'Reportes',
         description: 'Descripción del módulo',
-        content: <ReportView/>,
+        content: <div>Reportes</div>,
+        // content: <ReportView/>,
         icon: <FaChartLine />
     },
     {
