@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-org/react'
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
-import PieChart from '@/components/ui/pieChart'
+// import PieChart from '@/components/ui/pieChart'
 // import AreaChart from '@/components/ui/areaChart'
 // import Filter from './Filter/Filter'
 import useReportsStore from './store'
@@ -179,7 +179,7 @@ const ReportView = () => {
                                         </div>
 
                                         <div className='col-span-2 w-full h-full'>
-                                            <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />                                        </div>
+                                            {/* <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} /> */}                                        </div>
                                     </section>
                                     <section className="col-span-2 mt-3 md:mt-0">
                                         {/* <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} /> */}                                    </section>
