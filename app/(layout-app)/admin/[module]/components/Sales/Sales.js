@@ -1,17 +1,21 @@
 'use client'
 import TableSales from '@/components/ui/TableSales'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useLastSalesStore from './store'
+import SaleDetail from './SaleDetail'
 
 export default function Sales ({ params }) {
     const { requestData, loading, data } = useLastSalesStore()
+    const [target, setTarget] = useState(null)
+
     useEffect(() => {
         requestData()
     }, [])
 
     return <section>
         <section className='grid grid-cols w-full gap-3 ' >
-            <TableSales data={ data } loading={loading} />
+            <TableSales data={ data } loading={loading} setTarget={setTarget}/>
+            <SaleDetail target={target} setTarget={setTarget}/>
         </section>
     </section>
 }

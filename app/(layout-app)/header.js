@@ -23,7 +23,7 @@ export function Header () {
 
             <HomeButton/>
             <ThemeButton/>
-            {isMobile ? <MobileNavBar></MobileNavBar> : <></>}
+            {/*             {isMobile ? <MobileNavBar></MobileNavBar> : <></>} */}
             {usePathname() === '/sales' ? <ScaleStatus scaleStatus = {isConnected}/> : <></>}
         </section>
     )

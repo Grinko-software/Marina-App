@@ -8,6 +8,7 @@ export const modules = [
         path: 'sales',
         name: 'Ventas',
         description: 'Descripción del módulo',
+        requireAdmin: true,
         content: <Sales/>,
         icon: <FaClipboardList />
     },
@@ -16,6 +17,7 @@ export const modules = [
         path: 'reports',
         name: 'Reportes',
         description: 'Descripción del módulo',
+        requireAdmin: true,
         content: <ReportView/>,
         icon: <FaChartLine />
     },
@@ -24,6 +26,7 @@ export const modules = [
         path: 'users',
         name: 'Usuarios',
         description: 'Descripción del módulo',
+        requireAdmin: true,
         content: <div>Usuarios</div>,
         icon: <FaUsersCog />
     },
@@ -32,6 +35,7 @@ export const modules = [
         path: 'aaaa',
         name: 'Proveedores',
         description: 'Descripción del módulo',
+        requireAdmin: false,
         content: <div>Proveedores</div>,
         icon: <FaTruck />
     },
@@ -40,6 +44,7 @@ export const modules = [
         path: 'products',
         name: 'Productos',
         description: 'Descripción del módulo',
+        requireAdmin: false,
         content: <div>Productos</div>,
         icon: <FaShoppingCart />
     },
@@ -48,6 +53,7 @@ export const modules = [
         path: 'aaaa6',
         name: 'Módulo 6',
         description: 'Descripción del módulo',
+        requireAdmin: false,
         content: <div>6</div>,
         icon: <FaUsersCog />
     }

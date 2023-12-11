@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
 import { isMobileDevice } from '@/utils/agent'
 import { getMoment } from '@/utils/date'
-export default function TableSales ({ data, loading }) {
+export default function TableSales ({ data, loading, setTarget }) {
     // eslint-disable-next-line no-unused-vars
     const [isMobile, setIsMobile] = useState(true)
     const [hasMore, setHasMore] = useState(false)
@@ -16,6 +16,10 @@ export default function TableSales ({ data, loading }) {
     }
 
     const columns = [
+        {
+            key: 'id',
+            label: 'ID'
+        },
         {
             key: 'datetime',
             label: 'FECHA'
@@ -49,6 +53,7 @@ export default function TableSales ({ data, loading }) {
             let tableData = data.map((item) => {
                 return {
                     key: item.sale_id,
+                    id: item.sale_id,
                     datetime: item?.date,
                     total: item?.total,
                     iva: item?.total - ((item.total || 0) / 1.19),
@@ -72,7 +77,7 @@ export default function TableSales ({ data, loading }) {
     }
 
     const openTicket = (ticketId) => {
-        //
+        setTarget(ticketId)
     }
 
     const sortItems = (items, sortDescriptor) => {
