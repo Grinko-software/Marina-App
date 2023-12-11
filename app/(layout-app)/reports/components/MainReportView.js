@@ -5,8 +5,8 @@ import { Card, CardBody, CardHeader, CardFooter, Image, Button } from '@nextui-o
 import InfoCard from '@/components/ui/infoCard'
 import TableSales from '@/components/ui/TableSales'
 import PieChart from '@/components/ui/pieChart'
-// import AreaChart from '@/components/ui/areaChart'
-// import Filter from './Filter/Filter'
+import AreaChart from '@/components/ui/areaChart'
+import Filter from './Filter/Filter'
 import useReportsStore from './store'
 import { roundValueWithUnit } from '@/utils/number'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -137,7 +137,7 @@ const ReportView = () => {
         <>
             {(typeof window !== 'undefined') &&
             <section className='grid grid-cols-1 w-full gap-3'>
-                {/* <Filter/> */}
+                <Filter/>
                 <Swiper
                     className=''
                     modules={[Navigation, Pagination, Autoplay]}
@@ -183,7 +183,8 @@ const ReportView = () => {
                                         </div>
                                     </section>
                                     <section className="col-span-2 mt-3 md:mt-0">
-                                        {/* <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} /> */}                                    </section>
+                                        <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
+                                    </section>
                                 </section>
                             </section>
                         </section>
