@@ -180,12 +180,12 @@ const ReportView = () => {
                                         </div>
 
                                         <div className='col-span-2 w-full h-full'>
-                                            <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />
-                                        </div>
+                                            {/*                                             <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />
+ */}                                        </div>
                                     </section>
                                     <section className="col-span-2 mt-3 md:mt-0">
-                                        <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
-                                    </section>
+                                        {/*                                         <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
+ */}                                    </section>
                                 </section>
                             </section>
                         </section>
@@ -200,7 +200,7 @@ const ReportView = () => {
                     <SwiperSlide>
                         <section className='grid grid-cols-1 w-full gap-3 mt-3'>
                             <section className='grid grid-cols w-full gap-3 ' >
-                                <TableSales/>
+                                {/* <TableSales/> */}
                             </section>
                         </section>
                     </SwiperSlide>
