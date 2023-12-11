@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
-import ReactApexChart from 'apexcharts'
 import { Card, CardBody, CardHeader, Skeleton } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 
