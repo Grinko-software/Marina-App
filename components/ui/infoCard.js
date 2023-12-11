@@ -9,7 +9,7 @@ const InfoCard = ({ title, unit, quantity, subUnit, color, pct, isLoading }) => 
     return (
         <section className='h-full flex'>
             {isLoading
-                ? <Card className="w-full space-y-5 p-4 text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black " radius="lg">
+                ? <Card className="w-full space-y-5 p-4 text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform text-black " radius="lg">
                     <Skeleton className="rounded-lg">
                         <div className="h-24 rounded-lg bg-default-300"></div>
                     </Skeleton>
@@ -25,7 +25,7 @@ const InfoCard = ({ title, unit, quantity, subUnit, color, pct, isLoading }) => 
                         </Skeleton>
                     </div>
                 </Card>
-                : <Card className={'flex flex-1 w-full h-full transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black '}>
+                : <Card className={'flex flex-1 w-full h-full transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform text-black '}>
                     <CardHeader className='flex-1 flex-col'>
                         <h4 className="text-emerald-600 dark:text-esmerald-800 font-extrabold text-2xl">{title?.toUpperCase()}</h4>
                         {
