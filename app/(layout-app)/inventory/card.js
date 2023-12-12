@@ -76,15 +76,12 @@ export default function Card () {
             setTimeout(() => {
                 setPageNumber(pageNumber + 1)
             }, 500)
-
-            console.log(pageNumber)
         }
     }, [listInventoryComplete, lastInViewPort, pageNumber])
 
     /* async function updatedFilteredListByCategory (filteredLisInventory) {
         await timeout(100)
 
-        console.log('hello')
     } */
 
     useEffect(() => {
@@ -94,7 +91,6 @@ export default function Card () {
     }, [selectedCategoryID])
 
     useEffect(() => {
-        console.log(refShowMore)
     }, [refShowMore])
 
     useEffect(() => {

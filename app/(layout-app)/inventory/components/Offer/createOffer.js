@@ -104,7 +104,6 @@ export default function CreateOffer () {
         if (isSalePrice) {
             newFormValues.net_price = newFormValues?.sale_price / 1.19
         }
-        console.log(newFormValues)
         setFormData(newFormValues)
     }
 

@@ -22,6 +22,11 @@ export function Navigation () {
             id: 'reports',
             label: 'Reportes',
             route: '/reports'
+        },
+        {
+            id: 'admin',
+            label: 'Administrar',
+            route: '/admin'
         }
     ]
     useEffect(() => {

@@ -66,7 +66,6 @@ export default function tableProducts (props) {
     }, [selectedProductWithKG])
 
     useEffect(() => {
-        console.log('open: ', isOpen)
         if (!isOpen) {
             setTargetProduct(null)
             setSelectedProductWithKG(null)

@@ -20,3 +20,22 @@ export const roundValueWithMath = (value, decimal, errorValue = '-') => {
 export const roundPrice = (value) => {
     return Math.round(value / 10) * 10
 }
+
+export const roundValueWithUnit = (value, decimal) => {
+    let unit = ''
+    let valueRound = value
+
+    if (value > 1000000) {
+        unit = 'mill.'
+        valueRound = value / 1000000
+    } else if (value > 1000) {
+        unit = 'mil.'
+        valueRound = value / 1000
+    }
+
+    return {
+        value: valueRound?.toFixed(decimal || 1),
+        unit,
+        originalValue: value
+    }
+}

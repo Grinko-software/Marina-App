@@ -48,7 +48,6 @@ export default function SaleList (props) {
 
     const onChange = (event) => {
         setSearchInput(event.target.value)
-        console.log(event.target.value)
     }
 
     const onClear = () => {

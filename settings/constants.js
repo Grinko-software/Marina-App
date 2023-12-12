@@ -27,7 +27,7 @@ export const PRODUCT_OFFER = BASE_MARKET_API_URL + '/product/offer'
 // Creat list
 export const SALE_TICKET_CREATE = BASE_MARKET_API_URL + '/sale-ticket/create'
 // DTEMITE ENDPOINTS
-export const GET_DOCUMENT_DTEMITE = 'https://www.dtemite.cl/sistema/Backend/WsMaster/ApiIntegracionController.php/Api/Documento'
+export const GET_DOCUMENT_HAULMER = BASE_MARKET_API_URL + '/dte'
 // Get customers
 export const CUSTOMER_API_URL = BASE_MARKET_API_URL + '/customer'
 export const CREATE_CUSTOMER = BASE_MARKET_API_URL + '/customer/create'
@@ -37,3 +37,12 @@ export const CREATE_PAYMENT_POSMACHINE = BASE_MARKET_API_URL + '/machine/create-
 export const GET_STATE_SALE_POSMACHINE = BASE_MARKET_API_URL + '/machine/payment-request/:id'
 // GET CONFIG
 export const GET_POST_MACHINE = BASE_MARKET_API_URL + '/settings/post-machine'
+
+// REPORTS
+export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-type-sales'
+export const REPORTS_CATEGORY_API_URL = BASE_MARKET_API_URL + '/report/period-category-sales'
+export const REPORTS_INDICATORS_API_URL = BASE_MARKET_API_URL + '/report/period'
+export const REPORTS_SALES_TYPES_API_URL = BASE_MARKET_API_URL + '/report/period-sales-types'
+export const REPORTS_CRITICAL_STOCK_API_URL = BASE_MARKET_API_URL + '/report/product-stock'
+export const REPORTS_LAST_SALES_API_URL = BASE_MARKET_API_URL + '/report/last-sales'
+export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
