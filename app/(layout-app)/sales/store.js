@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
-import { GET_DOCUMENT_HAULMER, SALE_TICKET_CREATE } from '@/settings/constants'
+import { GET_DOCUMENT_HAULMER, SALE_TICKET_CREATE, CREATE_PAYMENT_POSMACHINE, GET_STATE_SALE_POSMACHINE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
