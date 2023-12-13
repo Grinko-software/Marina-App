@@ -25,10 +25,10 @@ export function ErrorLogin ({ error }) {
     const [errorText, setErrorText] = useState(null)
 
     useEffect(() => {
-        setErrorText(error)
+        setErrorText('Error')
     }, [error])
 
     return (<div>
-        {errorText ? <Alert icon={<Icon />}>{errorText}</Alert> : <div></div>}
+        {error ? <Alert icon={<Icon />}>{errorText}</Alert> : null}
     </div>)
 }
