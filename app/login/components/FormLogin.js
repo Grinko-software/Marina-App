@@ -92,7 +92,6 @@ export default function LoginForm () {
                     variant="bordered"
                     value={email}
                     onValueChange={setEmail}
-                    validationState={validationStateEmail}
                     color={emailError ? 'danger' : 'default'}
                     errorMessage={emailError}
                     onBlur={() => setValidateValues(true)}
@@ -110,7 +109,6 @@ export default function LoginForm () {
                     variant="bordered"
                     value={password}
                     onValueChange={setPassword}
-                    validationState={validationStatePassword}
                     color={passwordError ? 'danger' : 'default'}
                     errorMessage={passwordError}
                     onBlur={() => setValidateValues(true)}
