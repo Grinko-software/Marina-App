@@ -141,7 +141,6 @@ const useSalesStore = create(
             const netTotal = roundValueWithMath(totalPay / 1.19, 0, 0)
             /* 1: Boleta model  2: factura model */
 
-            // TODO:integrar factura
             const modelBody = voucherTarget === 1
                 ? {
                     response: [
@@ -152,16 +151,11 @@ const useSalesStore = create(
                             IdDoc: {
                                 TipoDTE: 39,
                                 Folio: 0,
-                                FchEmis: '2023-12-08',
+                                FchEmis: date,
                                 IndServicio: '3'
                             },
                             Emisor: {
-                                RUTEmisor: '77426986-K',
-                                RznSocEmisor: 'MARINA MARKET',
-                                GiroEmisor: 'MINIMARKET',
-                                DirOrigen: 'LA MARINA 200 #11001101',
-                                CmnaOrigen: 'COQUIMBO',
-                                CiudadOrigen: 'COQUIMO'
+                                RUTEmisor: '77426986-K'
                             },
                             Receptor: {
                                 RUTRecep: '66666666-6'

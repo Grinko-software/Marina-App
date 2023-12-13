@@ -29,8 +29,10 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp }) => 
             <View style={StylePdf.container}>
                 <Text style={StylePdf.titleSecondary}>{'COMPROBANTE DE VENTA'}</Text>
                 <Text style={StylePdf.subtitle}>{date}</Text>
-                <View className="w-96 h-96">
+                <View style={StylePdf.logo}>
                     <Image
+                        width="100%"
+                        height="100%"
                         src={'data:image/png;base64,' + stamp}
                     />
                 </View>

@@ -11,6 +11,7 @@ import { BillIcon } from '@/components/ui/BillIcon'
 import useSalesStore from './store'
 import usePaymentStore from '@/stores/payment'
 import useVocuherStore from '@/stores/voucher'
+import { ExemptSaleIcon } from '@/components/ui/exemptSale'
 export default function PayPage (props) {
     /* Change state to go back to sales table product */
     const {
@@ -95,16 +96,28 @@ export default function PayPage (props) {
                                             <Skeleton className="w-4/5 rounded-lg">
                                                 <div className="h-2 w-4/5 rounded-lg bg-default-200"></div>
                                             </Skeleton>
+                                            <Skeleton className="w-4/5 rounded-lg">
+                                                <div className="h-2 w-4/5 rounded-lg bg-default-200"></div>
+                                            </Skeleton>
                                         </div>
                                     </Card>)
                                     }
                                 </section>
-                                : payment?.map((pay) => <PaymentButton
-                                    key={pay?.id}
-                                    id={pay?.id}
-                                    icon = {pay?.id === 1 ? <CashIcon/> : <CreditIcon/>} title={pay?.name}
-                                    paymentTarget={paymentTarget}
-                                    setPaymentTarget={setPaymentTarget}/>)
+                                : payment?.map((pay) =>
+                                    <PaymentButton
+                                        key={pay?.id}
+                                        id={pay?.id}
+                                        icon = {
+                                            pay?.id === 1
+                                                ? <CashIcon/>
+                                                : (pay?.id === 2)
+                                                    ? <CreditIcon/>
+                                                    : <ExemptSaleIcon/>}
+                                        title={pay?.name}
+                                        paymentTarget={paymentTarget}
+                                        setPaymentTarget={setPaymentTarget}
+                                    />
+                                )
                             }
                         </div>
                     </div>
