@@ -19,7 +19,7 @@ const InputCode = ({ value, setValue }) => {
 
 export default function RequireAdminComponent ({ moduleName, children }) {
     const [authCode, setAuthCode] = useState(null)
-    const [messageAuth, setMessageAuth] = useState(null)
+    // const [messageAuth, setMessageAuth] = useState(null)
     const { signInWithCode, loading, errorAuthCode, isAdmin } = useAuthStore()
     const router = useRouter()
 
@@ -29,7 +29,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
         }
     }, [authCode])
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (authCode?.length > 3) {
             if (!isAdmin) {
                 setMessageAuth('No tienes permiso de administrador')
@@ -39,7 +39,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
         } else {
             setMessageAuth(null)
         }
-    }, [errorAuthCode, isAdmin, authCode])
+    }, [errorAuthCode, isAdmin, authCode]) */
 
     return <section className='flex w-full min-h-full items-center justify-center'>
         <div className=''>
@@ -62,7 +62,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
                         <div className='w-[40%] mx-auto py-4 text-center'>
                             <InputCode value={authCode} setValue={setAuthCode}/>
                         </div>
-                        {messageAuth && !loading
+                        {/*  {messageAuth && !loading
                             ? <div className='w-[60%] m-auto flex items-center'>
 
                                 <Alert
@@ -75,7 +75,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
                                 </Alert>
                             </div>
                             : null
-                        }
+                        } */}
                         {loading
                             ? <div className='w-[60%] m-auto flex items-center'>
                                 <Spinner className='text-md m-auto my-1'>
