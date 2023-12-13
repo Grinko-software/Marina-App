@@ -23,7 +23,7 @@ function Icon () {
 }
 
 export function ErrorLogin () {
-    const error = useAuthStore((state) => state.error)
+    const { error } = useAuthStore()
     const [errorText, setErrorText] = useState(null)
 
     useEffect(() => {
