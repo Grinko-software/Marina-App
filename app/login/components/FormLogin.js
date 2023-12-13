@@ -48,7 +48,7 @@ export default function LoginForm () {
         }
     }, [password])
 
-    const onSubmitHandler = async () => {
+    const onSubmitHandler = () => {
         if (!emailError && !passwordError) {
             signIn(
                 {
@@ -92,7 +92,7 @@ export default function LoginForm () {
                     variant="bordered"
                     value={email}
                     onValueChange={setEmail}
-                    validationState={validationStateEmail}
+                    isInvalid={validationStateEmail}
                     color={emailError ? 'danger' : 'default'}
                     errorMessage={emailError}
                     onBlur={() => setValidateValues(true)}
@@ -110,7 +110,7 @@ export default function LoginForm () {
                     variant="bordered"
                     value={password}
                     onValueChange={setPassword}
-                    validationState={validationStatePassword}
+                    isInvalid={validationStatePassword}
                     color={passwordError ? 'danger' : 'default'}
                     errorMessage={passwordError}
                     onBlur={() => setValidateValues(true)}
