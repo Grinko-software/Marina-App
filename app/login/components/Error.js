@@ -1,5 +1,4 @@
 'use client'
-import useAuthStore from '@/stores/user'
 import { Alert } from '@material-tailwind/react'
 import { useEffect, useState } from 'react'
 
@@ -22,8 +21,7 @@ function Icon () {
     )
 }
 
-export function ErrorLogin () {
-    const { error } = useAuthStore()
+export function ErrorLogin ({ error }) {
     const [errorText, setErrorText] = useState(null)
 
     useEffect(() => {

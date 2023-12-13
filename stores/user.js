@@ -41,7 +41,7 @@ const useAuthStore = create(
                             if (userType === 'admin') set({ isAdmin: true })
                         } else {
                             // set({ error: statusCode + ' ' + (error || message || statusText) })
-                            set({ error: statusCode })
+                            set({ error: 'Error' })
                         }
                         set({ loading: false })
                     })

@@ -6,7 +6,7 @@ import { ErrorLogin } from './Error'
 import { validateEmail } from '@/utils/email'
 
 export default function LoginForm () {
-    const { signIn, loading } = useAuthStore()
+    const { signIn, loading, error } = useAuthStore()
     const [validateValues, setValidateValues] = useState(false)
     const [sendDisabled, setSendDisabled] = useState(false)
     const [email, setEmail] = useState(null)
@@ -128,7 +128,7 @@ export default function LoginForm () {
             Ingresar
                 </Button>
             </div>
-            <ErrorLogin/>
+            <ErrorLogin error={error}/>
         </section>
     )
 }
