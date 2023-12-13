@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation'
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Spinner } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import useAuthStore from '@/stores/user'
-import { Alert } from '@material-tailwind/react'
 import { FiAlertTriangle } from 'react-icons/fi'
 
 const InputCode = ({ value, setValue }) => {
@@ -19,7 +18,7 @@ const InputCode = ({ value, setValue }) => {
 
 export default function RequireAdminComponent ({ moduleName, children }) {
     const [authCode, setAuthCode] = useState(null)
-    // const [messageAuth, setMessageAuth] = useState(null)
+    const [messageAuth, setMessageAuth] = useState(null)
     const { signInWithCode, loading, errorAuthCode, isAdmin } = useAuthStore()
     const router = useRouter()
 
@@ -29,7 +28,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
         }
     }, [authCode])
 
-    /* useEffect(() => {
+    useEffect(() => {
         if (authCode?.length > 3) {
             if (!isAdmin) {
                 setMessageAuth('No tienes permiso de administrador')
@@ -39,7 +38,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
         } else {
             setMessageAuth(null)
         }
-    }, [errorAuthCode, isAdmin, authCode]) */
+    }, [errorAuthCode, isAdmin, authCode])
 
     return <section className='flex w-full min-h-full items-center justify-center'>
         <div className=''>
@@ -62,20 +61,21 @@ export default function RequireAdminComponent ({ moduleName, children }) {
                         <div className='w-[40%] mx-auto py-4 text-center'>
                             <InputCode value={authCode} setValue={setAuthCode}/>
                         </div>
-                        {/*  {messageAuth && !loading
+                        {messageAuth && !loading
                             ? <div className='w-[60%] m-auto flex items-center'>
 
-                                <Alert
+                                <div
                                     color="red"
-                                    icon={<FiAlertTriangle className='text-2xl mr-3'/>}
-                                    variant="filled"
-                                    className='text-md'
+                                    className='flex text-md bg-red-600 text-white items-start'
                                 >
-                                    {messageAuth}
-                                </Alert>
+                                    <FiAlertTriangle className='text-2xl mr-3'/>
+                                    <p>
+                                        {messageAuth}
+                                    </p>
+                                </div>
                             </div>
                             : null
-                        } */}
+                        }
                         {loading
                             ? <div className='w-[60%] m-auto flex items-center'>
                                 <Spinner className='text-md m-auto my-1'>
