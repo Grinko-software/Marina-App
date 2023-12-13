@@ -9,7 +9,7 @@ const AreaChart = ({ data, isLoading }) => {
     return (
         <section className='h-full w-full flex' >
             <WidgetReport
-                title={'VENTAS POR CATEGORÍAS'}
+                title={'TOTAL VENTAS POR TIPO DE PAGO'}
                 isLoading={isLoading}
                 data={data}
             />
@@ -20,7 +20,7 @@ const AreaChart = ({ data, isLoading }) => {
 const WidgetReport = ({ children, className, title, isLoading, data }) => {
     return <>
 
-        <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
+        <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform text-black ' + className}>
             <CardHeader >
                 {isLoading
                     ? <Skeleton className="h-[2rem] w-[66rem] rounded-md"></Skeleton>
@@ -35,8 +35,8 @@ const WidgetReport = ({ children, className, title, isLoading, data }) => {
                             options={data?.options}
                             series={data?.series}
                             type="area"
-                            width={'100%'}
-                            height={'100%'}
+                            width={'90%'}
+                            height={'90%'}
                         />
                     </div>
                 }

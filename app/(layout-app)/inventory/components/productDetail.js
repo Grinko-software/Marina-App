@@ -56,7 +56,6 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     useEffect(() => {
         if (image !== targeProduct?.image) {
             const newProductValues = { ...newProductData, image }
-            console.log(newProductValues)
             setNewProductData(newProductValues)
         }
     }, [image, targeProduct])
@@ -72,13 +71,11 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
         if (isSalePrice) {
             newProductValues.net_price = newProductValues?.price / 1.19
         }
-        console.log(newProductValues)
         setNewProductData(newProductValues)
     }
 
     useEffect(() => {
         if (targeProduct && !edit) {
-            console.log(targeProduct)
             setProductData({
                 image: targeProduct?.image,
                 code: targeProduct?.code,

@@ -77,7 +77,6 @@ export default function WeighingScaleModal ({ isOpen, onClose, product }) {
     }, [manualMode])
 
     useEffect(() => {
-        console.log(connectionStatus)
         if (connectionStatus === 'Closed') {
             setIsConnected(false)
         } else if (connectionStatus === 'Open') {

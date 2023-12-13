@@ -126,7 +126,6 @@ export default function CreateProduct () {
         if (isSalePrice) {
             newFormValues.net_price = newFormValues?.sale_price / 1.19
         }
-        console.log(newFormValues)
         setFormData(newFormValues)
     }
 

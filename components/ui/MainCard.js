@@ -21,10 +21,8 @@ export default function MainTittleCard (props) {
                 <h4 className="text-white/80 font-medium text-4xl sm:text-8xl">{title}</h4>
             </CardHeader>
             <Image
-                removeWrapper
                 alt="Card background"
                 className="z-0 w-full h-full object-cover"
-                isZoomed
                 src={imgSrc}
 
             />

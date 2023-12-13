@@ -21,6 +21,13 @@ export const StylePdf = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 'auto'
     },
+    stamp: {
+        width: 80,
+        height: 80,
+        color: 'black',
+        alignContent: 'center',
+        alignItems: 'center'
+    },
     container: {
         alignContent: 'center',
         alignItems: 'center',

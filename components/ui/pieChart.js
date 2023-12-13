@@ -17,7 +17,7 @@ const PieChart = ({ data, isLoading }) => {
     )
 }
 const WidgetReport = ({ children, className, title, isLoading, data }) => {
-    return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform hover:scale-[1.01] text-black ' + className}>
+    return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform text-black ' + className}>
         <CardHeader >
             {isLoading
                 ? <Skeleton className="h-[2rem] w-[36rem] rounded-md"></Skeleton>

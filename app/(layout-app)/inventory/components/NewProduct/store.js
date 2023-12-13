@@ -53,7 +53,6 @@ const useProductFormStore = create((set) => ({
                     headers: { Authorization: 'Bearer ' + getToken() }
                 })
                 .then(response => {
-                    console.log(response)
                     // const statusCode = response?.status
                     // const statusText = response?.statusText
                     try {

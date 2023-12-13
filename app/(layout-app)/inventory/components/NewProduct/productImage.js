@@ -43,7 +43,6 @@ export default function ProductImage ({ defaultImg, setImage }) {
 
     useEffect(() => {
         setFormData({ ...data, image: optimizedImage })
-        console.log('optimizedImage: ', optimizedImage)
     }, [selectedImageBytes, optimizedImage])
 
     useEffect(() => {
@@ -77,7 +76,6 @@ export default function ProductImage ({ defaultImg, setImage }) {
                     }).then((canvas) => {
                         const optimizedImageData = canvas.toDataURL('image/jpeg', 0.7)
                         setOptimizedImage(optimizedImageData)
-                        console.log(optimizedImage)
                     })
                 }
             }

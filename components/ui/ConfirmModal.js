@@ -33,7 +33,6 @@ export default function ConfirmModal (props) {
                 setLoadingDelete(false)
                 deleteProduct({ id: productId, notify }).then(
                     (response) => {
-                        console.log(response)
                         setTargetProduct(null)
                         getListInventory()
                         onClose()
@@ -45,7 +44,6 @@ export default function ConfirmModal (props) {
                     try {
                         updateProduct({ id: productId, ...newProductData, notify }).then(
                             (response) => {
-                                console.log(response)
                                 setLoadingEdit(false)
                                 setEdit(false)
                                 setTargetProduct(null)
@@ -54,7 +52,6 @@ export default function ConfirmModal (props) {
                             }
                         )
                     } catch (err) {
-                        console.log(err)
                         setConfirm(false)
                         setLoadingEdit(false)
                         setEdit(false)

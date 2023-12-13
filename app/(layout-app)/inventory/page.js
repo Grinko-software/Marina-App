@@ -10,7 +10,6 @@ import { isMobileDevice } from '@/utils/agent'
 export default function Inventory () {
     const [isMobile, setIsMobile] = useState(true)
     useEffect(() => {
-        console.log('Inventory')
         if (navigator) {
             const view = isMobileDevice()
             setIsMobile(view)

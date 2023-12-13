@@ -33,7 +33,6 @@ export default function Filter () {
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
 
     useEffect(() => {
-        console.log('filterKeyIsOpen: ', filterKeyIsOpen)
         if (filterKeyIsOpen) {
             setSelectedKeys(['filter'])
         } else {
@@ -42,7 +41,6 @@ export default function Filter () {
     }, [filterKeyIsOpen])
 
     useEffect(() => {
-        console.log('selectedKeys: ', selectedKeys)
     }, [selectedKeys])
 
     return <section>

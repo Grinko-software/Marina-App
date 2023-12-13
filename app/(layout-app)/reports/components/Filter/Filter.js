@@ -97,7 +97,6 @@ export default function Filter () {
         setFilterKeyIsOpen(false)
     }
     useEffect(() => {
-        console.log('filterKeyIsOpen: ', filterKeyIsOpen)
         if (filterKeyIsOpen) {
             setSelectedKeys(['filter'])
         } else {
@@ -115,11 +114,9 @@ export default function Filter () {
     }, [isFirstSearch, useFilterStore.getState()])
 
     useEffect(() => {
-        console.log('selectedKeys: ', selectedKeys)
     }, [selectedKeys])
 
     useEffect(() => {
-        console.log('Report Data: ', reportsData)
     }, [reportsData])
 
     return <section>
