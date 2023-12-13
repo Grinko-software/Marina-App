@@ -128,7 +128,7 @@ export default function LoginForm () {
             Ingresar
                 </Button>
             </div>
-            <ErrorLogin error={error}/>
+            {/* <ErrorLogin error={error}/> */}
         </section>
     )
 }
