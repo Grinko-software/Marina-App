@@ -99,12 +99,21 @@ export default function PayPage (props) {
                                     </Card>)
                                     }
                                 </section>
-                                : payment?.map((pay) => <PaymentButton
-                                    key={pay?.id}
-                                    id={pay?.id}
-                                    icon = {pay?.id === 1 ? <CashIcon/> : <CreditIcon/>} title={pay?.name}
-                                    paymentTarget={paymentTarget}
-                                    setPaymentTarget={setPaymentTarget}/>)
+                                : payment?.map((pay) =>
+                                    <PaymentButton
+                                        key={pay?.id}
+                                        id={pay?.id}
+                                        icon = {
+                                            pay?.id === 1
+                                                ? <CashIcon/>
+                                                : (pay?.id === 2)
+                                                    ? <CreditIcon/>
+                                                    : <CreditIcon/>}
+                                        title={pay?.name}
+                                        paymentTarget={paymentTarget}
+                                        setPaymentTarget={setPaymentTarget}
+                                    />
+                                )
                             }
                         </div>
                     </div>
