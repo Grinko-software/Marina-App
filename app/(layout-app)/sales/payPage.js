@@ -11,6 +11,7 @@ import { BillIcon } from '@/components/ui/BillIcon'
 import useSalesStore from './store'
 import usePaymentStore from '@/stores/payment'
 import useVocuherStore from '@/stores/voucher'
+import Discount from './components/discount/discount'
 export default function PayPage (props) {
     /* Change state to go back to sales table product */
     const {
@@ -21,7 +22,7 @@ export default function PayPage (props) {
         setVoucherTarget
     } = props
     /* Use states */
-
+    const [openModal, setOpenModal] = useState(false)
     const { payment, getPaymentType, loadingPayment } = usePaymentStore()
     const { voucher, getVoucherType, loadingVoucher } = useVocuherStore()
     const {
@@ -30,6 +31,11 @@ export default function PayPage (props) {
     } = useSalesStore()
     const listEmpty = new Array(2).fill(null)
     const listEmpty3 = new Array(3).fill(null)
+    const handleButton = () => {
+        // removeSale(listSalesActives, saleIdActive)
+        // setPayment(false)
+        setOpenModal(!openModal)
+    }
     useEffect(() => {
         /* Check token */
         getPaymentType()
@@ -37,14 +43,23 @@ export default function PayPage (props) {
     }, [])
     return (
         <section className='animation-fade-in h-full w-full'>
-            <section className="z-10 h-[6%] w-[7rem] top-[52px] rounded-t-[12px] bg-secondary-50 dark:bg-secondary-450">
+            {openModal ? <Discount openModal={openModal} setOpenModal={setOpenModal}/> : null}
+            <section className="z-10 h-[3.5rem] w-[7rem] rounded-t-[12px] bg-secondary-50 dark:bg-secondary-450">
                 <Button size="lg" className="flex flex-col items-center h-full w-full font-bold" isIconOnly variant="ligth" aria-label="" onClick={() => {
                     setPaymentTarget(listSalesActives, saleIdActive, null)
                     setPayment(false)
                 } }>Volver</Button>
             </section>
-            <section className='flex flex-col h-3/4  sm:h-[93%] items-center px-5 py-[1rem] shadow-md hover:shadow-lg  rounded-tl-[0px]  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]'>
-                <div className='flex flex-col w-full h-full items-center mt-10'>
+            <section className='flex  flex-col h-3/4 mt-[-0.2rem] sm:h-[93%] items-center px-5 shadow-md hover:shadow-lg  rounded-tl-[0px]  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]'>
+                <div className='flex flex-col w-full h-full items-center'>
+                    <div className='flex flex-row-reverse w-full'>
+                        <div className='py-[0.7rem]'>
+                            <Button className='animation-fade-in w-full h-[56px] text-lg text-primary-50' color="success" variant="shadow" onClick={() => (handleButton())}>
+                     Agregar Descuento
+                            </Button>
+
+                        </div>
+                    </div>
                     <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Boleta, factura o Ticket</h5>
                     <div className='flex flex-col items-center'>
                         <div className='flex flex-row mt-10 space-x-10  items-center '>

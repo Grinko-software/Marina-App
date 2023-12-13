@@ -76,7 +76,7 @@ export default function SaleList (props) {
         }
     }, [keyFocus])
     return (
-        <section className='flex flex-1 flex-col items-center w-full animation-fade-in'>
+        <section className='flex mt-[-4.2px] flex-1 flex-col items-center w-full animation-fade-in'>
             <section className='w-full h-full rounded-xl rounded-tr-[0px] bg-primary-50 shadow  dark:bg-secondary-450'>
                 <section className='flex flex-row px-1'>
                     <SearchBar onChange={onChange} onClear={onClear} defaultValue={searchInput}/>

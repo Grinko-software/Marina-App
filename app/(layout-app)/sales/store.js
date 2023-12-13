@@ -20,7 +20,8 @@ const useSalesStore = create(
             totalPrice: 0,
             saleProductsList: [],
             paymentTarget: null,
-            voucherTarget: 1
+            voucherTarget: 1,
+            discount: null
         }],
         scannerEnabled: false,
         enabledRedirect: false,
@@ -381,6 +382,12 @@ const useSalesStore = create(
                     set({ loadingSale: false })
                 }
             }
+        },
+        /* Add discount */
+        addDiscountSale: (listSalesActives, saleIdActive, value) => {
+            const saleIndex = listSalesActives?.findIndex((sale) => sale.id === saleIdActive)
+            listSalesActives[saleIndex].discount = value ? parseInt(value) : null
+            set({ listSalesActives })
         }
     }),
     {
