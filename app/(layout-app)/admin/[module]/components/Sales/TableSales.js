@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
 import { getMoment } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
+import moment from 'moment-timezone'
 export default function TableSales ({ data, loading, setTarget }) {
     const [hasMore, setHasMore] = useState(false)
     const [showAllData, setShowAllData] = useState(false)
@@ -55,7 +56,7 @@ export default function TableSales ({ data, loading, setTarget }) {
                     key: item.sale_id,
                     target: item.sale_id,
                     id: item.sale_id,
-                    datetime: item?.date,
+                    datetime: moment(item?.date),
                     total: item?.total,
                     discount: item?.total_discount,
                     iva: item?.total - ((item.total || 0) / 1.19),
@@ -105,7 +106,7 @@ export default function TableSales ({ data, loading, setTarget }) {
         case 'datetime':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{getMoment(cellValue).format('DD-MM-YYYY HH:mm:ss')}</p>
+                    <p className="text-bold text-sm capitalize dark:text-white">{(cellValue).format('DD-MM-YYYY HH:mm:ss')}</p>
                 </div>
             )
         case 'total':

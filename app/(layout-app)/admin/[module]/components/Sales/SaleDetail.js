@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import useLastSalesStore from './store'
 import { Button, Modal, ModalBody, ModalContent, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import { generatePdfDocument } from '@/app/(layout-app)/sales/components/voucher/services'
-import moment from 'moment-timezone'
 
 export default function SaleDetail (params) {
     const { target, setTarget } = params
@@ -64,7 +63,7 @@ export default function SaleDetail (params) {
                 listSales: dataModel,
                 totalPay: target?.total,
                 discount: target?.discount,
-                datetime: moment(target?.datetime)
+                datetime: target?.datetime
             })
         }
     }
@@ -79,7 +78,7 @@ export default function SaleDetail (params) {
             <ModalContent>
 
                 <ModalHeader>
-                    <p>Fecha de venta: {moment(target?.datetime).format('YYYY-MM-DD HH:mm:ss')}</p>
+                    <p>Fecha de venta: {target?.datetime.format('YYYY-MM-DD HH:mm:ss')}</p>
                 </ModalHeader>
                 <ModalBody>
                     {
