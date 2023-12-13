@@ -128,7 +128,11 @@ export default function LoginForm () {
             Ingresar
                 </Button>
             </div>
-            {/* <ErrorLogin error={error}/> */}
+            {
+                error && <div className='w-full p-2'>
+                    <ErrorLogin error={error}/>
+                </div>
+            }
         </section>
     )
 }

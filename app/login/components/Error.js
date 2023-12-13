@@ -1,4 +1,5 @@
 'use client'
+import AlertMessage from '@/components/ui/AlertMessage'
 import { Alert } from '@material-tailwind/react'
 import { useEffect, useState } from 'react'
 
@@ -25,10 +26,14 @@ export function ErrorLogin ({ error }) {
     const [errorText, setErrorText] = useState(null)
 
     useEffect(() => {
-        setErrorText('Error')
+        setErrorText(error)
     }, [error])
 
     return (<div>
-        {error ? <Alert icon={<Icon />}>{errorText}</Alert> : null}
+        {error
+            ? <div className=''>
+                <AlertMessage message={errorText}/>
+            </div>
+            : null}
     </div>)
 }
