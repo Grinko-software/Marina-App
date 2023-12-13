@@ -1,6 +1,7 @@
 import { StyleSheet /* , Font */ } from '@react-pdf/renderer'
 
 export const StylePdf = StyleSheet.create({
+
     page: {
         fontFamily: 'Helvetica',
         fontSize: 11,
@@ -22,17 +23,31 @@ export const StylePdf = StyleSheet.create({
         marginRight: 'auto'
     },
     stamp: {
-        width: 80,
-        height: 80,
-        color: 'black',
-        alignContent: 'center',
-        alignItems: 'center'
+        width: '100%',
+        height: '100%'
+    },
+    stampContainer: {
+        width: 170,
+        height: 550
+    },
+    containerAbsoulte: {
+        marginTop: 20,
+        position: 'absolute',
+        top: 0
     },
     container: {
         alignContent: 'center',
         alignItems: 'center',
         textTransform: 'uppercase',
         marginTop: 0,
+        marginBottom: 10
+    },
+    containerFlexCol1: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignContent: 'center',
+        alignItems: 'center',
+        marginTop: 60,
         marginBottom: 10
     },
     containerFlexCol: {
