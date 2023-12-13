@@ -7,7 +7,7 @@ export const modules = [
         key: 'sales',
         path: 'sales',
         name: 'Ventas',
-        description: 'Descripción del módulo',
+        description: 'Detalle de las últimas ventas realizadas',
         requireAdmin: true,
         content: <Sales/>,
         icon: <FaClipboardList />
@@ -16,7 +16,7 @@ export const modules = [
         key: 'reports',
         path: 'reports',
         name: 'Reportes',
-        description: 'Descripción del módulo',
+        description: 'Indicadores de ventas por periodos',
         requireAdmin: true,
         content: <ReportView/>,
         icon: <FaChartLine />
@@ -25,7 +25,7 @@ export const modules = [
         key: 'users',
         path: 'users',
         name: 'Usuarios',
-        description: 'Descripción del módulo',
+        description: 'Administración de usuarios/trabajadores',
         requireAdmin: true,
         content: <div>Usuarios</div>,
         icon: <FaUsersCog />
@@ -34,7 +34,7 @@ export const modules = [
         key: 'aaaa',
         path: 'aaaa',
         name: 'Proveedores',
-        description: 'Descripción del módulo',
+        description: 'Administración de proveedores',
         requireAdmin: false,
         content: <div>Proveedores</div>,
         icon: <FaTruck />
@@ -43,7 +43,7 @@ export const modules = [
         key: 'products',
         path: 'products',
         name: 'Productos',
-        description: 'Descripción del módulo',
+        description: 'Administración de los productos',
         requireAdmin: false,
         content: <div>Productos</div>,
         icon: <FaShoppingCart />

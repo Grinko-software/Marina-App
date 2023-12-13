@@ -1,3 +1,4 @@
+import { getToken } from '@/services/user'
 import { AUTH_CODE_API_URL, AUTH_LOGIN_API_URL } from '@/settings/constants'
 
 const getDataAuthenticate = async (response) => {
@@ -69,8 +70,8 @@ export async function authenticateByAuthCode ({ authCode }) {
             fetch(`${AUTH_CODE_API_URL}/${authCode}`,
                 {
                     method: 'GET',
-                    cache: 'no-store'
-
+                    cache: 'no-store',
+                    headers: { Authorization: 'Bearer ' + getToken() }
                 }))
         return data
     } catch {

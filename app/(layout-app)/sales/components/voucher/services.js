@@ -3,9 +3,9 @@
 import { pdf as pdff } from '@react-pdf/renderer'
 import { Voucher } from './voucher'
 import { getMoment, today } from '@/utils/date'
-export const generatePdfDocument = async ({ listSales, totalPay, stamp }) => {
-    const date = today().format('DD-MM-YYYY')
-    const totalDiscount = listSales?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
+export const generatePdfDocument = async ({ datetime, listSales, totalPay, discount, stamp }) => {
+    const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
+    const totalDiscount = discount || listSales?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
     const blob = await pdff(
         <Voucher listSales={listSales} totalPay={totalPay} date={date} totalDiscount={totalDiscount} stamp={stamp}/>
     ).toBlob()

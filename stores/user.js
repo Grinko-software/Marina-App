@@ -13,6 +13,7 @@ const useAuthStore = create(
             loading: false,
             error: null,
             idUser: null,
+            errorAuthCode: null,
             setToken: () => set((state) => ({ token: state })),
             setEmail: () => set((state) => ({ email: state })),
             setError: () => set((state) => ({ error: state })),
@@ -48,7 +49,7 @@ const useAuthStore = create(
                 }
             },
             signInWithCode: ({ authCode }) => {
-                set({ loading: true, error: null })
+                set({ loading: true, error: null, errorAuthCode: null })
                 try {
                     authenticateByAuthCode(
                         {
@@ -70,6 +71,9 @@ const useAuthStore = create(
                             if (userType === 'admin') set({ isAdmin: true })
                         } else {
                             set({ error: statusCode + ' ' + (error || message || statusText) })
+                            if (statusCode === 401) {
+                                set({ errorAuthCode: 'Credencial no autorizada' })
+                            }
                         }
                         set({ loading: false })
                     })

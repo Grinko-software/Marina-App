@@ -1,55 +1,99 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { Button, Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react'
-import { useState } from 'react'
+import { Button, Card, CardBody, CardFooter, CardHeader, Input, Spinner } from '@nextui-org/react'
+import { useEffect, useState } from 'react'
 import useAuthStore from '@/stores/user'
+import { Alert } from '@material-tailwind/react'
+import { FiAlertTriangle } from 'react-icons/fi'
+
+const InputCode = ({ value, setValue }) => {
+    return <Input
+        label="Credencial"
+        value={value}
+        labelPlacement="inside"
+        onValueChange={(v) => setValue(v)}
+        type="number"
+        variant='bordered'
+    />
+}
 
 export default function RequireAdminComponent ({ moduleName, children }) {
-    const [isAuthMode, setIsAuthMode] = useState(false)
-    const { signInWithCode, loading, isAdmin } = useAuthStore()
+    const [authCode, setAuthCode] = useState(null)
+    const [messageAuth, setMessageAuth] = useState(null)
+    const { signInWithCode, loading, errorAuthCode, isAdmin } = useAuthStore()
     const router = useRouter()
+
+    useEffect(() => {
+        if (authCode?.length > 3) {
+            signInWithCode({ authCode })
+        }
+    }, [authCode])
+
+    useEffect(() => {
+        if (authCode?.length > 3) {
+            if (!isAdmin) {
+                setMessageAuth('No tienes permiso de administrador')
+            } else {
+                setMessageAuth(errorAuthCode || null)
+            }
+        } else {
+            setMessageAuth(null)
+        }
+    }, [errorAuthCode, isAdmin, authCode])
 
     return <section className='flex w-full min-h-full items-center justify-center'>
         <div className=''>
-            {!isAuthMode
-                ? <Card>
-                    <CardHeader>
+            <Card>
+                <CardHeader>
+                    <p className='text-md'>
                     Estimado usuario
-                    </CardHeader>
-                    <CardBody>
-                        <p className='mx-10 my-5'>
+                    </p>
+                </CardHeader>
+                <CardBody className='flex flex-col gap-2 h-[20rem]'>
+                    <div className='mx-10 my-5 gap-2 flex flex-col'>
+                        <p className='text-md'>
                             {`No puedes acceder a ${moduleName}, necesitas permisos de administrador.`}
                         </p>
-                    </CardBody>
-                    <CardFooter>
-                        <div className='flex w-full flex-row gap-5'>
-                            <Button className='flex-1' onPress={() => router.push('/admin')}>
-                            Regresar
-                            </Button>
-                            <Button className='flex-1' onPress={() => setIsAuthMode(true)}>
-                            Autenticar
-                            </Button>
-                        </div>
-                    </CardFooter>
-                </Card>
-                : <Card>
-                    <CardHeader>
-                        Auth
-                    </CardHeader>
-                    <CardBody>
-                        <p className='mx-10 my-5'>
-                            {'Escanea tu credencial para ingresar.'}
+                        <p className='text-md'>
+                            {'Escanea tu credencial.'}
                         </p>
-                    </CardBody>
-                    <CardFooter>
-                        <div className='flex w-full flex-row'>
-                            <Button className='flex-1' onPress={() => setIsAuthMode(false)}>
-                        Volver
-                            </Button>
+                    </div>
+                    <section className='flex flex-col flex-1 items-center justify-center'>
+                        <div className='w-[40%] mx-auto py-4 text-center'>
+                            <InputCode value={authCode} setValue={setAuthCode}/>
                         </div>
-                    </CardFooter>
-                </Card>
-            }
+                        {messageAuth && !loading
+                            ? <div className='w-[60%] m-auto flex items-center'>
+
+                                <Alert
+                                    color="red"
+                                    icon={<FiAlertTriangle className='text-2xl mr-3'/>}
+                                    variant="filled"
+                                    className='text-md'
+                                >
+                                    {messageAuth}
+                                </Alert>
+                            </div>
+                            : null
+                        }
+                        {loading
+                            ? <div className='w-[60%] m-auto flex items-center'>
+                                <Spinner className='text-md m-auto my-1'>
+                                    {'Verificando...'}
+                                </Spinner>
+                            </div>
+                            : null}
+                    </section>
+
+                </CardBody>
+                <CardFooter>
+                    <div className='flex w-full flex-row'>
+                        <Button isDisabled={loading} className=' w-[50%] m-auto text-md' onPress={() => router.push('/admin')}>
+                            {'Regresar'}
+                        </Button>
+                    </div>
+                </CardFooter>
+            </Card>
         </div>
     </section>
 }
