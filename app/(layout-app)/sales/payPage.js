@@ -95,6 +95,9 @@ export default function PayPage (props) {
                                             <Skeleton className="w-4/5 rounded-lg">
                                                 <div className="h-2 w-4/5 rounded-lg bg-default-200"></div>
                                             </Skeleton>
+                                            <Skeleton className="w-4/5 rounded-lg">
+                                                <div className="h-2 w-4/5 rounded-lg bg-default-200"></div>
+                                            </Skeleton>
                                         </div>
                                     </Card>)
                                     }
@@ -106,9 +109,7 @@ export default function PayPage (props) {
                                         icon = {
                                             pay?.id === 1
                                                 ? <CashIcon/>
-                                                : (pay?.id === 2)
-                                                    ? <CreditIcon/>
-                                                    : <CreditIcon/>}
+                                                : <CreditIcon/>}
                                         title={pay?.name}
                                         paymentTarget={paymentTarget}
                                         setPaymentTarget={setPaymentTarget}

@@ -4,15 +4,31 @@ import { Text, View } from '@react-pdf/renderer'
 import { StylePdf } from './styleTotal'
 import { formatter, roundValue, roundValueWithMath } from '@/utils/number'
 
-const WrapperComponent = ({ totalPay, totalDiscount }) =>
+const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva }) =>
     (
         <View style={StylePdf.table}>
+            <View style={StylePdf.rowTable}>
+                <View style={StylePdf.tableColumn1}>
+                    <Text style={StylePdf.textRow}>{'Monto NETO'}</Text>
+                </View>
+                <View style={StylePdf.tableColumn2}>
+                    <Text style={StylePdf.textRow}>{netTotal ? formatter.format(netTotal) : '-'}</Text>
+                </View>
+            </View>
+            <View style={StylePdf.rowTable}>
+                <View style={StylePdf.tableColumn1}>
+                    <Text style={StylePdf.textRow}>{'Monto EXENTO'}</Text>
+                </View>
+                <View style={StylePdf.tableColumn2}>
+                    <Text style={StylePdf.textRow}>{totalTaxFree ? formatter.format(totalTaxFree) : '-'}</Text>
+                </View>
+            </View>
             <View style={StylePdf.rowTable}>
                 <View style={StylePdf.tableColumn1}>
                     <Text style={StylePdf.textRow}>{'Monto IVA (19%)'}</Text>
                 </View>
                 <View style={StylePdf.tableColumn2}>
-                    <Text style={StylePdf.textRow}>{totalPay ? formatter.format(totalPay - roundValueWithMath(totalPay / 1.19, 0, 0)) : '-'}</Text>
+                    <Text style={StylePdf.textRow}>{iva ? formatter.format(iva) : '-'}</Text>
                 </View>
             </View>
             {totalDiscount > 0
@@ -33,7 +49,6 @@ const WrapperComponent = ({ totalPay, totalDiscount }) =>
                 <View style={StylePdf.tableColumn2}>
                     <Text style={StylePdf.textRow}>{totalPay ? formatter.format(totalPay) : '-'}</Text>
                 </View>
-
             </View>
         </View>
     )

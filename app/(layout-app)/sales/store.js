@@ -20,7 +20,8 @@ const useSalesStore = create(
             totalPrice: 0,
             saleProductsList: [],
             paymentTarget: null,
-            voucherTarget: 1
+            voucherTarget: 1,
+            totalTaxFree: 0
         }],
         scannerEnabled: false,
         enabledRedirect: false,
@@ -47,9 +48,10 @@ const useSalesStore = create(
                 set({ saleIdActive: newSaleId })
             }
         },
-        setTotalPrice: (sales, saleId, value) => {
+        setTotalPrice: (sales, saleId, totalValue, taxFreeValue) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
-            sales[saleIndex].totalPrice = value
+            sales[saleIndex].totalPrice = totalValue
+            sales[saleIndex].totalTaxFree = taxFreeValue
             set({ listSalesActives: sales })
         },
         addFromNewSales: (sales, saleId, product, units, offers, onCompleteFunction) => {
@@ -139,11 +141,12 @@ const useSalesStore = create(
             const voucherTarget = sale?.voucherTarget || targetGeneral
             /*  DTEMITE */
             const totalPay = sale?.totalPrice
+            const totalTaxFreePay = sale?.totalTaxFree || 0
+            const totalWithOutTaxFree = totalPay - totalTaxFreePay
             const date = today().format('YYYY-MM-DD')
-            const netTotal = roundValueWithMath(totalPay / 1.19, 0, 0)
+            const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
+            const iva = totalWithOutTaxFree - netTotal
             /* 1: Boleta model  2: factura model */
-
-            // TODO:integrar factura
             const modelBody = voucherTarget === 1
                 ? {
                     response: [
@@ -154,24 +157,19 @@ const useSalesStore = create(
                             IdDoc: {
                                 TipoDTE: 39,
                                 Folio: 0,
-                                FchEmis: '2023-12-08',
+                                FchEmis: date,
                                 IndServicio: '3'
                             },
                             Emisor: {
-                                RUTEmisor: '77426986-K',
-                                RznSocEmisor: 'MARINA MARKET',
-                                GiroEmisor: 'MINIMARKET',
-                                DirOrigen: 'LA MARINA 200 #11001101',
-                                CmnaOrigen: 'COQUIMBO',
-                                CiudadOrigen: 'COQUIMO'
+                                RUTEmisor: '77426986-K'
                             },
                             Receptor: {
                                 RUTRecep: '66666666-6'
                             },
                             Totales: {
                                 MntNeto: netTotal,
-                                MntExe: '0',
-                                IVA: totalPay - netTotal,
+                                MntExe: totalTaxFreePay,
+                                IVA: iva,
                                 MntTotal: totalPay,
                                 TotalPeriodo: totalPay,
                                 VlrPagar: totalPay
@@ -179,17 +177,30 @@ const useSalesStore = create(
                         },
 
                         Detalle: saleProductsList?.map((item, index) => {
+                            let indexTaxFree = 0
                             const priceItem = item?.discount > 0
                                 ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
                                 : roundValueWithMath(item?.product?.price, 0, 0)
                             const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
                             const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
-                            return {
-                                NroLinDet: index + 1,
-                                NmbItem: item?.product?.name,
-                                QtyItem: quantityItem,
-                                PrcItem: priceItem,
-                                MontoItem: totalItem
+                            if (item?.product?.taxFree) {
+                                indexTaxFree++
+                                return {
+                                    NroLinDet: index + 1,
+                                    IndExe: indexTaxFree,
+                                    NmbItem: item?.product?.name,
+                                    QtyItem: quantityItem,
+                                    PrcItem: priceItem,
+                                    MontoItem: totalItem
+                                }
+                            } else {
+                                return {
+                                    NroLinDet: index + 1,
+                                    NmbItem: item?.product?.name,
+                                    QtyItem: quantityItem,
+                                    PrcItem: priceItem,
+                                    MontoItem: totalItem
+                                }
                             }
                         })
                     }
@@ -265,15 +276,16 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
-                    fetchPost(GET_DOCUMENT_HAULMER, modelBody, true).then(resultDtemite => {
+                    fetchPost(GET_DOCUMENT_HAULMER, modelBody, false).then(resultDtemite => {
                         try {
                             fetchPost(SALE_TICKET_CREATE, body).then(result => {
                                 setPageTarget(false)
                                 // setPaymentTarget(sales, saleId, null)
                                 set({ loadingSale: false })
                                 if (result?.code === 200) {
+                                    console.log(result)
                                     const stamp = resultDtemite.data.TIMBRE
-                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp })
+                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay })
                                     // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                     notify('✅ Pago con éxito')
                                     setPayment(false)

@@ -21,7 +21,7 @@ const useInventoryStore = create(
                     fetchGet({ url: PRODUCT_API_URL }).then(result => {
                         if (result?.code === 200) {
                             set({
-                                listInventory: result?.data?.reduce((acc, { ID, code, cost_price, image, name, net_price, sale_price, product_categories_id, stock_types_id, product_stock }) => {
+                                listInventory: result?.data?.reduce((acc, { ID, code, cost_price, image, name, net_price, sale_price, product_categories_id, stock_types_id, product_stock, tax_free }) => {
                                     return [...acc,
                                         {
                                             id: ID,
@@ -35,7 +35,8 @@ const useInventoryStore = create(
                                             stockTypeId: stock_types_id,
                                             stock: product_stock?.stock,
                                             stockMin: product_stock?.stock_min,
-                                            meta: name + ' ' + code
+                                            meta: name + ' ' + code,
+                                            taxFree: tax_free
                                         }
                                     ]
                                 }, []).sort((a, b) => {

@@ -131,35 +131,15 @@ export default function SaleList (props) {
 
                 <section className="flow-root px-3 max-h-[44rem]">
                     <ul className="divide-y divide-gray-200 dark:divide-white">
-                        {loading
-                            ? <section className="pt-3 pl-3 pr-3 ">
-                                <div className="max-w-full w-full flex items-center gap-3">
-                                    <div className="w-full flex flex-col gap-5">
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                        <Skeleton className="h-7 w-full rounded-lg"/>
-                                    </div>
-                                </div>
-                            </section>
-
-                            : <ScrollShadow className="w-full h-[31rem] pr-1 ">
-                                {listSales?.map((product, index) =>
-                                    <section key={index} id={product?.product?.code}>
-                                        <Divider orientation="horizontal" />
-                                        <SaleListItem product={product} />
-                                        <Divider orientation="horizontal" />
-                                    </section>
-                                )}
-                            </ScrollShadow>
-                        }
+                        <ScrollShadow className="w-full h-[31rem] pr-1 ">
+                            {listSales?.map((product, index) =>
+                                <section key={index} id={product?.product?.code}>
+                                    <Divider orientation="horizontal" />
+                                    <SaleListItem product={product} />
+                                    <Divider orientation="horizontal" />
+                                </section>
+                            )}
+                        </ScrollShadow>
 
                     </ul>
                 </section>
