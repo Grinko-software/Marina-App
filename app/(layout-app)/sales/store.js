@@ -341,24 +341,29 @@ const useSalesStore = create(
                             ]
                         }
                     }
+                    setStateMachine('Enviando')
                     fetchPost(CREATE_PAYMENT_POSMACHINE, bodyPosMachine).then(result => {
                         setPageTarget(null)
                         // setPaymentTarget(sales, saleId, null)
                         // set({ loadingSale: false })
+
                         if (result?.code === 200 && result?.data?.paymentRequestId !== 0) {
+                            setStateMachine('Pendiente')
                             const idSale = result?.data?.paymentRequestId
-                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale), setStateMachine).then(data => {
-                                console.log('Estado confirmado:', data)
+                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
+                                // console.log('Estado confirmado:', data)
                                 fetchPost(SALE_TICKET_CREATE, body).then(result => {
                                     setPageTarget(null)
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
                                         generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data })
                                         if (pageTarget) {
+                                            // setStateMachine('Confirmado')
                                             notify('✅ Pago con tarjeta con éxito')
                                         } else {
                                             notify('✅ Pago con éxito')
                                         }
+                                        setStateMachine(null)
                                         setPayment(false)
                                         onClose()
                                         setGoPay(false)
@@ -367,6 +372,7 @@ const useSalesStore = create(
                                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                                         onClose()
                                         setGoPay(false)
+                                        setStateMachine(null)
                                     }
                                 })
                             })
@@ -377,6 +383,7 @@ const useSalesStore = create(
                                         notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                                     }
                                     set({ loadingSale: false })
+                                    setStateMachine(null)
                                 })
                         // clearList()
                         } else {
@@ -386,12 +393,12 @@ const useSalesStore = create(
                                 notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                             }
                             set({ loadingSale: false })
-                            // onClose()
-                            // setGoPay(false)
+                            setStateMachine(null)
                         }
                     })
                 } catch {
                     set({ loadingSale: false })
+                    setStateMachine(null)
                 }
             }
         }

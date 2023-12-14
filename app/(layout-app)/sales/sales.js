@@ -8,9 +8,11 @@ import PayPage from './payPage'
 import useSalesStore from './store'
 import PayDetailed from './components/payDetailed'
 import { PlusIcon } from '@heroicons/react/24/solid'
+import LoadingSale from './components/loadingSale'
 const SalesMenu = () => {
     const [payment, setPayment] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
+    const [openLoadingSale, setOpenLoadingSale] = useState(false)
     const [searchInput, setSearchInput] = useState(null)
     const [goPay, setGoPay] = useState(false)
     const [payDetailed, setPayDetailed] = useState(null)
@@ -31,7 +33,12 @@ const SalesMenu = () => {
         setPaymentTarget,
         setVoucherTarget
     } = useSalesStore()
-
+    const onCloseLoadingSale = () => {
+        setOpenLoadingSale(false)
+    }
+    const onOpenLoadingSale = () => {
+        setOpenLoadingSale(true)
+    }
     useEffect(() => {
         setPayment(false)
     }, [saleIdActive])
@@ -52,7 +59,8 @@ const SalesMenu = () => {
                         ? <PayPage setPayment={setPayment}
                             paymentTarget={paymentTargetValue}
                             setPaymentTarget={setPaymentTarget}
-                            voucherTarget={voucherTargetValue} setVoucherTarget={setVoucherTarget}
+                            voucherTarget={voucherTargetValue}
+                            setVoucherTarget={setVoucherTarget}
                         />
                         : <TableInventory setSearchInput={setSearchInput} searchInput={searchInput}/>
                     }
@@ -102,6 +110,29 @@ const SalesMenu = () => {
                     isOpen={isOpen}
                     onClose={onClose}
                     onOpen={onOpen}
+                    totalPay={totalPrice}
+                    setGoPay={setGoPay}
+                    setPayDetailed={setPayDetailed}
+                    payDetailed={payDetailed}
+                    listSales={listSales}
+                    createSale={createSale}
+                    paymentTarget={paymentTargetValue}
+                    voucherTarget={voucherTargetValue}
+                    setPayment={setPayment}
+                    loadingSale={loadingSale}
+                    pageTarget={pageTarget}
+                    setPageTarget={setPageTarget}
+                    setPaymentTarget={setPaymentTarget}
+                    setSearchInput={setSearchInput}
+                    setPaymentTargetValue={setPaymentTargetValue}
+                    setVoucherTargetValue={setVoucherTargetValue}
+                />
+                {/* Modal loading sale from debit/credit card */}
+                <LoadingSale
+                    payment={payment}
+                    isOpen={openLoadingSale}
+                    onClose={onCloseLoadingSale}
+                    onOpen={onOpenLoadingSale}
                     totalPay={totalPrice}
                     setGoPay={setGoPay}
                     setPayDetailed={setPayDetailed}
