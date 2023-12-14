@@ -21,7 +21,6 @@ export const fetchGet = async (url) => {
     }
 }
 export const fetchPost = async (url, body, notAuth = false) => {
-    console.log(body)
     if (notAuth) {
         try {
             return await fetch(url,

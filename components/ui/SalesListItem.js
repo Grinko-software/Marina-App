@@ -5,17 +5,28 @@ import { formatter } from '@/utils/number'
 export default function SaleListItem (props) {
     const { product: productDetail } = props
     const { product, quantity, discount, total } = productDetail
-    const { id, name, code, price } = product
+    const { id, name, code, price, taxFree } = product
     return (
         <li className="py-3 sm:py-2 animation-fade-in">
             <div className="flex items-center">
                 <div className="flex-1 min-w-0">
+
                     <p className="text-lg font-bold text-gray-900 truncate dark:text-white">
                         {name?.toUpperCase()}
                     </p>
-                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                        {code}
-                    </p>
+
+                    <div className='flex flex-row gap-4 items-center'>
+                        <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                            {code}
+                        </p>
+                        {taxFree
+                            ? <p className="text-xs font-bold text-red-500 truncate dark:text-red-500">
+                                EXCENTO DE IVA
+                            </p>
+                            : <></>
+
+                        }
+                    </div>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                     <div className='flex flex-row gap-4 items-center'>

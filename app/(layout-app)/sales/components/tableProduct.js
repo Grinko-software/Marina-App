@@ -75,12 +75,16 @@ export default function tableProducts (props) {
     useEffect(() => {
         if (listSales?.length > 0) {
             let currentTotal = 0
+            let currentTotalTaxFree = 0
             listSales?.forEach((item) => {
+                if (item.product.taxFree) {
+                    currentTotalTaxFree += item?.total - (item?.discount || 0)
+                }
                 currentTotal += item?.total - (item?.discount || 0)
             })
-            setTotalPrice(listSalesActives, saleIdActive, Math.round(currentTotal / 10) * 10)
+            setTotalPrice(listSalesActives, saleIdActive, Math.round(currentTotal / 10) * 10, Math.round(currentTotalTaxFree / 10) * 10)
         } else {
-            setTotalPrice(listSalesActives, saleIdActive, 0)
+            setTotalPrice(listSalesActives, saleIdActive, 0, 0)
         }
     }, [listSales])
 
