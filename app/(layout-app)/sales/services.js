@@ -1,6 +1,8 @@
 // import { fetchGet } from '@/services/sales'
 import { getToken } from '@/services/user'
+import MachineStore from './components/store/machine'
 export const getStateSaleMachine = (url) => {
+    const { setStatus } = MachineStore()
     return new Promise((resolve, reject) => {
         let limitTime = 0
         const intervalId = setInterval(() => {
@@ -21,10 +23,15 @@ export const getStateSaleMachine = (url) => {
                     return response.json()
                 })
                 .then(data => {
+                    // added status
+                    setStatus(data?.data?.paymentRequest?.status)
                     // Comprueba si el estado es confirmado
                     if (data?.data?.paymentRequest?.status === 'Completed') {
                         clearInterval(intervalId)
                         resolve(data)
+                    } else if (data?.data?.paymentRequest?.status === 'Sent') {
+
+                        // enviada la venta
                     } else if (data?.data?.paymentRequest?.status === 'Canceled') {
                         clearInterval(intervalId)
                         reject(new Error('Venta cancelada desde la máquina'))
@@ -40,6 +47,6 @@ export const getStateSaleMachine = (url) => {
                 clearInterval(intervalId)
                 reject(new Error('Tiempo de espera agotado (más de 2 minutos).'))
             }
-        }, 1000) // Consulta cada 1000ms
+        }, 5000) // Consulta cada 1000ms
     })
 }
