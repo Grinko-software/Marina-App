@@ -63,7 +63,10 @@ export default function SaleDetail (params) {
                 listSales: dataModel,
                 totalPay: target?.total,
                 discount: target?.discount,
-                datetime: target?.datetime
+                datetime: target?.datetime,
+                iva: target?.iva,
+                totalTaxFree: target?.totalTaxFree,
+                netTotal: target?.total - target?.iva
             })
         }
     }

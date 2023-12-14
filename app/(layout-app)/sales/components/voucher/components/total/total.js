@@ -15,14 +15,17 @@ const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva
                     <Text style={StylePdf.textRow}>{netTotal ? formatter.format(netTotal) : '-'}</Text>
                 </View>
             </View>
-            <View style={StylePdf.rowTable}>
-                <View style={StylePdf.tableColumn1}>
-                    <Text style={StylePdf.textRow}>{'Monto EXENTO'}</Text>
+            {totalTaxFree
+                ? <View style={StylePdf.rowTable}>
+                    <View style={StylePdf.tableColumn1}>
+                        <Text style={StylePdf.textRow}>{'Monto EXENTO'}</Text>
+                    </View>
+                    <View style={StylePdf.tableColumn2}>
+                        <Text style={StylePdf.textRow}>{totalTaxFree ? formatter.format(totalTaxFree) : '-'}</Text>
+                    </View>
                 </View>
-                <View style={StylePdf.tableColumn2}>
-                    <Text style={StylePdf.textRow}>{totalTaxFree ? formatter.format(totalTaxFree) : '-'}</Text>
-                </View>
-            </View>
+                : null}
+
             <View style={StylePdf.rowTable}>
                 <View style={StylePdf.tableColumn1}>
                     <Text style={StylePdf.textRow}>{'Monto IVA (19%)'}</Text>

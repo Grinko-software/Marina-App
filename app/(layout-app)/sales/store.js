@@ -1,3 +1,4 @@
+/* eslint-disable n/handle-callback-err */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
@@ -8,6 +9,7 @@ import { today } from '@/utils/date'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
 import { getStateSaleMachine } from './services'
 import { getDeviceTuu } from '@/services/settings'
+import { setStateMachine } from '@/services/machine'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -345,13 +347,13 @@ const useSalesStore = create(
                         // set({ loadingSale: false })
                         if (result?.code === 200 && result?.data?.paymentRequestId !== 0) {
                             const idSale = result?.data?.paymentRequestId
-                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
+                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale), setStateMachine).then(data => {
                                 console.log('Estado confirmado:', data)
                                 fetchPost(SALE_TICKET_CREATE, body).then(result => {
                                     setPageTarget(null)
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data })
                                         if (pageTarget) {
                                             notify('✅ Pago con tarjeta con éxito')
                                         } else {
@@ -371,7 +373,6 @@ const useSalesStore = create(
                                 .catch(error => {
                                     if (pageTarget) {
                                         notify('❌ Problemas con el pago con la tarjeta')
-                                        console.error('Error al consultar el endpoint:', error)
                                     } else {
                                         notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                                     }

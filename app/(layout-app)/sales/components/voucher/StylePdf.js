@@ -72,6 +72,7 @@ export const StylePdf = StyleSheet.create({
         alignItems: 'center',
         marginTop: -20
     },
+
     containerFlexCol: {
         display: 'flex',
         flexDirection: 'column',
@@ -79,6 +80,14 @@ export const StylePdf = StyleSheet.create({
         alignItems: 'center',
         marginTop: 0,
         marginBottom: 67
+    },
+    containerFlexCol4: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignContent: 'center',
+        alignItems: 'center',
+        marginTop: 0,
+        marginBottom: 72
     },
     title: {
         color: '#000000',
