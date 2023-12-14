@@ -21,7 +21,7 @@ export default function SaleListItem (props) {
                         </p>
                         {taxFree
                             ? <p className="text-xs font-bold text-red-500 truncate dark:text-red-500">
-                                EXCENTO DE IVA
+                                EXENTO DE IVA
                             </p>
                             : <></>
 

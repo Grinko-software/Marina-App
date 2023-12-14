@@ -7,7 +7,7 @@ import { TableProductVoucher } from './components/table/table'
 import ViewTotal from './components/total/total'
 
 // Create Document Component
-export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp }) => {
+export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, totalTaxFree, netTotal, iva }) => {
     return (
         <Document>
             <Page size={[180]} style={StylePdf.page}>
@@ -30,22 +30,28 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp }) => 
                 <View style={StylePdf.container}>
                     <Text style={StylePdf.titleSecondary}>{'COMPROBANTE DE VENTA'}</Text>
                     <Text style={StylePdf.subtitle}>{date}</Text>
-                    <View style={StylePdf.containerAbsoulte}>
-                        <View style={StylePdf.stampContainer}>
-                            <Image
-                                fixed={true}
-                                src={'data:image/png;base64,' + stamp }
-                                style={StylePdf.stamp}
-                            />
-                        </View>
-                    </View>
                 </View>
                 {/* Table products */}
                 <View style={StylePdf.containerFlexCol1}>
                     <TableProductVoucher listSales={listSales}/>
                 </View>
+                <View style={StylePdf.containerAbsoulte}>
+                    <View style={StylePdf.stampContainer}>
+                        <Image
+                            fixed={true}
+                            src={'data:image/png;base64,' + stamp }
+                            style={StylePdf.stamp}
+                        />
+                    </View>
+                </View>
                 <View style={StylePdf.containerFlexCol}>
-                    <ViewTotal totalPay={totalPay} totalDiscount={totalDiscount}/>
+                    <ViewTotal
+                        totalPay={totalPay}
+                        totalDiscount={totalDiscount}
+                        totalTaxFree={totalTaxFree}
+                        netTotal={netTotal}
+                        iva ={iva}
+                    />
                 </View>
             </Page>
         </Document>
