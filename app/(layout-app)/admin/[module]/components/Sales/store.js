@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { requestDataSales } from './service'
+import { requestDataSales, requestDataSaleDetail } from './service'
 
 const useLastSalesStore = create((set) => ({
     data: undefined,
@@ -11,6 +11,10 @@ const useLastSalesStore = create((set) => ({
             set({ data: data?.data })
         }
         set({ loading: false })
+    },
+    requestSaleDetail: async ({ saleId }) => {
+        const [data] = await Promise.all([requestDataSaleDetail(saleId)])
+        return undefined || data
     }
 }))
 

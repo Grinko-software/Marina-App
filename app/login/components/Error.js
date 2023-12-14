@@ -1,5 +1,5 @@
 'use client'
-import useAuthStore from '@/stores/user'
+import AlertMessage from '@/components/ui/AlertMessage'
 import { Alert } from '@material-tailwind/react'
 import { useEffect, useState } from 'react'
 
@@ -22,8 +22,7 @@ function Icon () {
     )
 }
 
-export function ErrorLogin () {
-    const error = useAuthStore((state) => state.error)
+export function ErrorLogin ({ error }) {
     const [errorText, setErrorText] = useState(null)
 
     useEffect(() => {
@@ -31,6 +30,10 @@ export function ErrorLogin () {
     }, [error])
 
     return (<div>
-        {errorText ? <Alert icon={<Icon />}>{errorText}</Alert> : <div></div>}
+        {error
+            ? <div className=''>
+                <AlertMessage message={errorText}/>
+            </div>
+            : null}
     </div>)
 }

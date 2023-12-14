@@ -1,4 +1,4 @@
-import { authenticate } from '@/utils/authSettings'
+import { authenticate, authenticateByAuthCode } from '@/utils/authSettings'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 const useAuthStore = create(
@@ -13,6 +13,7 @@ const useAuthStore = create(
             loading: false,
             error: null,
             idUser: null,
+            errorAuthCode: null,
             setToken: () => set((state) => ({ token: state })),
             setEmail: () => set((state) => ({ email: state })),
             setError: () => set((state) => ({ error: state })),
@@ -40,6 +41,39 @@ const useAuthStore = create(
                             if (userType === 'admin') set({ isAdmin: true })
                         } else {
                             set({ error: statusCode + ' ' + (error || message || statusText) })
+                        }
+                        set({ loading: false })
+                    })
+                } catch {
+                    set({ loading: false })
+                }
+            },
+            signInWithCode: ({ authCode }) => {
+                set({ loading: true, error: null, errorAuthCode: null })
+                try {
+                    authenticateByAuthCode(
+                        {
+                            authCode
+                        }
+                    ).then(({ user, statusCode, statusText, error, message }) => {
+                        if (user.token) {
+                            const { name, lastName, userType, token, idUser, email } = user
+                            set({
+                                name,
+                                lastName,
+                                fullName: name + ' ' + lastName,
+                                email,
+                                token,
+                                isAdmin: userType === 'admin',
+                                idUser,
+                                error: null
+                            })
+                            if (userType === 'admin') set({ isAdmin: true })
+                        } else {
+                            set({ error: statusCode + ' ' + (error || message || statusText) })
+                            if (statusCode === 401) {
+                                set({ errorAuthCode: 'Credencial no autorizada' })
+                            }
                         }
                         set({ loading: false })
                     })

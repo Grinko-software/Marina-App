@@ -6,7 +6,8 @@ export function Navigation () {
     const pathname = usePathname()
     const moduleApplication = pathname.replace('/', '')
     const router = useRouter()
-    const [selected, setSelected] = useState(moduleApplication)
+    const [selected, setSelected] = useState()
+
     const tabs = [
         {
             id: 'sales',
@@ -29,11 +30,26 @@ export function Navigation () {
             route: '/admin'
         }
     ]
+
     useEffect(() => {
-        if (selected && selected !== moduleApplication) {
+        if (moduleApplication) {
+            const pathParts = moduleApplication.split('/')
+            const principalPath = pathParts.length ? pathParts[0] : undefined
+            if (!selected) {
+                setSelected(principalPath)
+            } else if (selected !== principalPath) {
+                setSelected(selected)
+                router.push('/' + selected)
+            }
+        }
+    }, [moduleApplication, selected])
+
+    /*    useEffect(() => {
+        if (selected && !moduleApplication?.includes(selected)) {
             router.push('/' + selected)
         }
-    }, [selected])
+    }, [selected]) */
+
     return (
         <footer className={'flex flex-col items-center w-full'}>
             <Tabs

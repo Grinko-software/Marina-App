@@ -3,6 +3,7 @@ const BASE_MARKET_API_URL = 'https://marina-market-api.up.railway.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
+export const AUTH_CODE_API_URL = BASE_AUTH_API_URL + '/auth'
 
 // MARKET
 export const CREATE_PRODUCT_API_URL = BASE_MARKET_API_URL + '/product/create'
@@ -31,6 +32,12 @@ export const GET_DOCUMENT_HAULMER = BASE_MARKET_API_URL + '/dte'
 // Get customers
 export const CUSTOMER_API_URL = BASE_MARKET_API_URL + '/customer'
 export const CREATE_CUSTOMER = BASE_MARKET_API_URL + '/customer/create'
+// Create  Sale Machine Tuu
+export const CREATE_PAYMENT_POSMACHINE = BASE_MARKET_API_URL + '/machine/create-sale'
+// Get State Sale Machine Tuu
+export const GET_STATE_SALE_POSMACHINE = BASE_MARKET_API_URL + '/machine/payment-request/:id'
+// GET CONFIG
+export const GET_POST_MACHINE = BASE_MARKET_API_URL + '/settings/post-machine'
 
 // REPORTS
 export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-type-sales'

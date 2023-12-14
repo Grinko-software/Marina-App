@@ -6,7 +6,7 @@ import { ErrorLogin } from './Error'
 import { validateEmail } from '@/utils/email'
 
 export default function LoginForm () {
-    const { signIn, loading } = useAuthStore()
+    const { signIn, loading, error } = useAuthStore()
     const [validateValues, setValidateValues] = useState(false)
     const [sendDisabled, setSendDisabled] = useState(false)
     const [email, setEmail] = useState(null)
@@ -48,7 +48,7 @@ export default function LoginForm () {
         }
     }, [password])
 
-    const onSubmitHandler = async () => {
+    const onSubmitHandler = () => {
         if (!emailError && !passwordError) {
             signIn(
                 {
@@ -92,7 +92,7 @@ export default function LoginForm () {
                     variant="bordered"
                     value={email}
                     onValueChange={setEmail}
-                    validationState={validationStateEmail}
+                    isInvalid={validationStateEmail}
                     color={emailError ? 'danger' : 'default'}
                     errorMessage={emailError}
                     onBlur={() => setValidateValues(true)}
@@ -110,7 +110,7 @@ export default function LoginForm () {
                     variant="bordered"
                     value={password}
                     onValueChange={setPassword}
-                    validationState={validationStatePassword}
+                    isInvalid={validationStatePassword}
                     color={passwordError ? 'danger' : 'default'}
                     errorMessage={passwordError}
                     onBlur={() => setValidateValues(true)}
@@ -128,7 +128,11 @@ export default function LoginForm () {
             Ingresar
                 </Button>
             </div>
-            <ErrorLogin/>
+            {
+                error && <div className='w-full p-2'>
+                    <ErrorLogin error={error}/>
+                </div>
+            }
         </section>
     )
 }

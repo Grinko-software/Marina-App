@@ -11,7 +11,6 @@ import { BillIcon } from '@/components/ui/BillIcon'
 import useSalesStore from './store'
 import usePaymentStore from '@/stores/payment'
 import useVocuherStore from '@/stores/voucher'
-import { ExemptSaleIcon } from '@/components/ui/exemptSale'
 export default function PayPage (props) {
     /* Change state to go back to sales table product */
     const {
@@ -110,9 +109,7 @@ export default function PayPage (props) {
                                         icon = {
                                             pay?.id === 1
                                                 ? <CashIcon/>
-                                                : (pay?.id === 2)
-                                                    ? <CreditIcon/>
-                                                    : <ExemptSaleIcon/>}
+                                                : <CreditIcon/>}
                                         title={pay?.name}
                                         paymentTarget={paymentTarget}
                                         setPaymentTarget={setPaymentTarget}

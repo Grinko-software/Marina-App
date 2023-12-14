@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
-import { isMobileDevice } from '@/utils/agent'
 import { getMoment } from '@/utils/date'
+import { formatNumberWithPoints } from '@/utils/number'
+import moment from 'moment-timezone'
 export default function TableSales ({ data, loading, setTarget }) {
-    // eslint-disable-next-line no-unused-vars
-    const [isMobile, setIsMobile] = useState(true)
     const [hasMore, setHasMore] = useState(false)
     const [showAllData, setShowAllData] = useState(false)
     const [dataModel, setDataModel] = useState([])
@@ -22,11 +21,15 @@ export default function TableSales ({ data, loading, setTarget }) {
         },
         {
             key: 'datetime',
-            label: 'FECHA'
+            label: 'Fecha compra'
         },
         {
             key: 'total',
-            label: 'TOTAL'
+            label: 'Total'
+        },
+        {
+            key: 'discount',
+            label: 'Descuentos'
         },
         {
             key: 'iva',
@@ -34,30 +37,31 @@ export default function TableSales ({ data, loading, setTarget }) {
         },
         {
             key: 'type',
-            label: 'TIPO'
+            label: 'Tipo'
+        },
+        {
+            key: 'paymentType',
+            label: 'Tipo de pago'
         },
         {
             key: 'showTicket',
             label: 'Boleta'
         }
     ]
-    useEffect(() => {
-        if (navigator) {
-            const isMobile = isMobileDevice()
-            setIsMobile(isMobile)
-        }
-    }, [])
 
     useEffect(() => {
         if (data) {
             let tableData = data.map((item) => {
                 return {
                     key: item.sale_id,
+                    target: item.sale_id,
                     id: item.sale_id,
-                    datetime: item?.date,
+                    datetime: moment(item?.date),
                     total: item?.total,
+                    discount: item?.total_discount,
                     iva: item?.total - ((item.total || 0) / 1.19),
-                    type: item?.salesDetails?.name_voucher
+                    type: item?.name_voucher,
+                    paymentType: item?.name_payment
                 }
             })
             const limit = 10
@@ -102,19 +106,27 @@ export default function TableSales ({ data, loading, setTarget }) {
         case 'datetime':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{getMoment(cellValue).format('DD-MM-YYYY HH:mm:ss')}</p>
+                    <p className="text-bold text-sm capitalize dark:text-white">{(cellValue).format('DD-MM-YYYY HH:mm:ss')}</p>
                 </div>
             )
         case 'total':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`$${cellValue}`}</p>
+                    <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(cellValue)}`}</p>
                 </div>
+            )
+        case 'discount':
+            return (
+                cellValue
+                    ? <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(cellValue)}`}</p>
+                    </div>
+                    : '-'
             )
         case 'iva':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`$${cellValue}`}</p>
+                    <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(cellValue)}`}</p>
                 </div>
             )
         case 'type':
@@ -137,13 +149,13 @@ export default function TableSales ({ data, loading, setTarget }) {
         case 'showTicket':
             return (
                 <div className="flex flex-col">
-                    <Button variant="flat" onPress={() => openTicket(data.id)}>
+                    <Button variant="flat" onPress={() => openTicket(data)}>
                                 Generar ticket
                     </Button>
                 </div>
             )
         default:
-            return cellValue
+            return cellValue?.toString()?.toUpperCase()
         }
     }, [dataModel])
 
