@@ -351,7 +351,7 @@ const useSalesStore = create(
                                     setPageTarget(null)
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay })
+                                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
                                         if (pageTarget) {
                                             notify('✅ Pago con tarjeta con éxito')
                                         } else {
