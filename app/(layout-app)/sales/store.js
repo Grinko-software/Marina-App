@@ -336,10 +336,10 @@ const useSalesStore = create(
                             device,
                             amount: totalPay,
                             dteType: 48,
+                            method: methodPage ?? 0,
                             extraData: {
                                 taxIdnValidation: '77426986-K',
                                 sourceName: 'Marina APP',
-                                method: methodPage ?? 0,
                                 customFields: [
                                     {
                                         name: 'idXX',
