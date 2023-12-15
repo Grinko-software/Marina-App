@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation'
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Spinner } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import useAuthStore from '@/stores/user'
-import { FiAlertTriangle } from 'react-icons/fi'
 import AlertMessage from '@/components/ui/AlertMessage'
 
 const InputCode = ({ value, setValue }) => {

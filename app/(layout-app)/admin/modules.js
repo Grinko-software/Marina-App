@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { FaChartLine, FaClipboardList, FaShoppingCart, FaTruck, FaUsersCog } from 'react-icons/fa'
 import ReportView from '../reports/components/MainReportView'
 import Sales from './[module]/components/Sales/Sales'
@@ -8,11 +9,11 @@ export const modules = [
         path: 'sales',
         name: 'Ventas',
         description: 'Detalle de las últimas ventas realizadas',
-        requireAdmin: true,
+        requireAdmin: false,
         content: <Sales/>,
         icon: <FaClipboardList />
-    },
-    {
+    }
+    /* {
         key: 'reports',
         path: 'reports',
         name: 'Reportes',
@@ -56,7 +57,7 @@ export const modules = [
         requireAdmin: false,
         content: <div>6</div>,
         icon: <FaUsersCog />
-    }
+    } */
 ]
 
 export const getModuleName = ({ path: pathSearch }) => {
