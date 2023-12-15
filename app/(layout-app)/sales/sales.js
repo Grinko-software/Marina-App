@@ -126,6 +126,7 @@ const SalesMenu = () => {
                     setSearchInput={setSearchInput}
                     setPaymentTargetValue={setPaymentTargetValue}
                     setVoucherTargetValue={setVoucherTargetValue}
+                    onOpenLoadingSale={onOpenLoadingSale}
                 />
                 {/* Modal loading sale from debit/credit card */}
                 <LoadingSale

@@ -136,7 +136,7 @@ const useSalesStore = create(
             set({ listSalesActives: sales })
         },
         /* Create sale */
-        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer) => {
+        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer, methodPage, setMethodPage) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleProductsList = sale?.saleProductsList
@@ -328,6 +328,7 @@ const useSalesStore = create(
                 }
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 /* Its is when pageTarget is Debit or Credit */
+                setMethodPage(null)
                 try {
                     const device = getDeviceTuu()
                     if (device) {
@@ -338,6 +339,7 @@ const useSalesStore = create(
                             extraData: {
                                 taxIdnValidation: '77426986-K',
                                 sourceName: 'Marina APP',
+                                method: methodPage ?? 0,
                                 customFields: [
                                     {
                                         name: 'idXX',

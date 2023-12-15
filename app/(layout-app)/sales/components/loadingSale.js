@@ -7,7 +7,11 @@ import useInvoiceStore from './invoice/store'
 import useMachineStore from './store/machine'
 import cardloading from '@/assets/gifs/card-loading.json'
 import useSalesStore from '../store'
+import { CreditIcon } from '@/components/ui/CreditIcon'
+import toast from 'react-hot-toast'
 export default function LoadingSale ({ payment, loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue }) {
+    const notify = (text) => toast(text)
+    const [methodPage, setMethodPage] = useState(null)
     const { status, setStatus } = useMachineStore(({ status, setStatus }) => ({ status, setStatus }))
     const { targetCustomer, setTargetCustomer } = useInvoiceStore(({ targetCustomer, setTargetCustomer }) => ({ targetCustomer, setTargetCustomer }))
     const {
@@ -23,6 +27,14 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
         setGoPay(false)
         setLoadingSale(false)
     }
+    const handleButton = (value) => {
+        setMethodPage(value)
+        setSearchInput(null)
+        setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
+        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer, value, setMethodPage)
+        setPaymentTarget(listSalesActives, saleIdActive, null)
+    }
+
     useEffect(() => {
         if (status) {
             onOpen()
@@ -30,37 +42,87 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
             onClose()
         }
     }, [status])
+
     return (
 
         <Modal
             size='5xl'
-            className='h-[40rem]'
+            className='h-[35rem] w-6/12'
             isOpen={isOpen}
             backdrop='opaque'
             scrollBehavior={'inside'}
             closeButton={<></>}
         >
-            <ModalContent className='items-center content-center py-2' >
-                <ModalBody className='gap-4 w-6/12 items-center justify-around' >
-                    <section className="h-[10rem] w-[15rem] rounded-full border border-primary-200 bg-primary-100 ">
-                        <Lottie animationData={cardloading} loop={true} />
-                    </section>
-                    <section className="flex flex-col items-center h-[11rem] space-y-3">
-                        <Button isLoading={true} className='text-2xl w-[15rem] h-[5rem] bg-green-600 text-white'>{'pendiente'}</Button>
-                        <Button
-                            color="danger"
-                            variant="shadow"
-                            className="text-2xl h-[5rem] w-[15rem] "
-                            onClick={handleCancelSale}
-                        >
-                            Cancelar
-                        </Button>
-                    </section>
+            <ModalContent >
+                {status
+                    ? <ModalBody >
 
-                </ModalBody>
+                        <section className='flex flex-col items-center py-[3.5rem]'>
+                            <section className="h-[10rem] w-[15rem] rounded-full border border-primary-200 bg-primary-100 ">
+                                <Lottie animationData={cardloading} loop={true} />
+                            </section>
+                        </section>
+                        <section className='flex flex-col items-center pt-10  h-full'>
+                            <section className='flex flex-col items-center space-y-10'>
+                                <section className="flex flex-col items-center h-[11rem] space-y-3">
+                                    <Button isLoading={true} className='text-2xl w-[15rem] h-[5rem] bg-transparent text-primary-500'>{status}</Button>
+                                    <Button
+                                        color="danger"
+                                        variant="shadow"
+                                        className="text-2xl h-[5rem] w-[15rem] "
+                                        onClick={handleCancelSale}
+                                    >
+                            Cancelar
+                                    </Button>
+                                </section>
+                            </section>
+                        </section>
+                    </ModalBody>
+                    : <ModalBody >
+
+                        <section className='flex flex-col items-center py-[6rem]'>
+                            <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Crédito o Débito</h5>
+                        </section>
+                        <section className='flex flex-col items-center h-full'>
+                            <section className='flex flex-col items-center space-y-10'>
+                                <section className='flex flex-wrap space-x-3'>
+                                    <Button color="success" size="lg" className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500" isIconOnly variant="solid" aria-label=""
+                                        onClick={() => { handleButton(1) }}>
+                                        <CreditIcon/>
+                                        <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">{'Crédito'}</p>
+                                    </Button>
+                                    <Button color="success" size="lg" className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500" isIconOnly variant="solid" aria-label=""
+                                        onClick={() => {
+                                            handleButton(2)
+                                        }}>
+                                        <CreditIcon/>
+                                        <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">{'Débito'}</p>
+                                    </Button>
+                                </section>
+                            </section>
+                        </section>
+                    </ModalBody>}
 
             </ModalContent>
         </Modal>
 
     )
 }
+/*
+<section>
+                                <section className="h-[10rem] w-[15rem] rounded-full border border-primary-200 bg-primary-100 ">
+                                    <Lottie animationData={cardloading} loop={true} />
+                                </section>
+                                <section className="flex flex-col items-center h-[11rem] space-y-3">
+                                    <Button isLoading={true} className='text-2xl w-[15rem] h-[5rem] bg-green-600 text-white'>{status}</Button>
+                                    <Button
+                                        color="danger"
+                                        variant="shadow"
+                                        className="text-2xl h-[5rem] w-[15rem] "
+                                        onClick={handleCancelSale}
+                                    >
+                            Cancelar
+                                    </Button>
+                                </section>
+                            </section>
+*/
