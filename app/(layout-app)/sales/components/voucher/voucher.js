@@ -52,21 +52,24 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                         iva ={iva}
                     />
                 </View>
-                <View style={StylePdf.containerFlexCol2}>
-                    <View style={StylePdf.containerAbsoulte}>
-                        <View style={StylePdf.stampContainer}>
-                            <Image
-                                fixed={true}
-                                src={'data:image/png;base64,' + stamp}
-                                style={StylePdf.stamp}
-                            />
+                {stamp
+                    ? <View>
+                        <View style={StylePdf.containerFlexCol2}>
+                            <View style={StylePdf.containerAbsoulte}>
+                                <View style={StylePdf.stampContainer}>
+                                    <Image
+                                        fixed={true}
+                                        src={'data:image/png;base64,' + stamp}
+                                        style={StylePdf.stamp}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        <View style={StylePdf.containerFlexCol3}>
+                            <Detail/>
                         </View>
                     </View>
-                </View>
-                <View style={StylePdf.containerFlexCol3}>
-                    <Detail/>
-                </View>
-
+                    : <View></View>}
             </Page>
         </Document>
     )

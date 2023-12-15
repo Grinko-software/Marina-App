@@ -406,7 +406,29 @@ const useSalesStore = create(
                             }
                         })
                     } else {
-                        notify('❌ Selecciona una máquina desde el home del sistema ⚙️')
+                        fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                            setPageTarget(null)
+                            set({ loadingSale: false })
+                            if (result?.code === 200) {
+                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                                if (pageTarget) {
+                                    // setStateMachine('Confirmado')
+                                    notify('✅ Pago con tarjeta con éxito')
+                                } else {
+                                    notify('✅ Pago con éxito')
+                                }
+                                setStateMachine(null)
+                                setPayment(false)
+                                onClose()
+                                setGoPay(false)
+                                removeSale(sales, saleId)
+                            } else {
+                                notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
+                                onClose()
+                                setGoPay(false)
+                                setStateMachine(null)
+                            }
+                        })
                         set({ loadingSale: false })
                         setStateMachine(null)
                     }
