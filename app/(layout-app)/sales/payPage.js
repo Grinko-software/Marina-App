@@ -45,7 +45,7 @@ export default function PayPage (props) {
             </section>
             <section className='flex flex-col h-3/4  sm:h-[93%] items-center px-5 py-[1rem] shadow-md hover:shadow-lg  rounded-tl-[0px]  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]'>
                 <div className='flex flex-col w-full h-full items-center mt-10'>
-                    <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Boleta, factura o Ticket</h5>
+                    <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Boleta, Factura o Ticket</h5>
                     <div className='flex flex-col items-center'>
                         <div className='flex flex-row mt-10 space-x-10  items-center '>
 

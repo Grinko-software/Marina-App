@@ -68,7 +68,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                     Aceptar
                                 </Button>
                                 <Button color="danger" variant="light" onClick={onClose}>
-                                    Close
+                                    Cerrar
                                 </Button>
                                 {/*  <div>
               <BarcodeImg elementRef = { elementRef }></BarcodeImg>
