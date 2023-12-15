@@ -32,7 +32,7 @@ const useSalesStore = create(
         disabledScanner: (value) => set({ scannerEnabled: false }),
         enabledRedirectSales: (value) => set({ enabledRedirect: true }),
         disabledRedirectSales: (value) => set({ enabledRedirect: false }),
-
+        setLoadingSale: (value) => set({ loadingSale: value }),
         setUnits: (value) => set({ units: parseInt(value) }),
         setSelectedSaleId: (value) => set({ saleIdActive: parseInt(value) }),
         addNewSaleActive: (sales) => {

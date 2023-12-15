@@ -13,13 +13,15 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
     const {
         listSalesActives,
         saleIdActive,
-        removeSale
+        removeSale,
+        setLoadingSale
     } = useSalesStore()
     const handleCancelSale = () => {
         setPaymentTarget(listSalesActives, saleIdActive, null)
         setPayDetailed(null)
         onClose()
         setGoPay(false)
+        setLoadingSale(false)
     }
     useEffect(() => {
         if (status) {
