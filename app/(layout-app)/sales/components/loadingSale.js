@@ -83,8 +83,8 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
                         <section className='flex flex-col items-center py-[6rem]'>
                             <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Crédito o Débito</h5>
                         </section>
-                        <section className='flex flex-col items-center h-full'>
-                            <section className='flex flex-col items-center space-y-10'>
+                        <section className='flex flex-col items-center h-full space-y-10'>
+                            <section className='flex flex-col items-center space-y-3'>
                                 <section className='flex flex-wrap space-x-3'>
                                     <Button color="success" size="lg" className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500" isIconOnly variant="solid" aria-label=""
                                         onClick={() => { handleButton(1) }}>
@@ -100,6 +100,14 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
                                     </Button>
                                 </section>
                             </section>
+                            <Button
+                                color="danger"
+                                variant="shadow"
+                                className="text-2xl h-[5rem] w-[15rem]"
+                                onClick={handleCancelSale}
+                            >
+                            Cancelar
+                            </Button>
                         </section>
                     </ModalBody>}
 
