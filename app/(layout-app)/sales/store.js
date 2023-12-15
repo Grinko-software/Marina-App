@@ -10,6 +10,7 @@ import { roundPrice, roundValueWithMath } from '@/utils/number'
 import { getStateSaleMachine } from './services'
 import { getDeviceTuu } from '@/services/settings'
 import { setStateMachine } from '@/services/machine'
+import { errorsMachine } from '@/utils/machine'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -337,13 +338,11 @@ const useSalesStore = create(
                             extraData: {
                                 taxIdnValidation: '77426986-K',
                                 sourceName: 'Marina APP',
-                                sourceVersion: '2023.01.20-6',
-                                method: 0,
                                 customFields: [
                                     {
                                         name: 'idXX',
                                         value: '245023-2342-2',
-                                        print: true
+                                        print: false
                                     }
                                 ]
                             }
@@ -354,7 +353,7 @@ const useSalesStore = create(
                             // setPaymentTarget(sales, saleId, null)
                             // set({ loadingSale: false })
 
-                            if (result?.code === 200 && result?.data?.paymentRequestId !== 0) {
+                            if (result?.code === 200 && result?.data?.paymentRequestId) {
                                 setStateMachine('Pendiente')
                                 const idSale = result?.data?.paymentRequestId
                                 getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
@@ -394,11 +393,12 @@ const useSalesStore = create(
                                     })
                             // clearList()
                             } else {
-                                if (pageTarget) {
-                                    notify('❌ Problemas con el pago con la tarjeta')
+                                notify('❌ ' + errorsMachine.get(result?.data?.code))
+                                /*  if (pageTarget) {
+                                    notify('❌ ' + errorsMachine.get(result?.data?.code))
                                 } else {
                                     notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
-                                }
+                                } */
                                 set({ loadingSale: false })
                                 setStateMachine(null)
                             }
