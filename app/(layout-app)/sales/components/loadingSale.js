@@ -86,17 +86,18 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
                         <section className='flex flex-col items-center h-full space-y-10'>
                             <section className='flex flex-col items-center space-y-3'>
                                 <section className='flex flex-wrap space-x-3'>
-                                    <Button color="success" size="lg" className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500" isIconOnly variant="solid" aria-label=""
-                                        onClick={() => { handleButton(1) }}>
-                                        <CreditIcon/>
-                                        <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">{'Crédito'}</p>
-                                    </Button>
+
                                     <Button color="success" size="lg" className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500" isIconOnly variant="solid" aria-label=""
                                         onClick={() => {
                                             handleButton(2)
                                         }}>
                                         <CreditIcon/>
                                         <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">{'Débito'}</p>
+                                    </Button>
+                                    <Button color="success" size="lg" className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500" isIconOnly variant="solid" aria-label=""
+                                        onClick={() => { handleButton(1) }}>
+                                        <CreditIcon/>
+                                        <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">{'Crédito'}</p>
                                     </Button>
                                 </section>
                             </section>
