@@ -81,7 +81,7 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
                     : <ModalBody >
 
                         <section className='flex flex-col items-center py-[6rem]'>
-                            <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Crédito o Débito</h5>
+                            <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Débito o Crédito</h5>
                         </section>
                         <section className='flex flex-col items-center h-full space-y-10'>
                             <section className='flex flex-col items-center space-y-3'>
