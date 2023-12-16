@@ -328,7 +328,7 @@ const useSalesStore = create(
                 }
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 /* Its is when pageTarget is Debit or Credit */
-                setMethodPage(null)
+                // setMethodPage(null)
                 try {
                     const device = getDeviceTuu()
                     if (device) {
