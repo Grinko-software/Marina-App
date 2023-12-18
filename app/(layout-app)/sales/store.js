@@ -328,7 +328,7 @@ const useSalesStore = create(
                     set({ loadingSale: false })
                     onClose()
                 }
-            } else if (pageTarget === 2 || voucherTarget === 3) {
+            } else if (pageTarget === 2 && voucherTarget !== 3) {
                 /* Its is when pageTarget is Debit or Credit */
                 // setMethodPage(null)
                 try {
@@ -337,7 +337,7 @@ const useSalesStore = create(
                         const bodyPosMachine = {
                             device,
                             amount: totalPay,
-                            dteType: 48,
+                            dteType: voucherTarget === 1 ? 48 : 33,
                             method: methodPage ?? 0,
                             extraData: {
                                 taxIdnValidation: '77426986-K',
@@ -438,6 +438,32 @@ const useSalesStore = create(
                     set({ loadingSale: false })
                     setStateMachine(null)
                 }
+            } else {
+                fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                    setPageTarget(null)
+                    set({ loadingSale: false })
+                    if (result?.code === 200) {
+                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                        if (pageTarget) {
+                            // setStateMachine('Confirmado')
+                            notify('✅ Pago con tarjeta con éxito')
+                        } else {
+                            notify('✅ Pago con éxito')
+                        }
+                        setStateMachine(null)
+                        setPayment(false)
+                        onClose()
+                        setGoPay(false)
+                        removeSale(sales, saleId)
+                    } else {
+                        notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
+                        onClose()
+                        setGoPay(false)
+                        setStateMachine(null)
+                    }
+                })
+                set({ loadingSale: false })
+                setStateMachine(null)
             }
         },
         /* Add discount */
