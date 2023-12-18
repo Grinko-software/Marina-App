@@ -3,11 +3,25 @@
 import { pdf as pdff } from '@react-pdf/renderer'
 import { Voucher } from './voucher'
 import { getMoment, today } from '@/utils/date'
-export const generatePdfDocument = async ({ datetime, listSales, totalPay, discount, stamp }) => {
+export const generatePdfDocument = async (
+    { datetime, listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard }
+) => {
     const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
-    const totalDiscount = discount || listSales?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
+    const totalDiscount = discount ||
+     listSales?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
     const blob = await pdff(
-        <Voucher listSales={listSales} totalPay={totalPay} date={date} totalDiscount={totalDiscount} stamp={stamp}/>
+        <Voucher
+            listSales={listSales}
+            totalPay={totalPay}
+            date={date}
+            totalDiscount={totalDiscount}
+            stamp={stamp}
+            totalTaxFree={totalTaxFree}
+            netTotal={netTotal}
+            iva = {iva}
+            dataCard={dataCard?.transactionDetails}
+
+        />
     ).toBlob()
     const fileURL = URL.createObjectURL(blob)
     // window.open(fileURL, 'Boleta.pdf')

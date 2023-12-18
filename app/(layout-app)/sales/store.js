@@ -1,3 +1,4 @@
+/* eslint-disable n/handle-callback-err */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
@@ -8,6 +9,8 @@ import { today } from '@/utils/date'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
 import { getStateSaleMachine } from './services'
 import { getDeviceTuu } from '@/services/settings'
+import { setStateMachine } from '@/services/machine'
+import { errorsMachine } from '@/utils/machine'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -21,7 +24,8 @@ const useSalesStore = create(
             saleProductsList: [],
             paymentTarget: null,
             voucherTarget: 1,
-            discount: null
+            discount: null,
+            totalTaxFree: 0
         }],
         scannerEnabled: false,
         enabledRedirect: false,
@@ -29,7 +33,7 @@ const useSalesStore = create(
         disabledScanner: (value) => set({ scannerEnabled: false }),
         enabledRedirectSales: (value) => set({ enabledRedirect: true }),
         disabledRedirectSales: (value) => set({ enabledRedirect: false }),
-
+        setLoadingSale: (value) => set({ loadingSale: value }),
         setUnits: (value) => set({ units: parseInt(value) }),
         setSelectedSaleId: (value) => set({ saleIdActive: parseInt(value) }),
         addNewSaleActive: (sales) => {
@@ -48,9 +52,10 @@ const useSalesStore = create(
                 set({ saleIdActive: newSaleId })
             }
         },
-        setTotalPrice: (sales, saleId, value) => {
+        setTotalPrice: (sales, saleId, totalValue, taxFreeValue) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
-            sales[saleIndex].totalPrice = value
+            sales[saleIndex].totalPrice = totalValue
+            sales[saleIndex].totalTaxFree = taxFreeValue
             set({ listSalesActives: sales })
         },
         addFromNewSales: (sales, saleId, product, units, offers, onCompleteFunction) => {
@@ -132,7 +137,7 @@ const useSalesStore = create(
             set({ listSalesActives: sales })
         },
         /* Create sale */
-        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer) => {
+        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer, methodPage, setMethodPage) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleProductsList = sale?.saleProductsList
@@ -140,11 +145,12 @@ const useSalesStore = create(
             const voucherTarget = sale?.voucherTarget || targetGeneral
             /*  DTEMITE */
             const totalPay = sale?.totalPrice
+            const totalTaxFreePay = sale?.totalTaxFree || 0
+            const totalWithOutTaxFree = totalPay - totalTaxFreePay
             const date = today().format('YYYY-MM-DD')
-            const netTotal = roundValueWithMath(totalPay / 1.19, 0, 0)
+            const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
+            const iva = totalWithOutTaxFree - netTotal
             /* 1: Boleta model  2: factura model */
-
-            // TODO:integrar factura
             const modelBody = voucherTarget === 1
                 ? {
                     response: [
@@ -155,24 +161,19 @@ const useSalesStore = create(
                             IdDoc: {
                                 TipoDTE: 39,
                                 Folio: 0,
-                                FchEmis: '2023-12-08',
+                                FchEmis: date,
                                 IndServicio: '3'
                             },
                             Emisor: {
-                                RUTEmisor: '77426986-K',
-                                RznSocEmisor: 'MARINA MARKET',
-                                GiroEmisor: 'MINIMARKET',
-                                DirOrigen: 'LA MARINA 200 #11001101',
-                                CmnaOrigen: 'COQUIMBO',
-                                CiudadOrigen: 'COQUIMO'
+                                RUTEmisor: '77426986-K'
                             },
                             Receptor: {
                                 RUTRecep: '66666666-6'
                             },
                             Totales: {
                                 MntNeto: netTotal,
-                                MntExe: '0',
-                                IVA: totalPay - netTotal,
+                                MntExe: totalTaxFreePay,
+                                IVA: iva,
                                 MntTotal: totalPay,
                                 TotalPeriodo: totalPay,
                                 VlrPagar: totalPay
@@ -180,17 +181,30 @@ const useSalesStore = create(
                         },
 
                         Detalle: saleProductsList?.map((item, index) => {
+                            let indexTaxFree = 0
                             const priceItem = item?.discount > 0
                                 ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
                                 : roundValueWithMath(item?.product?.price, 0, 0)
                             const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
                             const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
-                            return {
-                                NroLinDet: index + 1,
-                                NmbItem: item?.product?.name,
-                                QtyItem: quantityItem,
-                                PrcItem: priceItem,
-                                MontoItem: totalItem
+                            if (item?.product?.taxFree) {
+                                indexTaxFree++
+                                return {
+                                    NroLinDet: index + 1,
+                                    IndExe: indexTaxFree,
+                                    NmbItem: item?.product?.name,
+                                    QtyItem: quantityItem,
+                                    PrcItem: priceItem,
+                                    MontoItem: totalItem
+                                }
+                            } else {
+                                return {
+                                    NroLinDet: index + 1,
+                                    NmbItem: item?.product?.name,
+                                    QtyItem: quantityItem,
+                                    PrcItem: priceItem,
+                                    MontoItem: totalItem
+                                }
                             }
                         })
                     }
@@ -210,13 +224,17 @@ const useSalesStore = create(
                             },
                             Emisor: {
                                 RUTEmisor: '77426986-K',
-                                RznSocEmisor: 'MARINA MARKET',
-                                GiroEmisor: 'MINIMARKET',
+                                RznSoc: 'MARINA MARKET',
+                                GiroEmis: 'MINIMARKET',
                                 DirOrigen: 'LA MARINA 200 #11001101',
                                 CmnaOrigen: 'COQUIMBO',
-                                CiudadOrigen: 'COQUIMO'
+                                CiudadOrigen: 'COQUIMBO',
+                                Telefono: '0 0',
+                                CorreoEmisor: '0000',
+                                Acteco: '951100'
                             },
                             Receptor: {
+                                GiroRecep: targetCustomer?.business_line,
                                 RUTRecep: targetCustomer?.rut,
                                 CdgIntRecep: targetCustomer?.code,
                                 RznSocRecep: targetCustomer?.business_name,
@@ -228,8 +246,8 @@ const useSalesStore = create(
                                 MntNeto: netTotal,
                                 MntExe: '0',
                                 IVA: totalPay - netTotal,
+                                TasaIVA: '19',
                                 MntTotal: totalPay,
-                                TotalPeriodo: totalPay,
                                 VlrPagar: totalPay
                             }
                         },
@@ -240,12 +258,14 @@ const useSalesStore = create(
                                 : roundValueWithMath(item?.product?.price, 0, 0)
                             const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
                             const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                            const netPrctIem = roundValueWithMath(priceItem / 1.19, 0, 0)
+                            const netMontoItem = roundValueWithMath(totalItem / 1.19, 0, 0)
                             return {
                                 NroLinDet: index + 1,
                                 NmbItem: item?.product?.name,
                                 QtyItem: quantityItem,
-                                PrcItem: priceItem,
-                                MontoItem: totalItem
+                                PrcItem: netPrctIem,
+                                MontoItem: netMontoItem
                             }
                         })
                     }
@@ -266,15 +286,16 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
-                    fetchPost(GET_DOCUMENT_HAULMER, modelBody, true).then(resultDtemite => {
+                    fetchPost(GET_DOCUMENT_HAULMER, modelBody, false).then(resultDtemite => {
                         try {
                             fetchPost(SALE_TICKET_CREATE, body).then(result => {
                                 setPageTarget(false)
                                 // setPaymentTarget(sales, saleId, null)
                                 set({ loadingSale: false })
                                 if (result?.code === 200) {
+                                    console.log(result)
                                     const stamp = resultDtemite.data.TIMBRE
-                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp })
+                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay })
                                     // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                     notify('✅ Pago con éxito')
                                     setPayment(false)
@@ -308,78 +329,113 @@ const useSalesStore = create(
                 }
             } else if (pageTarget === 2 || voucherTarget === 3) {
                 /* Its is when pageTarget is Debit or Credit */
+                // setMethodPage(null)
                 try {
                     const device = getDeviceTuu()
-                    const bodyPosMachine = {
-                        device,
-                        amount: totalPay,
-                        dteType: 48,
-                        extraData: {
-                            taxIdnValidation: '77426986-K',
-                            sourceName: 'Marina APP',
-                            sourceVersion: '2023.01.20-6',
-                            method: 0,
-                            customFields: [
-                                {
-                                    name: 'idXX',
-                                    value: '245023-2342-2',
-                                    print: true
-                                }
-                            ]
-                        }
-                    }
-                    fetchPost(CREATE_PAYMENT_POSMACHINE, bodyPosMachine).then(result => {
-                        setPageTarget(null)
-                        // setPaymentTarget(sales, saleId, null)
-                        // set({ loadingSale: false })
-                        if (result?.code === 200 && result?.data?.paymentRequestId !== 0) {
-                            const idSale = result?.data?.paymentRequestId
-                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
-                                console.log('Estado confirmado:', data)
-                                fetchPost(SALE_TICKET_CREATE, body).then(result => {
-                                    setPageTarget(null)
-                                    set({ loadingSale: false })
-                                    if (result?.code === 200) {
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay })
-                                        if (pageTarget) {
-                                            notify('✅ Pago con tarjeta con éxito')
-                                        } else {
-                                            notify('✅ Pago con éxito')
-                                        }
-                                        setPayment(false)
-                                        onClose()
-                                        setGoPay(false)
-                                        removeSale(sales, saleId)
-                                    } else {
-                                        notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
-                                        onClose()
-                                        setGoPay(false)
+                    if (device) {
+                        const bodyPosMachine = {
+                            device,
+                            amount: totalPay,
+                            dteType: 48,
+                            method: methodPage ?? 0,
+                            extraData: {
+                                taxIdnValidation: '77426986-K',
+                                sourceName: 'Marina APP',
+                                customFields: [
+                                    {
+                                        name: 'idXX',
+                                        value: '245023-2342-2',
+                                        print: false
                                     }
-                                })
-                            })
-                                .catch(error => {
-                                    if (pageTarget) {
-                                        notify('❌ Problemas con el pago con la tarjeta')
-                                        console.error('Error al consultar el endpoint:', error)
-                                    } else {
-                                        notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
-                                    }
-                                    set({ loadingSale: false })
-                                })
-                        // clearList()
-                        } else {
-                            if (pageTarget) {
-                                notify('❌ Problemas con el pago con la tarjeta')
-                            } else {
-                                notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                ]
                             }
-                            set({ loadingSale: false })
-                            // onClose()
-                            // setGoPay(false)
                         }
-                    })
+                        setStateMachine('Enviando')
+                        fetchPost(CREATE_PAYMENT_POSMACHINE, bodyPosMachine).then(result => {
+                            setPageTarget(null)
+                            // setPaymentTarget(sales, saleId, null)
+                            // set({ loadingSale: false })
+
+                            if (result?.code === 200 && result?.data?.paymentRequestId) {
+                                setStateMachine('Pendiente')
+                                const idSale = result?.data?.paymentRequestId
+                                getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
+                                    // console.log('Estado confirmado:', data)
+                                    fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                                        setPageTarget(null)
+                                        set({ loadingSale: false })
+                                        if (result?.code === 200) {
+                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data })
+                                            if (pageTarget) {
+                                                // setStateMachine('Confirmado')
+                                                notify('✅ Pago con tarjeta con éxito')
+                                            } else {
+                                                notify('✅ Pago con éxito')
+                                            }
+                                            setStateMachine(null)
+                                            setPayment(false)
+                                            onClose()
+                                            setGoPay(false)
+                                            removeSale(sales, saleId)
+                                        } else {
+                                            notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
+                                            onClose()
+                                            setGoPay(false)
+                                            setStateMachine(null)
+                                        }
+                                    })
+                                })
+                                    .catch(error => {
+                                        if (pageTarget) {
+                                            notify('❌ Problemas con el pago con la tarjeta')
+                                        } else {
+                                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        }
+                                        set({ loadingSale: false })
+                                        setStateMachine(null)
+                                    })
+                            // clearList()
+                            } else {
+                                notify('❌ ' + errorsMachine.get(result?.data?.code))
+                                /*  if (pageTarget) {
+                                    notify('❌ ' + errorsMachine.get(result?.data?.code))
+                                } else {
+                                    notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                } */
+                                set({ loadingSale: false })
+                                setStateMachine(null)
+                            }
+                        })
+                    } else {
+                        fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                            setPageTarget(null)
+                            set({ loadingSale: false })
+                            if (result?.code === 200) {
+                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                                if (pageTarget) {
+                                    // setStateMachine('Confirmado')
+                                    notify('✅ Pago con tarjeta con éxito')
+                                } else {
+                                    notify('✅ Pago con éxito')
+                                }
+                                setStateMachine(null)
+                                setPayment(false)
+                                onClose()
+                                setGoPay(false)
+                                removeSale(sales, saleId)
+                            } else {
+                                notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
+                                onClose()
+                                setGoPay(false)
+                                setStateMachine(null)
+                            }
+                        })
+                        set({ loadingSale: false })
+                        setStateMachine(null)
+                    }
                 } catch {
                     set({ loadingSale: false })
+                    setStateMachine(null)
                 }
             }
         },

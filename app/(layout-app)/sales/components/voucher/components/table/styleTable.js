@@ -3,6 +3,8 @@ const COL_WIDTH_1 = 12.5
 const COL_WIDTH_2 = 56.5//
 const COL_WIDTH_3 = 18.5
 const COL_WIDTH_4 = 25
+const COL_WIDTH_5 = 60
+const COL_WIDTH_6 = 40
 export const StylePdf = StyleSheet.create({
     table: {
         display: 'table',
@@ -45,6 +47,16 @@ export const StylePdf = StyleSheet.create({
         borderLeftWidth: 0,
         borderTopWidth: 0
     },
+    tableColumn5: {
+        width: COL_WIDTH_5 + '%',
+        borderLeftWidth: 0,
+        borderTopWidth: 0
+    },
+    tableColumn6: {
+        width: COL_WIDTH_6 + '%',
+        borderLeftWidth: 0,
+        borderTopWidth: 0
+    },
     textRow: {
         fontFamily: 'Helvetica-Bold',
         color: '#000000',
@@ -57,5 +69,22 @@ export const StylePdf = StyleSheet.create({
         fontSize: 7,
         textTransform: 'uppercase',
         fontFamily: 'Helvetica-Bold'
+    },
+    subtitle: {
+        color: '#000000',
+        letterSpacing: 1,
+        fontSize: 5,
+        fontFamily: 'Helvetica-Bold'
+    },
+    underline: {
+        textDecoration: 'underline',
+        color: '#000000',
+        letterSpacing: 1,
+        fontSize: 5,
+        fontFamily: 'Helvetica-Bold'
+    },
+    container: {
+        alignContent: 'center',
+        alignItems: 'center'
     }
 })

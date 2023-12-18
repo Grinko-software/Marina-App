@@ -7,7 +7,7 @@ import { formatter } from '@/utils/number'
 import useSalesStore from '../store'
 import InvoiceDetailed from './invoice/invoice'
 import useInvoiceStore from './invoice/store'
-export default function PayDetailed ({ payment, loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue }) {
+export default function PayDetailed ({ payment, loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue, onOpenLoadingSale }) {
     const [openModal, setOpenModal] = useState(false)
     const { targetCustomer, setTargetCustomer } = useInvoiceStore(({ targetCustomer, setTargetCustomer }) => ({ targetCustomer, setTargetCustomer }))
     const notify = (text) => toast(text)
@@ -21,6 +21,7 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
         if (paymentTarget === 1) {
             onOpen()
         } else if (paymentTarget === 2) {
+            // nOpenLoadingSale()
             setSearchInput(null)
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
             createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer)

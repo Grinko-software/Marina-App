@@ -19,11 +19,11 @@ export function Navigation () {
             label: 'Inventario',
             route: '/inventory'
         },
-        {
+        /* {
             id: 'reports',
             label: 'Reportes',
             route: '/reports'
-        },
+        }, */
         {
             id: 'admin',
             label: 'Administrar',
@@ -57,6 +57,7 @@ export function Navigation () {
                 items={tabs}
                 selectedKey={selected}
                 onSelectionChange={setSelected}
+                // disabledKeys={['reports']}
             >
                 {(item) => (
                     <Tab key={item.id} size={'lg'} title={item.label} className="w-full md:w-[10rem] xl:w-[24rem]">

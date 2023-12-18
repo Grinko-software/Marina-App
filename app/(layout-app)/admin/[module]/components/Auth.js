@@ -3,8 +3,7 @@ import { useRouter } from 'next/navigation'
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Spinner } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import useAuthStore from '@/stores/user'
-import { Alert } from '@material-tailwind/react'
-import { FiAlertTriangle } from 'react-icons/fi'
+import AlertMessage from '@/components/ui/AlertMessage'
 
 const InputCode = ({ value, setValue }) => {
     return <Input
@@ -63,16 +62,8 @@ export default function RequireAdminComponent ({ moduleName, children }) {
                             <InputCode value={authCode} setValue={setAuthCode}/>
                         </div>
                         {messageAuth && !loading
-                            ? <div className='w-[60%] m-auto flex items-center'>
-
-                                <Alert
-                                    color="red"
-                                    icon={<FiAlertTriangle className='text-2xl mr-3'/>}
-                                    variant="filled"
-                                    className='text-md'
-                                >
-                                    {messageAuth}
-                                </Alert>
+                            ? <div className='w-[60%]'>
+                                <AlertMessage message={messageAuth}/>
                             </div>
                             : null
                         }

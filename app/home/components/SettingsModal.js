@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect } from 'react'
 import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
-import useSettingsStore from './../../../stores/settings'
+import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
 import { GetPostMachines } from './../../../services/settings'
 /* import Barcode from "../barcode";
 import BarcodeImg from "../barcodeImg";
@@ -47,7 +47,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                             <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Atajos</ModalHeader>
                             <ModalBody>
                                 <p className="text-primary-500 dark:text-primary-200">Seleccionar TUU principal</p>
-                                {postMachinesData?.map((item, index) => {
+                                {[DEFAULT_SELECTED, ...postMachinesData]?.map((item, index) => {
                                     const isSelected = SelectedPostMachine?.ID === item.ID
                                     return (
                                         <Checkbox
@@ -55,7 +55,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                             isSelected={isSelected}
                                             onClick={() => { setSelectedPostMachine(item) }}
                                             color="danger">
-                                            {item.serial_number}
+                                            {item?.serial_number || item?.label}
                                         </Checkbox>
                                     )
                                 }
@@ -68,7 +68,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                     Aceptar
                                 </Button>
                                 <Button color="danger" variant="light" onClick={onClose}>
-                                    Close
+                                    Cerrar
                                 </Button>
                                 {/*  <div>
               <BarcodeImg elementRef = { elementRef }></BarcodeImg>

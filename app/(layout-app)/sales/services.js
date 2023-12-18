@@ -1,5 +1,6 @@
 // import { fetchGet } from '@/services/sales'
 import { getToken } from '@/services/user'
+// import { setStateMachine } from '@/services/machine'
 export const getStateSaleMachine = (url) => {
     return new Promise((resolve, reject) => {
         let limitTime = 0
@@ -40,6 +41,6 @@ export const getStateSaleMachine = (url) => {
                 clearInterval(intervalId)
                 reject(new Error('Tiempo de espera agotado (más de 2 minutos).'))
             }
-        }, 1000) // Consulta cada 1000ms
+        }, 5000) // Consulta cada 1000ms
     })
 }
