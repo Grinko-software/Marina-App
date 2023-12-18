@@ -4,7 +4,7 @@ import { Text, View } from '@react-pdf/renderer'
 import { StylePdf } from './styleTotal'
 import { formatter, roundValue, roundValueWithMath } from '@/utils/number'
 
-const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva }) =>
+const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva, discountPctg }) =>
     (
         <View style={StylePdf.table}>
             <View style={StylePdf.rowTable}>
@@ -41,6 +41,16 @@ const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva
                     </View>
                     <View style={StylePdf.tableColumn2}>
                         <Text style={StylePdf.textRow}>{totalDiscount ? formatter.format(totalDiscount) : '-'}</Text>
+                    </View>
+                </View>
+                : null}
+            {discountPctg > 0 && discountPctg
+                ? <View style={StylePdf.rowTable}>
+                    <View style={StylePdf.tableColumn1}>
+                        <Text style={StylePdf.textRow}>{'Descuento'}</Text>
+                    </View>
+                    <View style={StylePdf.tableColumn2}>
+                        <Text style={StylePdf.textRow}>{discountPctg ? formatter.format(totalPay * discountPctg) : '-'}</Text>
                     </View>
                 </View>
                 : null}

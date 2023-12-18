@@ -4,7 +4,7 @@ import { pdf as pdff } from '@react-pdf/renderer'
 import { Voucher } from './voucher'
 import { getMoment, today } from '@/utils/date'
 export const generatePdfDocument = async (
-    { datetime, listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard }
+    { datetime, listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg }
 ) => {
     const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
     const totalDiscount = discount ||
@@ -20,6 +20,7 @@ export const generatePdfDocument = async (
             netTotal={netTotal}
             iva = {iva}
             dataCard={dataCard?.transactionDetails}
+            discountPctg={discountPctg}
 
         />
     ).toBlob()

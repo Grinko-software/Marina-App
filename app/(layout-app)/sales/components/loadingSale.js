@@ -110,7 +110,8 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
                             Cancelar
                             </Button>
                         </section>
-                    </ModalBody>}
+                    </ModalBody>
+                    }
 
             </ModalContent>
         </Modal>

@@ -9,7 +9,7 @@ import { Detail } from './components/detail/detail'
 import { TableCardDetail } from './components/table/cardDetail'
 
 // Create Document Component
-export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, totalTaxFree, netTotal, iva, dataCard }) => {
+export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg }) => {
     return (
         <Document>
             <Page size={[180]} style={StylePdf.page}>
@@ -50,10 +50,11 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                         totalTaxFree={totalTaxFree}
                         netTotal={netTotal}
                         iva ={iva}
+                        discountPctg={discountPctg}
                     />
                 </View>
                 {stamp
-                    ? <View>
+                    ? <>
                         <View style={StylePdf.containerFlexCol2}>
                             <View style={StylePdf.containerAbsoulte}>
                                 <View style={StylePdf.stampContainer}>
@@ -68,8 +69,8 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                         <View style={StylePdf.containerFlexCol3}>
                             <Detail/>
                         </View>
-                    </View>
-                    : <View></View>}
+                    </>
+                    : null}
             </Page>
         </Document>
     )
