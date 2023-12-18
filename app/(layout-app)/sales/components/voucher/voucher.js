@@ -53,7 +53,7 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                     />
                 </View>
                 {stamp
-                    ? <View>
+                    ? <>
                         <View style={StylePdf.containerFlexCol2}>
                             <View style={StylePdf.containerAbsoulte}>
                                 <View style={StylePdf.stampContainer}>
@@ -68,8 +68,8 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                         <View style={StylePdf.containerFlexCol3}>
                             <Detail/>
                         </View>
-                    </View>
-                    : <View></View>}
+                    </>
+                    : null}
             </Page>
         </Document>
     )
