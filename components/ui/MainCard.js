@@ -17,7 +17,7 @@ export default function MainTittleCard (props) {
             isPressable onPress = {() => (router.push(route))}
         >
             <CardHeader className="absolute z-10 top-1 flex-col drop-shadow-6xl !items-start ">
-                <p className="text-tiny text-white/60 uppercase font-bold ">MÓDULO</p>
+                {/* <p className="text-tiny text-white/60 uppercase font-bold ">MÓDULO</p> */}
                 <h4 className="text-white/80 font-medium text-4xl sm:text-8xl">{title}</h4>
             </CardHeader>
             <Image

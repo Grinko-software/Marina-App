@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader, Skeleton } from '@nextui-org/react'
-import dynamic from 'next/dynamic'
-
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
+import Chart from 'react-apexcharts'
+// import dynamic from 'next/dynamic'
+// const Chart = dynamic(() => import('react-apexcharts'), { ssr: true })
 
 const PieChart = ({ data, isLoading }) => {
     return (

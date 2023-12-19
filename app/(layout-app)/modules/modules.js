@@ -12,8 +12,8 @@ export const modules = [
         requireAdmin: false,
         content: <Sales/>,
         icon: <FaClipboardList />
-    }
-    /* {
+    },
+    {
         key: 'reports',
         path: 'reports',
         name: 'Reportes',
@@ -57,7 +57,7 @@ export const modules = [
         requireAdmin: false,
         content: <div>6</div>,
         icon: <FaUsersCog />
-    } */
+    }
 ]
 
 export const getModuleName = ({ path: pathSearch }) => {

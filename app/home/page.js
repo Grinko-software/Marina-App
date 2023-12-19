@@ -47,10 +47,10 @@ export default function Home () {
                                 footerMessage="Optimiza existencias en tiempo real."
                             />
                             <MainTittleCard
-                                route ="/reports"
-                                title="Reportes"
+                                route ="/modules"
+                                title="Módulos"
                                 imgSrc={reports}
-                                footerMessage="Datos clave para decisiones informadas y estratégicas."
+                                footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
                             />
                         </motion.div>
                         <motion.div
