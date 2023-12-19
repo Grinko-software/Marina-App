@@ -334,23 +334,31 @@ const useSalesStore = create(
                 try {
                     const device = getDeviceTuu()
                     if (device) {
-                        const bodyPosMachine = {
-                            device,
-                            amount: totalPay,
-                            dteType: voucherTarget === 1 ? 48 : 33,
-                            method: methodPage ?? 0,
-                            extraData: {
-                                taxIdnValidation: '77426986-K',
-                                sourceName: 'Marina APP',
-                                customFields: [
-                                    {
-                                        name: 'idXX',
-                                        value: '245023-2342-2',
-                                        print: false
-                                    }
-                                ]
+                        const bodyPosMachine = voucherTarget === 1
+                            ? {
+                                device,
+                                amount: totalPay,
+                                dteType: 48,
+                                method: methodPage ?? 0,
+                                printVoucherOnApp: false,
+                                extraData: {
+                                    taxIdnValidation: '77426986-K',
+                                    sourceName: 'Marina APP'
+
+                                }
                             }
-                        }
+                            : {
+                                device,
+                                amount: totalPay,
+                                dteType: 99,
+                                method: methodPage ?? 0,
+                                printVoucherOnApp: false,
+                                extraData: {
+                                    exemptAmount: totalPay,
+                                    taxIdnValidation: '77426986-K',
+                                    sourceName: 'Marina APP'
+                                }
+                            }
                         setStateMachine('Enviando')
                         fetchPost(CREATE_PAYMENT_POSMACHINE, bodyPosMachine).then(result => {
                             setPageTarget(null)
