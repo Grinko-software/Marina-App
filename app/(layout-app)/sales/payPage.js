@@ -8,6 +8,7 @@ import { CreditIcon } from '@/components/ui/CreditIcon'
 import { InvoiceIcon } from '@/components/ui/InvoiceIcon'
 import { TicketIcon } from '@/components/ui/TicketIcon'
 import { BillIcon } from '@/components/ui/BillIcon'
+import { BiSolidOffer } from 'react-icons/bi'
 import useSalesStore from './store'
 import usePaymentStore from '@/stores/payment'
 import useVocuherStore from '@/stores/voucher'
@@ -54,8 +55,8 @@ export default function PayPage (props) {
                 <div className='flex flex-col w-full h-full items-center'>
                     <div className='flex flex-row-reverse w-full'>
                         <div className='py-[0.7rem]'>
-                            <Button className='animation-fade-in w-full h-[56px] text-lg text-primary-50' color="success" variant="shadow" onClick={() => (handleButton())}>
-                     Agregar Descuento
+                            <Button className='animation-fade-in w-full h-[56px] text-lg  bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={() => (handleButton()) } startContent={<BiSolidOffer size={25}/>}>
+                    Agregar Descuento
                             </Button>
 
                         </div>

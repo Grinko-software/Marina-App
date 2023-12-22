@@ -4,9 +4,8 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
-import { Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Text, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
-import { SearchIcon } from '@/components/ui/SearchIcon'
+import { Slider, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Text, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
+
 import useSalesStore from '../../store'
 import AlertMessage from '@/components/ui/AlertMessage'
 export const SectionInput = ({ title, children, showDivider, className }) => {
@@ -28,13 +27,7 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const [createCustomer, setCreateCustomer] = useState(false)
     const [messageError, setMessageError] = useState(null)
     const [searchInput, setSearchInput] = useState('')
-
-    const notify = (text) => toast(text)
-
-    const onClose = () => {
-        setOpenModal(false)
-    }
-
+    const discountShortcuts = [10, 20, 30, 40, 50]
     const handleInputChange = (value) => {
         if (value >= 0 && value <= 100) {
             setSearchInput(value)
@@ -51,114 +44,95 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const createDiscount = () => {
         addDiscountSale(listSalesActives, saleIdActive, searchInput, cleanForm)
     }
+    const onClose = () => {
+        setOpenModal(false)
+    }
     return (
-        <>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                toastOptions={{
-                    className: '',
-                    duration: 10000,
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black'
-                        }
-                    }
-                }} />
-            <div className="flex flex-wrap gap-3">
-            </div>
-            <Modal
-                size='5xl'
-                className='h-[35rem] w-6/12'
-                isOpen={openModal}
-                backdrop='opaque'
-                scrollBehavior={'inside'}
-                closeButton={<></>}
-            >
-                <ModalContent>
-                    {(onClose) => (
-                        <section>
-                            {/* <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 ml-[3.5rem]">Agregar Descuento</ModalHeader> */}
+        <Modal
+            size='5xl'
+            className='h-8/12 w-8/12'
+            isOpen={openModal}
+            backdrop='opaque'
+            scrollBehavior={'inside'}
+            closeButton={<></>}
+        >
+            <ModalContent>
+                {(onClose) => (
+                    <section>
+                        <ModalHeader className="flex flex-col items-center  text-primary-500 dark:text-primary-200 ml-[3.5rem]">
+                            <section className='flex flex-col items-center py-[2rem]'> <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Agregar Descuento (%)</h5> </section>
+                        </ModalHeader>
+                        <ModalBody className='flex flex-col items-center h-full space-y-[4rem]' >
+                            <section className='flex flex-row space-x-3'>
+                                {discountShortcuts?.map((e, index) => <Button key={index} variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
+                                    onClick={() => handleInputChange(e) }>
+                                    {e + ' %' }
+                                </Button>)}
+                            </section>
+                            <section className='w-full flex flex-col items-center'>
+                                <Slider
+                                    label=""
+                                    color="success"
+                                    size="lg"
+                                    step={10}
+                                    marks={[
 
-                            <ModalBody >
-
-                                <section className='flex flex-col items-center py-[6rem]'>
-                                    <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Agregar Descuento (%)</h5>
-                                </section>
-                                <section className='flex flex-col items-center h-full space-y-10'>
-                                    <section className='flex flex-col items-center space-y-3'>
-                                        <section className='flex flex-row space-x-3'>
-
-                                            <Input type="number" variant={'underlined'} defaultValue={ ''} onValueChange={(value) => { handleInputChange(value) }} />
-                                            <h5 className="text-xl font-bold leading-none pt-[1rem] text-gray-900 dark:text-white">%</h5>
-
-                                        </section>
-                                        {messageError
-                                            ? <div className='w-full'>
-                                                <AlertMessage message={messageError}/>
-                                            </div>
-                                            : null
+                                        {
+                                            value: 20,
+                                            label: '20%'
+                                        },
+                                        {
+                                            value: 50,
+                                            label: '50%'
+                                        },
+                                        {
+                                            value: 80,
+                                            label: '80%'
                                         }
-                                    </section>
-                                    <ModalFooter>
-                                        <Button color="danger" variant="light"
-                                            className="text-2xl h-[5rem] w-[15rem]"
+                                    ]}
+                                    defaultValue={10}
+                                    className="w-full px-[4rem]"
+                                    onChangeEnd={(value) => { handleInputChange(value) }}
+                                />
 
-                                            onClick={() => {
-                                                handleButton()
-                                                setCreateCustomer(false)
-                                            }}
-                                        >
-                            Cerrar
-                                        </Button>
-                                        <Button
-                                            className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
-                                            isDisabled={messageError}
-                                            onClick={() => {
-                                                handleButton()
-                                                createDiscount()
-                                            }
-                                            }>
-                            Guardar
-                                        </Button>
-                                    </ModalFooter>
-                                </section>
-                            </ModalBody>
-
-                        </section>
-                    )}
-                </ModalContent>
-
-            </Modal>
-        </>
-    )
-}
-/*
-<ModalBody className='flex flex-col items-center'>
-                                <Input type="text" variant={'underlined'} defaultValue={ ''} className='w-[80%]'
-                                    onValueChange={(value) => { handleInputChange(value) }} />
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button className =" bg-green-500 text-primary-50" onClick={() => {
-                                    onClose()
-                                    createDiscount()
-                                }
-                                }>
-                            Guardar
-                                </Button>
+                            </section>
+                            {messageError
+                                ? <div className='w-full'>
+                                    <AlertMessage message={messageError}/>
+                                </div>
+                                : null
+                            }
+                        </ModalBody>
+                        <ModalFooter className='flex flex-col items-center h-full mt-[2rem]'>
+                            <section className='flex flex-row'>
                                 <Button color="danger" variant="light"
+                                    className="text-2xl h-[5rem] w-[15rem]"
+
                                     onClick={() => {
-                                        onClose()
+                                        handleButton()
                                         setCreateCustomer(false)
                                     }}
                                 >
                             Cerrar
                                 </Button>
-                            </ModalFooter>
-*/
+                                <Button
+                                    className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
+                                    isDisabled={messageError}
+                                    onClick={() => {
+                                        handleButton()
+                                        createDiscount()
+                                    }
+                                    }>
+                            Guardar
+                                </Button>
+                            </section>
+                        </ModalFooter>
+
+                    </section>
+                )}
+            </ModalContent>
+
+        </Modal>
+
+    )
+}
