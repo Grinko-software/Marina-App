@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
-import { getMoment } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
 import moment from 'moment-timezone'
 export default function TableSales ({ data, loading, setTarget }) {

@@ -7,7 +7,7 @@ import { modules } from '../modules'
 const ModuleView = ({ key, path, name, description, children, icon }) => {
     const router = useRouter()
     return <section key={key} className='flex'>
-        <Card className="border border-default-300 flex-1" isPressable onPress={() => { router.push(`/admin/${path}`) }}>
+        <Card className="border border-default-300 flex-1" isPressable onPress={() => { router.push(`/modules/${path}`) }}>
             <CardBody>
                 <div className='text-9xl m-auto text-default-600 py-0 md:py-5'>
                     {icon}

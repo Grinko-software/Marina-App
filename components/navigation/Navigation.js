@@ -25,9 +25,9 @@ export function Navigation () {
             route: '/reports'
         }, */
         {
-            id: 'admin',
-            label: 'Administrar',
-            route: '/admin'
+            id: 'modules',
+            label: 'Módulos',
+            route: '/modules'
         }
     ]
 
