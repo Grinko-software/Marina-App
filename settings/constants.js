@@ -1,5 +1,5 @@
-const BASE_AUTH_API_URL = 'https://marina-auth-api.up.railway.app'
-const BASE_MARKET_API_URL = 'https://marina-market-api.up.railway.app'
+export const BASE_AUTH_API_URL = 'https://marina-auth-api.up.railway.app'
+export const BASE_MARKET_API_URL = 'https://marina-market-api.up.railway.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
@@ -10,13 +10,13 @@ export const CREATE_PRODUCT_API_URL = BASE_MARKET_API_URL + '/product/create'
 export const CREATE_OFFER_API_URL = BASE_MARKET_API_URL + '/product/create/offer'
 
 // Get product information
-export const PRODUCT_API_URL = BASE_MARKET_API_URL + '/product'
+export const PRODUCT_API_URL = '/product'
 // Get categories
-export const CATEGORIES_API_URL = BASE_MARKET_API_URL + '/product/categories'
+export const CATEGORIES_API_URL = '/product/categories'
 export const CREATE_CATEGORIES_API_URL = BASE_MARKET_API_URL + '/product/create/category'
 
 // Get type of stock
-export const TYPE_STOCK_API_URL = BASE_MARKET_API_URL + '/product/type-stock'
+export const TYPE_STOCK_API_URL = '/product/type-stock'
 // Get type of payment
 export const TYPE_PAYMENT_API_URL = BASE_MARKET_API_URL + '/payment'
 // Get type of voucher

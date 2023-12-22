@@ -1,26 +1,43 @@
-import useHttpStore from '@/stores/http'
+import { BASE_MARKET_API_URL } from '../settings/constants'
+import { getRequestQueue, getIsRefreshing, setIsRefreshing, GET } from '../services/http'
+import { getToken, setToken } from '@/services/user'
 
-const makeRequest = (url, token, requestQueue, isRefreshing) => {
-    const baseApi = useHttpStore.getState().apiUrl
-    return fetch(`${baseApi}${url}`, {
-        headers: {
-            Authorization: 'Bearer ' + token
-        }
+const makeRequest = async (url, method = GET, data = null) => {
+    const headers = new Headers({
+        Authorization: 'Bearer ' + getToken(),
+        'Content-Type': 'application/json'
     })
-        .then(response => {
-            if (response.ok) {
-                return response.json()
-            } else if (response.status === 401) {
-                return handleUnauthorized(url, token, requestQueue, isRefreshing)
-            } else {
-                throw new Error('Error en la solicitud: ' + response.status)
-            }
-        })
+    const options = {
+        method,
+        headers
+    }
+
+    if (data) {
+        options.body = JSON.stringify(data)
+    }
+    try {
+        return await fetch(`${BASE_MARKET_API_URL}${url}`, options)
+            .then(response => {
+                try {
+                    if (response?.ok) {
+                        return response.json()
+                    } else if (response?.status === 401) {
+                        return handleUnauthorized(url, method, data)
+                    } else {
+                        throw new Error('Error en la solicitud: ' + response.status)
+                    }
+                } catch (err) {
+                    return err
+                }
+            })
+    } catch (err) {
+        return err
+    }
 }
 
-const handleUnauthorized = (url, token, requestQueue, isRefreshing) => {
-    if (!isRefreshing) {
-        isRefreshing = true
+const handleUnauthorized = (url, method, data) => {
+    if (!getIsRefreshing()) {
+        setIsRefreshing(true)
 
         return refreshToken()
             .then(newToken => {
@@ -31,21 +48,18 @@ const handleUnauthorized = (url, token, requestQueue, isRefreshing) => {
                 throw new Error('Error renew Token: ' + error.message)
             })
             .finally(() => {
-                isRefreshing = false
+                setIsRefreshing(false)
             })
     } else {
-        return waitForRefresh(url)
+        return waitForRefresh(url, method, data)
     }
 }
-const setToken = (token) => {
-    const setToken = useHttpStore.getState().setToken
-    setToken(token)
-}
-const waitForRefresh = (url) => {
+
+const waitForRefresh = (url, method, data) => {
     return new Promise(resolve => {
         const checkRefresh = () => {
-            if (!apiClient.isRefreshing) {
-                resolve(makeRequest(url))
+            if (!getIsRefreshing()) {
+                resolve(makeRequest(url, method, data))
             } else {
                 setTimeout(checkRefresh, 100)
             }
@@ -56,28 +70,22 @@ const waitForRefresh = (url) => {
 }
 
 const processQueue = () => {
-    const currentRequest = apiClient.requestQueue.shift()
+    const requestQueue = getRequestQueue()
+    const currentRequest = requestQueue.shift()
     if (currentRequest) {
         return currentRequest()
     }
 }
 
 const refreshToken = () => {
-    // Lógica para renovar el token
-    // Devolver la promesa con el nuevo token
-    // Asegúrate de manejar cualquier error que pueda ocurrir durante el proceso de renovación.
-    // Puedes usar el mismo mecanismo de autenticación que usas para obtener el token inicial.
+    // preguntar a niquito
 }
-export const fetchData = (url) => {
-    const urlStore = useHttpStore.getState().apiUrl
-    const requestQueue = useHttpStore.getState().requestQueue
-    const isRefreshing = useHttpStore.getState().isRefreshing
-    const token = useHttpStore.getState().token
-
-    const request = () => makeRequest(url || urlStore, token, requestQueue, isRefreshing)
+export const fetchData = (url, method, data) => {
+    const requestQueue = getRequestQueue()
+    const request = () => makeRequest(url, method, data)
     requestQueue.push(request)
 
-    if (!isRefreshing) {
+    if (!getIsRefreshing()) {
         return processQueue()
     }
 }

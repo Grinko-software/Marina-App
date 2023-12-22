@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { create } from 'zustand'
+import { fetchData } from '@/utils/http'
 import { persist } from 'zustand/middleware'
-import { fetchGet } from '@/services/products'
-import { PRODUCT_API_URL, CATEGORIES_API_URL, TYPE_STOCK_API_URL, PRODUCT_OFFER } from '@/settings/constants'
+import { PRODUCT_API_URL, CATEGORIES_API_URL, TYPE_STOCK_API_URL } from '@/settings/constants'
 const useInventoryStore = create(
     persist(
         (set) => ({
@@ -18,7 +18,7 @@ const useInventoryStore = create(
             getListInventory: () => {
                 set({ loading: true, error: null })
                 try {
-                    fetchGet({ url: PRODUCT_API_URL }).then(result => {
+                    fetchData(PRODUCT_API_URL).then(result => {
                         if (result?.code === 200) {
                             set({
                                 listInventory: result?.data?.reduce((acc, { ID, code, cost_price, image, name, net_price, sale_price, product_categories_id, stock_types_id, product_stock, tax_free }) => {
@@ -54,6 +54,10 @@ const useInventoryStore = create(
                             return null
                         }
                         set({ loading: false })
+                    }
+                    ).catch(error => {
+                        console.debug(error)
+                        set({ loading: false })
                     })
                 } catch {
                     set({ loading: false })
@@ -62,7 +66,7 @@ const useInventoryStore = create(
             getCategories: () => {
                 set({ loadingCategories: true, error: null })
                 try {
-                    fetchGet({ url: CATEGORIES_API_URL }).then(result => {
+                    fetchData(CATEGORIES_API_URL).then(result => {
                         if (result?.code === 200) {
                             const data = result?.data?.reduce((acc, value) => {
                                 return [...acc, { id: value?.ID, label: value?.name.toUpperCase() }]
@@ -75,6 +79,10 @@ const useInventoryStore = create(
                             return null
                         }
                         set({ loadingCategories: false })
+                    }
+                    ).catch(error => {
+                        console.debug(error)
+                        set({ loadingCategories: false })
                     })
                 } catch {
                     set({ loadingCategories: false })
@@ -83,7 +91,7 @@ const useInventoryStore = create(
             getStockTypes: () => {
                 set({ loadingStock: true, error: null })
                 try {
-                    fetchGet({ url: TYPE_STOCK_API_URL }).then(result => {
+                    fetchData(TYPE_STOCK_API_URL).then(result => {
                         if (result?.code === 200) {
                             set({
                                 listStockTypes: result?.data?.reduce((acc, value) => {
@@ -96,6 +104,10 @@ const useInventoryStore = create(
                         } else {
                             return null
                         }
+                        set({ loadingStock: false })
+                    }
+                    ).catch(error => {
+                        console.debug(error)
                         set({ loadingStock: false })
                     })
                 } catch {

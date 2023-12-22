@@ -1,4 +1,9 @@
 import useHttpStore from '@/stores/http'
+export const GET = 'GET'
+export const POST = 'POST'
+export const PUT = 'PUT'
+export const DELETE = 'DELETE'
+export const PATCH = 'PATCH'
 
 export const updateTokenSystem = () => {
     window.addEventListener('message', (event) => {
@@ -15,6 +20,10 @@ export const getBaseUrl = () => {
 export const getRequestQueue = () => {
     const { requestQueue } = useHttpStore.getState()
     return requestQueue
+}
+export const getIsRefreshing = () => {
+    const { isRefreshing } = useHttpStore.getState()
+    return isRefreshing
 }
 
 export const setRequestQueue = (value) => {
