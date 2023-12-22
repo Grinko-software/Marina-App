@@ -1,6 +1,7 @@
 import { authenticate, authenticateByAuthCode } from '@/utils/authSettings'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { setToken } from '@/services/user'
 const useAuthStore = create(
     persist(
         (set) => ({
@@ -28,12 +29,13 @@ const useAuthStore = create(
                     ).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
                             const { name, lastName, userType, token, idUser } = user
+                            // set global ls
+                            setToken(token)
                             set({
                                 name,
                                 lastName,
                                 fullName: name + ' ' + lastName,
                                 email,
-                                token,
                                 isAdmin: userType === 'admin',
                                 idUser,
                                 error: null
@@ -57,13 +59,14 @@ const useAuthStore = create(
                         }
                     ).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
-                            const { name, lastName, userType, token, idUser, email } = user
+                            const { name, lastName, token, userType, idUser, email } = user
+                            setToken(token)
                             set({
                                 name,
                                 lastName,
                                 fullName: name + ' ' + lastName,
                                 email,
-                                token,
+
                                 isAdmin: userType === 'admin',
                                 idUser,
                                 error: null
@@ -82,6 +85,7 @@ const useAuthStore = create(
                 }
             },
             signOut: () => {
+                localStorage.clear()
                 set({
                     name: null,
                     lastName: null,

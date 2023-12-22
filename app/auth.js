@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import useAuthStore from '@/stores/user'
 import { useRouter } from 'next/navigation'
+import { updateTokenSystem } from '@/services/http'
 
 export default function Auth ({ pathname }) {
     const router = useRouter()
@@ -14,6 +15,6 @@ export default function Auth ({ pathname }) {
             router.push('/home')
         }
     }, [token])
-
+    useEffect(() => { updateTokenSystem() }, [])
     return (<></>)
 }

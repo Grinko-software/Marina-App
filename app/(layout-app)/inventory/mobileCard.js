@@ -41,9 +41,9 @@ export default function Card () {
 
     useEffect(() => {
         /* Add in the future refreshToken in this useEffect */
-        getCategories()
-        getStockTypes()
-        getListInventory()
+        // getCategories()
+        // getStockTypes()
+        // getListInventory()
     }, [])
 
     useEffect(() => {
