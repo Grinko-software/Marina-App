@@ -1,5 +1,5 @@
 const BASE_AUTH_API_URL = 'https://marina-auth-api.up.railway.app'
-const BASE_MARKET_API_URL = 'https://marina-market-api.up.railway.app'
+const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
