@@ -1,21 +1,24 @@
 'use client'
 import { useEffect, useState } from 'react'
-import useLastSalesStore from './store'
+import useSupplierStore from './store'
 import SupplierAssociation from './SupplierAssociation'
 import SupplierInfo from './SupplierInfo'
+import useInventoryStore from '@/app/(layout-app)/inventory/store'
 
 export default function Supplier ({ params }) {
-    const { requestData, loading, data } = useLastSalesStore()
+    const { requestData, loading, data } = useSupplierStore()
+    const { listInventory, getListInventory } = useInventoryStore()
     const [target, setTarget] = useState(null)
 
     useEffect(() => {
         requestData()
+        getListInventory()
     }, [])
 
     return <section className='w-full'>
         <section className='flex flex-row' >
             <SupplierInfo data={data} loading={loading} setTarget={setTarget}/>
-            <SupplierAssociation target={target} setTarget={setTarget}/>
+            <SupplierAssociation target={target} setTarget={setTarget} products={listInventory}/>
         </section>
     </section>
 }
