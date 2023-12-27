@@ -148,6 +148,7 @@ export default function SupplierAssociation (params) {
     const updatedProducts = async () => {
         setIsLoading(true)
         await requestUpdateSupplierAssociation({ supplierId: target.id, productsId: updatedTargetKeysSelected })
+        await fetchData()
         setIsLoading(false)
     }
 
