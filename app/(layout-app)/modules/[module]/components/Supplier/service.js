@@ -32,9 +32,9 @@ export const requestGetAssociationSupplier = async ({ supplierId }) => {
     }
 }
 
-export const requestUpdateAssociationSupplier = async ({ supplierId }) => {
+export const requestUpdateAssociationSupplier = async ({ supplierId, ids }) => {
     try {
-        return fetchUpdatedAssociationSupplier({ id: supplierId })
+        return fetchUpdatedAssociationSupplier({ supplierId, ids })
     } catch (error) {
         console.log(error)
     }

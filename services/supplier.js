@@ -73,9 +73,9 @@ export const fetchGetAssociationSupplier = async ({ id }) => {
     }
 }
 
-export const fetchUpdatedAssociationSupplier = async ({ id, associatedProducts, dissociatedProducts }) => {
+export const fetchUpdatedAssociationSupplier = async ({ supplierId, ids }) => {
     try {
-        return await fetch(`${SUPPLIER_ASSOCIATION_API_URL.replace(':id', id)}`,
+        return await fetch(`${SUPPLIER_ASSOCIATION_API_URL.replace(':id', supplierId)}`,
             {
                 method: 'POST',
                 headers: new Headers({
@@ -84,8 +84,7 @@ export const fetchUpdatedAssociationSupplier = async ({ id, associatedProducts, 
                 cache: 'no-store',
                 mode: 'cors',
                 body: JSON.stringify({
-                    associated_products: associatedProducts,
-                    dissociated_products: dissociatedProducts
+                    ids
                 })
             }).then(response => {
             try {

@@ -81,7 +81,7 @@ export default function SupplierAssociation (params) {
     const [dataModelProducts, setDataModelProducts] = useState(null)
     const [targetKeysSelected, setTargetKeysSelected] = useState([])
     const [updatedTargetKeysSelected, setUpdatedTargetKeysSelected] = useState([])
-    const { requestSupplierDetail } = useSupplierStore()
+    const { requestSupplierDetail, requestUpdateSupplierAssociation } = useSupplierStore()
 
     useEffect(() => {
         if (target) {
@@ -145,6 +145,12 @@ export default function SupplierAssociation (params) {
         setIsLoading(false)
     }
 
+    const updatedProducts = async () => {
+        setIsLoading(true)
+        await requestUpdateSupplierAssociation({ supplierId: target.id, productsId: updatedTargetKeysSelected })
+        setIsLoading(false)
+    }
+
     const printTicket = () => {
         /*  if (dataModel && target) {
             generatePdfDocument({
@@ -189,7 +195,7 @@ export default function SupplierAssociation (params) {
                     <Button className =" bg-green-500 text-primary-50"
                         isDisabled={saveDisabled}
                         onClick={() => {
-                            // requestCreate(name, rut, nameCompany, rutCompany, notify)
+                            updatedProducts()
                         }}
                     >
                             Guardar cambios

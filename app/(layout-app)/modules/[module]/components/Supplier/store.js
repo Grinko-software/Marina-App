@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { requestGetAssociationSupplier, requestSupplierList } from './service'
+import { requestGetAssociationSupplier, requestSupplierList, requestUpdateAssociationSupplier } from './service'
 
 const useSupplierStore = create((set) => ({
     data: undefined,
@@ -14,6 +14,10 @@ const useSupplierStore = create((set) => ({
     },
     requestSupplierDetail: async ({ supplierId }) => {
         const [data] = await Promise.all([requestGetAssociationSupplier({ supplierId })])
+        return undefined || data
+    },
+    requestUpdateSupplierAssociation: async ({ supplierId, productsId }) => {
+        const [data] = await Promise.all([requestUpdateAssociationSupplier({ supplierId, ids: productsId })])
         return undefined || data
     }
 }))
