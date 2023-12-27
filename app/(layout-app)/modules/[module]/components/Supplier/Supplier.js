@@ -4,6 +4,7 @@ import useSupplierStore from './store'
 import SupplierAssociation from './SupplierAssociation'
 import SupplierInfo from './SupplierInfo'
 import useInventoryStore from '@/app/(layout-app)/inventory/store'
+import CreateSupplier from './NewSupplier/newSupplier'
 
 export default function Supplier ({ params }) {
     const { requestData, loading, data } = useSupplierStore()
@@ -16,6 +17,8 @@ export default function Supplier ({ params }) {
     }, [])
 
     return <section className='w-full'>
+
+        <CreateSupplier/>
         <section className='flex flex-row' >
             <SupplierInfo data={data} loading={loading} setTarget={setTarget}/>
             <SupplierAssociation target={target} setTarget={setTarget} products={listInventory}/>

@@ -1,21 +1,20 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Button, Modal, ModalBody, ModalContent, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import useSupplierStore from './store'
 import { Transfer } from 'antd'
-import useInventoryStore from '@/app/(layout-app)/inventory/store'
 
-const ProductsTransfer = ({ dataSource, targetKeysSelected }) => {
+const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelected }) => {
     const [targetKeys, setTargetKeys] = useState(targetKeysSelected)
     const [selectedKeys, setSelectedKeys] = useState([])
-    const [disabled, setDisabled] = useState(false)
-    const { listInventory, getListInventory } = useInventoryStore()
+
+    useEffect(() => {
+        setTargetKeysSelected(targetKeys || [])
+    }, [targetKeys])
 
     const handleChange = (newTargetKeys, direction, moveKeys) => {
         setTargetKeys(newTargetKeys)
         console.log('targetKeys: ', newTargetKeys)
-        console.log('direction: ', direction)
-        console.log('moveKeys: ', moveKeys)
     }
 
     const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
@@ -49,7 +48,7 @@ const ProductsTransfer = ({ dataSource, targetKeysSelected }) => {
         onScroll={handleScroll}
         filterOption={filterOption}
         render={(item) => item.title}
-        disabled={disabled}
+        // disabled={disabled}
         pagination
         oneWay
         className='w-full flex items-start justify-start'
@@ -76,10 +75,12 @@ export default function SupplierAssociation (params) {
     // eslint-disable-next-line no-unused-vars
     const { target, setTarget, products } = params
     const [isLoading, setIsLoading] = useState(false)
+    const [saveDisabled, setSaveDisabled] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [dataModel, setDataModel] = useState(null)
     const [dataModelProducts, setDataModelProducts] = useState(null)
     const [targetKeysSelected, setTargetKeysSelected] = useState([])
+    const [updatedTargetKeysSelected, setUpdatedTargetKeysSelected] = useState([])
     const { requestSupplierDetail } = useSupplierStore()
 
     useEffect(() => {
@@ -88,6 +89,7 @@ export default function SupplierAssociation (params) {
             fetchData()
         } else {
             setDataModel(null)
+            setSaveDisabled(true)
             closeModal()
         }
     }, [target])
@@ -97,6 +99,11 @@ export default function SupplierAssociation (params) {
             printTicket()
         }
     }, [dataModel, target])
+
+    useEffect(() => {
+        const isSameArray = targetKeysSelected?.toString() === updatedTargetKeysSelected?.toString()
+        setSaveDisabled(isSameArray)
+    }, [targetKeysSelected, updatedTargetKeysSelected])
 
     useEffect(() => {
         if (products) {
@@ -124,7 +131,7 @@ export default function SupplierAssociation (params) {
         const data = await requestSupplierDetail({ supplierId: target.id })
         const modelData = data?.data?.map((item) => {
             return {
-                key: item?.name,
+                key: item?.id,
                 name: item?.name?.toUpperCase(),
                 stock: item?.stock,
                 stock_min: item?.stock_min,
@@ -157,7 +164,8 @@ export default function SupplierAssociation (params) {
             isOpen={isOpen}
             size={'5xl'}
             backdrop='opaque'
-            onClose={closeModal}
+            onClose={null}
+            hideCloseButton
         >
             <ModalContent>
 
@@ -169,13 +177,32 @@ export default function SupplierAssociation (params) {
                         isLoading
                             ? <Spinner>Cargando productos...</Spinner>
                             : <div className=''>
-                                <ProductsTransfer dataSource={dataModelProducts} targetKeysSelected={targetKeysSelected}/>
+                                <ProductsTransfer dataSource={dataModelProducts} targetKeysSelected={targetKeysSelected} setTargetKeysSelected={setUpdatedTargetKeysSelected}/>
                                 {/* <Button className='w-full m-auto text-md' onPress={() => printTicket()}>
                                     Generar ticket
                                 </Button> */}
                             </div>
                     }
                 </ModalBody>
+                <ModalFooter>
+
+                    <Button className =" bg-green-500 text-primary-50"
+                        isDisabled={saveDisabled}
+                        onClick={() => {
+                            // requestCreate(name, rut, nameCompany, rutCompany, notify)
+                        }}
+                    >
+                            Guardar cambios
+                    </Button>
+                    <Button color="danger" variant="flat"
+                        onClick={() => {
+                            closeModal()
+                            // clearStore()
+                        }}
+                    >
+                            Cerrar
+                    </Button>
+                </ModalFooter>
             </ModalContent>
         </Modal>
     </section>

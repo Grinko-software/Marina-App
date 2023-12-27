@@ -8,9 +8,9 @@ export const requestSupplierList = async () => {
     }
 }
 
-export const requestCreateSupplier = async (props) => {
+export const requestCreateSupplier = async ({ name, rut, companyName, companyRut }) => {
     try {
-        return fetchCreateSupplier({ ...props })
+        return fetchCreateSupplier({ name, rut, companyName, companyRut })
     } catch (error) {
         console.log(error)
     }
