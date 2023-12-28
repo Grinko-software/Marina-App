@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import useSupplierStore from './store'
 import { Transfer } from 'antd'
+import { generateTickectSupplier } from './components/services'
 
 const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelected }) => {
     const [targetKeys, setTargetKeys] = useState(targetKeysSelected)
@@ -152,18 +153,12 @@ export default function SupplierAssociation (params) {
         setIsLoading(false)
     }
 
-    const printTicket = () => {
-        /*  if (dataModel && target) {
-            generatePdfDocument({
-                listSales: dataModel,
-                totalPay: target?.total,
-                discount: target?.discount,
-                datetime: target?.datetime,
-                iva: target?.iva,
-                totalTaxFree: target?.totalTaxFree,
-                netTotal: target?.total - target?.iva
+    const printTicket = (data) => {
+        if (dataModel && target) {
+            generateTickectSupplier({
+                listProducts: dataModel
             })
-        } */
+        }
     }
 
     return <section>
@@ -183,11 +178,14 @@ export default function SupplierAssociation (params) {
                     {
                         isLoading
                             ? <Spinner>Cargando productos...</Spinner>
-                            : <div className=''>
-                                <ProductsTransfer dataSource={dataModelProducts} targetKeysSelected={targetKeysSelected} setTargetKeysSelected={setUpdatedTargetKeysSelected}/>
-                                {/* <Button className='w-full m-auto text-md' onPress={() => printTicket()}>
+                            : <div className='flex flex-col space-y-5'>
+                                <Button className='bg-blue-500 text-primary-50 ml-auto text-md'
+                                    onPress={() => printTicket(dataModel)}
+                                    isDisabled={!dataModel?.length}
+                                >
                                     Generar ticket
-                                </Button> */}
+                                </Button>
+                                <ProductsTransfer dataSource={dataModelProducts} targetKeysSelected={targetKeysSelected} setTargetKeysSelected={setUpdatedTargetKeysSelected}/>
                             </div>
                     }
                 </ModalBody>
