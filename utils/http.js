@@ -1,4 +1,4 @@
-import { BASE_MARKET_API_URL } from '../settings/constants'
+import { BASE_MARKET_API_URL, AUTH_RENEW } from '../settings/constants'
 import { getRequestQueue, getIsRefreshing, setIsRefreshing, GET } from '../services/http'
 import { getToken, setToken } from '@/services/user'
 
@@ -77,8 +77,48 @@ const processQueue = () => {
     }
 }
 
-const refreshToken = () => {
+const refreshToken = async () => {
     // preguntar a niquito
+    const headers = new Headers({
+        Authorization: 'Bearer ' + getToken(),
+        'Content-Type': 'application/json'
+    })
+    const options = {
+        headers
+    }
+    try {
+        return await fetch(`${AUTH_RENEW}`, options)
+            .then(response => {
+                try {
+                    if (response?.ok) {
+                        return response.json()
+                    } else if (response?.status === 401) {
+                        return response
+                    } else {
+                        throw new Error('Error en la solicitud: ' + response.status)
+                    }
+                } catch (err) {
+                    return err
+                }
+            })
+    } catch (err) {
+        return err
+    }
+
+    let data = {}
+
+    try {
+        data = await
+        fetch(AUTH_RENEW,
+            {
+                method: 'GET',
+                cache: 'no-store'
+
+            })
+        return data
+    } catch {
+        return data
+    }
 }
 export const fetchData = (url, method, data) => {
     const requestQueue = getRequestQueue()

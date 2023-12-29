@@ -15,7 +15,9 @@ const useAuthStore = create(
             error: null,
             idUser: null,
             errorAuthCode: null,
-            setToken: () => set((state) => ({ token: state })),
+            setToken: (value) => {
+                set({ token: value })
+            },
             setEmail: () => set((state) => ({ email: state })),
             setError: () => set((state) => ({ error: state })),
             signIn: ({ email, password }) => {
