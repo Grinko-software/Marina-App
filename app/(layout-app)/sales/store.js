@@ -374,7 +374,7 @@ const useSalesStore = create(
                                         setPageTarget(null)
                                         set({ loadingSale: false })
                                         if (result?.code === 200) {
-                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data })
+                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data, targetCustomer })
                                             if (pageTarget) {
                                                 // setStateMachine('Confirmado')
                                                 notify('✅ Pago con tarjeta con éxito')
@@ -420,7 +420,7 @@ const useSalesStore = create(
                             setPageTarget(null)
                             set({ loadingSale: false })
                             if (result?.code === 200) {
-                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, targetCustomer })
                                 if (pageTarget) {
                                     // setStateMachine('Confirmado')
                                     notify('✅ Pago con tarjeta con éxito')
