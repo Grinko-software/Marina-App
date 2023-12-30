@@ -4,6 +4,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, 
 import { DefaultImageMarinaMarket, ConvertBytesToImage } from '@/utils/image'
 import useReportsStore from '../../app/(layout-app)/reports/components/store'
 import { isMobileDevice } from '@/utils/agent'
+import { roundValue } from '@/utils/number'
 const StockTable = () => {
     const { criticalStore } = useReportsStore()
     const [dataModelCriticalStore, setDataModelCriticalStore] = useState(null)
@@ -35,7 +36,7 @@ const StockTable = () => {
                         product: item?.name_product,
                         category: item?.name_category,
                         state: item?.stock_classification,
-                        stock: item?.stock,
+                        stock: roundValue(item?.stock, 1, 0),
                         base_stock: item?.stock_min,
                         avatar: image
                     }
