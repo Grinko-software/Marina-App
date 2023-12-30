@@ -136,7 +136,7 @@ export default function SupplierAssociation (params) {
                 name: item?.name?.toUpperCase(),
                 stock: item?.stock,
                 stock_min: item?.stock_min,
-                request: item?.request
+                request: item?.request > 0 ? item?.request : 0
             }
         })
 

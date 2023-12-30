@@ -19,16 +19,19 @@ const TableProducts = ({ listProducts }) =>
             </View>
 
             {listProducts?.map((element, index) => (
-                <View key={index} style={StylePdf.rowTableMandatory}>
-
-                    <View style={StylePdf.column1}>
-                        <Text style={StylePdf.textRow}>{(element?.product?.name || element?.name) ?? '-'}</Text>
-                    </View>
-                    <View style={StylePdf.column2}>
-                        <Text style={StylePdf.textRow}>{ roundValue(element?.request, 2, '-')}</Text>
-                    </View>
+                <View key={index} >
+                    {element?.request > 0
+                        ? <View key={index} style={StylePdf.rowTableMandatory}>
+                            <View style={StylePdf.column1}>
+                                <Text style={StylePdf.textRow}>{(element?.product?.name || element?.name) ?? '-'}</Text>
+                            </View>
+                            <View style={StylePdf.column2}>
+                                <Text style={StylePdf.textRow}>{ roundValue(element?.request, 2, '-')}</Text>
+                            </View>
+                        </View>
+                        : null
+                    }
                 </View>
-
             )
             )}
 
