@@ -296,7 +296,7 @@ const useSalesStore = create(
                                 if (result?.code === 200) {
                                     console.log(result)
                                     const stamp = resultDtemite.data.TIMBRE
-                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
+                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                     // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                     notify('✅ Pago con éxito')
                                     setPayment(false)
