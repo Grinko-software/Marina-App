@@ -89,10 +89,13 @@ const SalesMenu = () => {
                                     : null}
 
                             </Tabs>
-                            <Button isDisabled={listSalesActives?.length > 2} isIconOnly><PlusIcon className='w-5 h-5'
-                                onClick={() => addNewSaleActive(listSalesActives)}/></Button>
+                            <Button isDisabled={listSalesActives?.length > 2} isIconOnly>
+                                <PlusIcon className='w-5 h-5'
+                                    onClick={() => addNewSaleActive(listSalesActives)}/>
+                            </Button>
                         </section>
                     </section>
+
                     <SaleList
                         loadingSale={loadingSale}
                         setPageTarget={setPageTarget}
@@ -104,6 +107,7 @@ const SalesMenu = () => {
                         setGoPay={setGoPay}
                         keyFocus={keyFocus}
                     />
+
                 </section>
                 <PayDetailed
                     payment={payment}

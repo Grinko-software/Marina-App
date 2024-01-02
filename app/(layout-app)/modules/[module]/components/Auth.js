@@ -79,7 +79,7 @@ export default function RequireAdminComponent ({ moduleName, children }) {
                 </CardBody>
                 <CardFooter>
                     <div className='flex w-full flex-row'>
-                        <Button isDisabled={loading} className=' w-[50%] m-auto text-md' onPress={() => router.push('/admin')}>
+                        <Button isDisabled={loading} className=' w-[50%] m-auto text-md' onPress={() => router.push('/modules')}>
                             {'Regresar'}
                         </Button>
                     </div>

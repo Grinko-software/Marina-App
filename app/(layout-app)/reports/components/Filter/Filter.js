@@ -40,7 +40,7 @@ export default function Filter () {
     const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
     useEffect(() => {
-        let from = moment.utc(getMoment(today().startOf('day').add(-1, 'day'), 'YYYY-MM-DD'))
+        let from = moment.utc(getMoment(today().startOf('day').add(-6, 'day'), 'YYYY-MM-DD'))
         let to = moment.utc(getMoment(today()))
 
         if (valueFrom || valueTo) {

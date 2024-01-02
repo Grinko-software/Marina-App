@@ -2,15 +2,18 @@
 /* eslint-disable no-unused-vars */
 import { pdf as pdff } from '@react-pdf/renderer'
 import { Voucher } from './voucher'
+import { Bill } from './bill'
 import { getMoment, today } from '@/utils/date'
 export const generatePdfDocument = async (
-    { datetime, listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard }
+    { datetime, listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg, targetCustomer }
+
 ) => {
     const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
     const totalDiscount = discount ||
      listSales?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
-    const blob = await pdff(
-        <Voucher
+
+    const blob = await pdff(targetCustomer
+        ? <Bill
             listSales={listSales}
             totalPay={totalPay}
             date={date}
@@ -20,6 +23,20 @@ export const generatePdfDocument = async (
             netTotal={netTotal}
             iva = {iva}
             dataCard={dataCard?.transactionDetails}
+            targetCustomer={targetCustomer}
+
+        />
+        : <Voucher
+            listSales={listSales}
+            totalPay={totalPay}
+            date={date}
+            totalDiscount={totalDiscount}
+            stamp={stamp}
+            totalTaxFree={totalTaxFree}
+            netTotal={netTotal}
+            iva = {iva}
+            dataCard={dataCard?.transactionDetails}
+            discountPctg={discountPctg}
 
         />
     ).toBlob()

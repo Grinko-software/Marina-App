@@ -7,9 +7,10 @@ import { TableProductVoucher } from './components/table/table'
 import ViewTotal from './components/total/total'
 import { Detail } from './components/detail/detail'
 import { TableCardDetail } from './components/table/cardDetail'
+import { CustomerDetailed } from './components/customer/customer'
 
 // Create Document Component
-export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg }) => {
+export const Bill = ({ listSales, totalPay, date, totalDiscount, stamp, totalTaxFree, netTotal, iva, dataCard, targetCustomer }) => {
     return (
         <Document>
             <Page size={[180]} style={StylePdf.page}>
@@ -30,8 +31,12 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                     <Text style={StylePdf.subtitle}>{'944226305'}</Text>
                 </View>
                 <View style={StylePdf.container}>
-                    <Text style={StylePdf.titleSecondary}>{'COMPROBANTE DE VENTA'}</Text>
+                    <Text style={StylePdf.titleSecondary}>{'FACTURA ELECTRÓNICA'}</Text>
                     <Text style={StylePdf.subtitle}>{date}</Text>
+                </View>
+                {/* data customer */}
+                <View style={StylePdf.containerFlexCol1}>
+                    <CustomerDetailed targetCustomer={targetCustomer}/>
                 </View>
                 {/* Table products */}
                 <View style={StylePdf.containerFlexCol1}>
@@ -50,7 +55,6 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                         totalTaxFree={totalTaxFree}
                         netTotal={netTotal}
                         iva ={iva}
-                        discountPctg={discountPctg}
                     />
                 </View>
                 {stamp

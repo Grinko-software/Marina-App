@@ -24,6 +24,7 @@ const useSalesStore = create(
             saleProductsList: [],
             paymentTarget: null,
             voucherTarget: 1,
+            discount: null,
             totalTaxFree: 0
         }],
         scannerEnabled: false,
@@ -143,7 +144,8 @@ const useSalesStore = create(
             const paymentTarget = sale?.paymentTarget || pageTarget
             const voucherTarget = sale?.voucherTarget || targetGeneral
             /*  DTEMITE */
-            const totalPay = sale?.totalPrice
+            const discount = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalPay = discount ? (sale?.totalPrice - (sale?.totalPrice * discount)) : sale?.totalPrice// add general discount
             const totalTaxFreePay = sale?.totalTaxFree || 0
             const totalWithOutTaxFree = totalPay - totalTaxFreePay
             const date = today().format('YYYY-MM-DD')
@@ -193,16 +195,16 @@ const useSalesStore = create(
                                     IndExe: indexTaxFree,
                                     NmbItem: item?.product?.name,
                                     QtyItem: quantityItem,
-                                    PrcItem: priceItem,
-                                    MontoItem: totalItem
+                                    PrcItem: discount ? (priceItem - (priceItem * discount)) : priceItem,
+                                    MontoItem: discount ? (totalItem - (totalItem * discount)) : totalItem
                                 }
                             } else {
                                 return {
                                     NroLinDet: index + 1,
                                     NmbItem: item?.product?.name,
                                     QtyItem: quantityItem,
-                                    PrcItem: priceItem,
-                                    MontoItem: totalItem
+                                    PrcItem: discount ? (priceItem - (priceItem * discount)) : priceItem,
+                                    MontoItem: discount ? (totalItem - (totalItem * discount)) : totalItem
                                 }
                             }
                         })
@@ -294,7 +296,7 @@ const useSalesStore = create(
                                 if (result?.code === 200) {
                                     console.log(result)
                                     const stamp = resultDtemite.data.TIMBRE
-                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                     // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                     notify('✅ Pago con éxito')
                                     setPayment(false)
@@ -372,7 +374,7 @@ const useSalesStore = create(
                                         setPageTarget(null)
                                         set({ loadingSale: false })
                                         if (result?.code === 200) {
-                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data })
+                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data, targetCustomer })
                                             if (pageTarget) {
                                                 // setStateMachine('Confirmado')
                                                 notify('✅ Pago con tarjeta con éxito')
@@ -418,7 +420,7 @@ const useSalesStore = create(
                             setPageTarget(null)
                             set({ loadingSale: false })
                             if (result?.code === 200) {
-                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, targetCustomer })
                                 if (pageTarget) {
                                     // setStateMachine('Confirmado')
                                     notify('✅ Pago con tarjeta con éxito')
@@ -471,6 +473,13 @@ const useSalesStore = create(
                 set({ loadingSale: false })
                 setStateMachine(null)
             }
+        },
+        /* Add discount */
+        addDiscountSale: (listSalesActives, saleIdActive, value, cleanForm) => {
+            const saleIndex = listSalesActives?.findIndex((sale) => sale.id === saleIdActive)
+            listSalesActives[saleIndex].discount = value ? parseInt(value) : null
+            set({ listSalesActives })
+            cleanForm()
         }
     }),
     {
