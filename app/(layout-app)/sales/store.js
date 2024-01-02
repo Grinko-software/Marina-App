@@ -348,11 +348,11 @@ const useSalesStore = create(
                             : {
                                 device,
                                 amount: totalPay,
-                                dteType: 99,
+                                dteType: 33,
                                 method: methodPage ?? 0,
                                 printVoucherOnApp: false,
                                 extraData: {
-                                    exemptAmount: totalPay,
+                                    // exemptAmount: totalPay,
                                     taxIdnValidation: '77426986-K',
                                     sourceName: 'Marina APP'
                                 }
