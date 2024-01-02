@@ -24,6 +24,7 @@ export default function PayPage (props) {
     } = props
     /* Use states */
     const [openModal, setOpenModal] = useState(false)
+    const [activeSale, setActiveSale] = useState(null)
     const { payment, getPaymentType, loadingPayment } = usePaymentStore()
     const { voucher, getVoucherType, loadingVoucher } = useVocuherStore()
     const {
@@ -41,7 +42,13 @@ export default function PayPage (props) {
         /* Check token */
         getPaymentType()
         getVoucherType()
+        setActiveSale(null)
     }, [])
+    useEffect(() => {
+        const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
+        setActiveSale(sale)
+    }, [listSalesActives])
+
     return (
         <section className='animation-fade-in h-full w-full'>
             {openModal ? <Discount openModal={openModal} setOpenModal={setOpenModal} handleButton={handleButton}/> : null}
@@ -49,16 +56,17 @@ export default function PayPage (props) {
                 <Button size="lg" className="flex flex-col items-center h-full w-full font-bold" isIconOnly variant="ligth" aria-label="" onClick={() => {
                     setPaymentTarget(listSalesActives, saleIdActive, null)
                     setPayment(false)
-                } }>Volver</Button>
+                } }>
+                Volver
+                </Button>
             </section>
             <section className='flex  flex-col h-3/4 mt-[-0.2rem] sm:h-[93%] items-center px-5 shadow-md hover:shadow-lg  rounded-tl-[0px]  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]'>
                 <div className='flex flex-col w-full h-full items-center'>
                     <div className='flex flex-row-reverse w-full'>
                         <div className='py-[0.7rem]'>
                             <Button className='animation-fade-in w-full h-[56px] text-lg  bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={() => (handleButton()) } startContent={<BiSolidOffer size={25}/>}>
-                    Agregar Descuento
+                                { activeSale?.discount ? (activeSale?.discount + ' % de DSC. aplicado') : ' Agregar Descuento'}
                             </Button>
-
                         </div>
                     </div>
                     <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Seleccione Boleta, factura o Ticket</h5>

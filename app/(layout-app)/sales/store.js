@@ -123,6 +123,8 @@ const useSalesStore = create(
             } else {
                 sales[saleIndex].saleProductsList = []
                 sales[saleIndex].totalPrice = 0
+                sales[saleIndex].discount = null
+                sales[saleIndex].voucherTarget = 1
                 set({ listSalesActives: sales })
             }
         },
@@ -374,7 +376,7 @@ const useSalesStore = create(
                                         setPageTarget(null)
                                         set({ loadingSale: false })
                                         if (result?.code === 200) {
-                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, dataCard: data, targetCustomer })
+                                            generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
                                             if (pageTarget) {
                                                 // setStateMachine('Confirmado')
                                                 notify('✅ Pago con tarjeta con éxito')
@@ -420,7 +422,7 @@ const useSalesStore = create(
                             setPageTarget(null)
                             set({ loadingSale: false })
                             if (result?.code === 200) {
-                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, targetCustomer })
+                                generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                 if (pageTarget) {
                                     // setStateMachine('Confirmado')
                                     notify('✅ Pago con tarjeta con éxito')
@@ -451,7 +453,7 @@ const useSalesStore = create(
                     setPageTarget(null)
                     set({ loadingSale: false })
                     if (result?.code === 200) {
-                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay })
+                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
                         if (pageTarget) {
                             // setStateMachine('Confirmado')
                             notify('✅ Pago con tarjeta con éxito')

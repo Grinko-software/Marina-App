@@ -27,11 +27,16 @@ export default function SaleList (props) {
 
     const [listSales, setListSales] = useState([])
     const [totalPrice, setTotalPrice] = useState([])
+    const [discount, setDiscount] = useState(null)
 
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
         setListSales(sale.saleProductsList)
         setTotalPrice(sale.totalPrice)
+        if (sale?.discount) {
+            const totalDiscount = sale?.totalPrice - (sale?.totalPrice * (sale?.discount / 100))
+            setDiscount(totalDiscount)
+        }
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
 
     useEffect(() => {
@@ -52,6 +57,7 @@ export default function SaleList (props) {
 
     const onClear = () => {
         setSearchInput('')
+        setDiscount(null)
     }
     const IncreaseUnit = () => {
         const Units = inputValue + 1
@@ -169,8 +175,9 @@ export default function SaleList (props) {
                                     delay: 0.2,
                                     ease: [0, 0.71, 0.2, 1.01]
                                 }}>
-                                {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'TOTAL '}{ formatter.format(totalPrice)}
-                                {}
+                                {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'TOTAL '}
+                                { discount ? formatter.format(discount) : formatter.format(totalPrice) }
+
                             </motion.div>
                         </div>
 
