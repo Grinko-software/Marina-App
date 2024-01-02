@@ -5,8 +5,8 @@ const useHttpStore = create(
         apiUrl: 'https://marina-market-api.up.railway.app',
         requestQueue: [],
         isRefreshing: false,
-        setRequestQueue: () => set((requestQueue) => ({ requestQueue })),
-        setIsRefreshing: () => set((isRefreshing) => ({ isRefreshing }))
+        setRequestQueue: (requestQueue) => set({ requestQueue }),
+        setIsRefreshing: (isRefreshing) => set({ isRefreshing })
     }),
     {
         name: 'scanner'

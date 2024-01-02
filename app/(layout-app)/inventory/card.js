@@ -13,6 +13,7 @@ import Offers from './components/Offer/offers'
 import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
+import useHttpStore from '@/stores/http'
 // import toast from 'react-hot-toast'
 
 const LIMIT_PRODUCTS_VIEW = 50
@@ -35,6 +36,7 @@ export default function Card () {
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
     const listEmpty = new Array(20).fill(null)
+    const { requestQueue, isRefreshing } = useHttpStore(({ requestQueue, isRefreshing }) => ({ requestQueue, isRefreshing }))
     const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
         ({ listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }) => (
             { listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }))
@@ -141,6 +143,11 @@ export default function Card () {
         getStockTypes()
         getListInventory()
     }, [])
+
+    useEffect(() => {
+        console.log('RequestQueque: ', requestQueue)
+        console.log('IsRefreshing: ', isRefreshing)
+    }, [requestQueue, isRefreshing])
     return (
         <section className='h-full flex flex-col'>
             <section className="flex items-center justify-between  z-10">

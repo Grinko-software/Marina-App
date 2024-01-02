@@ -41,7 +41,7 @@ const handleUnauthorized = (url, method, data) => {
 
         return refreshToken()
             .then(newToken => {
-                setToken(newToken)
+                setToken(newToken?.data)
                 return processQueue()
             })
             .catch(error => {
@@ -51,6 +51,7 @@ const handleUnauthorized = (url, method, data) => {
                 setIsRefreshing(false)
             })
     } else {
+        console.log(url)
         return waitForRefresh(url, method, data)
     }
 }
@@ -79,8 +80,9 @@ const processQueue = () => {
 
 const refreshToken = async () => {
     // preguntar a niquito
+    const token = getToken()
     const headers = new Headers({
-        Authorization: 'Bearer ' + getToken(),
+        Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
     })
     const options = {
@@ -103,21 +105,6 @@ const refreshToken = async () => {
             })
     } catch (err) {
         return err
-    }
-
-    let data = {}
-
-    try {
-        data = await
-        fetch(AUTH_RENEW,
-            {
-                method: 'GET',
-                cache: 'no-store'
-
-            })
-        return data
-    } catch {
-        return data
     }
 }
 export const fetchData = (url, method, data) => {

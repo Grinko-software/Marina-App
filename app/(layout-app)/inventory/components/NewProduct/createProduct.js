@@ -94,6 +94,7 @@ export default function CreateProduct () {
         if (isOpen) {
             getStockTypes()
             getCategories()
+            getListInventory()
             useSalesStore.getState()?.disabledRedirectSales()
         } else {
             useSalesStore.getState()?.enabledRedirectSales()
@@ -111,7 +112,7 @@ export default function CreateProduct () {
         if (complete && !error) {
             clearStore()
             onClose()
-            getListInventory()
+            // getListInventory()
         }
     }, [complete, error])
 
