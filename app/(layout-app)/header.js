@@ -24,7 +24,8 @@ export function Header () {
     }, [])
     return (
         <section className={'flex flex-row-reverse py-2 mx-[2rem] gap-x-unit-1 animation-fade-in'}>
-            <div className="flex flex-row gap-3 items items-center">
+            <div className="flex flex-row gap-4 items items-center">
+                {usePathname() === '/sales' ? <ScaleStatus scaleStatus = {isConnected}/> : <></>}
                 <Divider orientation="vertical" className="h-12"/>
                 <div className="col-start-2 col-end-2">
                     <PaymentOfMoney />
@@ -44,7 +45,7 @@ export function Header () {
                 </div>
             </div>
             {isMobile ? <MobileNavBar></MobileNavBar> : <></>}
-            {usePathname() === '/sales' ? <ScaleStatus scaleStatus = {isConnected}/> : <></>}
+
         </section>
     )
 }

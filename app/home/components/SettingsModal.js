@@ -2,24 +2,29 @@
 import React, { useEffect } from 'react'
 import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
-import { GetPostMachines } from './../../../services/settings'
+import { GetCashRegister, GetPostMachines } from './../../../services/settings'
 /* import Barcode from "../barcode";
 import BarcodeImg from "../barcodeImg";
 import { generateProductCode } from "@/utils/barcode"; */
 
 export default function SettingModal ({ isOpen, onClose }) {
     const [postMachinesData, setPostMachinesData] = React.useState(null)
+    const [cashRegisterData, setCashRegisterData] = React.useState(null)
     const {
         SelectedPostMachine,
         PostMachines,
         setPostMachines,
-        setSelectedPostMachine
+        setSelectedPostMachine,
+        SelectedCashRegister,
+        CashRegister,
+        setCashRegister,
+        setSelectedCashRegister
     } = useSettingsStore()
 
     const requestData = async () => {
-        const [data] = await Promise.all([GetPostMachines()])
-        console.log(data)
+        const [data, cashRegister] = await Promise.all([GetPostMachines(), GetCashRegister()])
         setPostMachines(data?.data)
+        setCashRegister(cashRegister?.data)
     }
 
     useEffect(() => {
@@ -33,8 +38,10 @@ export default function SettingModal ({ isOpen, onClose }) {
     }, [PostMachines])
 
     useEffect(() => {
-        console.log(SelectedPostMachine)
-    }, [SelectedPostMachine])
+        if (cashRegisterData) {
+            setCashRegisterData(CashRegister)
+        }
+    }, [cashRegisterData])
 
     return (
         <>
@@ -58,10 +65,20 @@ export default function SettingModal ({ isOpen, onClose }) {
                                             {item?.serial_number || item?.label}
                                         </Checkbox>
                                     )
-                                }
-                                )
+                                })}
 
-                                }
+                                {[DEFAULT_SELECTED, ...cashRegisterData]?.map((item, index) => {
+                                    const isSelected = SelectedCashRegister?.ID === item.ID
+                                    return (
+                                        <Checkbox
+                                            key={index}
+                                            isSelected={isSelected}
+                                            onClick={() => { setSelectedCashRegister(item) }}
+                                            color="danger">
+                                            {item?.serial_number || item?.label}
+                                        </Checkbox>
+                                    )
+                                })}
                             </ModalBody>
                             <ModalFooter>
                                 <Button className ="dark" onClick={onClose}>
