@@ -1,11 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Card, CardHeader, Button } from '@nextui-org/react'
+import { Card, CardHeader, Button, Divider } from '@nextui-org/react'
 import useAuthStore from '@/stores/user'
 import ThemeButton from './ThemeButton'
 import imgSrc from '@/app/icon.png'
 import Image from 'next/image'
 import ShortcutButton from './ShortcutButton'
+import { PaymentOfMoney } from './PaymentOfMoney'
+import { CloseBox } from './CloseBox'
 // import ShortcutButton from './ShortcutButton'
 
 export default function UserAvatar () {
@@ -23,19 +25,29 @@ export default function UserAvatar () {
     return (
         <div>
             <Card >
-                <CardHeader className="justify-between space-x-1">
+                <CardHeader className="justify-between space-x-2">
                     <div className="flex gap-3">
                         <Image className="w-16 h-16 p-1 rounded-full ring-4 ring-amber-600" src={imgSrc} alt="Bordered avatar"/>
                         <div className="flex flex-col items-start justify-center">
                             <h4 className="sm:text-xl  text-tiny font-semibold leading-none text-default-600">{userName?.toUpperCase() }</h4>
                             <h5 className="sm:text-xl text-tiny tracking-tight text-default-400">{admin ? 'Administrador' : 'Trabajador'}</h5>
                         </div>
-                    </div>
-                    <div className="col-start-1 col-end-1">
-                        <ThemeButton/>
-                    </div>
-                    <div className="col-start-2 col-end-2">
-                        <ShortcutButton />
+                        <div className="flex flex-row gap-3 items items-center">
+                            <Divider orientation="vertical" className="h-12"/>
+                            <div className="col-start-2 col-end-2">
+                                <PaymentOfMoney />
+                            </div>
+                            <div className="col-start-2 col-end-2">
+                                <CloseBox />
+                            </div>
+                            <Divider orientation="vertical" className="h-12"/>
+                            <div className="col-start-1 col-end-2">
+                                <ThemeButton/>
+                            </div>
+                            <div className="col-start-2 col-end-2">
+                                <ShortcutButton />
+                            </div>
+                        </div>
                     </div>
                     <Button
                         className={'text-xs sm:text-lg bg-transparent text-foreground border-default-200'}
