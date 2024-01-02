@@ -13,8 +13,8 @@ const useSettingsStore = create(
 
             SelectedCashRegister: DEFAULT_SELECTED,
             CashRegister: null,
-            setCashRegister: (value) => set({ PostMachines: value }),
-            setSelectedCashRegister: (value) => set({ SelectedPostMachine: value })
+            setCashRegister: (value) => set({ CashRegister: value }),
+            setSelectedCashRegister: (value) => set({ SelectedCashRegister: value })
         }), {
             name: 'settings'
         }
