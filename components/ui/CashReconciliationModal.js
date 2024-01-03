@@ -2,32 +2,45 @@
 import React from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
 import { IoPersonSharp } from 'react-icons/io5'
+import credit from '@/assets/images/credit.jpg'
+import cash from '@/assets/images/cash.jpeg'
+import CashReconciliationCard from './CashReconciliationCard'
 
-export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
+export default function CashReconciliationModal ({ isOpen, onClose }) {
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size='xl' >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1 font-extrabold">RETIRO EN EFECTIVO</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1 font-extrabold">CIERRE DE CAJA</ModalHeader>
                             <ModalBody>
                                 <div className=" space-y-16">
-                                    <Input
-                                        size='lg'
-                                        isRequired={true}
-                                        type="number"
-                                        label="Cantidad"
-                                        placeholder="0"
-                                        labelPlacement="outside"
-                                        startContent={
-                                            <div className="pointer-events-none flex items-center">
-                                                <span className="text-default-400 text-small">$</span>
-                                            </div>
-                                        }
-                                    />
+                                    <div className='flex flex-row w-full space-x-4'>
+                                        <CashReconciliationCard
+                                            title={'Ventas en Debito/Credito'}
+                                            total={'$900.000'}
+                                            bgTitle={'bg-black/40'}
+                                            img={credit}
+                                            detail={'Total de ingresos en tarjetas de debito/credito del dia'}
+                                        />
+                                        <CashReconciliationCard
+                                            title={'Ventas en Efectivo'}
+                                            total={'$900.000'}
+                                            bgTitle={'bg-green-600/40'}
+                                            img={cash}
+                                            detail={'Total de ingresos en efectivo del dia'}
+                                        />
+                                        <CashReconciliationCard
+                                            title={'Egresos/pagos'}
+                                            total={'$900.000'}
+                                            bgTitle={'bg-green-600/40'}
+                                            img={cash}
+                                            detail={'Total de egresos de caja diarios (pagos)'}
+                                        />
+                                    </div>
                                     <Input
                                         size='lg'
                                         type="text"

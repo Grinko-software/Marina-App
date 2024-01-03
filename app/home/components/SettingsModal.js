@@ -52,7 +52,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 font-extrabold">CONFIGURACION</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 font-extrabold">CONFIGURACIÓN</ModalHeader>
                             <ModalBody>
                                 <div className="flex flex-col space-y-4">
                                     <div className="flex flex-col gap-2">
