@@ -26,9 +26,10 @@ export const getIsRefreshing = () => {
     return isRefreshing
 }
 
-export const setRequestQueue = (value) => {
+export const setRequestQueueService = (value) => {
     const { setRequestQueue } = useHttpStore.getState()
-    setRequestQueue(value)
+    setRequestQueue(useHttpStore.getState().requestQueue, value)
+    console.log(useHttpStore.getState().requestQueue)
 }
 export const setIsRefreshing = (value) => {
     const { setIsRefreshing } = useHttpStore.getState()

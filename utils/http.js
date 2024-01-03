@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { BASE_MARKET_API_URL, AUTH_RENEW } from '../settings/constants'
-import { getRequestQueue, getIsRefreshing, setIsRefreshing, GET } from '../services/http'
+import { getRequestQueue, getIsRefreshing, setIsRefreshing, setRequestQueueService, GET } from '../services/http'
 import { getToken, setToken } from '@/services/user'
 
 const makeRequest = async (url, method = GET, data = null) => {
@@ -35,13 +36,14 @@ const makeRequest = async (url, method = GET, data = null) => {
     }
 }
 
-const handleUnauthorized = (url, method, data) => {
+const handleUnauthorized = async (url, method, data) => {
     if (!getIsRefreshing()) {
         setIsRefreshing(true)
 
         return refreshToken()
             .then(newToken => {
                 setToken(newToken?.data)
+                waitForRefresh(url, method, data)
                 return processQueue()
             })
             .catch(error => {
@@ -51,7 +53,7 @@ const handleUnauthorized = (url, method, data) => {
                 setIsRefreshing(false)
             })
     } else {
-        console.log(url)
+        // console.log(url)
         return waitForRefresh(url, method, data)
     }
 }
@@ -71,8 +73,7 @@ const waitForRefresh = (url, method, data) => {
 }
 
 const processQueue = () => {
-    const requestQueue = getRequestQueue()
-    const currentRequest = requestQueue.shift()
+    const currentRequest = getRequestQueue().shift()
     if (currentRequest) {
         return currentRequest()
     }
@@ -108,10 +109,13 @@ const refreshToken = async () => {
     }
 }
 export const fetchData = (url, method, data) => {
-    const requestQueue = getRequestQueue()
-    const request = () => makeRequest(url, method, data)
-    requestQueue.push(request)
+    // const requestQueue = getRequestQueue()
+    // requestQueue.push(request)
+    // const newData = requestQueue.push(request)
+    // setRequestQueueService(newData)
+    setTimeout(() => { makeRequest(url, method, data) }, [500])
 
+    // console.log(requestQueue)
     if (!getIsRefreshing()) {
         return processQueue()
     }

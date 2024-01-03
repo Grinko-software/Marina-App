@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import CardUi from '@/components/ui/Card'
@@ -144,10 +145,10 @@ export default function Card () {
         getListInventory()
     }, [])
 
-    useEffect(() => {
+    /*   useEffect(() => {
         console.log('RequestQueque: ', requestQueue)
         console.log('IsRefreshing: ', isRefreshing)
-    }, [requestQueue, isRefreshing])
+    }, [requestQueue, isRefreshing]) */
     return (
         <section className='h-full flex flex-col'>
             <section className="flex items-center justify-between  z-10">
