@@ -1,9 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { GET_POST_MACHINE } from '@/settings/constants'
-import { GET } from '@/services/http'
+import { getData, GET } from '@/services/http'
 export const DEFAULT_SELECTED = { ID: 'no-select', label: 'NINGUNA' }
-
 const useSettingsStore = create(
     persist(
         (set) => ({
@@ -13,11 +12,14 @@ const useSettingsStore = create(
             loading: false,
             setPostMachines: (value) => set({ postMachines: value }),
             setSelectedPostMachine: (value) => set({ selectedPostMachine: value }),
-            getPostMachines: (fetchData) => {
+            getPostMachines: () => {
                 set({ loading: true, error: null })
                 try {
-                    fetchData(GET_POST_MACHINE, GET).then((result) =>
-                        console.log(result)
+                    getData(GET_POST_MACHINE, GET).then((result) => {
+                        if (result?.data?.length > 0) {
+                            set({ postMachines: result?.data })
+                        }
+                    }
                     ).catch((error) => {
                         console.debug(error)
                         set({ loading: false })

@@ -9,11 +9,21 @@ import { InvoiceIcon } from '@/components/ui/InvoiceIcon'
 import { TicketIcon } from '@/components/ui/TicketIcon'
 import { BillIcon } from '@/components/ui/BillIcon'
 import { BiSolidOffer } from 'react-icons/bi'
-import useSalesStore from './store'
+import useSalesStore from '../../store'
 import usePaymentStore from '@/stores/payment'
 import useVocuherStore from '@/stores/voucher'
-import Discount from './components/discount/discount'
+import Discount from '../discount/discount'
+import useStore from './store/store'
+import useInvoiceStore from '../invoice/store'
 export default function PayPage (props) {
+    const {
+        getData,
+        error,
+        loading,
+        setLoading,
+        data,
+        triggerAction
+    } = useStore((state) => state)
     /* Change state to go back to sales table product */
     const {
         setPayment,
@@ -24,8 +34,9 @@ export default function PayPage (props) {
     } = props
     /* Use states */
     const [openModal, setOpenModal] = useState(false)
-    const { payment, getPaymentType, loadingPayment } = usePaymentStore()
-    const { voucher, getVoucherType, loadingVoucher } = useVocuherStore()
+    const { payment, getPaymentType } = usePaymentStore()
+    const { voucher, getVoucherType } = useVocuherStore()
+    const { getCustomers } = useInvoiceStore()
     const {
         listSalesActives,
         saleIdActive
@@ -38,9 +49,18 @@ export default function PayPage (props) {
         setOpenModal(!openModal)
     }
     useEffect(() => {
-        /* Check token */
-        getPaymentType()
-        getVoucherType()
+        if (data) {
+            getPaymentType(data?.typePayment)
+            getVoucherType(data?.typeVoucher)
+            getCustomers(data?.customers)
+        }
+    }, [data])
+    // Handle request
+    useEffect(() => {
+        getData()
+        return () => {
+            setLoading(false)
+        }
     }, [])
     return (
         <section className='animation-fade-in h-full w-full'>
@@ -65,7 +85,7 @@ export default function PayPage (props) {
                     <div className='flex flex-col items-center'>
                         <div className='flex flex-row mt-10 space-x-10  items-center '>
 
-                            { loadingVoucher
+                            { loading
                                 ? <section className='flex flex-row space-x-10'>
                                     {listEmpty3?.map((element, index) => <Card key={index} className='animation-fade-in p-1 w-[176px] h-[176px]' shadow="sm">
                                         <Skeleton className="rounded-lg">
@@ -98,7 +118,7 @@ export default function PayPage (props) {
                     <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white flex-initial">Seleccione el medio de pago</h5>
                     <div className='flex flex-col items-center'>
                         <div className='flex flex-row  space-x-10 mt-10 item-center'>
-                            { loadingPayment
+                            { loading
                                 ? <section className='flex flex-row space-x-10'>
                                     {listEmpty?.map((element, index) => <Card key={index} className='animation-fade-in p-1 w-[176px] h-[176px]' shadow="sm">
                                         <Skeleton className="rounded-lg">

@@ -21,20 +21,20 @@ export const CREATE_CATEGORIES_API_URL = BASE_MARKET_API_URL + '/product/create/
 // Get type of stock
 export const TYPE_STOCK_API_URL = '/product/type-stock'
 // Get type of payment
-export const TYPE_PAYMENT_API_URL = BASE_MARKET_API_URL + '/payment'
+export const TYPE_PAYMENT_API_URL = '/payment'
 // Get type of voucher
-export const TYPE_VOUCHER_API_URL = BASE_MARKET_API_URL + '/voucher'
+export const TYPE_VOUCHER_API_URL = '/voucher'
 
 // Get offer
-export const PRODUCT_OFFER = BASE_MARKET_API_URL + '/product/offer'
+export const PRODUCT_OFFER = '/product/offer'
 
 // Creat list
 export const SALE_TICKET_CREATE = BASE_MARKET_API_URL + '/sale-ticket/create'
 // DTEMITE ENDPOINTS
 export const GET_DOCUMENT_HAULMER = BASE_MARKET_API_URL + '/dte'
 // Get customers
-export const CUSTOMER_API_URL = BASE_MARKET_API_URL + '/customer'
-export const CREATE_CUSTOMER = BASE_MARKET_API_URL + '/customer/create'
+export const CUSTOMER_API_URL = '/customer'
+export const CREATE_CUSTOMER = '/customer/create'
 // Create  Sale Machine Tuu
 export const CREATE_PAYMENT_POSMACHINE = BASE_MARKET_API_URL + '/machine/create-sale'
 // Get State Sale Machine Tuu

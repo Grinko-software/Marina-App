@@ -5,7 +5,7 @@ import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
 /* import Barcode from "../barcode";
 import BarcodeImg from "../barcodeImg";
 import { generateProductCode } from "@/utils/barcode"; */
-import { fetchData } from '@/utils/http'
+
 export default function SettingModal ({ isOpen, onClose }) {
     const [postMachinesData, setPostMachinesData] = React.useState(null)
     const {
@@ -24,22 +24,16 @@ export default function SettingModal ({ isOpen, onClose }) {
         setSelectedPostMachine,
         getPostMachines
     }))
-    useEffect(() => {
-        if (fetchData) {
-            getPostMachines(fetchData)
-        }
-    }, [fetchData])
 
     useEffect(() => {
         if (postMachines) {
-            setPostMachinesData(DEFAULT_SELECTED, ...postMachines)
+            setPostMachinesData([DEFAULT_SELECTED, ...postMachines])
         }
     }, [postMachines])
-
+    /* Handle unique request */
     useEffect(() => {
-        console.log(selectedPostMachine)
-    }, [selectedPostMachine])
-
+        getPostMachines()
+    }, [])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">

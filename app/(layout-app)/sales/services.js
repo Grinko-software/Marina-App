@@ -1,6 +1,5 @@
-// import { fetchGet } from '@/services/sales'
 import { getToken } from '@/services/user'
-// import { setStateMachine } from '@/services/machine'
+
 export const getStateSaleMachine = (url) => {
     return new Promise((resolve, reject) => {
         let limitTime = 0

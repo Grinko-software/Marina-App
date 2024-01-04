@@ -3,20 +3,28 @@
 import React, { useEffect, useState } from 'react'
 import CardUi from '@/components/ui/Card'
 import { Tabs, Tab, useDisclosure, Skeleton, Divider } from '@nextui-org/react'
-import useSalesStore from '../store'
-import useInventoryStore from '../../inventory/store'
+import useSalesStore from '../../store'
+import useInventoryStore from '../../../inventory/store'
 import LoadingCard from '@/components/ui/Loading'
-import WeighingScaleModal from './weighingScaleModal'
+import WeighingScaleModal from '../weighingScaleModal'
 import useOffersStore from '@/stores/offers'
-
+import useStore from './store'
 export default function tableProducts (props) {
+    const {
+        getData,
+        error,
+        loading,
+        setLoading,
+        data,
+        triggerAction
+    } = useStore((state) => state)
     const { searchInput, setSearchInput } = props
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
     const [selectedProductWithKG, setSelectedProductWithKG] = useState(null)
     const [categoryTabSelected, setCategoryTabSelected] = useState()
     const [listInventory, setListInventory] = useState([])
-    const { listCategories, listInventory: list, getCategories, getListInventory, loading, loadingCategories } = useInventoryStore(({ listCategories, listInventory: list, getCategories, getListInventory, loading, loadingCategories }) => ({ listCategories, listInventory: list, getCategories, getListInventory, loading, loadingCategories }))
+    const { listCategories, listInventory: list, getCategories, getListInventory, loadingCategories } = useInventoryStore(({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories }) => ({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories }))
     const [filteredList, setFilteredList] = useState([])
     const {
         addFromNewSales,
@@ -89,10 +97,18 @@ export default function tableProducts (props) {
     }, [listSales])
 
     useEffect(() => {
-        /* Add in the future refreshToken in this useEffect */
-        getCategories()
-        getListInventory()
-        getOffers()
+        if (data) {
+            getCategories(data?.categories)
+            getListInventory(data?.inventory)
+            getOffers(data?.offers)
+        }
+    }, [data])
+    // Handle request
+    useEffect(() => {
+        getData()
+        return () => {
+            setLoading(false)
+        }
     }, [])
     useEffect(() => {
         const searchSize = searchInput?.length || 0

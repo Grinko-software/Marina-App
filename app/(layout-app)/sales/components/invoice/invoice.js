@@ -29,9 +29,9 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     const [searchInput, setSearchInput] = useState('')
     const [filteredList, setFilteredList] = useState([])
     const notify = (text) => toast(text)
-    const { defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer } =
-     useInventoryStore(({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer }
-     ) => ({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer }))
+    const { defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers } =
+     useInventoryStore(({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers }
+     ) => ({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers }))
     const onClose = () => {
         setOpenModal(false)
     }
@@ -97,9 +97,6 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
             setFilteredList(customers)
         }
     }, [searchInput, customers])
-    useEffect(() => {
-        getCustomers()
-    }, [])
     return (
         <>
             <Toaster
@@ -298,7 +295,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                 <ModalFooter>
                                     <Button className =" bg-green-500 text-primary-50" onClick={() => {
                                         if (defaultForm?.rut && defaultForm?.businessLine && defaultForm?.businessName) {
-                                            create(defaultForm, notify, setTargetCustomer, getCustomers)
+                                            create(defaultForm, notify, setTargetCustomer, triggetgetCustomers)
                                         }
                                         onClose()
                                         setCreateCustomer(false)
