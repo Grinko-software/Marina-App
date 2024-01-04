@@ -20,7 +20,7 @@ export default function Page ({ params }) {
                 setModuleSelected(selected)
             } else {
                 setModuleSelected(null)
-                router.push('/admin')
+                router.push('/modules')
             }
         }
     }, [module])

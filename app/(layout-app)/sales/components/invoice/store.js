@@ -6,24 +6,27 @@ import { getData, GET, POST } from '@/services/http'
 const useInvoiceStore = create(
     (set) => ({
         defaultForm: {
-            businessName: null,
-            businessLine: null,
-            rut: null,
-            code: null,
-            phone: null,
-            region: null,
-            commune: null,
-            province: null,
-            legalRepresentative: null,
-            email: null,
-            address: null
+            businessName: { value: null, error: null },
+            businessLine: { value: null, error: null },
+            rut: { value: null, error: null },
+            code: { value: null, error: null },
+            phone: { value: null, error: null },
+            region: { value: null, error: null },
+            commune: { value: null, error: null },
+            province: { value: null, error: null },
+            legalRepresentative: { value: null, error: null },
+            email: { value: null, error: null },
+            address: { value: null, error: null }
         },
         targetCustomer: null,
         loadingCustomer: false,
         error: null,
         complete: false,
         setTargetCustomer: (value) => set({ targetCustomer: value }),
-        setFormData: (newData) => set({ defaultForm: { ...newData } }),
+        setFormData: (newData) => {
+            // console.log(newData)
+            set({ defaultForm: { ...newData } })
+        },
         setLoadingCustomer: (value) => set({ loadingCustomer: value }),
         setError: (value) => set({ error: value }),
         customers: [],
@@ -31,17 +34,17 @@ const useInvoiceStore = create(
         create: (customer, notify, setTargetCustomer, getCustomers) => {
             set({ loadingCustomer: true })
             const dataBody = {
-                business_name: customer?.businessName ?? '-',
-                business_line: customer?.businessLine ?? '-',
-                rut: customer?.rut ?? '-',
-                code: customer?.rut ?? '-',
-                phone: customer?.phone ?? '-',
-                region: customer?.region ?? 'Elqui',
-                commune: customer?.commune ?? 'Coquimbo',
-                province: customer?.commune ?? 'Coquimbo',
-                legal_representative: customer?.legalRepresentative ?? '-',
-                email: customer?.email ?? '-',
-                address: customer?.address ?? '-'
+                business_name: customer?.businessName?.value ?? '-',
+                business_line: customer?.businessLine?.value ?? '-',
+                rut: customer?.rut?.value ?? '-',
+                code: customer?.rut?.value ?? '-',
+                phone: customer?.phone?.value ?? '-',
+                region: customer?.region?.value ?? 'Elqui',
+                commune: customer?.commune?.value ?? 'Coquimbo',
+                province: customer?.commune?.value ?? 'Coquimbo',
+                legal_representative: customer?.legalRepresentative?.value ?? '-',
+                email: customer?.email?.value ?? '-',
+                address: customer?.address?.value ?? '-'
             }
 
             try {

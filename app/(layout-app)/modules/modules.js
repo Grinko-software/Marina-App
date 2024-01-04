@@ -2,6 +2,7 @@
 import { FaChartLine, FaClipboardList, FaShoppingCart, FaTruck, FaUsersCog } from 'react-icons/fa'
 import ReportView from '../reports/components/MainReportView'
 import Sales from './[module]/components/Sales/Sales'
+import Supplier from './[module]/components/Supplier/Supplier'
 
 export const modules = [
     {
@@ -32,12 +33,12 @@ export const modules = [
         icon: <FaUsersCog />
     },
     {
-        key: 'aaaa',
-        path: 'aaaa',
+        key: 'supplier',
+        path: 'supplier',
         name: 'Proveedores',
         description: 'Administración de proveedores',
         requireAdmin: false,
-        content: <div>Proveedores</div>,
+        content: <Supplier/>,
         icon: <FaTruck />
     },
     {

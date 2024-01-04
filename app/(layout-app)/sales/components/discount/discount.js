@@ -44,31 +44,32 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const createDiscount = () => {
         addDiscountSale(listSalesActives, saleIdActive, searchInput, cleanForm)
     }
-    const onClose = () => {
-        setOpenModal(false)
-    }
+
     return (
         <Modal
             size='5xl'
-            className='h-8/12 w-8/12'
+            className='h-8/12 w-full'
             isOpen={openModal}
             backdrop='opaque'
             scrollBehavior={'inside'}
             closeButton={<></>}
         >
             <ModalContent>
-                {(onClose) => (
+                {() => (
                     <section>
                         <ModalHeader className="flex flex-col items-center  text-primary-500 dark:text-primary-200 ml-[3.5rem]">
                             <section className='flex flex-col items-center py-[2rem]'> <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Agregar Descuento (%)</h5> </section>
                         </ModalHeader>
                         <ModalBody className='flex flex-col items-center h-full space-y-[4rem]' >
-                            <section className='flex flex-row space-x-3'>
-                                {discountShortcuts?.map((e, index) => <Button key={index} variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
-                                    onClick={() => handleInputChange(e) }>
-                                    {e + ' %' }
-                                </Button>)}
+                            <section className='flex flex-col items-center px-[4rem]'>
+                                <section className='flex flex-row w-full space-x-3'>
+                                    {discountShortcuts?.map((e, index) => <Button key={index} variant="shadow" className={`${searchInput === e ? ' bg-green-700  text-white' : ' bg-green-500 text-white'} max-w-full lg:min-w-[10rem]  h-[8rem] font-extrabold text-3xl`}
+                                        onClick={() => handleInputChange(e) }>
+                                        {e + ' %' }
+                                    </Button>)}
+                                </section>
                             </section>
+
                             <section className='w-full flex flex-col items-center'>
                                 <Slider
                                     label=""
@@ -90,9 +91,11 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
                                             label: '80%'
                                         }
                                     ]}
-                                    defaultValue={10}
+                                    value={searchInput}
+                                    defaultValue={searchInput}
                                     className="w-full px-[4rem]"
                                     onChangeEnd={(value) => { handleInputChange(value) }}
+
                                 />
 
                             </section>
@@ -104,8 +107,8 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
                             }
                         </ModalBody>
                         <ModalFooter className='flex flex-col items-center h-full mt-[2rem]'>
-                            <section className='flex flex-row'>
-                                <Button color="danger" variant="light"
+                            <section className='flex flex-row space-x-3'>
+                                <Button color="danger"
                                     className="text-2xl h-[5rem] w-[15rem]"
 
                                     onClick={() => {
@@ -117,13 +120,15 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
                                 </Button>
                                 <Button
                                     className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
-                                    isDisabled={messageError}
+                                    isDisabled={ messageError}
                                     onClick={() => {
                                         handleButton()
                                         createDiscount()
                                     }
-                                    }>
-                            Guardar
+                                    }
+
+                                >
+                                    { searchInput ? 'Aplicar ' + searchInput + '% DSC.' : 'Aplica un DSC.' }
                                 </Button>
                             </section>
                         </ModalFooter>

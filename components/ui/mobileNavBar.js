@@ -19,14 +19,14 @@ export default function MobileNavBar () {
             route: '/inventory'
         },
         {
-            id: 'reports',
-            label: 'Reportes',
-            route: '/reports'
+            id: 'modules',
+            label: 'Módulos',
+            route: '/modules{k,'
         },
         {
             id: 'admin',
             label: 'Administrar',
-            route: '/admin'
+            route: '/modules'
         }
     ]
     useEffect(() => {

@@ -8,7 +8,7 @@ import PieChart from '@/components/ui/pieChart'
 import AreaChart from '@/components/ui/areaChart'
 import Filter from './Filter/Filter'
 import useReportsStore from './store'
-import { roundValueWithUnit } from '@/utils/number'
+import { roundValueWithUnit, formatNumberWithPoints } from '@/utils/number'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import StockTable from '@/components/ui/StockTable'
@@ -91,6 +91,7 @@ const ReportView = () => {
         if (dataSalesTypes) {
             const seriesCash = dataSalesTypes?.map((item) => { return item?.cash_sales_amount })
             const seriesCard = dataSalesTypes?.map((item) => { return item?.card_sales_amount })
+            const totalCard = dataSalesTypes?.map((item) => { return item?.card_sales_amount + item?.cash_sales_amount })
             const seriesDate = dataSalesTypes?.map((item) => { return item?.start_time })
             const data = {
                 series: [{
@@ -99,6 +100,10 @@ const ReportView = () => {
                 }, {
                     name: 'Debito/Credito',
                     data: [...seriesCard]
+                },
+                {
+                    name: 'Total',
+                    data: [...totalCard]
                 }],
                 options: {
                     chart: {
@@ -192,13 +197,6 @@ const ReportView = () => {
                         <section className='grid grid-cols-1 w-full gap-3 mt-3'>
                             <section className='grid grid-cols w-full gap-3 ' >
                                 <StockTable/>
-                            </section>
-                        </section>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <section className='grid grid-cols-1 w-full gap-3 mt-3'>
-                            <section className='grid grid-cols w-full gap-3 ' >
-                                <TableSales/>
                             </section>
                         </section>
                     </SwiperSlide>

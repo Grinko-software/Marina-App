@@ -1,7 +1,7 @@
 // export const BASE_AUTH_API_URL = 'https://marina-auth-api.up.railway.app'
-// export const BASE_MARKET_API_URL = 'https://marina-market-api.up.railway.app'
 export const BASE_AUTH_API_URL = 'https://marina-auth-api-dev-rlfvoxmasq-uc.a.run.app'
 export const BASE_MARKET_API_URL = 'https://marina-market-api-rlfvoxmasq-uc.a.run.app'
+// const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
@@ -50,3 +50,7 @@ export const REPORTS_SALES_TYPES_API_URL = BASE_MARKET_API_URL + '/report/period
 export const REPORTS_CRITICAL_STOCK_API_URL = BASE_MARKET_API_URL + '/report/product-stock'
 export const REPORTS_LAST_SALES_API_URL = '/report/last-sales'
 export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
+
+// SUPPLIER
+export const SUPPLIER_API_URL = BASE_MARKET_API_URL + '/supplier'
+export const SUPPLIER_ASSOCIATION_API_URL = BASE_MARKET_API_URL + '/supplier/:id/association/products'

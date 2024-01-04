@@ -28,6 +28,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     const [messageSearch, setMessageSearch] = useState(null)
     const [searchInput, setSearchInput] = useState('')
     const [filteredList, setFilteredList] = useState([])
+    const [errorInput, setErrorInput] = useState(false)
     const notify = (text) => toast(text)
     const { defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers } =
      useInventoryStore(({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers }
@@ -35,9 +36,34 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     const onClose = () => {
         setOpenModal(false)
     }
+    const validateRut = (rut) => {
+        // Expresión regular para validar el formato del RUT
+        const rutRegex = /^(\d{8})-(\d|k|K)$/
+        return rutRegex.test(rut)
+    }
+    const controlError = () => {
+        const dictionary = Object.keys(defaultForm)
+        for (const keys of dictionary) {
+            // console.log('Clave:', keys, 'Valor:', defaultForm[keys])
+            const value = defaultForm[keys]?.value
+            if (!value) {
+                useInventoryStore.getState().setFormData({ ...useInventoryStore.getState().defaultForm, [keys]: { value: null, error: 'Este campo es obligatorio' } })
+            }
+        }
+    }
     const handleInputChange = ({ field, value }) => {
-        const newFormValues = { ...defaultForm, [field]: value }
-        // const newFormValues = { ...defaultForm, [field]: !isNaN(value) ? parseInt(value) : value }
+        let newFormValues = {}
+        if (field === 'rut') {
+            if (validateRut(value)) {
+                setErrorInput(false)
+                newFormValues = { ...defaultForm, [field]: { value, error: null } }
+            } else {
+                newFormValues = { ...defaultForm, [field]: { value: null, error: 'Debes ingresar el formato correcto 12345678-9' } }
+            }
+            // newFormValues = { ...defaultForm, [field]: value }
+        } else {
+            newFormValues = { ...defaultForm, [field]: { value, error: null } }
+        }
         setFormData(newFormValues)
     }
     const CardRow = ({ item, setTargetCustomer }) => {
@@ -97,6 +123,10 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
             setFilteredList(customers)
         }
     }, [searchInput, customers])
+    useEffect(() => {
+        getCustomers()
+    }, [])
+    // useEffect(() => { console.log(defaultForm) }, [defaultForm])
     return (
         <>
             <Toaster
@@ -202,17 +232,24 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                         <SectionInput title={''}>
                                             <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
                                                 <div className="flex-3">
-                                                    <h3 className=" text-small pt-1">{'Nombre de empresa'}</h3>
+                                                    <h3 className=" text-small pt-1">{'* Nombre de empresa'}</h3>
                                                     <section className="space-y-3">
                                                         <Input type="text" variant={'underlined'} defaultValue={ ''}
+                                                            errorMessage={defaultForm?.businessName?.error}
+                                                            isInvalid={defaultForm?.businessName?.error}
                                                             onValueChange={(value) => { handleInputChange({ field: 'businessName', value }) }} />
                                                     </section>
 
                                                 </div>
                                                 <div className="flex-3">
-                                                    <h3 className="text-small pt-1">{'Rut de empresa'}</h3>
+                                                    <h3 className="text-small pt-1">{'* Rut de empresa'}</h3>
                                                     <section className="space-y-3">
-                                                        <Input type="text" variant={'underlined'} defaultValue={ ''}
+                                                        <Input
+                                                            type="text"
+                                                            variant={'underlined'}
+                                                            defaultValue={ ''}
+                                                            errorMessage={defaultForm?.rut?.error}
+                                                            isInvalid={defaultForm?.rut?.error}
                                                             onValueChange={(value) => { handleInputChange({ field: 'rut', value }) }}
                                                         />
                                                     </section>
@@ -223,9 +260,11 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                         <SectionInput title={''} >
                                             <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
                                                 <div className="flex-3">
-                                                    <h3 className="text-small pt-1">{'Giro de empresa'}</h3>
+                                                    <h3 className="text-small pt-1">{'* Giro de empresa'}</h3>
                                                     <section className="space-y-3">
                                                         <Input type="text" variant={'underlined'} defaultValue={ ''}
+                                                            errorMessage={defaultForm?.businessLine?.error}
+                                                            isInvalid={defaultForm?.businessLine?.error}
                                                             onValueChange={(value) => { handleInputChange({ field: 'businessLine', value }) }}
                                                         />
                                                     </section>
@@ -293,14 +332,19 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
 
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button className =" bg-green-500 text-primary-50" onClick={() => {
-                                        if (defaultForm?.rut && defaultForm?.businessLine && defaultForm?.businessName) {
-                                            create(defaultForm, notify, setTargetCustomer, triggetgetCustomers)
+                                    <Button
+                                        isDisabled={!!errorInput}
+                                        className="bg-green-500 text-primary-50"
+                                        onClick={() => {
+                                            if (defaultForm?.rut?.value && defaultForm?.businessLine?.value && defaultForm?.businessName?.value) {
+                                                create(defaultForm, notify, setTargetCustomer, getCustomers)
+                                                onClose()
+                                                setCreateCustomer(false)
+                                            } else {
+                                                controlError()
+                                            }
                                         }
-                                        onClose()
-                                        setCreateCustomer(false)
-                                    }
-                                    }>
+                                        }>
                             Guardar
                                     </Button>
                                     <Button color="danger" variant="light"
