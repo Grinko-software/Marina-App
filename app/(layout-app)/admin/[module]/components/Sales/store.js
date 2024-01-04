@@ -1,15 +1,14 @@
 import { create } from 'zustand'
-import { requestDataSales, requestDataSaleDetail } from './service'
-
+import { requestDataSaleDetail } from './service'
+import { fetchGetReportsLastSales } from '@/services/reports'
 const useLastSalesStore = create((set) => ({
     data: undefined,
     loading: false,
-    requestData: async () => {
+    requestData: () => {
         set({ loading: true })
-        const [data] = await Promise.all([requestDataSales()])
-        if (data) {
+        fetchGetReportsLastSales().then((data) => {
             set({ data: data?.data })
-        }
+        }).catch((error) => { console.debug(error) })
         set({ loading: false })
     },
     requestSaleDetail: async ({ saleId }) => {
