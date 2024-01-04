@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input } from '@nextui-org/react'
 import { SearchIcon } from './SearchIcon'
-import useSalesStore from '@/app/(layout-app)/sales/store'
+import useScannerStore from '@/stores/scanner'
 
 export default function SearchBar (props) {
     const { onChange, onClear, defaultValue } = props
@@ -17,7 +17,7 @@ export default function SearchBar (props) {
                     if (value) {
                         onClear()
                     } else {
-                        useSalesStore.getState()?.enabledScanner()
+                        useScannerStore.getState()?.enabledScanner()
                     }
                 }}
                 classNames={{

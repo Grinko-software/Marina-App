@@ -8,10 +8,10 @@ import { generateProductCode } from '@/utils/barcode'
 import Barcosde from '@/components/barcode'
 import useProductFormStore from './store'
 import useInventoryStore from '../../store'
-import useSalesStore from '@/app/(layout-app)/sales/store'
 import toast, { Toaster } from 'react-hot-toast'
 import { BiSolidShoppingBags } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
+import useScannerStore from '@/stores/scanner'
 
 const notify = (text) => toast(text)
 
@@ -94,9 +94,9 @@ export default function CreateProduct () {
         if (isOpen) {
             getStockTypes()
             getCategories()
-            useSalesStore.getState()?.disabledRedirectSales()
+            useScannerStore.getState()?.disabledRedirectSales()
         } else {
-            useSalesStore.getState()?.enabledRedirectSales()
+            useScannerStore.getState()?.enabledRedirectSales()
             setIsBarcodeGenerated(false)
             setBarcodeValue(null)
         }
