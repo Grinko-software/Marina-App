@@ -2,39 +2,43 @@
 import React, { useEffect } from 'react'
 import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
-import { GetPostMachines } from './../../../services/settings'
 /* import Barcode from "../barcode";
 import BarcodeImg from "../barcodeImg";
 import { generateProductCode } from "@/utils/barcode"; */
-
+import { fetchData } from '@/utils/http'
 export default function SettingModal ({ isOpen, onClose }) {
     const [postMachinesData, setPostMachinesData] = React.useState(null)
     const {
-        SelectedPostMachine,
-        PostMachines,
-        setPostMachines,
-        setSelectedPostMachine
-    } = useSettingsStore()
-
-    const requestData = async () => {
-        const [data] = await Promise.all([GetPostMachines()])
-        console.log(data)
-        setPostMachines(data?.data)
-    }
-
+        selectedPostMachine,
+        postMachines,
+        setSelectedPostMachine,
+        getPostMachines
+    } = useSettingsStore(({
+        selectedPostMachine,
+        postMachines,
+        setSelectedPostMachine,
+        getPostMachines
+    }) => ({
+        selectedPostMachine,
+        postMachines,
+        setSelectedPostMachine,
+        getPostMachines
+    }))
     useEffect(() => {
-        requestData()
-    }, [])
-
-    useEffect(() => {
-        if (PostMachines) {
-            setPostMachinesData(PostMachines)
+        if (fetchData) {
+            getPostMachines(fetchData)
         }
-    }, [PostMachines])
+    }, [fetchData])
 
     useEffect(() => {
-        console.log(SelectedPostMachine)
-    }, [SelectedPostMachine])
+        if (postMachines) {
+            setPostMachinesData(DEFAULT_SELECTED, ...postMachines)
+        }
+    }, [postMachines])
+
+    useEffect(() => {
+        console.log(selectedPostMachine)
+    }, [selectedPostMachine])
 
     return (
         <>
@@ -47,8 +51,8 @@ export default function SettingModal ({ isOpen, onClose }) {
                             <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Atajos</ModalHeader>
                             <ModalBody>
                                 <p className="text-primary-500 dark:text-primary-200">Seleccionar TUU principal</p>
-                                {[DEFAULT_SELECTED, ...postMachinesData]?.map((item, index) => {
-                                    const isSelected = SelectedPostMachine?.ID === item.ID
+                                {postMachinesData?.map((item, index) => {
+                                    const isSelected = selectedPostMachine?.ID === item.ID
                                     return (
                                         <Checkbox
                                             key={index}

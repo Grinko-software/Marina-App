@@ -40,7 +40,7 @@ export const CREATE_PAYMENT_POSMACHINE = BASE_MARKET_API_URL + '/machine/create-
 // Get State Sale Machine Tuu
 export const GET_STATE_SALE_POSMACHINE = BASE_MARKET_API_URL + '/machine/payment-request/:id'
 // GET CONFIG
-export const GET_POST_MACHINE = BASE_MARKET_API_URL + '/settings/post-machine'
+export const GET_POST_MACHINE = '/settings/post-machine'
 
 // REPORTS
 export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-type-sales'

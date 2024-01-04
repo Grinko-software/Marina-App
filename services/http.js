@@ -1,4 +1,5 @@
 import useHttpStore from '@/stores/http'
+import http from '@/utils/http'
 export const GET = 'GET'
 export const POST = 'POST'
 export const PUT = 'PUT'
@@ -17,21 +18,26 @@ export const getBaseUrl = () => {
     const { apiUrl } = useHttpStore.getState()
     return apiUrl
 }
-export const getRequestQueue = () => {
-    const { requestQueue } = useHttpStore.getState()
-    return requestQueue
-}
 export const getIsRefreshing = () => {
     const { isRefreshing } = useHttpStore.getState()
     return isRefreshing
 }
-
-export const setRequestQueueService = (value) => {
-    const { setRequestQueue } = useHttpStore.getState()
-    setRequestQueue(useHttpStore.getState().requestQueue, value)
-    console.log(useHttpStore.getState().requestQueue)
-}
 export const setIsRefreshing = (value) => {
     const { setIsRefreshing } = useHttpStore.getState()
     setIsRefreshing(value)
+}
+/**
+ * Handle the data request
+ * @returns request async
+ */
+export const getData = (url, method = GET, data) => {
+    return http.makeRequest(url, method, data)
+}
+
+/**
+ * Handle the data request multiple
+ * @returns request async
+ */
+export const getDataMultiple = (requests) => {
+    return http.fetchDataMulti(requests)
 }

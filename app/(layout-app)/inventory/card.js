@@ -15,12 +15,14 @@ import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
 import useHttpStore from '@/stores/http'
+import { getMultiDataRequest, reMapData } from './services'
 // import toast from 'react-hot-toast'
 
 const LIMIT_PRODUCTS_VIEW = 50
 // const notify = (text) => toast.success(text)
 
 export default function Card () {
+    const [response, setResponse] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
     const [selectedCategoryID, setSelectedCategoryID] = useState('24')
@@ -37,7 +39,7 @@ export default function Card () {
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
     const listEmpty = new Array(20).fill(null)
-    const { requestQueue, isRefreshing } = useHttpStore(({ requestQueue, isRefreshing }) => ({ requestQueue, isRefreshing }))
+
     const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
         ({ listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }) => (
             { listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }))
@@ -81,11 +83,6 @@ export default function Card () {
             }, 500)
         }
     }, [listInventoryComplete, lastInViewPort, pageNumber])
-
-    /* async function updatedFilteredListByCategory (filteredLisInventory) {
-        await timeout(100)
-
-    } */
 
     useEffect(() => {
         if (selectedCategoryID) {
@@ -138,17 +135,26 @@ export default function Card () {
             setSearchInput('')
         }
     }, [sectionSearch])
+    /* set States from store inventory */
     useEffect(() => {
-        /* Add in the future refreshToken in this useEffect */
-        getCategories()
-        getStockTypes()
-        getListInventory()
+        if (response) {
+            getCategories(response?.categories)
+            getStockTypes(response?.stockTypes)
+            getListInventory(response?.inventory)
+        }
+    }, [response])
+    /* Handle multiple request */
+    useEffect(() => {
+        try {
+            getMultiDataRequest().then((results) => {
+                const dataModel = reMapData(results)
+                setResponse(dataModel)
+            }
+            )
+        } catch (error) {
+            console.error('Error en al menos una solicitud:', error)
+        }
     }, [])
-
-    /*   useEffect(() => {
-        console.log('RequestQueque: ', requestQueue)
-        console.log('IsRefreshing: ', isRefreshing)
-    }, [requestQueue, isRefreshing]) */
     return (
         <section className='h-full flex flex-col'>
             <section className="flex items-center justify-between  z-10">

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { BASE_MARKET_API_URL, AUTH_RENEW } from '../settings/constants'
-import { getRequestQueue, getIsRefreshing, setIsRefreshing, setRequestQueueService, GET } from '../services/http'
+import { getIsRefreshing, setIsRefreshing, GET } from '../services/http'
 import { getToken, setToken } from '@/services/user'
 
 const makeRequest = async (url, method = GET, data = null) => {
@@ -43,8 +43,7 @@ const handleUnauthorized = async (url, method, data) => {
         return refreshToken()
             .then(newToken => {
                 setToken(newToken?.data)
-                waitForRefresh(url, method, data)
-                return processQueue()
+                return makeRequest(url, method, data)
             })
             .catch(error => {
                 throw new Error('Error renew Token: ' + error.message)
@@ -53,7 +52,7 @@ const handleUnauthorized = async (url, method, data) => {
                 setIsRefreshing(false)
             })
     } else {
-        // console.log(url)
+        console.debug('viene del refresh ', url)
         return waitForRefresh(url, method, data)
     }
 }
@@ -72,15 +71,7 @@ const waitForRefresh = (url, method, data) => {
     })
 }
 
-const processQueue = () => {
-    const currentRequest = getRequestQueue().shift()
-    if (currentRequest) {
-        return currentRequest()
-    }
-}
-
 const refreshToken = async () => {
-    // preguntar a niquito
     const token = getToken()
     const headers = new Headers({
         Authorization: 'Bearer ' + token,
@@ -108,15 +99,19 @@ const refreshToken = async () => {
         return err
     }
 }
-export const fetchData = (url, method, data) => {
-    // const requestQueue = getRequestQueue()
-    // requestQueue.push(request)
-    // const newData = requestQueue.push(request)
-    // setRequestQueueService(newData)
-    setTimeout(() => { makeRequest(url, method, data) }, [500])
 
-    // console.log(requestQueue)
-    if (!getIsRefreshing()) {
-        return processQueue()
+export const fetchDataMulti = async (requests) => {
+    try {
+        const results = await Promise.all(
+            requests.map(({ url, method, data }) => makeRequest(url, method, data))
+        )
+        return results
+    } catch (error) {
+        console.error('Error en al menos una solicitud:', error)
+        throw error
     }
+}
+
+export default {
+    makeRequest, fetchDataMulti
 }
