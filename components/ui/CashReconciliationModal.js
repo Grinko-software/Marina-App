@@ -5,7 +5,6 @@ import credit from '@/assets/images/credit.jpeg'
 import cash from '@/assets/images/cash.jpeg'
 import PaymentOfMoney from '@/assets/images/paymentOfMoney.jpeg'
 import CashReconciliationCard from './CashReconciliationCard'
-import confetti from 'canvas-confetti'
 import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
 
@@ -13,9 +12,6 @@ export default function CashReconciliationModal ({ isOpen, onClose }) {
     const [isSelected, setIsSelected] = useState()
     const [readQR, setReadQR] = useState(false)
 
-    const handleConfetti = () => {
-        confetti()
-    }
     useEffect(() => {
         setReadQR(false)
     }, [])
@@ -100,7 +96,6 @@ export default function CashReconciliationModal ({ isOpen, onClose }) {
                                 <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                     onClick={() => {
                                         setReadQR(true)
-                                        handleConfetti()
                                     }}>
                                     ACEPTAR
                                 </Button>

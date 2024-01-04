@@ -3,14 +3,47 @@ import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
 import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
+import useScannerStore from '@/stores/scanner'
+import useAuthStore from '@/stores/user'
 
 export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
     const [paymentDetailed, setPayDetailed] = useState(false)
     const [readQR, setReadQR] = useState(false)
+    const [userAuthData, setUserAuthData] = useState(null)
+    const { enabledScanner, disabledScanner, enabledAuthMode, disabledAuthMode } = useScannerStore()
+    const { getUserDataWithCode } = useAuthStore()
+
+    const getUserData = async (qrValue) => {
+        const data = await getUserDataWithCode({ authCode: qrValue })
+        setUserAuthData(data)
+    }
+
+    useEffect(() => {
+        if (userAuthData) {
+            setReadQR(false)
+            alert(userAuthData?.fullName)
+        }
+    }, [userAuthData])
 
     useEffect(() => {
         setReadQR(false)
     }, [])
+
+    useEffect(() => {
+        if (isOpen) {
+            disabledScanner()
+        } else {
+            enabledScanner()
+        }
+    }, [isOpen])
+
+    useEffect(() => {
+        if (readQR) {
+            enabledAuthMode(getUserData)
+        } else {
+            disabledAuthMode()
+        }
+    }, [readQR])
 
     return (
         <>

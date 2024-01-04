@@ -20,6 +20,7 @@ export default function ScannerDetection () {
         scannerEnabled,
         enabledRedirect,
         authModeEnabled,
+        authModeFunction,
         msRangeScan,
         setDatetimeLastScan,
         getMillisecondsSinceLastScan
@@ -76,7 +77,8 @@ export default function ScannerDetection () {
     }
 
     const onCompleteAuthMode = (barcode) => {
-        alert(`Auth code: ${barcode}`)
+        authModeFunction(barcode)
+        console.log(`Auth code: ${barcode}`)
     }
 
     const onError = (value) => console.log(value) // Devolución de llamada después de la detección de un escaneo fallido

@@ -29,17 +29,21 @@ export default function UserAvatar () {
     }, [fullName])
     return (
         <div >
-            <Card className={`${usePathname() !== '/home' ? 'bg-transparent' : ''} `}>
+            <Card className={`${usePathname() !== '/home' ? 'bg-transparent shadow-none' : ''} `}>
                 <CardHeader className="justify-between space-x-2">
-                    <div className="flex gap-3">
-                        <Image className="w-16 h-16 p-1 rounded-full ring-4 ring-amber-600" src={imgSrc} alt="Bordered avatar"/>
+                    <div className={`${usePathname() !== '/home' ? 'flex-row-reverse' : 'flex-row'} flex gap-3`}>
+                        {usePathname() === '/home'
+                            ? <div>
+                                <Image className="w-16 h-16 p-1 rounded-full ring-4 ring-amber-600" src={imgSrc} alt="Bordered avatar"/>
+                            </div>
+                            : <></>}
                         <div className="flex flex-col items-start justify-center">
                             <h4 className="sm:text-xl  text-tiny font-semibold leading-none text-default-600">{userName?.toUpperCase() }</h4>
                             <h5 className="sm:text-xl text-tiny tracking-tight text-default-400">{admin ? 'Administrador' : 'Trabajador'}</h5>
                         </div>
+
                         <div className="flex flex-row gap-3 items items-center">
-                            <Divider orientation="vertical" className="h-12"/>
-                            {usePathname() === '/sales' ? <ScaleStatus scaleStatus = {isConnected}/> : <></>}
+                            {usePathname() === '/sales' ? <div><ScaleStatus scaleStatus = {isConnected}/></div> : <></>}
                             <div className="col-start-2 col-end-2">
                                 <PaymentOfMoney />
                             </div>
@@ -54,19 +58,30 @@ export default function UserAvatar () {
                                 <ShortcutButton />
                             </div>
                             <div className="col-start-2 col-end-2">
-                                {usePathname() !== '/home' ? <HomeButton /> : <></>}
+                                {usePathname() !== '/home'
+                                    ? <div>
+                                        <HomeButton />
+                                    </div>
+                                    : <></>}
                             </div>
+                            {usePathname() !== '/home'
+                                ? <div>
+                                    <Divider orientation="vertical" className="h-12"/>
+                                </div>
+                                : <></>}
                         </div>
                     </div>
-                    <Button
-                        className={'text-xs sm:text-lg bg-transparent text-foreground border-default-200'}
-                        color="primary"
-                        radius="full"
-                        variant={'solid'}
-                        onClick={() => signOut()}
-                    >
-                        {'Cerrar Sesion'}
-                    </Button>
+                    {usePathname() === '/home'
+                        ? <Button
+                            className={'text-xs sm:text-lg bg-transparent text-foreground border-default-200'}
+                            color="primary"
+                            radius="full"
+                            variant={'solid'}
+                            onClick={() => signOut()}
+                        >
+                            {'Cerrar Sesion'}
+                        </Button>
+                        : <></>}
                 </CardHeader>
             </Card>
         </div>

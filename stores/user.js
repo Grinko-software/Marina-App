@@ -81,6 +81,31 @@ const useAuthStore = create(
                     set({ loading: false })
                 }
             },
+            getUserDataWithCode: async ({ authCode }) => {
+                let resultData = null
+                try {
+                    await authenticateByAuthCode(
+                        {
+                            authCode
+                        }
+                    ).then(({ user, statusCode, statusText, error, message }) => {
+                        if (user.token) {
+                            const { name, lastName, userType, idUser } = user
+                            resultData = {
+                                name,
+                                lastName,
+                                fullName: name + ' ' + lastName,
+                                isAdmin: userType === 'admin',
+                                id: idUser
+                            }
+                        }
+                    })
+                } catch (error) {
+                    console.error(error)
+                }
+
+                return resultData
+            },
             signOut: () => {
                 set({
                     name: null,
