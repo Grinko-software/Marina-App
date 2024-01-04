@@ -9,14 +9,14 @@ export const AUTH_CODE_API_URL = BASE_AUTH_API_URL + '/auth'
 export const AUTH_RENEW = BASE_AUTH_API_URL + '/auth/renew'
 
 // MARKET
-export const CREATE_PRODUCT_API_URL = BASE_MARKET_API_URL + '/product/create'
-export const CREATE_OFFER_API_URL = BASE_MARKET_API_URL + '/product/create/offer'
+export const CREATE_PRODUCT_API_URL = '/product/create'
+export const CREATE_OFFER_API_URL = '/product/create/offer'
 
 // Get product information
 export const PRODUCT_API_URL = '/product'
 // Get categories
 export const CATEGORIES_API_URL = '/product/categories'
-export const CREATE_CATEGORIES_API_URL = BASE_MARKET_API_URL + '/product/create/category'
+export const CREATE_CATEGORIES_API_URL = '/product/create/category'
 
 // Get type of stock
 export const TYPE_STOCK_API_URL = '/product/type-stock'
@@ -29,16 +29,16 @@ export const TYPE_VOUCHER_API_URL = '/voucher'
 export const PRODUCT_OFFER = '/product/offer'
 
 // Creat list
-export const SALE_TICKET_CREATE = BASE_MARKET_API_URL + '/sale-ticket/create'
+export const SALE_TICKET_CREATE = '/sale-ticket/create'
 // DTEMITE ENDPOINTS
-export const GET_DOCUMENT_HAULMER = BASE_MARKET_API_URL + '/dte'
+export const GET_DOCUMENT_HAULMER = '/dte'
 // Get customers
 export const CUSTOMER_API_URL = '/customer'
 export const CREATE_CUSTOMER = '/customer/create'
 // Create  Sale Machine Tuu
-export const CREATE_PAYMENT_POSMACHINE = BASE_MARKET_API_URL + '/machine/create-sale'
+export const CREATE_PAYMENT_POSMACHINE = '/machine/create-sale'
 // Get State Sale Machine Tuu
-export const GET_STATE_SALE_POSMACHINE = BASE_MARKET_API_URL + '/machine/payment-request/:id'
+export const GET_STATE_SALE_POSMACHINE = '/machine/payment-request/:id'
 // GET CONFIG
 export const GET_POST_MACHINE = '/settings/post-machine'
 

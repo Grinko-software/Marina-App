@@ -1,7 +1,6 @@
-import { getToken } from '@/services/user'
 import { CREATE_OFFER_API_URL } from '@/settings/constants'
 import { create } from 'zustand'
-
+import { getData, POST } from '@/services/http'
 const useOfferFormStore = create((set) => ({
     data: {
         product_id: null,
@@ -25,34 +24,19 @@ const useOfferFormStore = create((set) => ({
         }
 
         try {
-            await fetch(CREATE_OFFER_API_URL,
+            getData(CREATE_OFFER_API_URL, POST,
                 {
-                    method: 'POST',
-                    cache: 'no-store',
-                    body: JSON.stringify({
-                        product_id: data.product_id,
-                        quantity: data.quantity,
-                        unit_price: data.unit_price
-                    }),
-                    headers: { Authorization: 'Bearer ' + getToken() }
-                })
-                .then(response => {
-                    // const statusCode = response?.status
-                    // const statusText = response?.statusText
-                    try {
-                        return response.json()
-                    } catch {
-                        set({ error: response?.statusText })
-                        return undefined
-                    }
+                    product_id: data.product_id,
+                    quantity: data.quantity,
+                    unit_price: data.unit_price
                 }).then(response => {
-                    set({ loading: false, complete: true })
-                    if (response?.code === 200) {
-                        notify('🔥 Oferta creada con exito!')
-                    } else {
-                        notify(' La oferta no fue creada intenta otra vez!')
-                    }
-                })
+                set({ loading: false, complete: true })
+                if (response?.code === 200) {
+                    notify('🔥 Oferta creada con exito!')
+                } else {
+                    notify(' La oferta no fue creada intenta otra vez!')
+                }
+            })
         } catch (err) {
             set({ loading: false, error: err, complete: true })
         }

@@ -4,6 +4,7 @@
 import { create } from 'zustand'
 import { GET_DOCUMENT_HAULMER, SALE_TICKET_CREATE, CREATE_PAYMENT_POSMACHINE, GET_STATE_SALE_POSMACHINE } from '@/settings/constants'
 import { fetchPost } from '@/services/sales'
+import { getData, GET, POST } from '@/services/http'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
@@ -287,15 +288,14 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
-                    fetchPost(GET_DOCUMENT_HAULMER, modelBody, false).then(resultDtemite => {
+                    getData(GET_DOCUMENT_HAULMER, POST, modelBody).then(resultDtemite => {
                         try {
-                            fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                            getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                 setPageTarget(false)
                                 // setPaymentTarget(sales, saleId, null)
                                 set({ loadingSale: false })
                                 if (result?.code === 200) {
-                                    console.log(result)
-                                    const stamp = resultDtemite.data.TIMBRE
+                                    const stamp = resultDtemite?.data?.TIMBRE
                                     generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
                                     // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                     notify('✅ Pago con éxito')
@@ -360,7 +360,7 @@ const useSalesStore = create(
                                 }
                             }
                         setStateMachine('Enviando')
-                        fetchPost(CREATE_PAYMENT_POSMACHINE, bodyPosMachine).then(result => {
+                        getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(result => {
                             setPageTarget(null)
                             // setPaymentTarget(sales, saleId, null)
                             // set({ loadingSale: false })
@@ -370,7 +370,8 @@ const useSalesStore = create(
                                 const idSale = result?.data?.paymentRequestId
                                 getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
                                     // console.log('Estado confirmado:', data)
-                                    fetchPost(SALE_TICKET_CREATE, body).then(result => {
+
+                                    getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                         setPageTarget(null)
                                         set({ loadingSale: false })
                                         if (result?.code === 200) {
@@ -447,7 +448,7 @@ const useSalesStore = create(
                     setStateMachine(null)
                 }
             } else {
-                fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                getData(SALE_TICKET_CREATE, POST, body).then(result => {
                     setPageTarget(null)
                     set({ loadingSale: false })
                     if (result?.code === 200) {

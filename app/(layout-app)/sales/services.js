@@ -1,35 +1,20 @@
-import { getToken } from '@/services/user'
-
+import { getData, GET } from '@/services/http'
 export const getStateSaleMachine = (url) => {
     return new Promise((resolve, reject) => {
         let limitTime = 0
         const intervalId = setInterval(() => {
             limitTime += 1000 // Incrementa el tiempo transcurrido en cada consulta
             // Realiza la solicitud al endpoint
-            fetch(url,
-                {
-                    method: 'get',
-                    headers: new Headers({
-                        Authorization: 'Bearer ' + getToken(),
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    })
-                })
-                .then(response => {
-                    if (response?.status !== 200) {
-                        throw new Error(`Error en la solicitud: ${response.status}`)
-                    }
-                    return response.json()
-                })
-                .then(data => {
-                    // Comprueba si el estado es confirmado
-                    if (data?.data?.paymentRequest?.status === 'Completed') {
-                        clearInterval(intervalId)
-                        resolve(data)
-                    } else if (data?.data?.paymentRequest?.status === 'Canceled') {
-                        clearInterval(intervalId)
-                        reject(new Error('Venta cancelada desde la máquina'))
-                    }
-                })
+            getData(url, GET).then(data => {
+                // Comprueba si el estado es confirmado
+                if (data?.data?.paymentRequest?.status === 'Completed') {
+                    clearInterval(intervalId)
+                    resolve(data)
+                } else if (data?.data?.paymentRequest?.status === 'Canceled') {
+                    clearInterval(intervalId)
+                    reject(new Error('Venta cancelada desde la máquina'))
+                }
+            })
                 .catch(error => {
                     clearInterval(intervalId)
                     reject(error)

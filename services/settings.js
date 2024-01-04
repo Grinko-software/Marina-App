@@ -2,6 +2,6 @@
 import useSettingsStore from '@/stores/settings'
 /* GET GENERAL */
 export const getDeviceTuu = () => {
-    const { SelectedPostMachine } = useSettingsStore.getState()
-    return SelectedPostMachine?.serial_number
+    const { selectedPostMachine } = useSettingsStore.getState()
+    return selectedPostMachine?.serial_number
 }

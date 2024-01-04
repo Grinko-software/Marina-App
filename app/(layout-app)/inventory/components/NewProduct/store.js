@@ -1,7 +1,6 @@
-import { getToken } from '@/services/user'
 import { CREATE_PRODUCT_API_URL } from '@/settings/constants'
 import { create } from 'zustand'
-
+import { getData, POST } from '@/services/http'
 const useProductFormStore = create((set) => ({
     data: {
         name: null,
@@ -32,43 +31,27 @@ const useProductFormStore = create((set) => ({
         }
 
         try {
-            await fetch(CREATE_PRODUCT_API_URL,
-                {
-                    method: 'POST',
-                    cache: 'no-store',
-                    body: JSON.stringify({
-                        name: data.name?.toString(),
-                        cost_price: Math.trunc(data.cost_price),
-                        net_price: Math.trunc(data.net_price),
-                        sale_price: Math.trunc(data.sale_price),
-                        code: data.barcode?.toString(),
-                        image: data.image,
-                        product_categories_id: data.category_id,
-                        stock_types_id: data.stock_type_id,
-                        product_stock: {
-                            stock: data.stock,
-                            stock_min: data.stock_min
-                        }
-                    }),
-                    headers: { Authorization: 'Bearer ' + getToken() }
-                })
-                .then(response => {
-                    // const statusCode = response?.status
-                    // const statusText = response?.statusText
-                    try {
-                        return response.json()
-                    } catch {
-                        set({ error: response?.statusText })
-                        return undefined
-                    }
-                }).then(response => {
-                    set({ loading: false, complete: true })
-                    if (response?.code === 200) {
-                        notify('✅ Producto creado con exito!')
-                    } else {
-                        notify('❌ El producto no fue creado con exito, intenta otra vez!')
-                    }
-                })
+            getData(CREATE_PRODUCT_API_URL, POST, {
+                name: data.name?.toString(),
+                cost_price: Math.trunc(data.cost_price),
+                net_price: Math.trunc(data.net_price),
+                sale_price: Math.trunc(data.sale_price),
+                code: data.barcode?.toString(),
+                image: data.image,
+                product_categories_id: data.category_id,
+                stock_types_id: data.stock_type_id,
+                product_stock: {
+                    stock: data.stock,
+                    stock_min: data.stock_min
+                }
+            }).then(response => {
+                set({ loading: false, complete: true })
+                if (response?.code === 200) {
+                    notify('✅ Producto creado con exito!')
+                } else {
+                    notify('❌ El producto no fue creado con exito, intenta otra vez!')
+                }
+            })
         } catch (err) {
             set({ loading: false, error: err, complete: true })
         }
