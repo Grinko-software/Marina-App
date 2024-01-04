@@ -7,14 +7,19 @@ import imgSrc from '@/app/icon.png'
 import Image from 'next/image'
 import ShortcutButton from './ShortcutButton'
 import { PaymentOfMoney } from './PaymentOfMoney'
-import { CloseBox } from './CloseBox'
+import { usePathname } from 'next/navigation'
+import BoxStatus from './closeBoxStatus'
+import ScaleStatus from '@/components/ui/ScaleStatus'
+import hubScale from '@/app/(layout-app)/sales/components/store/connectionScale'
+import { HomeButton } from './HomeButton'
+
 // import ShortcutButton from './ShortcutButton'
 
 export default function UserAvatar () {
     const [userName, setUserName] = useState(null)
     const [admin, setAdmin] = useState(false)
     const { fullName, isAdmin } = useAuthStore(({ fullName, isAdmin }) => ({ fullName, isAdmin }))
-
+    const { isConnected } = hubScale()
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
     useEffect(() => {
         if (fullName) {
@@ -23,8 +28,8 @@ export default function UserAvatar () {
         }
     }, [fullName])
     return (
-        <div>
-            <Card >
+        <div >
+            <Card className={`${usePathname() !== '/home' ? 'bg-transparent' : ''} `}>
                 <CardHeader className="justify-between space-x-2">
                     <div className="flex gap-3">
                         <Image className="w-16 h-16 p-1 rounded-full ring-4 ring-amber-600" src={imgSrc} alt="Bordered avatar"/>
@@ -34,11 +39,12 @@ export default function UserAvatar () {
                         </div>
                         <div className="flex flex-row gap-3 items items-center">
                             <Divider orientation="vertical" className="h-12"/>
+                            {usePathname() === '/sales' ? <ScaleStatus scaleStatus = {isConnected}/> : <></>}
                             <div className="col-start-2 col-end-2">
                                 <PaymentOfMoney />
                             </div>
                             <div className="col-start-2 col-end-2">
-                                <CloseBox />
+                                <BoxStatus />
                             </div>
                             <Divider orientation="vertical" className="h-12"/>
                             <div className="col-start-1 col-end-2">
@@ -46,6 +52,9 @@ export default function UserAvatar () {
                             </div>
                             <div className="col-start-2 col-end-2">
                                 <ShortcutButton />
+                            </div>
+                            <div className="col-start-2 col-end-2">
+                                {usePathname() !== '/home' ? <HomeButton /> : <></>}
                             </div>
                         </div>
                     </div>

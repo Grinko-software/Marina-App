@@ -111,7 +111,7 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
                             </Button>
                         </section>
                     </ModalBody>
-                    }
+                }
 
             </ModalContent>
         </Modal>

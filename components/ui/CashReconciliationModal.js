@@ -1,12 +1,24 @@
 'use client'
-import React from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
-import { IoPersonSharp } from 'react-icons/io5'
-import credit from '@/assets/images/credit.jpg'
+import React, { useState, useEffect } from 'react'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Checkbox } from '@nextui-org/react'
+import credit from '@/assets/images/credit.jpeg'
 import cash from '@/assets/images/cash.jpeg'
+import PaymentOfMoney from '@/assets/images/paymentOfMoney.jpeg'
 import CashReconciliationCard from './CashReconciliationCard'
+import confetti from 'canvas-confetti'
+import QR from '@/assets/gifs/QR.json'
+import Lottie from 'lottie-react'
 
 export default function CashReconciliationModal ({ isOpen, onClose }) {
+    const [isSelected, setIsSelected] = useState()
+    const [readQR, setReadQR] = useState(false)
+
+    const handleConfetti = () => {
+        confetti()
+    }
+    useEffect(() => {
+        setReadQR(false)
+    }, [])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
@@ -17,55 +29,86 @@ export default function CashReconciliationModal ({ isOpen, onClose }) {
                         <>
                             <ModalHeader className="flex flex-col gap-1 font-extrabold">CIERRE DE CAJA</ModalHeader>
                             <ModalBody>
-                                <div className=" space-y-16">
-                                    <div className='flex flex-row w-full space-x-4'>
-                                        <CashReconciliationCard
-                                            title={'Ventas en Debito/Credito'}
-                                            total={'$900.000'}
-                                            bgTitle={'bg-black/40'}
-                                            img={credit}
-                                            detail={'Total de ingresos en tarjetas de debito/credito del dia'}
+                                {!readQR
+                                    ? <div className=" space-y-12">
+                                        <div className='flex flex-row w-full space-x-4'>
+                                            <CashReconciliationCard
+                                                title={'Ventas en Debito/Credito'}
+                                                total={'$900.000'}
+                                                bgTitle={'bg-black/40'}
+                                                img={credit}
+                                                detail={'Total de ingresos en tarjetas de debito/credito del dia'}
+                                            />
+                                            <CashReconciliationCard
+                                                title={'Ventas en Efectivo'}
+                                                total={'$400.000'}
+                                                bgTitle={'bg-green-500/80'}
+                                                img={cash}
+                                                detail={'Total de ingresos en efectivo del dia'}
+                                            />
+                                            <CashReconciliationCard
+                                                title={'Egresos/pagos'}
+                                                total={'$75.000'}
+                                                bgTitle={'bg-green-500/20'}
+                                                img={PaymentOfMoney}
+                                                detail={'Total de egresos de caja diarios (pagos)'}
+                                            />
+                                        </div>
+                                        <Input
+                                            size='lg'
+                                            isRequired={true}
+                                            type="number"
+                                            label="Cantidad de dinero en caja"
+                                            placeholder="0"
+                                            labelPlacement="outside"
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className="text-default-400 text-small">$</span>
+                                                </div>
+                                            }
                                         />
-                                        <CashReconciliationCard
-                                            title={'Ventas en Efectivo'}
-                                            total={'$900.000'}
-                                            bgTitle={'bg-green-600/40'}
-                                            img={cash}
-                                            detail={'Total de ingresos en efectivo del dia'}
+                                        <Input
+                                            size='lg'
+                                            isDisabled
+                                            isRequired={false}
+                                            type="number"
+                                            label="Saldo pendiente"
+                                            placeholder="0"
+                                            labelPlacement="outside"
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className="text-default-400 text-small">$</span>
+                                                </div>
+                                            }
                                         />
-                                        <CashReconciliationCard
-                                            title={'Egresos/pagos'}
-                                            total={'$900.000'}
-                                            bgTitle={'bg-green-600/40'}
-                                            img={cash}
-                                            detail={'Total de egresos de caja diarios (pagos)'}
-                                        />
+                                        <div className="flex flex-col">
+                                            <Checkbox
+                                                isSelected={isSelected}
+                                                onValueChange={setIsSelected}>
+                                                Aceptar
+                                            </Checkbox>
+                                            <p className="text-default-500 italic">
+                                            Al hacer clic en Aceptar, confirmo que revisé y aprobé los cálculos de cierre de caja.
+                                            Esta acción representa mi conformidad con la precisión de las transacciones y la cantidad de efectivo en la caja.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <Input
-                                        size='lg'
-                                        type="text"
-                                        label="Detalle"
-                                        labelPlacement="outside"
-                                        placeholder="Ingrese detalles del retiro"
-                                    />
-                                    <Input
-                                        size='lg'
-                                        label="Usuario"
-                                        placeholder="Escanée su llave"
-                                        labelPlacement="outside"
-                                        isRequired={true}
-                                        startContent={
-                                            <IoPersonSharp className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-                                        }
-                                    />
-                                </div>
+                                    : <Lottie animationData={QR} loop={true} />
+                                }
                             </ModalBody>
-                            <ModalFooter>
-                                <Button className ="dark" onClick={onClose}>
-                                    Aceptar
+                            <ModalFooter className='justify-center'>
+                                <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                    onClick={() => {
+                                        setReadQR(true)
+                                        handleConfetti()
+                                    }}>
+                                    ACEPTAR
                                 </Button>
-                                <Button color="danger" variant="light" onClick={onClose}>
-                                    Cerrar
+                                <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                    setReadQR(false)
+                                    onClose()
+                                }}>
+                                    CANCELAR
                                 </Button>
                             </ModalFooter>
                         </>
