@@ -54,7 +54,10 @@ export default function CashReconciliationModal ({ isOpen, onClose }) {
                                             size='lg'
                                             isRequired={true}
                                             type="number"
-                                            label="Cantidad de dinero en caja"
+
+                                            label={
+                                                <span className=" uppercase font-bold text-lg text-black dark:text-white ">Cantidad de dinero en caja</span>
+                                            }
                                             placeholder="0"
                                             labelPlacement="outside"
                                             startContent={
@@ -68,7 +71,9 @@ export default function CashReconciliationModal ({ isOpen, onClose }) {
                                             isDisabled
                                             isRequired={false}
                                             type="number"
-                                            label="Saldo pendiente"
+                                            label={
+                                                <span className=" uppercase font-bold text-lg text-black dark:text-white ">Saldo pendiente</span>
+                                            }
                                             placeholder="0"
                                             labelPlacement="outside"
                                             startContent={
@@ -80,6 +85,7 @@ export default function CashReconciliationModal ({ isOpen, onClose }) {
                                         <div className="flex flex-col">
                                             <Checkbox
                                                 isSelected={isSelected}
+                                                color="danger"
                                                 onValueChange={setIsSelected}>
                                                 Aceptar
                                             </Checkbox>

@@ -82,14 +82,14 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
                                             isRequired={true}
                                             type="number"
                                             label={
-                                                <span className="font-bold text-lg text-black ">CANTIDAD</span>
+                                                <span className="font-bold text-lg text-black dark:text-white ">CANTIDAD</span>
                                             }
                                             placeholder="0"
                                             labelPlacement="outside"
                                             value={paymentDetailed}
                                             startContent={
                                                 <div className="pointer-events-none flex items-center">
-                                                    <span className="text-default-400 text-small">$</span>
+                                                    <span className="text-default-400 text-small dark:text-white">$</span>
                                                 </div>
                                             }
                                         />
@@ -97,7 +97,7 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
                                             size='lg'
                                             type="text"
                                             label={
-                                                <span className="font-bold text-lg text-black ">DETALLE</span>
+                                                <span className="font-bold text-lg text-black dark:text-white ">DETALLE</span>
                                             }
                                             labelPlacement="outside"
                                             placeholder="Ingrese detalles del retiro"

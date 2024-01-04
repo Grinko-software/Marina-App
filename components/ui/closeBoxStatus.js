@@ -9,24 +9,18 @@ export default function BoxStatus ({ scaleStatus }) {
     const [isOpenInfo, setIsOpenInfo] = useState(null)
     const [color, setColor] = useState('danger')
     const [box, setBox] = useState(null)
+    const [message, setMessage] = useState(false)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const {
         SelectedCashRegister
     } = useSettingsStore()
     const DEFAULT_SELECTED = { ID: 'no-select', label: 'NINGUNA' }
-    useEffect(() => {
-        scaleStatus = true
-        if (SelectedCashRegister?.ID === 1) {
-            setBox('1')
-        }
 
-        if (SelectedCashRegister?.ID === 2) {
-            setBox('2')
-        }
+    useEffect(() => {
+        setMessage(true)
     }, [])
 
     useEffect(() => {
-        scaleStatus = true
         if (SelectedCashRegister?.ID === 1) {
             setBox('1')
         }
@@ -37,13 +31,12 @@ export default function BoxStatus ({ scaleStatus }) {
     }, [SelectedCashRegister])
 
     useEffect(() => {
-        if (isOpen && scaleStatus) {
+        if (message && box) {
             setTimeout(
                 () => setIsOpenInfo(false), 5000
             )
         }
-        console.log(SelectedCashRegister)
-    }, [isOpen, scaleStatus])
+    }, [message, box])
 
     useEffect(() => {
         setTimeout(
@@ -58,15 +51,15 @@ export default function BoxStatus ({ scaleStatus }) {
     }, [box])
 
     const Message = ({ enabled }) => {
-        return SelectedCashRegister !== DEFAULT_SELECTED
-            ? null
-            : <div className="text-small font-bold">Se debe seleccionar una caja para continuar</div>
+        return SelectedCashRegister?.ID === DEFAULT_SELECTED?.ID
+            ? <div className="text-small font-bold">Se debe seleccionar una caja en ajustes para continuar</div>
+            : null
     }
 
     return (
         <div className="flex items-center gap-4 animation-fade-in" onClick={() => setIsOpenInfo(!isOpenInfo)}>
             <div className="flex items-center gap-3">
-                <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={isOpen}>
+                <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={message}>
                     <PopoverTrigger>
                         <Badge color={color} content={box} size = "lg" shape="circle" className="text-white" >
                             <button
@@ -81,10 +74,11 @@ export default function BoxStatus ({ scaleStatus }) {
                             </button>
                         </Badge>
                     </PopoverTrigger>
-                    <PopoverContent className='mt-1' color={color}>
-                        <Message enabled={box}/>
-                    </PopoverContent>
-
+                    {SelectedCashRegister?.ID === DEFAULT_SELECTED?.ID
+                        ? <PopoverContent className='mt-1' color={color}>
+                            <Message enabled={box}/>
+                        </PopoverContent>
+                        : <></>}
                 </Popover>
             </div>
         </div>

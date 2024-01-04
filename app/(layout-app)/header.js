@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { isMobileDevice } from '@/utils/agent'
-import MobileNavBar from '@/components/ui/mobileNavBar'
+import MobileNavBar from '@/components/ui/MobileNavBar'
 import UserAvatar from '@/components/ui/UserAvatar'
 
 export function Header () {
