@@ -8,11 +8,22 @@ const useInventoryStore = create(
             listInventory: [],
             listCategories: [],
             listStockTypes: [],
-            setListInventory: () => set((state) => ({ listInventory: state })),
             loading: false,
-            loadingCategories: false,
-            loadingStock: false,
             error: null,
+            setListInventory: () => set((state) => ({ listInventory: state })),
+            handleRequest: (getMultiDataRequest, setResponse, reMapData) => {
+                set({ loading: true })
+                try {
+                    getMultiDataRequest().then((results) => {
+                        set({ loading: false })
+                        const dataModel = reMapData(results)
+                        setResponse(dataModel)
+                    }
+                    )
+                } catch (error) {
+                    set({ error, loading: false })
+                }
+            },
             getListInventory: (result) => {
                 set({ loading: true, error: null })
                 if (result?.code === 200) {

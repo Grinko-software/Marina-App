@@ -40,9 +40,9 @@ export default function Card () {
 
     const listEmpty = new Array(20).fill(null)
 
-    const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
-        ({ listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }) => (
-            { listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }))
+    const { handleRequest, listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loading } = useInventoryStore(
+        ({ handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory, loading }) => (
+            { handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory, loading }))
     const onChangeValue = (event) => {
         setSearchInput(event.target.value)
     }
@@ -145,22 +145,14 @@ export default function Card () {
     }, [response])
     /* Handle multiple request */
     useEffect(() => {
-        try {
-            getMultiDataRequest().then((results) => {
-                const dataModel = reMapData(results)
-                setResponse(dataModel)
-            }
-            )
-        } catch (error) {
-            console.error('Error en al menos una solicitud:', error)
-        }
+        handleRequest(getMultiDataRequest, setResponse, reMapData)
     }, [])
     return (
         <section className='h-full flex flex-col'>
             <section className="flex items-center justify-between  z-10">
                 <section className='justify-center flex flex-row rounded-t-[12px] bg-secondary-50 dark:bg-secondary-450 pl-3 pr-3 py-1 items-center'>
                     <div className='h-[3rem] overflow-x-auto rounded-r-2xl overflow-hidden flex items-center'>
-                        {loadingCategories && loading
+                        {loading
                             ? <section className="w-full min-w-[10rem] flex">
                                 <Skeleton className="w-full h-8 rounded-lg"></Skeleton>
                             </section>
@@ -173,13 +165,13 @@ export default function Card () {
                         }
                     </div>
                     <Button
-                        isDisabled={loadingCategories || loading}
-                        isLoading={loadingCategories || loading}
+                        isDisabled={loading}
+                        isLoading={loading}
                         variant={sectionSearch ? 'solid' : 'ghost'} color={sectionSearch ? 'warning' : ''} isIconOnly onClick={() => {
                             setSectionSearch(!sectionSearch)
                         }}>
                         {
-                            loadingCategories || loading
+                            loading
                                 ? null
                                 : <MagnifyingGlassIcon className='w-5 h-5'/>
                         }
@@ -194,7 +186,7 @@ export default function Card () {
                 </div>
             </section>
             <section className="flex flex-1 p-[1rem] w-auto shadow-md hover:shadow-lg  rounded-tl-[0px]  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]">
-                { loadingCategories && loading
+                { loading
                     ? <ScrollShadow className="w-full pb-4">
                         <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1">{listEmpty?.map((item, key) => (<LoadingCard key={key}/>))}</div> </ScrollShadow>
                     : sectionSearch
