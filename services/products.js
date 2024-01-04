@@ -1,140 +1,6 @@
 /* eslint-disable camelcase */
-import { PRODUCT_API_URL, CATEGORIES_API_URL, TYPE_STOCK_API_URL, PRODUCT_OFFER } from '@/settings/constants'
-import { getToken } from '@/services/user'
-/* GET GENERAL */
-export const fetchGet = async ({ url }) => {
-    try {
-        return await fetch(url,
-            {
-                method: 'get',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
-            try {
-                if (response?.status === 204) {
-                    return response
-                }
-                return response.json()
-            } catch {
-                return null
-            }
-        })
-    } catch {
-        return null
-    }
-}
-export const fetchGetproducts = async () => {
-    try {
-        return await fetch(PRODUCT_API_URL,
-            {
-                method: 'get',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
-            try {
-                if (response?.status === 204) {
-                    return response
-                }
-                return response.json()
-            } catch {
-                return null
-            }
-        })
-    } catch {
-        return null
-    }
-}
-/*  next: { revalidate: 60 }, cache: 'no-store' }) */
-export const fetchGetCategories = async () => {
-    try {
-        return await fetch(CATEGORIES_API_URL,
-            {
-                method: 'get',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
-            try {
-                return response.json()
-            } catch {
-                return null
-            }
-        })
-    } catch {
-        return null
-    }
-}
-
-export const fetchGetOffers = async () => {
-    try {
-        return await fetch(PRODUCT_OFFER,
-            {
-                method: 'get',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
-            try {
-                if (response.status === 200) {
-                    return response.json()
-                } else {
-                    return null
-                }
-            } catch {
-                return null
-            }
-        })
-    } catch {
-        return null
-    }
-}
-export const fetchGetOfferById = async (id) => {
-    try {
-        return await fetch(PRODUCT_OFFER + '/' + id,
-            {
-                method: 'get',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
-            try {
-                return response.json()
-            } catch {
-                return null
-            }
-        })
-    } catch {
-        return null
-    }
-}
-
-export const fetchGetTypeStocks = async () => {
-    try {
-        return await fetch(TYPE_STOCK_API_URL,
-            {
-                method: 'get',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
-            try {
-                return response.json()
-            } catch {
-                return null
-            }
-        })
-    } catch {
-        return null
-    }
-}
+import { PRODUCT_API_URL } from '@/settings/constants'
+import { DELETE, getData, PUT } from './http'
 
 export const updateProduct = async (
     {
@@ -166,23 +32,18 @@ export const updateProduct = async (
                 stock: stock || '',
                 stock_min: stock_min || ''
             })
-        return await fetch(`${PRODUCT_API_URL}?${queryParams}`,
-            {
-                method: 'PUT',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken()
-                })
-            }).then(response => {
-            try {
-                if (response?.status === 200) {
-                    notify('✅ Producto actualizado con exito!')
-                } else {
-                    notify('❌ El producto no se actualizo correctamente, intenta otra vez!')
+        return getData(`${PRODUCT_API_URL}?${queryParams}`, PUT)
+            .then(response => {
+                try {
+                    if (response?.code === 200) {
+                        notify('✅ Producto actualizado con exito!')
+                    } else {
+                        notify('❌ El producto no se actualizo correctamente, intenta otra vez!')
+                    }
+                } catch {
+                    return null
                 }
-            } catch {
-                return null
-            }
-        })
+            })
     } catch {
         return null
     }
@@ -191,15 +52,9 @@ export const updateProduct = async (
 export const updateProductStock = async ({ stock_min, stock, notify }) => {
     try {
         const queryParams = new URLSearchParams({ stock, stock_min })
-        return await fetch(`${PRODUCT_API_URL}/stock?${queryParams}`,
-            {
-                method: 'PUT',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken()
-                })
-            }).then(response => {
+        return getData(`${PRODUCT_API_URL}/stock?${queryParams}`, PUT).then(response => {
             try {
-                if (response?.status === 200) {
+                if (response?.code === 200) {
                     notify('✅ Stock de producto actualizado con exito!')
                 } else {
                     notify('❌ El stock de producto no se actualizo correctamente, intenta más tarde.')
@@ -216,17 +71,9 @@ export const updateProductStock = async ({ stock_min, stock, notify }) => {
 export const deleteProduct = async ({ id, notify }) => {
     try {
         const queryParams = new URLSearchParams({ id })
-        return await fetch(`${PRODUCT_API_URL}?${queryParams}`,
-            {
-                method: 'DELETE',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken()
-                }),
-                cache: 'no-store',
-                mode: 'cors'
-            }).then(response => {
+        return getData(`${PRODUCT_API_URL}?${queryParams}`, DELETE).then(response => {
             try {
-                if (response?.status === 200) {
+                if (response?.code === 200) {
                     notify('🗑️ Producto eliminado con exito!')
                 } else {
                     notify('❌ El producto no se elimino correctamente, intenta más tarde')

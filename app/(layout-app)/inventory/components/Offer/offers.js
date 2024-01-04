@@ -120,7 +120,7 @@ export default function Offers () {
     const [isMobile, setIsMobile] = useState(true)
     const { data, setFormData, requestCreateOffer, loading, error, setError, complete, hasRequeredValues, clearStore } = useOfferFormStore()
     const { listInventory } = useInventoryStore()
-    const { offers, getOffers, loadingOffers } = useOffersStore()
+    const { offers, handleOffers } = useOffersStore()
 
     useEffect(() => {
         if (navigator) {
@@ -131,7 +131,7 @@ export default function Offers () {
     useEffect(() => {
         if (isOpen) {
             useSalesStore.getState()?.disabledRedirectSales()
-            getOffers()
+            handleOffers()
         } else {
             useSalesStore.getState()?.enabledRedirectSales()
             setFilteredList([])
@@ -183,11 +183,14 @@ export default function Offers () {
 
     useEffect(() => {
         if (complete && !error) {
-            getOffers()
+            handleOffers()
             clearStore()
             setSectionCreateOffer(false)
         }
     }, [complete, error])
+    useEffect(() => {
+        console.debug(sectionCreateOffer)
+    }, [sectionCreateOffer])
 
     return (
         <section>
@@ -238,7 +241,7 @@ export default function Offers () {
                                         {(filteredList)?.length
                                             ? filteredList.map((item) => {
                                                 // {id,quantity,unitPrice,productId }
-                                                return (<div key={item.id}><OffertCard item={item} deleteAction={getOffers}/></div>)
+                                                return (<div key={item.id}><OffertCard item={item} deleteAction={handleOffers}/></div>)
                                             })
                                             : <div>No se ha encontrado la oferta</div>}
 
@@ -247,7 +250,7 @@ export default function Offers () {
                                         {(listOffersWithProducts)?.length
                                             ? listOffersWithProducts.map((item) => {
                                             // {id,quantity,unitPrice,productId }
-                                                return (<div key={item.id}><OffertCard item={item} deleteAction={getOffers}/></div>)
+                                                return (<div key={item.id}><OffertCard item={item} deleteAction={handleOffers}/></div>)
                                             })
                                             : <div>No hay ofertas</div>}
                                     </section>
@@ -260,7 +263,9 @@ export default function Offers () {
                                 </div>
                                 : null}
                             <Button className =" bg-green-500 text-primary-50"
-                                onClick={() => { setSectionCreateOffer(true) }}>
+                                onClick={() => {
+                                    setSectionCreateOffer(true)
+                                }}>
                                 {'Crear oferta'}
                             </Button>
                             <Button color="danger" variant="flat"

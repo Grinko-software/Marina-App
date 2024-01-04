@@ -14,14 +14,21 @@ import Offers from './components/Offer/offers'
 import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
-import useHttpStore from '@/stores/http'
 import { getMultiDataRequest, reMapData } from './services'
-// import toast from 'react-hot-toast'
+import useStore from './store/store'
 
 const LIMIT_PRODUCTS_VIEW = 50
 // const notify = (text) => toast.success(text)
 
 export default function Card () {
+    const {
+        getData,
+        error,
+        loading,
+        setLoading,
+        data,
+        triggerAction
+    } = useStore((state) => state)
     const [response, setResponse] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
@@ -40,9 +47,9 @@ export default function Card () {
 
     const listEmpty = new Array(20).fill(null)
 
-    const { handleRequest, listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loading } = useInventoryStore(
-        ({ handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory, loading }) => (
-            { handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory, loading }))
+    const { handleRequest, listCategories, listInventory: list, getCategories, getStockTypes, getListInventory } = useInventoryStore(
+        ({ handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory }) => (
+            { handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory }))
     const onChangeValue = (event) => {
         setSearchInput(event.target.value)
     }
@@ -137,15 +144,18 @@ export default function Card () {
     }, [sectionSearch])
     /* set States from store inventory */
     useEffect(() => {
-        if (response) {
-            getCategories(response?.categories)
-            getStockTypes(response?.stockTypes)
-            getListInventory(response?.inventory)
+        if (data) {
+            getCategories(data?.categories)
+            getStockTypes(data?.stockTypes)
+            getListInventory(data?.inventory)
         }
-    }, [response])
+    }, [data])
     /* Handle multiple request */
     useEffect(() => {
-        handleRequest(getMultiDataRequest, setResponse, reMapData)
+        getData()
+        return () => {
+            setLoading(false)
+        }
     }, [])
     return (
         <section className='h-full flex flex-col'>
@@ -181,7 +191,7 @@ export default function Card () {
                 <div className="flex space-x-2">
                     {/* <ScannerDetection/> */}
                     <Offers/>
-                    <CreateProduct />
+                    <CreateProduct triggerAction={triggerAction}/>
                     <CreateCategory />
                 </div>
             </section>

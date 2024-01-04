@@ -69,7 +69,8 @@ export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, .
     )
 }
 
-export default function CreateProduct () {
+export default function CreateProduct (props) {
+    const { triggerAction } = props
     const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [scanProduct, setScanProduct] = useState(false)
@@ -81,7 +82,7 @@ export default function CreateProduct () {
     const [isBarcodeGenerated, setIsBarcodeGenerated] = useState(false)
 
     const { data, setFormData, requestCreateProduct, loadingStock, loadingCategories, error, setError, complete, hasRequeredValues, clearStore } = useProductFormStore()
-    const { listCategories, listStockTypes, getCategories, getStockTypes, getListInventory } = useInventoryStore()
+    const { listCategories, listStockTypes } = useInventoryStore()
 
     useEffect(() => {
         if (navigator) {
@@ -92,9 +93,7 @@ export default function CreateProduct () {
 
     useEffect(() => {
         if (isOpen) {
-            getStockTypes()
-            getCategories()
-            getListInventory()
+            triggerAction()
             useSalesStore.getState()?.disabledRedirectSales()
         } else {
             useSalesStore.getState()?.enabledRedirectSales()
@@ -283,7 +282,7 @@ export default function CreateProduct () {
                             </div>
                             : null}
                         <Button className =" bg-green-500 text-primary-50"
-                            onClick={() => { requestCreateProduct(data, notify) }}
+                            onClick={() => { requestCreateProduct(data, notify, triggerAction) }}
                             isLoading={!!loadingStock && !!loadingCategories}>
                             Guardar
                         </Button>
