@@ -8,6 +8,7 @@ import { getIdUser } from '@/services/user'
 import hubScale from './store/connectionScale'
 import useSalesStore from '../store'
 import useOffersStore from '@/stores/offers'
+import useScannerStore from '@/stores/scanner'
 
 export default function WeighingScaleModal ({ isOpen, onClose, product }) {
     const [handShake, setHandShake] = useState(false)
@@ -57,9 +58,9 @@ export default function WeighingScaleModal ({ isOpen, onClose, product }) {
         if (isOpen) {
             setValueKg(1)
             setManualMode(false)
-            useSalesStore.getState()?.disabledScanner()
+            useScannerStore.getState()?.disabledScanner()
         } else {
-            useSalesStore.getState()?.enabledScanner()
+            useScannerStore.getState()?.enabledScanner()
             setIsDefaultValue(false)
         }
     }, [isOpen])

@@ -5,13 +5,13 @@ import { useDisclosure, Input, ScrollShadow, Skeleton } from '@nextui-org/react'
 import useInventoryStore from './store'
 import CreateProduct from './components/NewProduct/createProduct'
 import { SearchIcon } from '@/components/ui/SearchIcon'
-import useSalesStore from '../sales/store'
 import ProductDetail from './components/productDetail'
 import LoadingCard from '@/components/ui/Loading'
 import Offers from './components/Offer/offers'
 import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
+import useScannerStore from '@/stores/scanner'
 
 const LIMIT_PRODUCTS_VIEW = 50
 
@@ -98,9 +98,9 @@ export default function Card () {
 
     useEffect(() => {
         if (isOpen) {
-            useSalesStore.getState()?.disabledRedirectSales()
+            useScannerStore.getState()?.disabledRedirectSales()
         } else {
-            useSalesStore.getState()?.enabledRedirectSales()
+            useScannerStore.getState()?.enabledRedirectSales()
         }
     }, [isOpen])
 
@@ -163,8 +163,8 @@ export default function Card () {
                             onChange={onChange}
                             onFocusChange={(value) =>
                                 value
-                                    ? useSalesStore.getState()?.disabledRedirectSales()
-                                    : useSalesStore.getState()?.enabledRedirectSales()
+                                    ? useScannerStore.getState()?.disabledRedirectSales()
+                                    : useScannerStore.getState()?.enabledRedirectSales()
                             }
                             classNames={{
                                 label: 'text-black/50 dark:text-white/90',
