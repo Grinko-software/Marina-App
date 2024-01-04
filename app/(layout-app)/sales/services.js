@@ -1,11 +1,11 @@
-import { getData, GET } from '@/services/http'
+import { getData } from '@/services/http'
 export const getStateSaleMachine = (url) => {
     return new Promise((resolve, reject) => {
         let limitTime = 0
         const intervalId = setInterval(() => {
             limitTime += 1000 // Incrementa el tiempo transcurrido en cada consulta
             // Realiza la solicitud al endpoint
-            getData(url, GET).then(data => {
+            getData(url).then(data => {
                 // Comprueba si el estado es confirmado
                 if (data?.data?.paymentRequest?.status === 'Completed') {
                     clearInterval(intervalId)
