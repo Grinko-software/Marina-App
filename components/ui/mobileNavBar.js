@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Navbar, NavbarContent, Button, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react'
 import { usePathname, useRouter } from 'next/navigation'
+
 export default function MobileNavBar () {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false)
     const pathname = usePathname()
