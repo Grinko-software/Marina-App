@@ -13,7 +13,8 @@ const useProductFormStore = create((set) => ({
         category_id: null,
         stock_type_id: null,
         stock: null,
-        stock_min: null
+        stock_min: null,
+        tax_free: null
     },
     error: null,
     loading: false,
@@ -45,6 +46,7 @@ const useProductFormStore = create((set) => ({
                         image: data.image,
                         product_categories_id: data.category_id,
                         stock_types_id: data.stock_type_id,
+                        tax_free: data.tax_free,
                         product_stock: {
                             stock: data.stock,
                             stock_min: data.stock_min
@@ -83,7 +85,8 @@ const useProductFormStore = create((set) => ({
             category_id: null,
             stock_type_id: null,
             stock: null,
-            stock_min: null
+            stock_min: null,
+            tax_free: null
         },
         loading: false,
         error: false,
