@@ -1,27 +1,20 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
-import QR from '@/assets/gifs/QR.json'
-import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
-import useAuthStore from '@/stores/user'
+import ScannerCredential from '../ScannerCredential/ScannerCredential'
+import ScannerController from '../ScannerController/ScannerController'
 
 export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
     const [paymentDetailed, setPayDetailed] = useState(false)
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
-    const { enabledScanner, disabledScanner, enabledAuthMode, disabledAuthMode } = useScannerStore()
-    const { getUserDataWithCode } = useAuthStore()
-
-    const getUserData = async (qrValue) => {
-        const data = await getUserDataWithCode({ authCode: qrValue })
-        setUserAuthData(data)
-    }
+    const { /* enabledScanner, disabledScanner, */ disabledAuthMode } = useScannerStore()
 
     useEffect(() => {
         if (userAuthData) {
-            setReadQR(false)
-            alert(userAuthData?.fullName)
+            // setReadQR(false)
+            // alert(userAuthData?.fullName)
         }
     }, [userAuthData])
 
@@ -29,24 +22,28 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
         setReadQR(false)
     }, [])
 
-    useEffect(() => {
+    /*     useEffect(() => {
         if (isOpen) {
             disabledScanner()
         } else {
             enabledScanner()
         }
     }, [isOpen])
+ */
+    const onScanFunction = (data) => {
+        setUserAuthData(data)
+        disabledAuthMode()
+        // setReadQR(false)
+    }
 
-    useEffect(() => {
-        if (readQR) {
-            enabledAuthMode(getUserData)
-        } else {
-            disabledAuthMode()
-        }
-    }, [readQR])
+    const closeModal = () => {
+        setReadQR(false)
+        onClose()
+    }
 
     return (
         <>
+            <ScannerController scanEnabled={!isOpen} authEnabled={!!readQR} authModeFunction={null}/>
             <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} className="space-y-2" >
                 <ModalContent>
                     {(onClose) => (
@@ -105,7 +102,8 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
                                     </div>
                                 </ModalBody>
                                 : <ModalBody>
-                                    <Lottie animationData={QR} loop={true} />
+                                    <ScannerCredential onGetUserData={onScanFunction} />
+                                    {userAuthData?.fullName}
                                 </ModalBody>}
                             <ModalFooter className='justify-center'>
                                 <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
@@ -115,8 +113,7 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
                                     ACEPTAR
                                 </Button>
                                 <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
-                                    setReadQR(false)
-                                    onClose()
+                                    closeModal()
                                 }}>
                                     CANCELAR
                                 </Button>
