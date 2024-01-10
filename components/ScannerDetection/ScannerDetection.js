@@ -102,6 +102,7 @@ export default function ScannerDetection () {
         if (scanner !== null) {
             scanner?.stopScanning()
             setScanner(null)
+            console.log('Stop scanner')
         }
 
         if (scannerEnabled || enabledRedirect || authModeEnabled) {
