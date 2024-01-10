@@ -12,6 +12,7 @@ import BoxStatus from './CloseBoxStatus'
 import ScaleStatus from '@/components/ui/ScaleStatus'
 import hubScale from '@/app/(layout-app)/sales/components/store/connectionScale'
 import { HomeButton } from './HomeButton'
+import SwitchUserButton from './SwitchUserButton'
 
 // import ShortcutButton from './ShortcutButton'
 
@@ -53,6 +54,9 @@ export default function UserAvatar () {
                             <Divider orientation="vertical" className="h-12"/>
                             <div className="col-start-1 col-end-2">
                                 <ThemeButton/>
+                            </div>
+                            <div className="col-start-2 col-end-2">
+                                <SwitchUserButton />
                             </div>
                             <div className="col-start-2 col-end-2">
                                 <ShortcutButton />
