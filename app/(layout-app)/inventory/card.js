@@ -79,11 +79,6 @@ export default function Card () {
         }
     }, [listInventoryComplete, lastInViewPort, pageNumber])
 
-    /* async function updatedFilteredListByCategory (filteredLisInventory) {
-        await timeout(100)
-
-    } */
-
     useEffect(() => {
         if (selectedCategoryID) {
             setSectionSearch(false)
