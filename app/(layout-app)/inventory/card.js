@@ -7,7 +7,6 @@ import useInventoryStore from './store'
 import CreateProduct from './components/NewProduct/createProduct'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { SearchIcon } from '@/components/ui/SearchIcon'
-import useSalesStore from '../sales/store'
 import ProductDetail from './components/productDetail'
 import LoadingCard from '@/components/ui/Loading'
 import Offers from './components/Offer/offers'
@@ -16,6 +15,8 @@ import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
 import { getMultiDataRequest, reMapData } from './services'
 import useStore from './store/store'
+import useScannerStore from '@/stores/scanner'
+// import toast from 'react-hot-toast'
 
 const LIMIT_PRODUCTS_VIEW = 50
 // const notify = (text) => toast.success(text)
@@ -108,9 +109,9 @@ export default function Card () {
 
     useEffect(() => {
         if (isOpen) {
-            useSalesStore.getState()?.disabledRedirectSales()
+            useScannerStore.getState()?.disabledRedirectSales()
         } else {
-            useSalesStore.getState()?.enabledRedirectSales()
+            useScannerStore.getState()?.enabledRedirectSales()
         }
     }, [isOpen])
 
@@ -209,8 +210,8 @@ export default function Card () {
                                 onChange={onChangeValue}
                                 onFocusChange={(value) =>
                                     value
-                                        ? useSalesStore.getState()?.disabledRedirectSales()
-                                        : useSalesStore.getState()?.enabledRedirectSales()
+                                        ? useScannerStore.getState()?.disabledRedirectSales()
+                                        : useScannerStore.getState()?.enabledRedirectSales()
                                 }
                                 classNames={{
                                     label: 'text-black/50 dark:text-white/90',

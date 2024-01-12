@@ -4,11 +4,11 @@ import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger,
 import React, { Suspense, createRef, useEffect, useMemo, useState } from 'react'
 import useInventoryStore from '../../store'
 import useOfferFormStore from './store'
-import useSalesStore from '@/app/(layout-app)/sales/store'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 import CardUi from '@/components/ui/Card'
 import Image from 'next/image'
 import { ConvertBytesToImage, DefaultImageMarinaMarket } from '@/utils/image'
+import useScannerStore from '@/stores/scanner'
 
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
     return (
@@ -141,8 +141,8 @@ export default function CreateOffer () {
                                 onChange={(e) => setSearchInput(e.target.value)}
                                 onFocusChange={(value) =>
                                     value
-                                        ? useSalesStore.getState()?.disabledRedirectSales()
-                                        : useSalesStore.getState()?.enabledRedirectSales()
+                                        ? useScannerStore.getState()?.disabledRedirectSales()
+                                        : useScannerStore.getState()?.enabledRedirectSales()
                                 }
                                 classNames={{
                                     label: 'text-black/50 dark:text-white/90',

@@ -41,7 +41,7 @@ export const CREATE_PAYMENT_POSMACHINE = '/machine/create-sale'
 export const GET_STATE_SALE_POSMACHINE = '/machine/payment-request/:id'
 // GET CONFIG
 export const GET_POST_MACHINE = '/settings/post-machine'
-
+export const GET_CASH_REGISTER = '/settings/cash-register'
 // REPORTS
 export const REPORTS_API_URL = BASE_MARKET_API_URL + '/report/period-voucher-type-sales'
 export const REPORTS_CATEGORY_API_URL = BASE_MARKET_API_URL + '/report/period-category-sales'

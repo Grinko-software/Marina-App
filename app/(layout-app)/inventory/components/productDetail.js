@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Checkbox } from '@nextui-org/react'
 import { InputComponent, SectionProduct, SelectComponent } from './NewProduct/createProduct'
 import ProductImage from './NewProduct/productImage'
 import useInventoryStore from '../store'
@@ -27,12 +27,14 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
         net_price: null,
         price: null,
         stock: null,
-        stock_min: null
+        stock_min: null,
+        tax_free: targeProduct?.taxFree
     }
     const [productData, setProductData] = useState(defaultState)
     const [newProductData, setNewProductData] = useState(defaultState)
     const [loadingEdit, setLoadingEdit] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
+    const [isTaxFree, setIsTaxFree] = useState(false)
 
     useEffect(() => {
         setLoadingDelete(false)
@@ -63,6 +65,10 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     useEffect(() => {
         if (!targeProduct) {
             setNewProductData(defaultState)
+        } else {
+            if (targeProduct?.taxFree === null) { setIsTaxFree(false) } else {
+                setIsTaxFree(targeProduct?.taxFree)
+            }
         }
     }, [targeProduct])
 
@@ -85,7 +91,8 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                 cost_price: targeProduct?.costPrice,
                 price: targeProduct?.price,
                 stock: targeProduct?.stock,
-                stock_min: targeProduct?.stockMin
+                stock_min: targeProduct?.stockMin,
+                tax_free: targeProduct?.taxFree
             })
         }
     }, [targeProduct, edit])
@@ -244,6 +251,18 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                             disabled={!edit}
                                         />
                                     </div>
+                                    <Checkbox
+                                        isSelected={isTaxFree}
+                                        color="danger"
+                                        isDisabled={!edit}
+                                        onValueChange={
+                                            (value) => {
+                                                setIsTaxFree(value)
+                                                handleInputChange({ field: 'tax_free', value, isCode: true })
+                                            }
+                                        }>
+                                            Producto exento de iva
+                                    </Checkbox>
                                 </SectionProduct>
                             </section>
                         </ModalBody>

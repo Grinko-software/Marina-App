@@ -13,12 +13,14 @@ export default function ScannerDetection () {
     const router = useRouter()
     const {
         addFromNewSales,
-        scannerEnabled,
-        enabledRedirect,
         units,
         setUnits
     } = useSalesStore()
     const {
+        scannerEnabled,
+        enabledRedirect,
+        authModeEnabled,
+        authModeFunction,
         msRangeScan,
         setDatetimeLastScan,
         getMillisecondsSinceLastScan
@@ -29,7 +31,7 @@ export default function ScannerDetection () {
 
     const addProduct = ({ code }) => {
         const currentListSales = useSalesStore.getState().listSales
-        const enabledRedirectSales = useSalesStore.getState().enabledRedirect
+        const enabledRedirectSales = useScannerStore.getState().enabledRedirect
         const units = useSalesStore.getState().units
         const offers = useOffersStore.getState().offers
         const listSalesActives = useSalesStore.getState().listSalesActives
@@ -50,7 +52,7 @@ export default function ScannerDetection () {
         }
     }
 
-    const onComplete = (barcode) => {
+    const onCompleteScanMode = (barcode) => {
         // check avaible scan
         const ms = getMillisecondsSinceLastScan(useScannerStore.getState().datetimeLastScan)
         useScannerStore.getState().disableSetUnits()
@@ -73,6 +75,12 @@ export default function ScannerDetection () {
             useScannerStore.getState().enableSetUnits()
         }, 100)
     }
+
+    const onCompleteAuthMode = (barcode) => {
+        authModeFunction(barcode)
+        console.log(`Auth code: ${barcode}`)
+    }
+
     const onError = (value) => console.log(value) // Devolución de llamada después de la detección de un escaneo fallido
     const stopPropagation = (value) => console.log(value) // Detiene la propagación inmediata en el evento de pulsación de tecla
 
@@ -86,25 +94,29 @@ export default function ScannerDetection () {
     }
 
     useEffect(() => {
-        console.log('redirect: ', enabledRedirect, ' scanner: ', scannerEnabled)
-
-        const options = {
-            onComplete,
-            onError
-            // timeBeforeScanTest: 3000,
-            // avgTimeByChar: 3000
-            // preventDefault: true,
-            // stopPropagation: true
-        }
+        console.log('redirect: ', enabledRedirect,
+            ' scanner: ', scannerEnabled,
+            ' authMode: ', authModeEnabled)
 
         // disabled scanner
         if (scanner !== null) {
             scanner?.stopScanning()
             setScanner(null)
+            console.log('Stop scanner')
         }
 
-        if (scannerEnabled || enabledRedirect) {
+        if (scannerEnabled || enabledRedirect || authModeEnabled) {
             console.log('New scanner')
+
+            const options = {
+                onComplete: authModeEnabled ? onCompleteAuthMode : onCompleteScanMode,
+                onError
+                // timeBeforeScanTest: 3000,
+                // avgTimeByChar: 3000
+                // preventDefault: true,
+                // stopPropagation: true
+            }
+
             startScanning(options)
         } else {
             /*       if (scanner) {
@@ -112,7 +124,7 @@ export default function ScannerDetection () {
                 setScanner(null)
             } */
         }
-    }, [detected, scannerEnabled, enabledRedirect])
+    }, [detected, scannerEnabled, enabledRedirect, authModeEnabled])
 
     return (
         <section>

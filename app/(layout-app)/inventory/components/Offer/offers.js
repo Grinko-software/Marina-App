@@ -4,7 +4,6 @@ import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger,
 import React, { Suspense, createRef, useEffect, useMemo, useState } from 'react'
 import useInventoryStore from '../../store'
 import useOfferFormStore from './store'
-import useSalesStore from '@/app/(layout-app)/sales/store'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 import CardUi from '@/components/ui/Card'
 import Image from 'next/image'
@@ -16,6 +15,7 @@ import { deleteOffer } from '@/services/offers'
 import toast, { Toaster } from 'react-hot-toast'
 import { BiSolidOffer } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
+import useScannerStore from '@/stores/scanner'
 
 const notify = (text) => toast(text)
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
@@ -130,10 +130,11 @@ export default function Offers () {
     }, [])
     useEffect(() => {
         if (isOpen) {
-            useSalesStore.getState()?.disabledRedirectSales()
             handleOffers()
+            useScannerStore.getState()?.disabledRedirectSales()
+            // getOffers()
         } else {
-            useSalesStore.getState()?.enabledRedirectSales()
+            useScannerStore.getState()?.enabledRedirectSales()
             setFilteredList([])
             setSearchInput(null)
             setSectionCreateOffer(false)

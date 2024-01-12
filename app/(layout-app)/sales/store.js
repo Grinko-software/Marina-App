@@ -28,12 +28,6 @@ const useSalesStore = create(
             discount: null,
             totalTaxFree: 0
         }],
-        scannerEnabled: false,
-        enabledRedirect: false,
-        enabledScanner: (value) => set({ scannerEnabled: true, enabledRedirect: false }),
-        disabledScanner: (value) => set({ scannerEnabled: false }),
-        enabledRedirectSales: (value) => set({ enabledRedirect: true }),
-        disabledRedirectSales: (value) => set({ enabledRedirect: false }),
         setLoadingSale: (value) => set({ loadingSale: value }),
         setUnits: (value) => set({ units: parseInt(value) }),
         setSelectedSaleId: (value) => set({ saleIdActive: parseInt(value) }),

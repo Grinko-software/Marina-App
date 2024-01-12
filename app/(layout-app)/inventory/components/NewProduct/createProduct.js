@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 'use client'
-import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, dropdown, useDisclosure } from '@nextui-org/react'
+import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, Checkbox, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, dropdown, useDisclosure } from '@nextui-org/react'
 import React, { Suspense, createRef, useEffect, useMemo, useState } from 'react'
 import ProductImage from './productImage'
 import BarcodeScanner from './scanner'
@@ -8,10 +8,10 @@ import { generateProductCode } from '@/utils/barcode'
 import Barcosde from '@/components/barcode'
 import useProductFormStore from './store'
 import useInventoryStore from '../../store'
-import useSalesStore from '@/app/(layout-app)/sales/store'
 import toast, { Toaster } from 'react-hot-toast'
 import { BiSolidShoppingBags } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
+import useScannerStore from '@/stores/scanner'
 
 const notify = (text) => toast(text)
 
@@ -80,6 +80,7 @@ export default function CreateProduct (props) {
 
     const [barcodeValue, setBarcodeValue] = useState(null)
     const [isBarcodeGenerated, setIsBarcodeGenerated] = useState(false)
+    const [isTaxFree, setIsTaxFree] = useState(false)
 
     const { data, setFormData, requestCreateProduct, loadingStock, loadingCategories, error, setError, complete, hasRequeredValues, clearStore } = useProductFormStore()
     const { listCategories, listStockTypes } = useInventoryStore()
@@ -94,9 +95,11 @@ export default function CreateProduct (props) {
     useEffect(() => {
         if (isOpen) {
             triggerAction()
-            useSalesStore.getState()?.disabledRedirectSales()
+            // getStockTypes()
+            // getCategories()
+            useScannerStore.getState()?.disabledRedirectSales()
         } else {
-            useSalesStore.getState()?.enabledRedirectSales()
+            useScannerStore.getState()?.enabledRedirectSales()
             setIsBarcodeGenerated(false)
             setBarcodeValue(null)
         }
@@ -121,8 +124,8 @@ export default function CreateProduct (props) {
         }
     }, [barcodeValue])
 
-    const handleInputChange = ({ field, value, isSalePrice }) => {
-        const newFormValues = { ...data, [field]: !isNaN(value) ? parseInt(value) : value }
+    const handleInputChange = ({ field, value, isSalePrice, isBool }) => {
+        const newFormValues = { ...data, [field]: !isNaN(value) && !isBool ? parseInt(value) : value }
         if (isSalePrice) {
             newFormValues.net_price = newFormValues?.sale_price / 1.19
         }
@@ -272,6 +275,15 @@ export default function CreateProduct (props) {
                                         onValueChange={(value) => { handleInputChange({ field: 'stock', value }) }}
                                     />
                                 </div>
+                                <Checkbox
+                                    defaultSelected={false}
+                                    color="danger"
+                                    onValueChange={(value) => {
+                                        setIsTaxFree(value)
+                                        handleInputChange({ field: 'tax_free', value, isBool: true })
+                                    }}>
+                                            Producto exento de iva
+                                </Checkbox>
                             </SectionProduct>
                         </section>
                     </ModalBody>

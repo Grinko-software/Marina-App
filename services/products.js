@@ -15,6 +15,7 @@ export const updateProduct = async (
         stock_type_id,
         stock,
         stock_min,
+        tax_free,
         notify
     }) => {
     try {
@@ -30,7 +31,8 @@ export const updateProduct = async (
                 product_category_id: category_id || '',
                 stock_type_id: stock_type_id || '',
                 stock: stock || '',
-                stock_min: stock_min || ''
+                stock_min: stock_min || '',
+                tax_free
             })
         return getData(`${PRODUCT_API_URL}?${queryParams}`, PUT)
             .then(response => {
