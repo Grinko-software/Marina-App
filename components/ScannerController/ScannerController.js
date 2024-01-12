@@ -13,7 +13,7 @@ export default function ScannerController ({ scanEnabled, authEnabled, redirectE
         }
     }, [scanEnabled])
 
-    useEffect(() => {
+    /*     useEffect(() => {
         if (authEnabled) {
             if (authModeFunction) {
                 enabledAuthMode(authModeFunction)
@@ -21,8 +21,8 @@ export default function ScannerController ({ scanEnabled, authEnabled, redirectE
         } else {
             disabledAuthMode()
         }
-    }, [authEnabled])
-
+    }, [authEnabled, authModeFunction])
+ */
     useEffect(() => {
         if (redirectEnabled) {
             //

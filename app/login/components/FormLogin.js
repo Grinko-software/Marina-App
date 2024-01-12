@@ -68,8 +68,8 @@ export default function LoginForm () {
     useEffect(() => {
         document.addEventListener('keydown', function (event) {
             if (event.code === 'Enter') {
-                const email = document.getElementById('email').value
-                const password = document.getElementById('pass').value
+                const email = document.getElementById('email')?.value
+                const password = document.getElementById('pass')?.value
                 setEmail(email)
                 setPassword(password)
                 setEventListener(true)

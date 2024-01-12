@@ -48,10 +48,11 @@ const useAuthStore = create(
                     set({ loading: false })
                 }
             },
-            signInWithCode: ({ authCode }) => {
+            signInWithCode: async ({ authCode }) => {
+                let ok = false
                 set({ loading: true, error: null, errorAuthCode: null })
                 try {
-                    authenticateByAuthCode(
+                    await authenticateByAuthCode(
                         {
                             authCode
                         }
@@ -69,6 +70,7 @@ const useAuthStore = create(
                                 error: null
                             })
                             if (userType === 'admin') set({ isAdmin: true })
+                            ok = true
                         } else {
                             set({ error: statusCode + ' ' + (error || message || statusText) })
                             if (statusCode === 401) {
@@ -80,8 +82,10 @@ const useAuthStore = create(
                 } catch {
                     set({ loading: false })
                 }
+
+                return ok
             },
-            getUserDataWithCode: async ({ authCode }) => {
+            getUserDataWithCode: async ({ authCode, requireAdmin }) => {
                 let resultData = null
                 try {
                     await authenticateByAuthCode(
@@ -91,12 +95,15 @@ const useAuthStore = create(
                     ).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
                             const { name, lastName, userType, idUser } = user
-                            resultData = {
-                                name,
-                                lastName,
-                                fullName: name + ' ' + lastName,
-                                isAdmin: userType === 'admin',
-                                id: idUser
+                            const isAdmin = userType === 'admin'
+                            if (!requireAdmin || (requireAdmin && isAdmin)) {
+                                resultData = {
+                                    name,
+                                    lastName,
+                                    fullName: name + ' ' + lastName,
+                                    isAdmin,
+                                    id: idUser
+                                }
                             }
                         }
                     })

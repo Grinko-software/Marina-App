@@ -1,11 +1,13 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { Button, Card, CardBody, CardFooter, CardHeader, Input, Spinner } from '@nextui-org/react'
+import { Button, Card, CardBody, CardFooter, CardHeader, Spinner } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import useAuthStore from '@/stores/user'
 import AlertMessage from '@/components/ui/AlertMessage'
+import ScannerController from '@/components/ScannerController/ScannerController'
+import ScannerCredential from '@/components/ScannerCredential/ScannerCredential'
 
-const InputCode = ({ value, setValue }) => {
+/* const InputCode = ({ value, setValue }) => {
     return <Input
         label="Credencial"
         value={value}
@@ -15,20 +17,20 @@ const InputCode = ({ value, setValue }) => {
         variant='bordered'
     />
 }
-
-export default function RequireAdminComponent ({ moduleName, children }) {
-    const [authCode, setAuthCode] = useState(null)
-    const [messageAuth, setMessageAuth] = useState(null)
-    const { signInWithCode, loading, errorAuthCode, isAdmin } = useAuthStore()
+ */
+export default function RequireAdminComponent ({ moduleName, children, isAdmin, setIsAdmin }) {
+    /*  const [authCode, setAuthCode] = useState(null)
+    const [messageAuth, setMessageAuth] = useState(null) */
+    const { loading, isAdmin: isAdminStoreValue } = useAuthStore()
     const router = useRouter()
 
-    useEffect(() => {
+    /*  useEffect(() => {
         if (authCode?.length > 3) {
             signInWithCode({ authCode })
         }
-    }, [authCode])
+    }, [authCode]) */
 
-    useEffect(() => {
+    /*     useEffect(() => {
         if (authCode?.length > 3) {
             if (!isAdmin) {
                 setMessageAuth('No tienes permiso de administrador')
@@ -38,18 +40,22 @@ export default function RequireAdminComponent ({ moduleName, children }) {
         } else {
             setMessageAuth(null)
         }
-    }, [errorAuthCode, isAdmin, authCode])
+    }, [errorAuthCode, isAdmin, authCode]) */
 
-    return <section className='flex w-full min-h-full items-center justify-center'>
-        <div className=''>
-            <Card>
+    const onSuccess = () => {
+        setIsAdmin(true)
+    }
+
+    return <section className='flex mx-auto min-h-full items-center justify-center'>
+        <div className='flex h-full py-5'>
+            <Card className=''>
                 <CardHeader>
                     <p className='text-md'>
                     Estimado usuario
                     </p>
                 </CardHeader>
-                <CardBody className='flex flex-col gap-2 h-[20rem]'>
-                    <div className='mx-10 my-5 gap-2 flex flex-col'>
+                <CardBody className='flex flex-col'>
+                    <div className='mx-auto flex flex-col'>
                         <p className='text-md'>
                             {`No puedes acceder a ${moduleName}, necesitas permisos de administrador.`}
                         </p>
@@ -57,23 +63,11 @@ export default function RequireAdminComponent ({ moduleName, children }) {
                             {'Escanea tu credencial.'}
                         </p>
                     </div>
-                    <section className='flex flex-col flex-1 items-center justify-center'>
-                        <div className='w-[40%] mx-auto py-4 text-center'>
-                            <InputCode value={authCode} setValue={setAuthCode}/>
+                    <section className='mx-auto flex flex-col flex-1 items-center justify-center'>
+                        <ScannerController scanEnabled={false} authEnabled={true} authModeFunction={null}/>
+                        <div className=''>
+                            <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={true} withoutDelay={true}/>
                         </div>
-                        {messageAuth && !loading
-                            ? <div className='w-[60%]'>
-                                <AlertMessage message={messageAuth}/>
-                            </div>
-                            : null
-                        }
-                        {loading
-                            ? <div className='w-[60%] m-auto flex items-center'>
-                                <Spinner className='text-md m-auto my-1'>
-                                    {'Verificando...'}
-                                </Spinner>
-                            </div>
-                            : null}
                     </section>
 
                 </CardBody>

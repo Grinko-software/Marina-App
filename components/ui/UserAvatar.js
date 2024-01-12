@@ -8,11 +8,12 @@ import Image from 'next/image'
 import ShortcutButton from './ShortcutButton'
 import { PaymentOfMoney } from './PaymentOfMoney'
 import { usePathname } from 'next/navigation'
-import BoxStatus from './CloseBoxStatus'
+
 import ScaleStatus from '@/components/ui/ScaleStatus'
 import hubScale from '@/app/(layout-app)/sales/components/store/connectionScale'
 import { HomeButton } from './HomeButton'
 import SwitchUserButton from './SwitchUserButton'
+import BoxStatus from './closeBoxStatus'
 
 // import ShortcutButton from './ShortcutButton'
 

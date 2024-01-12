@@ -11,10 +11,12 @@ const useScannerStore = create(
         enabledRedirect: false,
         authModeFunction: null,
         enabledScanner: () => set({ scannerEnabled: true, enabledRedirect: false, authModeEnabled: false }),
-        disabledScanner: () => set({ scannerEnabled: false, authModeEnabled: false }),
+        disabledScanner: () => set({ scannerEnabled: false, enabledRedirect: false, authModeEnabled: false }),
         enabledRedirectSales: () => set({ enabledRedirect: true }),
         disabledRedirectSales: () => set({ enabledRedirect: false }),
-        enabledAuthMode: (funcValue) => set({ enabledRedirect: false, authModeEnabled: true, authModeFunction: funcValue }),
+        enabledAuthMode: (funcValue) => {
+            set({ enabledRedirect: false, authModeEnabled: true, authModeFunction: funcValue })
+        },
         disabledAuthMode: () => set({ enabledRedirect: false, authModeEnabled: false, authModeFunction: null }),
 
         setScanFromInputUnits: () => set((state) => ({ scanFromInputUnits: state })),
