@@ -2,7 +2,6 @@
 import React from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 import ScannerCredential from '../ScannerCredential/ScannerCredential'
-import ScannerController from '../ScannerController/ScannerController'
 
 export default function SwitchUserModal ({ isOpen, onClose }) {
     const closeModal = () => {
@@ -15,8 +14,6 @@ export default function SwitchUserModal ({ isOpen, onClose }) {
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <ScannerController scanEnabled={!isOpen} authEnabled={isOpen} authModeFunction={null}/>
-
             <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
                 <ModalContent>
                     {(onClose) => (

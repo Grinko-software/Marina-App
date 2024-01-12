@@ -7,19 +7,34 @@ import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
 import useAuthStore from '@/stores/user'
 import { Spinner } from '@nextui-org/react'
+import AlertMessage from '../ui/AlertMessage'
+
+const TIMEOUT = 1500
+const TIMEOUT_SCAN = 500
 
 export default function ScannerCredential ({ onGetUserData, onSuccess, changeSession, requireAdmin, withoutDelay }) {
     const [loading, setLoading] = useState(false)
     const [completed, setCompleted] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
-    const { enabledAuthMode /* disabledAuthMode */ } = useScannerStore()
-    const { signInWithCode, getUserDataWithCode, errorAuthCode } = useAuthStore()
+    const {
+        enabledAuthMode,
+        disabledAuthMode,
+        authModeEnabled,
+        datetimeLastUpdate
+    } = useScannerStore()
+    const {
+        signInWithCode,
+        getUserDataWithCode,
+        errorAuthCode
+    } = useAuthStore()
 
     const getUserData = async (qrValue) => {
         setLoading(true)
         setCompleted(false)
+        setErrorMessage(null)
         const data = await getUserDataWithCode({ authCode: qrValue, requireAdmin })
         if (data) {
             setUserAuthData(data)
@@ -36,6 +51,7 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
     const loginWithQR = async (qrValue) => {
         setLoading(true)
         setCompleted(false)
+        setErrorMessage(null)
         const data = await signInWithCode({ authCode: qrValue })
         if (data) {
             setError(false)
@@ -62,18 +78,33 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
     } */
 
     useEffect(() => {
+        if (error && completed) {
+            if (requireAdmin) {
+                setErrorMessage('Se requieren permisos de administrador')
+            } else {
+                setErrorMessage('Credencial no autorizada')
+            }
+        } else {
+            setErrorMessage(null)
+        }
+    }, [error, completed, requireAdmin])
+
+    useEffect(() => {
         if (changeSession) {
             enabledAuthMode(loginWithQR)
         } else {
             enabledAuthMode(getUserData)
         }
-    }, [])
+    }, [datetimeLastUpdate, authModeEnabled])
 
     useEffect(() => {
         if (completed && success) {
             setTimeout(() => {
                 onCompleteAuth()
-            }, withoutDelay ? 0 : 2000)
+            }, withoutDelay ? 0 : TIMEOUT)
+            setTimeout(() => {
+                disabledAuthMode()
+            }, withoutDelay ? TIMEOUT_SCAN : (TIMEOUT + TIMEOUT_SCAN))
         }
     }, [completed, success, withoutDelay])
 
@@ -100,15 +131,16 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
             {`| loading:${loading}`}
             {`| success:${success}`}
             {`| error:${error}`} */}
-            {loading
-                ? <Spinner className='text-md m-auto my-1'>
-                    {'Verificando...'}
-                </Spinner>
-                : error
-                    ? <span>
-                        {errorAuthCode}
-                    </span>
-                    : null}
+            <section className='max-w-[40rem]'>
+
+                {loading
+                    ? <Spinner className='text-md m-auto my-1'>
+                        {'Verificando...'}
+                    </Spinner>
+                    : error
+                        ? <AlertMessage message= {errorAuthCode || errorMessage}/>
+                        : null}
+            </section>
         </section>
     )
 }

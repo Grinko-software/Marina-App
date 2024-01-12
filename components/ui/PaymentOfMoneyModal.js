@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
 import useScannerStore from '@/stores/scanner'
 import ScannerCredential from '../ScannerCredential/ScannerCredential'
-import ScannerController from '../ScannerController/ScannerController'
 
 export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
     const [paymentDetailed, setPayDetailed] = useState(false)
@@ -32,18 +31,18 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
  */
     const onScanFunction = (data) => {
         setUserAuthData(data)
-        disabledAuthMode()
+        // disabledAuthMode()
         // setReadQR(false)
     }
 
     const closeModal = () => {
+        disabledAuthMode()
         setReadQR(false)
         onClose()
     }
 
     return (
         <>
-            <ScannerController scanEnabled={!isOpen} authEnabled={!!readQR} authModeFunction={null}/>
             <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} className="space-y-2" >
                 <ModalContent>
                     {(onClose) => (

@@ -1,10 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { Button, Card, CardBody, CardFooter, CardHeader, Spinner } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react'
 import useAuthStore from '@/stores/user'
-import AlertMessage from '@/components/ui/AlertMessage'
-import ScannerController from '@/components/ScannerController/ScannerController'
 import ScannerCredential from '@/components/ScannerCredential/ScannerCredential'
 
 /* const InputCode = ({ value, setValue }) => {
@@ -64,7 +61,6 @@ export default function RequireAdminComponent ({ moduleName, children, isAdmin, 
                         </p>
                     </div>
                     <section className='mx-auto flex flex-col flex-1 items-center justify-center'>
-                        <ScannerController scanEnabled={false} authEnabled={true} authModeFunction={null}/>
                         <div className=''>
                             <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={true} withoutDelay={true}/>
                         </div>
