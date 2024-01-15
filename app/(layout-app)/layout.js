@@ -3,7 +3,6 @@ import { Navigation } from '@/components/navigation/Navigation'
 import React, { useState, useEffect } from 'react'
 import { Header } from './header'
 import { motion } from 'framer-motion'
-import ScannerDetection from '@/components/ScannerDetection/ScannerDetection'
 import { isMobileDevice } from '@/utils/agent'
 
 export default function LayoutApp ({ children }) {
@@ -17,7 +16,6 @@ export default function LayoutApp ({ children }) {
     return (
 
         <section className="min-h-full w-screen h-full bg-primary-200 dark:bg-secondary-500 overflow-x-hidden touch-none fixed">
-            <ScannerDetection/>
             <motion.div
                 className='min-h-full flex flex-col'
                 initial={{ opacity: 0, scale: 0.5 }}

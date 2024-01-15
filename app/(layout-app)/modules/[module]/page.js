@@ -7,11 +7,12 @@ import RequireAdminComponent from './components/Auth'
 
 export default function Page ({ params }) {
     const { module } = params
+    const [isAdmin, setIsAdmin] = useState(null)
     const [moduleSelected, setModuleSelected] = useState(null)
     const [contentModule, setContentModule] = useState(null)
     const [isAuthRequered, setIsAuthRequered] = useState(false)
     const router = useRouter()
-    const { isAdmin } = useAuthStore()
+    const { isAdmin: isUserAdmin } = useAuthStore()
 
     useEffect(() => {
         if (module) {
@@ -24,6 +25,10 @@ export default function Page ({ params }) {
             }
         }
     }, [module])
+
+    useEffect(() => {
+        setIsAdmin(isUserAdmin)
+    }, [isUserAdmin])
 
     useEffect(() => {
         if (moduleSelected) {
@@ -43,7 +48,7 @@ export default function Page ({ params }) {
 
     return <section className='flex flex-1 h-full'>
         {isAuthRequered
-            ? <RequireAdminComponent moduleName={moduleSelected?.name}/>
+            ? <RequireAdminComponent moduleName={moduleSelected?.name} isAdmin={isAdmin} setIsAdmin={setIsAdmin}/>
             : contentModule}
     </section>
 }

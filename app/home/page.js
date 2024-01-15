@@ -8,15 +8,22 @@ import inventory from '@/assets/images/inventory.webp'
 import reports from '@/assets/images/report.jpeg'
 import sales from '@/assets/images/sales.jpeg'
 import { isMobileDevice } from '@/utils/agent'
+import useScannerStore from '@/stores/scanner'
 
 export default function Home () {
     const [salesDisabled, setSalesDisabled] = useState(true)
+
     useEffect(() => {
         if (navigator) {
             const isMobile = isMobileDevice()
             setSalesDisabled(isMobile)
         }
     }, [])
+
+    useEffect(() => {
+        useScannerStore.getState()?.disabledScanner()
+    }, [])
+
     return (
         <section className="bg-primary-300 dark:bg-secondary-500 sm:mx-10" >
             <Auth/>

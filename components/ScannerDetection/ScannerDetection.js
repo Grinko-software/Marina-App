@@ -77,8 +77,21 @@ export default function ScannerDetection () {
     }
 
     const onCompleteAuthMode = (barcode) => {
-        authModeFunction(barcode)
-        console.log(`Auth code: ${barcode}`)
+        const ms = getMillisecondsSinceLastScan(useScannerStore.getState().datetimeLastScan)
+        if (!ms || ms > msRangeScan) {
+            setDatetimeLastScan()
+            console.log(`Auth code: ${barcode}`)
+            if (useScannerStore.getState().authModeFunction) useScannerStore.getState().authModeFunction(barcode)
+        }
+    }
+
+    const onCompleteScanner = (barcode) => {
+        const authMode = useScannerStore.getState().authModeEnabled
+        if (authMode) {
+            onCompleteAuthMode(barcode)
+        } else {
+            onCompleteScanMode(barcode)
+        }
     }
 
     const onError = (value) => console.log(value) // Devolución de llamada después de la detección de un escaneo fallido
@@ -109,7 +122,7 @@ export default function ScannerDetection () {
             console.log('New scanner')
 
             const options = {
-                onComplete: authModeEnabled ? onCompleteAuthMode : onCompleteScanMode,
+                onComplete: onCompleteScanner,
                 onError
                 // timeBeforeScanTest: 3000,
                 // avgTimeByChar: 3000

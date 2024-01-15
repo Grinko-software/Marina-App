@@ -2,9 +2,10 @@
 
 import { useDisclosure } from '@nextui-org/react'
 import { PiUserSwitchLight } from 'react-icons/pi'
+import SwitchUserModal from './SwitchUserButtonModal'
 
 const SwitchUserButton = () => {
-    const { onOpen } = useDisclosure()
+    const { onOpen, isOpen, onClose } = useDisclosure()
     return (
         <button
             aria-label='Toggle Dark Mode'
@@ -13,7 +14,7 @@ const SwitchUserButton = () => {
             onClick={(onOpen)}
         >
             <PiUserSwitchLight className="w-6 h-6 sm:w-10 sm:h-10 fill-primary-500 dark:fill-primary-200 "/>
-            {/* QR COMPONENT */}
+            <SwitchUserModal isOpen={isOpen} onClose={onClose} />
         </button>
     )
 }
