@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
+import useBoxStore from '@/stores/box'
 // import { GetCashRegister, GetPostMachines } from './../../../services/settings'
 /* import Barcode from "../barcode";
 import BarcodeImg from "../barcodeImg";
@@ -14,24 +15,30 @@ export default function SettingModal ({ isOpen, onClose }) {
         selectedPostMachine,
         postMachines,
         setSelectedPostMachine,
-        getPostMachines,
-        CashRegister,
-        SelectedCashRegister,
-        setSelectedCashRegister,
-        getCashRegister
+        getPostMachines
     } = useSettingsStore(({
         selectedPostMachine,
         postMachines,
         setSelectedPostMachine,
-        getPostMachines, CashRegister,
-        SelectedCashRegister,
-        setSelectedCashRegister,
-        getCashRegister
+        getPostMachines
     }) => ({
         selectedPostMachine,
         postMachines,
         setSelectedPostMachine,
-        getPostMachines,
+        getPostMachines
+    }))
+
+    const {
+        CashRegister,
+        SelectedCashRegister,
+        setSelectedCashRegister,
+        getCashRegister
+    } = useBoxStore(({
+        CashRegister,
+        SelectedCashRegister,
+        setSelectedCashRegister,
+        getCashRegister
+    }) => ({
         CashRegister,
         SelectedCashRegister,
         setSelectedCashRegister,
@@ -46,9 +53,10 @@ export default function SettingModal ({ isOpen, onClose }) {
     /* Handle unique request */
     useEffect(() => {
         if (CashRegister) {
-            setCashRegisterData(CashRegister)
+            setCashRegisterData([DEFAULT_SELECTED, ...CashRegister])
         }
-    }, [cashRegisterData])
+    }, [CashRegister])
+
     useEffect(() => {
         // TODO: Add multi data fetch
         getPostMachines()
@@ -85,7 +93,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                     <p className="text-primary-500 dark:text-primary-200 font-bold">
                                         Seleccionar Caja principal
                                     </p>
-                                    {[...cashRegisterData]?.map((cashRegister, index2) => {
+                                    {cashRegisterData?.map((cashRegister, index2) => {
                                         const isCashRegistrySelected = SelectedCashRegister?.ID === cashRegister.ID
                                         return (
                                             <Checkbox

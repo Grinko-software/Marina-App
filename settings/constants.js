@@ -54,3 +54,6 @@ export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
 // SUPPLIER
 export const SUPPLIER_API_URL = BASE_MARKET_API_URL + '/supplier'
 export const SUPPLIER_ASSOCIATION_API_URL = BASE_MARKET_API_URL + '/supplier/:id/association/products'
+
+// BOX
+export const BALANCE_BEGINNINGS_API_URL = '/accounting-event/create/balance-beginnings'

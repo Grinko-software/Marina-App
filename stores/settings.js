@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { GET_POST_MACHINE, GET_CASH_REGISTER } from '@/settings/constants'
+import { GET_POST_MACHINE } from '@/settings/constants'
 import { getData, GET } from '@/services/http'
+
 export const DEFAULT_SELECTED = { ID: 'no-select', label: 'NINGUNA' }
 const useSettingsStore = create(
     persist(
@@ -25,25 +26,8 @@ const useSettingsStore = create(
                         set({ loading: false })
                     })
                 } catch (error) { console.error(error) }
-            },
-            SelectedCashRegister: DEFAULT_SELECTED,
-            CashRegister: null,
-            setCashRegister: (value) => set({ CashRegister: value }),
-            setSelectedCashRegister: (value) => set({ SelectedCashRegister: value }),
-            getCashRegister: () => {
-                set({ loading: true, error: null })
-                try {
-                    getData(GET_CASH_REGISTER, GET).then((result) => {
-                        if (result?.data?.length > 0) {
-                            set({ CashRegister: result?.data })
-                        }
-                    }
-                    ).catch((error) => {
-                        console.debug(error)
-                        set({ loading: false })
-                    })
-                } catch (error) { console.error(error) }
             }
+
         }), {
             name: 'settings'
         }

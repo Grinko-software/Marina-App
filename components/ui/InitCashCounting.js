@@ -5,11 +5,27 @@ import credit from '@/assets/images/registryBox.png'
 import InitCashReconciliationCard from './InitCashReconciliationCard'
 import Lottie from 'lottie-react'
 import QR from '@/assets/gifs/QR.json'
+import useBoxStore from '@/stores/box'
+import { getIdUser } from '@/services/user'
 
 export default function InitCashCounting ({ isOpen, onClose, isInit, setIsInit }) {
     const [isSelected, setIsSelected] = useState(0)
     const [readQR, setReadQR] = useState(false)
     const [paymentDetailed, setPayDetailed] = useState(0)
+    const [totalBeginning, setTotalBeginning] = useState(null)
+    const [totalDetailBeginning, setTotalDetailBeginning] = useState(null)
+
+    const {
+        balanceBeginning,
+        SelectedCashRegister
+    } = useBoxStore(({
+        balanceBeginning,
+        SelectedCashRegister
+    }) => ({
+        balanceBeginning,
+        SelectedCashRegister
+    }))
+
     return (
         <>
             <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
@@ -87,7 +103,10 @@ export default function InitCashCounting ({ isOpen, onClose, isInit, setIsInit }
                             <ModalFooter className='justify-center'>
                                 <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                     onClick={() => {
-                                        setIsInit(true)
+                                        setTotalBeginning(paymentDetailed)
+                                        setTotalDetailBeginning('')
+                                        onClose()
+                                        balanceBeginning(getIdUser(), totalBeginning, totalDetailBeginning, SelectedCashRegister?.ID)
                                     }}>
                                 ACEPTAR
                                 </Button>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Badge, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@nextui-org/react'
 import { TbReportMoney } from 'react-icons/tb'
 import CashReconciliationModal from './CashReconciliationModal'
-import useSettingsStore from '@/stores/settings'
+import useBoxStore from '@/stores/box'
 
 export default function BoxStatus ({ scaleStatus }) {
     const [isOpenInfo, setIsOpenInfo] = useState(null)
@@ -13,7 +13,12 @@ export default function BoxStatus ({ scaleStatus }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const {
         SelectedCashRegister
-    } = useSettingsStore()
+    } = useBoxStore(({
+        SelectedCashRegister
+    }) => ({
+        SelectedCashRegister
+    }))
+
     const DEFAULT_SELECTED = { ID: 'no-select', label: 'NINGUNA' }
 
     useEffect(() => {
@@ -21,12 +26,12 @@ export default function BoxStatus ({ scaleStatus }) {
     }, [])
 
     useEffect(() => {
-        if (SelectedCashRegister?.ID === 1) {
-            setBox('1')
-        }
-
-        if (SelectedCashRegister?.ID === 2) {
-            setBox('2')
+        if (SelectedCashRegister?.ID === DEFAULT_SELECTED.ID) {
+            setColor('danger')
+            setBox(null)
+        } else {
+            setColor('success')
+            setBox(SelectedCashRegister?.ID)
         }
     }, [SelectedCashRegister])
 
@@ -38,18 +43,6 @@ export default function BoxStatus ({ scaleStatus }) {
         }
     }, [message, box])
 
-    useEffect(() => {
-        setTimeout(
-            () => setIsOpenInfo(true), 1000
-        )
-
-        if (box) {
-            setColor('success')
-        } else {
-            setColor('danger')
-        }
-    }, [box])
-
     const Message = ({ enabled }) => {
         return SelectedCashRegister?.ID === DEFAULT_SELECTED?.ID
             ? <div className="text-small font-bold">Se debe seleccionar una caja en ajustes para continuar</div>
@@ -59,7 +52,7 @@ export default function BoxStatus ({ scaleStatus }) {
     return (
         <div className="flex items-center gap-4 animation-fade-in" onClick={() => setIsOpenInfo(!isOpenInfo)}>
             <div className="flex items-center gap-3">
-                <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={message}>
+                <Popover crossOffset={200} offset={20} placement="top-end" color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={message}>
                     <PopoverTrigger>
                         <Badge color={color} content={box} size = "lg" shape="circle" className="text-white" >
                             <button
