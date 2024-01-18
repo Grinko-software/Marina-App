@@ -9,7 +9,8 @@ export default function ConfirmModal (props) {
         type,
         setLoadingDelete,
         setTargetProduct,
-        getListInventory,
+        handleProductRequest,
+        listInventory,
         targeProduct,
         onCloseTargetModal,
         setConfirm,
@@ -34,7 +35,7 @@ export default function ConfirmModal (props) {
                 deleteProduct({ id: productId, notify }).then(
                     (response) => {
                         setTargetProduct(null)
-                        getListInventory()
+                        handleProductRequest(true, listInventory)
                         onClose()
                         onCloseTargetModal()
                     })
@@ -48,7 +49,7 @@ export default function ConfirmModal (props) {
                                 setEdit(false)
                                 setTargetProduct(null)
                                 onClose()
-                                getListInventory()
+                                handleProductRequest(true, listInventory)
                             }
                         )
                     } catch (err) {

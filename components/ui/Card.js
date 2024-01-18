@@ -31,7 +31,10 @@ export default function Card (props) {
                     <p className="text-default-500">{item?.price}</p>
                 </CardFooter>
             </CardUI>
-            : <CardUI shadow="sm" className='w-full h-full animation-fade-in' key={index} isPressable onPress={() => { setTargetProduct(item) }}>
+            : <CardUI shadow="sm" className='w-full h-full animation-fade-in' key={index} isPressable onPress={() => {
+                setTargetProduct(item)
+            }
+            }>
                 <CardBody className="overflow-visible p-0">
                     <Badge content={item?.stock >= 100 ? '+99' : roundValue(item?.stock, 0, '-') } shape="circle"
                         className={`${item?.stock >= 100 ? 'right-[1.5rem]' : 'right-[1.2rem]'} top-5 z-1 bg-red-500 dark:bg-emerald-600 text-primary-50`}

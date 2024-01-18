@@ -21,7 +21,7 @@ const useProductFormStore = create((set) => ({
     setFormData: (newData) => set({ data: { ...newData } }),
     setLoading: (value) => set({ loading: value }),
     setError: (value) => set({ error: value }),
-    requestCreateProduct: async (data, notify, triggerAction) => {
+    requestCreateProduct: async (data, notify, handleProductRequest, withImage, listInventory) => {
         set({ loading: true, error: null, complete: false })
 
         // has requered values
@@ -50,7 +50,7 @@ const useProductFormStore = create((set) => ({
                 set({ loading: false, complete: true })
                 if (response?.code === 200) {
                     notify('✅ Producto creado con exito!')
-                    triggerAction()
+                    handleProductRequest(withImage, listInventory)
                 } else {
                     notify('❌ El producto no fue creado con exito, intenta otra vez!')
                 }
