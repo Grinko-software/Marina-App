@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import CardUi from '@/components/ui/Card'
@@ -32,19 +33,12 @@ export default function Card () {
         setSearchInput(event.target.value)
     }
     const listEmpty = new Array(20).fill(null)
-    const { listCategories, listInventory: list, getCategories, getStockTypes, getListInventory, loadingCategories, loading } = useInventoryStore(
-        ({ listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }) => (
-            { listCategories, listInventory, getCategories, getStockTypes, getListInventory, loadingCategories, loading }))
+    const { listCategories, listInventory: list, loadingCategories, loading } = useInventoryStore(
+        ({ listCategories, listInventory, loadingCategories, loading }) => (
+            { listCategories, listInventory, loadingCategories, loading }))
 
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
-
-    useEffect(() => {
-        /* Add in the future refreshToken in this useEffect */
-        // getCategories()
-        // getStockTypes()
-        // getListInventory()
-    }, [])
 
     useEffect(() => {
         if (selectedCategoryID) {
