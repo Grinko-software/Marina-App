@@ -70,7 +70,7 @@ export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, .
 }
 
 export default function CreateProduct (props) {
-    const { triggerAction, handleProductRequest } = props
+    const { triggerAction } = props
     const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -93,8 +93,7 @@ export default function CreateProduct (props) {
 
     useEffect(() => {
         if (isOpen) {
-            // triggerAction()
-            handleProductRequest(true, listInventory)
+            triggerAction()
             useScannerStore.getState()?.disabledRedirectSales()
         } else {
             useScannerStore.getState()?.enabledRedirectSales()
@@ -112,7 +111,7 @@ export default function CreateProduct (props) {
         if (complete && !error) {
             clearStore()
             onClose()
-            handleProductRequest(true, listInventory)
+            triggerAction()
         }
     }, [complete, error])
 
@@ -300,7 +299,6 @@ export default function CreateProduct (props) {
                             onClick={() => {
                                 onClose()
                                 clearStore()
-                                handleProductRequest(true, listInventory)
                             }}
                         >
                             Cerrar
