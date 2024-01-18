@@ -154,12 +154,12 @@ export default function Card () {
             // if (list?.length > 0 || !updateProduct) {
             if (list?.length > 0) {
                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
-                    // handleProductRequest(true, list)
+                    handleProductRequest(true, list)
                 } else {
-                    // handleProductRequest(false, list)
+                    handleProductRequest(false, list)
                 }
             } else {
-                // handleProductRequest(true, list)
+                handleProductRequest(true, list)
             }
         }
     }, [data])
