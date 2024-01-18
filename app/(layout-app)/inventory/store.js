@@ -91,7 +91,7 @@ const useInventoryStore = create(
                                     stock: product_stock?.stock,
                                     stockMin: product_stock?.stock_min,
                                     meta: name + ' ' + code,
-                                    taxFree: tax_free
+                                    taxFree: tax_free ?? false
                                 }
                             ]
                         }, []).sort((a, b) => {

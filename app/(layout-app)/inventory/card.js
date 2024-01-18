@@ -151,7 +151,8 @@ export default function Card () {
         if (data) {
             getCategories(data?.categories)
             getStockTypes(data?.stockTypes)
-            if (list?.length > 0 || !updateProduct) {
+            // if (list?.length > 0 || !updateProduct) {
+            if (list?.length > 0) {
                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
                     handleProductRequest(true, list)
                 } else {
@@ -206,6 +207,7 @@ export default function Card () {
                     <CreateProduct
                         triggerAction={triggerAction}
                         handleProductRequest={handleProductRequest}
+                        setUpdateProduct={setUpdateProduct}
                     />
                     <CreateCategory />
                 </div>
@@ -271,7 +273,7 @@ export default function Card () {
                         </section> }
 
             </section>
-            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct}/>
+            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct} setUpdateProduct={setUpdateProduct}/>
         </section>
     )
 }

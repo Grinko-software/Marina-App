@@ -9,7 +9,7 @@ import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { Toaster } from 'react-hot-toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
-export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct }) {
+export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, setUpdateProduct }) {
     const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
     const [edit, setEdit] = useState(false)
     const [type, setType] = useState(false)
@@ -28,7 +28,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
         price: null,
         stock: null,
         stock_min: null,
-        tax_free: targeProduct?.taxFree
+        tax_free: targeProduct?.taxFree ?? false
     }
     const [productData, setProductData] = useState(defaultState)
     const [newProductData, setNewProductData] = useState(defaultState)
@@ -315,7 +315,8 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                     type={type}
                     setLoadingDelete={setLoadingDelete}
                     setTargetProduct ={setTargetProduct}
-                    getListInventory={handleProductRequest(true, listInventory)}
+                    handleProductRequest={handleProductRequest}
+                    listInventory={listInventory}
                     onClose ={onClose}
                     targeProduct={targeProduct}
                     onCloseTargetModal = {onClose}
