@@ -30,8 +30,8 @@ export const setIsRefreshing = (value) => {
  * Handle the data request
  * @returns request async
  */
-export const getData = (url, method = GET, data) => {
-    return http.makeRequest(url, method, data)
+export const getData = (url, method = GET, data, fullUrl) => {
+    return http.makeRequest(url, method, data, fullUrl)
 }
 
 /**

@@ -3,7 +3,7 @@ import { BASE_MARKET_API_URL, AUTH_RENEW } from '../settings/constants'
 import { getIsRefreshing, setIsRefreshing, GET } from '../services/http'
 import { getToken, setToken } from '@/services/user'
 
-const makeRequest = async (url, method = GET, data = null) => {
+const makeRequest = async (url, method = GET, data = null, fullUrl = false) => {
     const headers = new Headers({
         Authorization: 'Bearer ' + getToken(),
         'Content-Type': 'application/json'
@@ -17,7 +17,7 @@ const makeRequest = async (url, method = GET, data = null) => {
         options.body = JSON.stringify(data)
     }
     try {
-        return await fetch(`${BASE_MARKET_API_URL}${url}`, options)
+        return await fetch(`${fullUrl ? '' : BASE_MARKET_API_URL}${url}`, options)
             .then(response => {
                 try {
                     if (response?.ok) {

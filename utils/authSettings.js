@@ -1,4 +1,4 @@
-import { getToken } from '@/services/user'
+import { GET, POST, getData } from '@/services/http'
 import { AUTH_CODE_API_URL, AUTH_LOGIN_API_URL } from '@/settings/constants'
 
 const getDataAuthenticate = async (response) => {
@@ -13,15 +13,6 @@ const getDataAuthenticate = async (response) => {
 
     await response()
         .then(response => {
-            data.statusCode = response?.status
-            data.statusText = response?.statusText
-            try {
-                return response.json()
-            } catch {
-                data.error = response?.statusText
-                return undefined
-            }
-        }).then(response => {
             if (response?.code === 200) {
                 const { token, user_type: userType, user: userData } = response.data
 
@@ -46,16 +37,13 @@ export async function authenticate ({ email, password }) {
     let data = {}
 
     try {
-        data = await getDataAuthenticate(() =>
-            fetch(AUTH_LOGIN_API_URL,
-                {
-                    method: 'POST',
-                    cache: 'no-store',
-                    body: JSON.stringify({
-                        email: email || '',
-                        password: password || ''
-                    })
-                }))
+        data = await getDataAuthenticate(() => getData(AUTH_LOGIN_API_URL,
+            POST,
+            {
+                email: email || '',
+                password: password || ''
+            },
+            true))
         return data
     } catch {
         return data
@@ -66,13 +54,7 @@ export async function authenticateByAuthCode ({ authCode }) {
     let data = {}
 
     try {
-        data = await getDataAuthenticate(() =>
-            fetch(`${AUTH_CODE_API_URL}/${authCode}`,
-                {
-                    method: 'GET',
-                    cache: 'no-store',
-                    headers: { Authorization: 'Bearer ' + getToken() }
-                }))
+        data = await getDataAuthenticate(() => getData(`${AUTH_CODE_API_URL}/${authCode}`, GET, null, true))
         return data
     } catch {
         return data
