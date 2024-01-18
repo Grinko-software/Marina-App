@@ -26,19 +26,20 @@ const useInventoryStore = create(
                     set({ error, loading: false })
                 }
             },
-            handleProductRequest: () => {
+            handleProductRequest: (withImage, lastListInventory) => {
                 set({ loading: true, error: null })
                 try {
-                    getData(PRODUCT_API_URL).then((result) => {
+                    getData(withImage ? PRODUCT_API_URL + '?include=image' : PRODUCT_API_URL).then((result) => {
                         if (result?.code === 200) {
                             set({
                                 listInventory: result?.data?.reduce((acc, { ID, code, cost_price, image, name, net_price, sale_price, product_categories_id, stock_types_id, product_stock, tax_free }) => {
+                                    const lastImage = lastListInventory?.find((product) => product?.id === ID)
                                     return [...acc,
                                         {
                                             id: ID,
                                             code,
                                             costPrice: cost_price,
-                                            image,
+                                            image: withImage ? image : lastImage?.image,
                                             name: name?.toUpperCase(),
                                             netPrice: net_price,
                                             price: sale_price,

@@ -70,10 +70,9 @@ export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, .
 }
 
 export default function CreateProduct (props) {
-    const { triggerAction } = props
+    const { triggerAction, handleProductRequest } = props
     const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
-    const [scanProduct, setScanProduct] = useState(false)
 
     const [categoryOptions, setCategoryOptions] = useState([])
     const [stockTypeOptions, setStockTypeOptions] = useState([])
@@ -83,7 +82,7 @@ export default function CreateProduct (props) {
     const [isTaxFree, setIsTaxFree] = useState(false)
 
     const { data, setFormData, requestCreateProduct, loadingStock, loadingCategories, error, setError, complete, hasRequeredValues, clearStore } = useProductFormStore()
-    const { listCategories, listStockTypes } = useInventoryStore()
+    const { listCategories, listStockTypes, listInventory } = useInventoryStore()
 
     useEffect(() => {
         if (navigator) {
@@ -94,9 +93,8 @@ export default function CreateProduct (props) {
 
     useEffect(() => {
         if (isOpen) {
-            triggerAction()
-            // getStockTypes()
-            // getCategories()
+            // triggerAction()
+            handleProductRequest(true, listInventory)
             useScannerStore.getState()?.disabledRedirectSales()
         } else {
             useScannerStore.getState()?.enabledRedirectSales()
@@ -114,7 +112,7 @@ export default function CreateProduct (props) {
         if (complete && !error) {
             clearStore()
             onClose()
-            // getListInventory()
+            handleProductRequest(true, listInventory)
         }
     }, [complete, error])
 
@@ -302,6 +300,7 @@ export default function CreateProduct (props) {
                             onClick={() => {
                                 onClose()
                                 clearStore()
+                                handleProductRequest(true, listInventory)
                             }}
                         >
                             Cerrar

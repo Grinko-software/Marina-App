@@ -10,7 +10,7 @@ import { Toaster } from 'react-hot-toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
 export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct }) {
-    const { listCategories, listStockTypes, handleProductRequest } = useInventoryStore()
+    const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
     const [edit, setEdit] = useState(false)
     const [type, setType] = useState(false)
     const [confirm, setConfirm] = useState(false)
@@ -315,7 +315,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                     type={type}
                     setLoadingDelete={setLoadingDelete}
                     setTargetProduct ={setTargetProduct}
-                    getListInventory={handleProductRequest}
+                    getListInventory={handleProductRequest(true, listInventory)}
                     onClose ={onClose}
                     targeProduct={targeProduct}
                     onCloseTargetModal = {onClose}

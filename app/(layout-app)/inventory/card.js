@@ -16,7 +16,8 @@ import { useIsInViewport } from '@/utils/viewportObserver'
 import { getMultiDataRequest, reMapData } from './services'
 import useStore from './store/store'
 import useScannerStore from '@/stores/scanner'
-// import toast from 'react-hot-toast'
+import useSyncStore from '@/stores/common/sync'
+import { upgradeVersion } from '@/services/sync'
 
 const LIMIT_PRODUCTS_VIEW = 50
 // const notify = (text) => toast.success(text)
@@ -30,7 +31,7 @@ export default function Card () {
         data,
         triggerAction
     } = useStore((state) => state)
-    const [response, setResponse] = useState(null)
+
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
     const [selectedCategoryID, setSelectedCategoryID] = useState('24')
@@ -43,14 +44,16 @@ export default function Card () {
     const [pageNumber, setPageNumber] = useState(1)
     const [lastInViewPort, setLastInViewPort] = useState(false)
     const refShowMore = useRef(null)
+    const { lastUpdate, setLastUpdate } = useSyncStore()
+    const [updateProduct, setUpdateProduct] = useState(false)
 
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
     const listEmpty = new Array(20).fill(null)
 
-    const { handleRequest, listCategories, listInventory: list, getCategories, getStockTypes, getListInventory } = useInventoryStore(
-        ({ handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory }) => (
-            { handleRequest, listCategories, listInventory, getCategories, getStockTypes, getListInventory }))
+    const { listCategories, listInventory: list, getCategories, getStockTypes, handleProductRequest } = useInventoryStore(
+        ({ listCategories, listInventory, getCategories, getStockTypes, handleProductRequest }) => (
+            { listCategories, listInventory, getCategories, getStockTypes, handleProductRequest }))
     const onChangeValue = (event) => {
         setSearchInput(event.target.value)
     }
@@ -148,7 +151,15 @@ export default function Card () {
         if (data) {
             getCategories(data?.categories)
             getStockTypes(data?.stockTypes)
-            getListInventory(data?.inventory)
+            if (list?.length > 0 || !updateProduct) {
+                if (upgradeVersion(lastUpdate, setLastUpdate)) {
+                    handleProductRequest(true, list)
+                } else {
+                    handleProductRequest(false, list)
+                }
+            } else {
+                handleProductRequest(true, list)
+            }
         }
     }, [data])
     /* Handle multiple request */
@@ -192,7 +203,10 @@ export default function Card () {
                 <div className="flex space-x-2">
                     {/* <ScannerDetection/> */}
                     <Offers/>
-                    <CreateProduct triggerAction={triggerAction}/>
+                    <CreateProduct
+                        triggerAction={triggerAction}
+                        handleProductRequest={handleProductRequest}
+                    />
                     <CreateCategory />
                 </div>
             </section>

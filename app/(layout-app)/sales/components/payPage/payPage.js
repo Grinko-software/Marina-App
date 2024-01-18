@@ -15,6 +15,7 @@ import useVocuherStore from '@/stores/voucher'
 import Discount from '../discount/discount'
 import useStore from './store/store'
 import useInvoiceStore from '../invoice/store'
+import useInventoryStore from '@/app/(layout-app)/inventory/store'
 export default function PayPage (props) {
     const {
         getData,
@@ -24,6 +25,8 @@ export default function PayPage (props) {
         data,
         triggerAction
     } = useStore((state) => state)
+    /* Control list products on local */
+    const { listInventory } = useInventoryStore(({ listInventory }) => ({ listInventory }))
     /* Change state to go back to sales table product */
     const {
         setPayment,
@@ -57,6 +60,7 @@ export default function PayPage (props) {
         }
     }, [data])
     // Handle request
+    /* Handle multiple request */
     useEffect(() => {
         getData()
         return () => {

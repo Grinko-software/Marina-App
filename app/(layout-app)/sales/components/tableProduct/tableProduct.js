@@ -8,6 +8,8 @@ import useInventoryStore from '../../../inventory/store'
 import LoadingCard from '@/components/ui/Loading'
 import WeighingScaleModal from '../weighingScaleModal'
 import useOffersStore from '@/stores/offers'
+import useSyncStore from '@/stores/common/sync'
+import { upgradeVersion } from '@/services/sync'
 import useStore from './store'
 export default function tableProducts (props) {
     const {
@@ -24,7 +26,7 @@ export default function tableProducts (props) {
     const [selectedProductWithKG, setSelectedProductWithKG] = useState(null)
     const [categoryTabSelected, setCategoryTabSelected] = useState()
     const [listInventory, setListInventory] = useState([])
-    const { listCategories, listInventory: list, getCategories, getListInventory, loadingCategories } = useInventoryStore(({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories }) => ({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories }))
+    const { listCategories, listInventory: list, getCategories, getListInventory, loadingCategories, handleProductRequest } = useInventoryStore(({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories, handleProductRequest }) => ({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories, handleProductRequest }))
     const [filteredList, setFilteredList] = useState([])
     const {
         addFromNewSales,
@@ -33,12 +35,11 @@ export default function tableProducts (props) {
         listSalesActives,
         saleIdActive
     } = useSalesStore()
-
     const { offers, getOffers } = useOffersStore()
     const listEmpty = new Array(20).fill(null)
 
     const [listSales, setListSales] = useState([])
-
+    const { lastUpdate, setLastUpdate } = useSyncStore()
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
         setListSales(sale.saleProductsList)
@@ -95,21 +96,6 @@ export default function tableProducts (props) {
             setTotalPrice(listSalesActives, saleIdActive, 0, 0)
         }
     }, [listSales])
-
-    useEffect(() => {
-        if (data) {
-            getCategories(data?.categories)
-            getListInventory(data?.inventory)
-            getOffers(data?.offers)
-        }
-    }, [data])
-    // Handle request
-    useEffect(() => {
-        getData()
-        return () => {
-            setLoading(false)
-        }
-    }, [])
     useEffect(() => {
         const searchSize = searchInput?.length || 0
         if (searchSize >= 3) {
@@ -127,6 +113,28 @@ export default function tableProducts (props) {
             setFilteredList([])
         }
     }, [searchInput])
+    useEffect(() => {
+        if (data) {
+            getCategories(data?.categories)
+            getOffers(data?.offers)
+            if (list?.length > 0) {
+                if (upgradeVersion(lastUpdate, setLastUpdate)) {
+                    handleProductRequest(true, list)
+                } else {
+                    handleProductRequest(false, list)
+                }
+            } else {
+                handleProductRequest(true, list)
+            }
+        }
+    }, [data])
+    /* Handle multiple request */
+    useEffect(() => {
+        getData()
+        return () => {
+            setLoading(false)
+        }
+    }, [])
 
     return (
         <section className='animation-fade-in h-full w-full flex flex-col'>
