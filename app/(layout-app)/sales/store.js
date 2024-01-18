@@ -8,7 +8,7 @@ import { getData, GET, POST } from '@/services/http'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
-import { getStateSaleMachine } from './services'
+import { getStateSaleMachine, createSaleOnHaulmer } from './services'
 import { getDeviceTuu } from '@/services/settings'
 import { setStateMachine } from '@/services/machine'
 import { errorsMachine } from '@/utils/machine'
@@ -284,43 +284,53 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
                 try {
-                    getData(GET_DOCUMENT_HAULMER, POST, modelBody).then(resultDtemite => {
-                        try {
-                            getData(SALE_TICKET_CREATE, POST, body).then(result => {
-                                setPageTarget(false)
-                                // setPaymentTarget(sales, saleId, null)
-                                set({ loadingSale: false })
-                                if (result?.code === 200) {
-                                    console.log(result)
-                                    const stamp = resultDtemite?.data?.TIMBRE
-                                    generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
-                                    // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
-                                    notify('✅ Pago con éxito')
-                                    setPayment(false)
-                                    onClose()
-                                    setGoPay(false)
-                                    removeSale(sales, saleId)
+                    createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, modelBody).then(data => {
+                        if (data?.data?.TIMBRE) {
+                            try {
+                                getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                     setPageTarget(false)
-                                    setPayment(false)
-                                    onClose()
-                                    setGoPay(false)
+                                    // setPaymentTarget(sales, saleId, null)
                                     set({ loadingSale: false })
-                                    setTargetCustomer(null)
-                                    // clearList()
-                                } else {
-                                    if (pageTarget) {
-                                        notify('❌ Problemas con el pago con la tarjeta')
+                                    if (result?.code === 200) {
+                                        console.log(result)
+                                        const stamp = data?.data?.TIMBRE
+                                        generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
+                                        // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                        notify('✅ Pago con éxito')
+                                        setPayment(false)
+                                        onClose()
+                                        setGoPay(false)
+                                        removeSale(sales, saleId)
+                                        setPageTarget(false)
+                                        setPayment(false)
+                                        onClose()
+                                        setGoPay(false)
+                                        set({ loadingSale: false })
+                                        setTargetCustomer(null)
+                                        // clearList()
                                     } else {
-                                        notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        if (pageTarget) {
+                                            notify('❌ Problemas con el pago con la tarjeta')
+                                        } else {
+                                            notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        }
+                                        set({ loadingSale: false })
+                                        onClose()
                                     }
-                                    set({ loadingSale: false })
-                                    onClose()
-                                }
-                            })
-                        } catch {
+                                })
+                            } catch {
+                                set({ loadingSale: false })
+                            }
+                        } else {
                             set({ loadingSale: false })
+                            onClose()
                         }
                     })
+                        .catch(error => {
+                            console.log(error)
+                            set({ loadingSale: false })
+                            onClose()
+                        })
                 } catch {
                     set({ loadingSale: false })
                     onClose()

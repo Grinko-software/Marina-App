@@ -28,3 +28,23 @@ export const getStateSaleMachine = (url) => {
         }, 5000) // Consulta cada 1000ms
     })
 }
+export const createSaleOnHaulmer = (url, method, modelbody, retry = 0) => {
+    return new Promise((resolve, reject) => {
+        getData(url, method, modelbody).then(data => {
+            retry = retry + 1
+            if (data?.data?.TIMBRE) {
+                resolve(data)
+            } else {
+                if (retry === 3) {
+                    reject(new Error('Error al consultar en haulmer'))
+                } else {
+                    return createSaleOnHaulmer(url, method, modelbody, retry)
+                }
+            }
+        })
+            .catch(error => {
+                reject(error)
+            }
+            )
+    })
+}
