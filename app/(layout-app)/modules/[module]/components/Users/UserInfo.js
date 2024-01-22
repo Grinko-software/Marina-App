@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import { useEffect, useState } from 'react'
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import toast from 'react-hot-toast'
 import { deleteUser } from '@/services/users'
@@ -71,7 +71,49 @@ export default function UserInfo (params) {
                     <p>Usuario: {target?.fullName?.toUpperCase()}</p>
                 </ModalHeader>
                 <ModalBody>
-                    {}
+                    <section className='items-center gap-4 grid grid-cols-1 md:grid-cols-2'>
+                        <div className="p-4 flex items-center">
+                            <Input
+                                disabled={!edit}
+                                type="text"
+                                defaultValue={target?.name}
+                                // value={name}
+                                variant={'underlined'}
+                                label={'Nombre'}
+                                labelPlacement={'outside'}
+                                placeholder={ 'Ingrese el nombre del usuario'}
+                                // onValueChange={(value) => { setName(value) }}
+                            />
+                        </div>
+                        <div className="p-4 flex items-center">
+                            <Input
+                                type="text"
+                                disabled={!edit}
+                                defaultValue={target?.lastName}
+                                // value={lastName}
+                                variant={'underlined'}
+                                label={'Apellido'}
+                                labelPlacement={'outside'}
+                                placeholder={ 'Ingrese el Apellido del usuario'}
+                                // onValueChange={(value) => { setLastName(value) }}
+                            />
+                        </div>
+                        <div className="p-4 flex items-center">
+                            <Input
+                                type="text"
+                                disabled={!edit}
+                                defaultValue={target?.email}
+                                // value={email}
+                                variant={'underlined'}
+                                label={'Correo del usuario'}
+                                labelPlacement={'outside'}
+                                placeholder={ 'Ingrese el correo del usuario'}
+                                // onValueChange={(value) => { setEmail(value) }}
+                            />
+                        </div>
+
+                    </section>
+
                 </ModalBody>
                 <ModalFooter>
                     {
@@ -100,7 +142,7 @@ export default function UserInfo (params) {
                                     isLoading={loadingDelete}>
                                     {loadingDelete ? 'Eliminando' : 'Eliminar'}
                                 </Button>
-                                <Button className =" bg-green-500 text-primary-50"
+                                <Button className =" bg-blue-500 text-primary-50"
                                     onClick={() => {
                                         setEdit(true)
                                     }}

@@ -129,7 +129,6 @@ export default function TableUsers ({ data, loading, setTarget }) {
                 : dataModel
                     ? <section className='p-1 w-full gap-3' >
                         <Table isHeaderSticky
-                            // onSortChange={sortItems}
                             bottomContent={
                                 loading
                                     ? <div className="flex w-full justify-center">
