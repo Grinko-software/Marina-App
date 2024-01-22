@@ -12,6 +12,7 @@ import { getStateSaleMachine, createSaleOnHaulmer } from './services'
 import { getDeviceTuu } from '@/services/settings'
 import { setStateMachine } from '@/services/machine'
 import { errorsMachine } from '@/utils/machine'
+import { getCashRegister } from '@/services/cashRegister'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -269,6 +270,7 @@ const useSalesStore = create(
                     }
                 }
             /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -279,7 +281,8 @@ const useSalesStore = create(
                     }
                 }),
                 payment_type_id: paymentTarget,
-                voucher_type_id: voucherTarget
+                voucher_type_id: voucherTarget,
+                cash_register_id: cashRegister?.ID
             }
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {

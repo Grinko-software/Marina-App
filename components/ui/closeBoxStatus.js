@@ -12,7 +12,7 @@ export default function BoxStatus ({ scaleStatus }) {
     const [message, setMessage] = useState(false)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const {
-        SelectedCashRegister
+        selectedCashRegister
     } = useSettingsStore()
     const DEFAULT_SELECTED = { ID: 'no-select', label: 'NINGUNA' }
 
@@ -21,14 +21,14 @@ export default function BoxStatus ({ scaleStatus }) {
     }, [])
 
     useEffect(() => {
-        if (SelectedCashRegister?.ID === 1) {
+        if (selectedCashRegister?.ID === 1) {
             setBox('1')
         }
 
-        if (SelectedCashRegister?.ID === 2) {
+        if (selectedCashRegister?.ID === 2) {
             setBox('2')
         }
-    }, [SelectedCashRegister])
+    }, [selectedCashRegister])
 
     useEffect(() => {
         if (message && box) {
@@ -51,7 +51,7 @@ export default function BoxStatus ({ scaleStatus }) {
     }, [box])
 
     const Message = ({ enabled }) => {
-        return SelectedCashRegister?.ID === DEFAULT_SELECTED?.ID
+        return selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
             ? <div className="text-small font-bold">Se debe seleccionar una caja en ajustes para continuar</div>
             : null
     }
@@ -74,7 +74,7 @@ export default function BoxStatus ({ scaleStatus }) {
                             </button>
                         </Badge>
                     </PopoverTrigger>
-                    {SelectedCashRegister?.ID === DEFAULT_SELECTED?.ID
+                    {selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
                         ? <PopoverContent className='mt-1' color={color}>
                             <Message enabled={box}/>
                         </PopoverContent>

@@ -26,10 +26,10 @@ const useSettingsStore = create(
                     })
                 } catch (error) { console.error(error) }
             },
-            SelectedCashRegister: DEFAULT_SELECTED,
+            selectedCashRegister: DEFAULT_SELECTED,
             cashRegister: null,
             setCashRegister: (value) => set({ cashRegister: value }),
-            setSelectedCashRegister: (value) => set({ SelectedCashRegister: value }),
+            setSelectedCashRegister: (value) => set({ selectedCashRegister: value }),
             getCashRegister: () => {
                 set({ loading: true, error: null })
                 try {

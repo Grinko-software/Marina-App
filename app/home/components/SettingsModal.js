@@ -16,7 +16,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         setSelectedPostMachine,
         getPostMachines,
         cashRegister,
-        SelectedCashRegister,
+        selectedCashRegister,
         setSelectedCashRegister,
         getCashRegister
     } = useSettingsStore(({
@@ -24,7 +24,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         postMachines,
         setSelectedPostMachine,
         getPostMachines, cashRegister,
-        SelectedCashRegister,
+        selectedCashRegister,
         setSelectedCashRegister,
         getCashRegister
     }) => ({
@@ -33,7 +33,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         setSelectedPostMachine,
         getPostMachines,
         cashRegister,
-        SelectedCashRegister,
+        selectedCashRegister,
         setSelectedCashRegister,
         getCashRegister
     }))
@@ -86,7 +86,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                         Seleccionar Caja principal
                                     </p>
                                     {cashRegisterData?.map((cashRegister, index2) => {
-                                        const isCashRegistrySelected = SelectedCashRegister?.ID === cashRegister.ID
+                                        const isCashRegistrySelected = selectedCashRegister?.ID === cashRegister.ID
                                         return (
                                             <Checkbox
                                                 key={index2}
