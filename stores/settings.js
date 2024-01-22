@@ -27,15 +27,15 @@ const useSettingsStore = create(
                 } catch (error) { console.error(error) }
             },
             SelectedCashRegister: DEFAULT_SELECTED,
-            CashRegister: null,
-            setCashRegister: (value) => set({ CashRegister: value }),
+            cashRegister: null,
+            setCashRegister: (value) => set({ cashRegister: value }),
             setSelectedCashRegister: (value) => set({ SelectedCashRegister: value }),
             getCashRegister: () => {
                 set({ loading: true, error: null })
                 try {
                     getData(GET_CASH_REGISTER, GET).then((result) => {
                         if (result?.data?.length > 0) {
-                            set({ CashRegister: result?.data })
+                            set({ cashRegister: result?.data })
                         }
                     }
                     ).catch((error) => {

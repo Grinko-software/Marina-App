@@ -15,7 +15,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         postMachines,
         setSelectedPostMachine,
         getPostMachines,
-        CashRegister,
+        cashRegister,
         SelectedCashRegister,
         setSelectedCashRegister,
         getCashRegister
@@ -23,7 +23,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         selectedPostMachine,
         postMachines,
         setSelectedPostMachine,
-        getPostMachines, CashRegister,
+        getPostMachines, cashRegister,
         SelectedCashRegister,
         setSelectedCashRegister,
         getCashRegister
@@ -32,7 +32,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         postMachines,
         setSelectedPostMachine,
         getPostMachines,
-        CashRegister,
+        cashRegister,
         SelectedCashRegister,
         setSelectedCashRegister,
         getCashRegister
@@ -45,10 +45,10 @@ export default function SettingModal ({ isOpen, onClose }) {
     }, [postMachines])
     /* Handle unique request */
     useEffect(() => {
-        if (CashRegister) {
-            setCashRegisterData(CashRegister)
+        if (cashRegister) {
+            setCashRegisterData(cashRegister)
         }
-    }, [cashRegisterData])
+    }, [cashRegister])
     useEffect(() => {
         // TODO: Add multi data fetch
         getPostMachines()
@@ -85,7 +85,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                     <p className="text-primary-500 dark:text-primary-200 font-bold">
                                         Seleccionar Caja principal
                                     </p>
-                                    {[...cashRegisterData]?.map((cashRegister, index2) => {
+                                    {cashRegisterData?.map((cashRegister, index2) => {
                                         const isCashRegistrySelected = SelectedCashRegister?.ID === cashRegister.ID
                                         return (
                                             <Checkbox
