@@ -425,7 +425,7 @@ const useSalesStore = create(
                             }
                         })
                     } else {
-                        fetchPost(SALE_TICKET_CREATE, body).then(result => {
+                        getData(SALE_TICKET_CREATE, POST, body).then(result => {
                             setPageTarget(null)
                             set({ loadingSale: false })
                             if (result?.code === 200) {
