@@ -395,6 +395,7 @@ const useSalesStore = create(
                                             setGoPay(false)
                                             removeSale(sales, saleId)
                                         } else {
+                                            console.log(result)
                                             notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                                             onClose()
                                             setGoPay(false)
@@ -441,6 +442,7 @@ const useSalesStore = create(
                                 setGoPay(false)
                                 removeSale(sales, saleId)
                             } else {
+                                console.log(result)
                                 notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                                 onClose()
                                 setGoPay(false)
@@ -472,6 +474,7 @@ const useSalesStore = create(
                         setGoPay(false)
                         removeSale(sales, saleId)
                     } else {
+                        console.log(result)
                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                         onClose()
                         setGoPay(false)
