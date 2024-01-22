@@ -1,7 +1,7 @@
 import { authenticate, authenticateByAuthCode } from '@/utils/authSettings'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { setToken } from '@/services/user'
+import { setToken } from '@/services/account'
 const useAuthStore = create(
     persist(
         (set) => ({

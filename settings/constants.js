@@ -54,3 +54,7 @@ export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
 // SUPPLIER
 export const SUPPLIER_API_URL = BASE_MARKET_API_URL + '/supplier'
 export const SUPPLIER_ASSOCIATION_API_URL = BASE_MARKET_API_URL + '/supplier/:id/association/products'
+
+// USERS
+export const USERS_API_URL = BASE_AUTH_API_URL + '/user'
+export const CREATE_USER_API_URL = BASE_AUTH_API_URL + '/user/create'
