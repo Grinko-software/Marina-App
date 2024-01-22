@@ -1,13 +1,19 @@
 'use client'
 import { Spinner, TableBody, TableCell, Table, TableColumn, TableHeader, TableRow, Button, Chip } from '@nextui-org/react'
 import { useCallback, useEffect, useState } from 'react'
+import { getDataModelUsers } from './service'
 
 const colorMap = {
     EMPLOYEE: 'warning',
     ADMIN: 'success'
 }
 
-export default function UsersInfo ({ data, loading, setTarget }) {
+const typesMap = {
+    EMPLOYEE: 'EMPLEADO',
+    ADMIN: 'ADMINISTRADOR'
+}
+
+export default function TableUsers ({ data, loading, setTarget }) {
     const [dataModel, setDataModel] = useState(null)
 
     const columns = [
@@ -25,24 +31,22 @@ export default function UsersInfo ({ data, loading, setTarget }) {
         },
         {
             key: 'type',
-            label: 'Tipo de usuario'
+            label: 'Tipo de usuario',
+            center: true
+        },
+        {
+            key: 'hasCredential',
+            label: 'Credencial',
+            center: true
         },
         {
             key: 'actions',
-            label: 'Acciones'
+            label: 'Acciones',
+            center: true
         }
     ]
     useEffect(() => {
-        const dataModel = data?.map((item) => {
-            return {
-                id: item.ID,
-                key: item.ID,
-                name: item.name,
-                lastName: item.last_name,
-                email: item.email,
-                type: item?.user_type?.type_name
-            }
-        })
+        const dataModel = getDataModelUsers({ data })
         setDataModel(dataModel)
     }, [data])
 
@@ -68,7 +72,7 @@ export default function UsersInfo ({ data, loading, setTarget }) {
         case 'type':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{
+                    <p className="text-bold text-sm capitalize dark:text-white flex justify-center">{
                         <Chip
                             color={colorMap[data.type?.toUpperCase()]}
                             size="sm"
@@ -77,16 +81,33 @@ export default function UsersInfo ({ data, loading, setTarget }) {
                                 content: 'text-white'
                             }}
                         >
-                            {data.type}
+                            {typesMap[data.type?.toUpperCase()]}
                         </Chip>
                     }</p>
+                </div>
+            )
+        case 'hasCredential':
+            return (
+                <div className="flex flex-col">
+                    <p className="text-bold text-sm capitalize dark:text-white flex justify-center">
+                        <Chip
+                            color={cellValue ? 'success' : 'warning'}
+                            size="sm"
+                            variant="solid"
+                            classNames={{
+                                content: 'text-white'
+                            }}
+                        >
+                            {cellValue ? 'ASIGNADA' : 'NO ASIGNADA'}
+                        </Chip>
+                    </p>
                 </div>
             )
         case 'actions':
             return (
                 <div className="flex flex-col">
                     <Button variant="flat" onPress={() => openTarget(data)}>
-                        Detalles
+                    Detalles
                     </Button>
                 </div>
             )
@@ -118,7 +139,7 @@ export default function UsersInfo ({ data, loading, setTarget }) {
                             }>
                             <TableHeader columns={columns}>
                                 {(column) => (
-                                    <TableColumn key={column.key} allowsSorting >
+                                    <TableColumn key={column.key} className={column.center ? 'text-center' : ''}>
                                         {column.label}
                                     </TableColumn>
                                 )}

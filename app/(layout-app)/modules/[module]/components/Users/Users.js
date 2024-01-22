@@ -1,11 +1,13 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useUsersStore from './store'
-import UsersInfo from './UsersInfo'
+import TableUsers from './TableUsers'
+import UserInfo from './UserInfo'
+import CreateUser from './NewUser/newUser'
 
 export default function Users ({ params }) {
     const { requestData, loading, data } = useUsersStore()
-    // const [target, setTarget] = useState(null)
+    const [target, setTarget] = useState(null)
 
     useEffect(() => {
         requestData()
@@ -13,9 +15,10 @@ export default function Users ({ params }) {
 
     return <section className='w-full'>
 
-        {/* <CreateUser/> */}
+        <CreateUser/>
         <section className='flex flex-row' >
-            <UsersInfo data={data} loading={loading} /* setTarget={setTarget} *//>
+            <TableUsers data={data} loading={loading} setTarget={setTarget}/>
+            <UserInfo target={target} setTarget={setTarget} deleteAction={requestData}/>
         </section>
     </section>
 }
