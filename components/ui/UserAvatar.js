@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, Button, Divider } from '@nextui-org/react'
@@ -15,13 +16,21 @@ import { HomeButton } from './HomeButton'
 import SwitchUserButton from './SwitchUserButton'
 
 // import ShortcutButton from './ShortcutButton'
-
+export const handler = async () => {
+    const response = await fetch('/api', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
 export default function UserAvatar () {
     const [userName, setUserName] = useState(null)
     const [admin, setAdmin] = useState(false)
     const { fullName, isAdmin } = useAuthStore(({ fullName, isAdmin }) => ({ fullName, isAdmin }))
     const { isConnected } = hubScale()
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
+
     useEffect(() => {
         if (fullName) {
             setUserName(fullName)
@@ -81,7 +90,13 @@ export default function UserAvatar () {
                             color="primary"
                             radius="full"
                             variant={'solid'}
-                            onClick={() => signOut()}
+                            onClick={() => {
+                                // call api
+                                handler()
+                            }
+                            // signOut()
+
+                            }
                         >
                             {'Cerrar Sesion'}
                         </Button>
