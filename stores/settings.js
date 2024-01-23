@@ -10,6 +10,8 @@ const useSettingsStore = create(
             postMachines: null,
             error: null,
             loading: false,
+            statusCashRegister: null,
+            setStatusCashRegister: (statusCashRegister) => set({ statusCashRegister }),
             setPostMachines: (value) => set({ postMachines: value }),
             setSelectedPostMachine: (value) => set({ selectedPostMachine: value }),
             getPostMachines: () => {

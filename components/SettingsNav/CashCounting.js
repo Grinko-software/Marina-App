@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input
 import credit from '@/assets/images/credit.jpeg'
 import cash from '@/assets/images/cash.jpeg'
 import PaymentOfMoney from '@/assets/images/paymentOfMoney.jpeg'
-import CashReconciliationCard from './CashReconciliationCard'
+import CashReconciliationCard from '../ui/CashReconciliationCard'
 import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
 

@@ -3,7 +3,7 @@ import MainTittleCard from '@/components/ui/MainCard'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Auth from '../auth'
-import UserAvatar from '../../components/ui/UserAvatar'
+import SettingsNav from '@/components/SettingsNav/SettingsNav'
 import inventory from '@/assets/images/inventory.webp'
 import reports from '@/assets/images/report.jpeg'
 import sales from '@/assets/images/sales.jpeg'
@@ -70,7 +70,7 @@ export default function Home () {
                             }}
                             className="flex sm:flex-col-reverse sm:m-0 m-4  items-center sm:items-end sm:x-5"
                         >
-                            <UserAvatar />
+                            <SettingsNav />
                         </motion.div>
                     </div>
                 </main>

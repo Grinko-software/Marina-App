@@ -12,7 +12,7 @@ export default function InitCashReconciliationCard (props) {
             <Card className="col-span-12 sm:col-span-4 h-[400px] w-full bg-yellow-400 ">
                 <CardHeader className={`${bgTitle} bottom-0 border-1 rounded-md border-zinc-100/50 z-10 !items-start h-[80px]`}>
                     <div className="grid grid-rows-2 content-between h-[120px]">
-                        <p className=" text-white/80 uppercase font-bold text-4xl">{title}</p>
+                        <p className=" text-white/80 uppercase font-bold text-3xl">{title}</p>
                     </div>
                 </CardHeader>
                 <h4 className="z-10 text-white/90 text-6xl font-bold px-2 my-2 items-start justify-start">{total}</h4>

@@ -5,7 +5,7 @@ import { TbReportMoney } from 'react-icons/tb'
 import CashReconciliationModal from './CashReconciliationModal'
 import useSettingsStore from '@/stores/settings'
 
-export default function BoxStatus ({ scaleStatus }) {
+export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance, setOpenModalCashBalance }) {
     const [isOpenInfo, setIsOpenInfo] = useState(null)
     const [color, setColor] = useState('danger')
     const [box, setBox] = useState(null)
@@ -50,6 +50,12 @@ export default function BoxStatus ({ scaleStatus }) {
         }
     }, [box])
 
+    useEffect(() => {
+        if (openModalCashBalance) {
+            onOpen()
+            setOpenModalCashBalance(false)
+        }
+    }, [openModalCashBalance])
     const Message = ({ enabled }) => {
         return selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
             ? <div className="text-small font-bold">Se debe seleccionar una caja en ajustes para continuar</div>
@@ -69,7 +75,7 @@ export default function BoxStatus ({ scaleStatus }) {
                                 onClick={(onOpen)}
                             >
 
-                                <CashReconciliationModal isOpen={isOpen} onClose={onClose} />
+                                <CashReconciliationModal isOpen={isOpen} onClose={onClose} setStatusCashRegister={setStatusCashRegister} />
                                 <TbReportMoney className="w-6 h-6 sm:w-10 sm:h-10 cursor-pointer "/>
                             </button>
                         </Badge>

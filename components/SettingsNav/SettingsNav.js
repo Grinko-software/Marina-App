@@ -2,23 +2,24 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, Button, Divider } from '@nextui-org/react'
 import useAuthStore from '@/stores/user'
-import ThemeButton from './ThemeButton'
+import ThemeButton from '../ui/ThemeButton'
 import imgSrc from '@/app/icon.png'
 import Image from 'next/image'
-import ShortcutButton from './ShortcutButton'
-import { PaymentOfMoney } from './PaymentOfMoney'
+import ShortcutButton from '../ui/ShortcutButton'
+import { PaymentOfMoney } from '../ui/PaymentOfMoney'
 import { usePathname } from 'next/navigation'
 import BoxStatus from './closeBoxStatus'
 import ScaleStatus from '@/components/ui/ScaleStatus'
 import hubScale from '@/app/(layout-app)/sales/components/store/connectionScale'
-import { HomeButton } from './HomeButton'
-import SwitchUserButton from './SwitchUserButton'
-
-// import ShortcutButton from './ShortcutButton'
-
-export default function UserAvatar () {
+import { HomeButton } from '../ui/HomeButton'
+import SwitchUserButton from '../ui/SwitchUserButton'
+import useSettingsStore from '@/stores/settings'
+import { getStatus } from './services'
+export default function SettingsNav () {
     const [userName, setUserName] = useState(null)
     const [admin, setAdmin] = useState(false)
+    const [openModalCashBalance, setOpenModalCashBalance] = useState(false)
+    const { selectedCashRegister, statusCashRegister, setStatusCashRegister } = useSettingsStore(({ selectedCashRegister, statusCashRegister, setStatusCashRegister }) => ({ selectedCashRegister, statusCashRegister, setStatusCashRegister }))
     const { fullName, isAdmin } = useAuthStore(({ fullName, isAdmin }) => ({ fullName, isAdmin }))
     const { isConnected } = hubScale()
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
@@ -28,6 +29,20 @@ export default function UserAvatar () {
             setAdmin(isAdmin)
         }
     }, [fullName])
+    useEffect(() => {
+        if (selectedCashRegister?.ID !== 'no-select' && statusCashRegister === null) {
+            console.debug(selectedCashRegister)
+            getStatus(selectedCashRegister?.ID).then((status) => {
+                console.log(status)
+                if (!status) {
+                    // Open Modal to Init Cash balance
+                    setOpenModalCashBalance(true)
+                } else {
+                    // Se debe hacer un cierre de caja
+                }
+            })
+        }
+    }, [selectedCashRegister])
     return (
         <div >
             <Card className={`${usePathname() !== '/home' ? 'bg-transparent shadow-none' : ''} `}>
@@ -49,7 +64,12 @@ export default function UserAvatar () {
                                 <PaymentOfMoney />
                             </div>
                             <div className="col-start-2 col-end-2">
-                                <BoxStatus />
+                                <BoxStatus
+                                    setStatusCashRegister={setStatusCashRegister}
+                                    openModalCashBalance={openModalCashBalance}
+                                    setOpenModalCashBalance={setOpenModalCashBalance}
+
+                                />
                             </div>
                             <Divider orientation="vertical" className="h-12"/>
                             <div className="col-start-1 col-end-2">
