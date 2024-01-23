@@ -18,6 +18,13 @@ export const requestCreateUser = async ({ name, lastName, email, password }) => 
 
 export const getDataModelUsers = ({ data }) => {
     return data?.map((item) => {
+        const credentialData = {
+            valid: !!item.user_key,
+            code: item?.user_key?.key_code,
+            name: item?.user_key?.key_name,
+            id: item?.user_key?.ID
+        }
+
         return {
             id: item.ID,
             key: item.ID,
@@ -26,7 +33,8 @@ export const getDataModelUsers = ({ data }) => {
             fullName: `${item.name} ${item.last_name}`,
             email: item.email,
             type: item?.user_type?.type_name,
-            hasCredential: !!item.user_key
+            hasCredential: !!item.user_key,
+            credential: credentialData?.valid ? credentialData : null
         }
     })
 }

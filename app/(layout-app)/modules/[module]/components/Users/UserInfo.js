@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import { useEffect, useState } from 'react'
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
+import { Button, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import toast from 'react-hot-toast'
 import { deleteUser } from '@/services/users'
+import { QRCode } from 'antd'
 
 const notify = (text) => toast(text)
 
@@ -71,7 +72,7 @@ export default function UserInfo (params) {
                     <p>Usuario: {target?.fullName?.toUpperCase()}</p>
                 </ModalHeader>
                 <ModalBody>
-                    <section className='items-center gap-4 grid grid-cols-1 md:grid-cols-2'>
+                    <section className='items-center gap-2 grid grid-cols-1 md:grid-cols-2'>
                         <div className="p-4 flex items-center">
                             <Input
                                 disabled={!edit}
@@ -112,6 +113,41 @@ export default function UserInfo (params) {
                             />
                         </div>
 
+                    </section>
+                    <section className='my-4 mx-[1rem] gap-4 flex flex-col'>
+                        <div className="flex flex-row gap-2">
+                            <p className='text-sm'>Credencial:</p>
+                            <p className="text-bold text-sm capitalize dark:text-white flex justify-center">
+                                <Chip
+                                    color={target?.credential ? 'success' : 'warning'}
+                                    size="sm"
+                                    variant="solid"
+                                    classNames={{
+                                        content: 'text-white'
+                                    }}
+                                >
+                                    {target?.credential ? 'ASIGNADA' : 'NO ASIGNADA'}
+                                </Chip>
+                            </p>
+                        </div>
+                        {target?.credential
+                            ? <div className='flex flex-row m-auto gap-5'>
+                                <div className='flex h-full flex-col items-end my-auto'>
+                                    <p className='text-sm font-medium text-default-700'>CREDENCIAL DE ACCESO:</p>
+                                    <p className='text-md font-semibold'>{target?.credential?.name?.toUpperCase() || 'Sin nombre'}</p>
+                                </div>
+                                <Divider orientation='vertical' className="h-[1-rem] w-[2px]"/>
+                                <div className='h-auto gap-2 max-w-60 border mr-auto bg-white rounded-xl'>
+                                    <QRCode
+                                        errorLevel="H"
+                                        // size={size}
+                                        // iconSize={size / 4}
+                                        value={target?.credential?.code}
+                                        icon="https://i.pinimg.com/originals/f5/c4/3d/f5c43df87ed342297a519ba9d202e111.png"
+                                    />
+                                </div>
+                            </div>
+                            : null}
                     </section>
 
                 </ModalBody>
