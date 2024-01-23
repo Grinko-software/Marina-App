@@ -92,7 +92,7 @@ export default function UserAvatar () {
                             variant={'solid'}
                             onClick={() => {
                                 // call api
-                                handler()
+                                signOut()
                             }
                             // signOut()
 

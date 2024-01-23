@@ -152,7 +152,7 @@ const useSalesStore = create(
             const modelBody = voucherTarget === 1
                 ? {
                     response: [
-                        'PDF', 'TIMBRE'
+                        'FOLIO', 'TIMBRE'
                     ],
                     dte: {
                         Encabezado: {
@@ -210,7 +210,7 @@ const useSalesStore = create(
                 : {
 
                     response: [
-                        'PDF', 'TIMBRE'
+                        'FOLIO', 'TIMBRE'
                     ],
                     dte: {
                         Encabezado: {
