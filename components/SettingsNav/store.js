@@ -25,8 +25,7 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, setReadQR,
-            onClose) => {
+        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, setReadQR, onClose) => {
             set({ loading: true })
             const body = {
                 total_beginning: totalBeginnig,

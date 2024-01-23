@@ -16,12 +16,12 @@ export default function InitCashCounting ({ isOpen, onClose, isInit, setIsInit, 
     const [lastBalance, setLastBalance] = useState(null)
     const onHandlerBalance = () => {
         if (getCashRegister()?.ID) {
-            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister)
+            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister, setReadQR, onClose)
         }
     }
     useEffect(() => {
         if (getCashRegister()?.ID !== 'no-select') {
-            getLastIndicatorsCashBalanceEnding(getCashRegister()?.ID, setLastBalance, setReadQR, onClose)
+            getLastIndicatorsCashBalanceEnding(getCashRegister()?.ID, setLastBalance)
         }
     }, [])
 
