@@ -1,20 +1,15 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import InitCashCounting from './InitCashCounting/InitCashCounting'
 import CashCounting from './CashCounting'
 
-export default function CashReconciliationModal ({ isOpen, onClose, setStatusCashRegister }) {
-    const [isInit, setIsInit] = useState(false)
-
-    useEffect(() => {
-        setIsInit(false)
-    }, [])
-
+export default function CashReconciliationModal ({ isOpen, onClose, setStatusCashRegister, statusCashRegister }) {
     return (
         <>
-            {!isInit
-                ? <InitCashCounting isOpen={isOpen} onClose={onClose} setIsInit={setIsInit} isInit={isInit} setStatusCashRegister={setStatusCashRegister}/>
-                : <CashCounting isOpen={isOpen} onClose={onClose} setIsInit={setIsInit} isInit={isInit} setStatusCashRegister={setStatusCashRegister}/>}
+            {statusCashRegister
+                ? <CashCounting isOpen={isOpen} onClose={onClose} setStatusCashRegister={setStatusCashRegister}/>
+                : <InitCashCounting isOpen={isOpen} onClose={onClose} setStatusCashRegister={setStatusCashRegister}/>
+            }
         </>
     )
 }

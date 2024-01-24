@@ -8,7 +8,7 @@ import CashReconciliationCard from '../ui/CashReconciliationCard'
 import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
 
-export default function CashCounting ({ isOpen, onClose, setIsInit }) {
+export default function CashCounting ({ isOpen, onClose }) {
     const [isSelected, setIsSelected] = useState()
     const [readQR, setReadQR] = useState(false)
 
@@ -101,7 +101,8 @@ export default function CashCounting ({ isOpen, onClose, setIsInit }) {
                             <ModalFooter className='justify-center'>
                                 <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                     onClick={() => {
-                                        setIsInit(false)
+                                        // setIsInit(false)
+                                        console.log('Llamar el cierre de caja')
                                     }}>
                                     ACEPTAR
                                 </Button>

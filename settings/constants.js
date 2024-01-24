@@ -58,5 +58,7 @@ export const SUPPLIER_ASSOCIATION_API_URL = BASE_MARKET_API_URL + '/supplier/:id
 export const GET_STATUS_CASH_REGISTER = '/accounting-event/status/cash-register/:id'
 // GET INDICATORS INIT CASH
 export const GET_INDICATORS_LAST_BALANCE = '/accounting-event/last-balance-ending/:id'
+export const GET_INDICATORS_BALANCE_ENDING = '/accounting-event/indicators-balance-ending/:id'
 
 export const CREATE_BALANCE_BEGINNINGS = '/accounting-event/create/balance-beginnings'
+export const CREATE_BALANCE_ENDINGS = '/accounting-event/create/balance-endings'

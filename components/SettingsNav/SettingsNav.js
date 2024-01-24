@@ -78,6 +78,7 @@ export default function SettingsNav () {
                             </div>
                             <div className="col-start-2 col-end-2">
                                 <BoxStatus
+                                    statusCashRegister={statusCashRegister}
                                     setStatusCashRegister={setStatusCashRegister}
                                     openModalCashBalance={openModalCashBalance}
                                     setOpenModalCashBalance={setOpenModalCashBalance}

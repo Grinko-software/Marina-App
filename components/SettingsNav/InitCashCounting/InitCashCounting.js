@@ -9,7 +9,7 @@ import useCashBalanceStore from '../store'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
 import { toast } from 'react-hot-toast'
-export default function InitCashCounting ({ isOpen, onClose, isInit, setIsInit, setStatusCashRegister }) {
+export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegister }) {
     const notify = (text) => toast(text)
     const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }))
     const [isSelected, setIsSelected] = useState(0)
