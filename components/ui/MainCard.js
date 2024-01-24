@@ -1,20 +1,33 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardFooter, CardHeader } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 export default function MainTittleCard (props) {
-    const { title, footerMessage, imgSrc, route } = props
+    const { title, footerMessage, imgSrc, route, disabled } = props
     const router = useRouter()
-
+    const [show, setShow] = useState(null)
+    console.debug(disabled)
+    useEffect(() => {
+        if (disabled !== null) {
+            setShow(disabled)
+        }
+    }, [disabled])
     return (
 
         <Card
+            isDisabled={show}
             isFooterBlurred
             radius="lg"
-            className="col-span-12 sm:col-auto w-10/12 sm:w-full h-[10rem]  sm:h-[40rem] shadow-xl items items-center hover:scale-110 hover:shadow-2xl duration-300"
-            isPressable onPress = {() => (router.push(route))}
+            className={`${show ? ' cursor-not-allowed' : 'cursor-pointer'} col-span-12 sm:col-auto w-10/12 sm:w-full h-[10rem]  sm:h-[40rem] shadow-xl items items-center hover:scale-110 hover:shadow-2xl duration-300 `}
+
+            isPressable
+            onPress = {() => {
+                if (!disabled) {
+                    router.push(route)
+                }
+            }}
         >
             <CardHeader className="absolute z-10 top-1 flex-col drop-shadow-6xl !items-start ">
                 {/* <p className="text-tiny text-white/60 uppercase font-bold ">MÓDULO</p> */}

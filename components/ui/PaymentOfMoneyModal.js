@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input
 import useScannerStore from '@/stores/scanner'
 import ScannerCredential from '../ScannerCredential/ScannerCredential'
 
-export default function PaymentOfMoneyModal ({ isOpen, onClose }) {
+export default function PaymentOfMoneyModal ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(false)
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)

@@ -8,7 +8,9 @@ import QR from '@/assets/gifs/QR.json'
 import useCashBalanceStore from '../store'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
+import { toast } from 'react-hot-toast'
 export default function InitCashCounting ({ isOpen, onClose, isInit, setIsInit, setStatusCashRegister }) {
+    const notify = (text) => toast(text)
     const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }))
     const [isSelected, setIsSelected] = useState(0)
     const [readQR, setReadQR] = useState(false)
@@ -16,7 +18,7 @@ export default function InitCashCounting ({ isOpen, onClose, isInit, setIsInit, 
     const [lastBalance, setLastBalance] = useState(null)
     const onHandlerBalance = () => {
         if (getCashRegister()?.ID) {
-            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister, setReadQR, onClose)
+            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister, setReadQR, onClose, notify)
         }
     }
     useEffect(() => {

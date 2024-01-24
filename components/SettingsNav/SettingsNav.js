@@ -15,11 +15,15 @@ import { HomeButton } from '../ui/HomeButton'
 import SwitchUserButton from '../ui/SwitchUserButton'
 import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
+import toast from 'react-hot-toast'
 export default function SettingsNav () {
+    const notify = (text) => toast(text)
     const [userName, setUserName] = useState(null)
     const [admin, setAdmin] = useState(false)
     const [openModalCashBalance, setOpenModalCashBalance] = useState(false)
-    const { selectedCashRegister, statusCashRegister, setStatusCashRegister } = useSettingsStore(({ selectedCashRegister, statusCashRegister, setStatusCashRegister }) => ({ selectedCashRegister, statusCashRegister, setStatusCashRegister }))
+    const { selectedCashRegister, statusCashRegister, setStatusCashRegister, setDisabled, disabled } =
+     useSettingsStore(({ selectedCashRegister, statusCashRegister, setStatusCashRegister, setDisabled, disabled }
+     ) => ({ selectedCashRegister, statusCashRegister, setStatusCashRegister, setDisabled, disabled }))
     const { fullName, isAdmin } = useAuthStore(({ fullName, isAdmin }) => ({ fullName, isAdmin }))
     const { isConnected } = hubScale()
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
@@ -31,7 +35,6 @@ export default function SettingsNav () {
     }, [fullName])
     useEffect(() => {
         if (selectedCashRegister?.ID !== 'no-select' && statusCashRegister === null) {
-            console.debug(selectedCashRegister)
             getStatus(selectedCashRegister?.ID).then((status) => {
                 console.log(status)
                 if (!status) {
@@ -41,6 +44,16 @@ export default function SettingsNav () {
                     // Se debe hacer un cierre de caja
                 }
             })
+        }
+    }, [selectedCashRegister])
+    /* Control disable button */
+    useEffect(() => {
+        if (selectedCashRegister?.ID === 'no-select') {
+            //
+            notify('⚙️ Se debe seleccionar una caja en ajustes para continuar!')
+            setDisabled(true)
+        } else {
+            setDisabled(false)
         }
     }, [selectedCashRegister])
     return (
@@ -61,13 +74,14 @@ export default function SettingsNav () {
                         <div className="flex flex-row gap-3 items items-center">
                             {usePathname() === '/sales' ? <div><ScaleStatus scaleStatus = {isConnected}/></div> : <></>}
                             <div className="col-start-2 col-end-2">
-                                <PaymentOfMoney />
+                                <PaymentOfMoney disabled={disabled} />
                             </div>
                             <div className="col-start-2 col-end-2">
                                 <BoxStatus
                                     setStatusCashRegister={setStatusCashRegister}
                                     openModalCashBalance={openModalCashBalance}
                                     setOpenModalCashBalance={setOpenModalCashBalance}
+                                    disabled={disabled}
 
                                 />
                             </div>

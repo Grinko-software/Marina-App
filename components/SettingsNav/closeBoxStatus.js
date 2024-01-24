@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Badge, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@nextui-org/react'
@@ -5,7 +6,7 @@ import { TbReportMoney } from 'react-icons/tb'
 import CashReconciliationModal from './CashReconciliationModal'
 import useSettingsStore from '@/stores/settings'
 
-export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance, setOpenModalCashBalance }) {
+export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance, setOpenModalCashBalance, disabled }) {
     const [isOpenInfo, setIsOpenInfo] = useState(null)
     const [color, setColor] = useState('danger')
     const [box, setBox] = useState(null)
@@ -17,9 +18,18 @@ export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance
     const DEFAULT_SELECTED = { ID: 'no-select', label: 'NINGUNA' }
 
     useEffect(() => {
-        setMessage(true)
-    }, [])
-
+        if (selectedCashRegister?.ID === DEFAULT_SELECTED?.ID) {
+            setMessage(true)
+        } else {
+            setMessage(false)
+        }
+    }, [selectedCashRegister])
+    const Message = () => {
+        return selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
+            ? <div className="text-small font-bold">Se debe seleccionar una caja en ajustes para continuar</div>
+            : null
+    }
+    /* Update number on Icon NAV Cash Register  */
     useEffect(() => {
         if (selectedCashRegister?.ID === 1) {
             setBox('1')
@@ -30,15 +40,15 @@ export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance
         }
     }, [selectedCashRegister])
 
-    useEffect(() => {
+    /*     useEffect(() => {
         if (message && box) {
             setTimeout(
                 () => setIsOpenInfo(false), 5000
             )
         }
-    }, [message, box])
+    }, [message, box]) */
 
-    useEffect(() => {
+    /*     useEffect(() => {
         setTimeout(
             () => setIsOpenInfo(true), 1000
         )
@@ -48,7 +58,7 @@ export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance
         } else {
             setColor('danger')
         }
-    }, [box])
+    }, [box]) */
 
     useEffect(() => {
         if (openModalCashBalance) {
@@ -56,11 +66,6 @@ export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance
             setOpenModalCashBalance(false)
         }
     }, [openModalCashBalance])
-    const Message = ({ enabled }) => {
-        return selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
-            ? <div className="text-small font-bold">Se debe seleccionar una caja en ajustes para continuar</div>
-            : null
-    }
 
     return (
         <div className="flex items-center gap-4 animation-fade-in" onClick={() => setIsOpenInfo(!isOpenInfo)}>
@@ -80,11 +85,11 @@ export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance
                             </button>
                         </Badge>
                     </PopoverTrigger>
-                    {selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
+                    {/*      {selectedCashRegister?.ID === DEFAULT_SELECTED?.ID
                         ? <PopoverContent className='mt-1' color={color}>
                             <Message enabled={box}/>
                         </PopoverContent>
-                        : <></>}
+                        : <></>} */}
                 </Popover>
             </div>
         </div>

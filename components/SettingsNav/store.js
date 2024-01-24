@@ -25,7 +25,7 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, setReadQR, onClose) => {
+        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, setReadQR, onClose, notify) => {
             set({ loading: true })
             const body = {
                 total_beginning: totalBeginnig,
@@ -39,11 +39,16 @@ const useCashBalanceStore = create(
                     if (result?.code === 200) {
                         // edit state
                         setStatusCashRegister(true)
-                        setReadQR(false)
-                        onClose()
+                        notify('✅ Inicio de Caja Nº ' + cashRegisterId + ' con éxito!')
+                    } else if (result?.message === 'Error en la solicitud: 400') {
+                        setStatusCashRegister(false)
+                        notify('❌ Primero se debe efectuar el cierre de la caja Nº ' + cashRegisterId + ', antes de efectuar el inicio de caja')
                     } else {
                         setStatusCashRegister(false)
+                        notify('❌ ' + result?.message)
                     }
+                    setReadQR(false)
+                    onClose()
                 }
                 )
             } catch (error) {
