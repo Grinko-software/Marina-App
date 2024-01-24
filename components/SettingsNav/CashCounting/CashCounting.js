@@ -1,20 +1,36 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Checkbox } from '@nextui-org/react'
 import credit from '@/assets/images/credit.jpeg'
 import cash from '@/assets/images/cash.jpeg'
 import PaymentOfMoney from '@/assets/images/paymentOfMoney.jpeg'
-import CashReconciliationCard from '../ui/CashReconciliationCard'
+import CashReconciliationCard from '../../ui/CashReconciliationCard'
 import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
-
-export default function CashCounting ({ isOpen, onClose }) {
+import useCashBalanceStore from '../store'
+import { getCashRegister } from '@/services/cashRegister'
+const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const [isSelected, setIsSelected] = useState()
     const [readQR, setReadQR] = useState(false)
+    const [indicatorsBalanceEnding, setIndicatorsBalanceEnding] = useState(null)
+    const [moneyOnCash, setMoneyOnCash] = useState(0)
+    const [diffMoney, setDiffMoney] = useState(0)
 
+    const { getIndicatorsBalanceEnding } = useCashBalanceStore(({ getIndicatorsBalanceEnding }) => ({ getIndicatorsBalanceEnding }))
     useEffect(() => {
         setReadQR(false)
     }, [])
+    useEffect(() => {
+        const idCashRegister = getCashRegister()?.ID
+        getIndicatorsBalanceEnding(idCashRegister, setIndicatorsBalanceEnding)
+    }, [])
+    useEffect(() => {
+        if (moneyOnCash) {
+            const diff = moneyOnCash - (indicatorsBalanceEnding?.total_beginning ?? 0)
+            setDiffMoney(diff)
+        }
+    }, [moneyOnCash])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
@@ -30,21 +46,21 @@ export default function CashCounting ({ isOpen, onClose }) {
                                         <div className='flex flex-row w-full space-x-4'>
                                             <CashReconciliationCard
                                                 title={'Ventas en Debito/Credito'}
-                                                total={'$900.000'}
+                                                total={indicatorsBalanceEnding?.total_sales_card ?? '-'}
                                                 bgTitle={'bg-black/40'}
                                                 img={credit}
                                                 detail={'Total de ingresos en tarjetas de debito/credito del dia'}
                                             />
                                             <CashReconciliationCard
                                                 title={'Ventas en Efectivo'}
-                                                total={'$400.000'}
+                                                total={indicatorsBalanceEnding?.total_sales_cash ?? '-'}
                                                 bgTitle={'bg-green-500/80'}
                                                 img={cash}
                                                 detail={'Total de ingresos en efectivo del dia'}
                                             />
                                             <CashReconciliationCard
                                                 title={'Egresos/pagos'}
-                                                total={'$75.000'}
+                                                total={indicatorsBalanceEnding?.total_drawals ?? '-'}
                                                 bgTitle={'bg-green-500/20'}
                                                 img={PaymentOfMoney}
                                                 detail={'Total de egresos de caja diarios (pagos)'}
@@ -65,6 +81,7 @@ export default function CashCounting ({ isOpen, onClose }) {
                                                     <span className="text-default-400 text-small">$</span>
                                                 </div>
                                             }
+                                            onValueChange={(value) => { setMoneyOnCash(value) }}
                                         />
                                         <Input
                                             size='lg'
@@ -81,6 +98,8 @@ export default function CashCounting ({ isOpen, onClose }) {
                                                     <span className="text-default-400 text-small">$</span>
                                                 </div>
                                             }
+                                            value={diffMoney}
+
                                         />
                                         <div className="flex flex-col">
                                             <Checkbox
@@ -120,3 +139,4 @@ export default function CashCounting ({ isOpen, onClose }) {
         </>
     )
 }
+export default CashCounting

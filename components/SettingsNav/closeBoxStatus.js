@@ -50,30 +50,35 @@ export default function BoxStatus ({ statusCashRegister, setStatusCashRegister, 
     }, [openModalCashBalance])
 
     return (
-        <div className="flex items-center gap-4 animation-fade-in" onClick={() => setIsOpenInfo(!isOpenInfo)}>
-            <div className="flex items-center gap-3">
-                <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={message}>
-                    <PopoverTrigger>
-                        <Badge color={color} content={box} size = "lg" shape="circle" className="text-white" >
-                            <button
-                                aria-label='Toggle Dark Mode'
-                                type='button'
-                                className='flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700'
-                                onClick={() => {
+        <>
+            <div className="flex items-center gap-4 animation-fade-in" onClick={() => setIsOpenInfo(!isOpenInfo)}>
+                <div className="flex items-center gap-3">
+                    <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={message}>
+                        <PopoverTrigger>
+                            <Badge color={color} content={box} size = "lg" shape="circle" className="text-white" >
+                                <button
+                                    aria-label='Toggle Dark Mode'
+                                    type='button'
+                                    className='flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700'
+                                    onClick={() => {
                                     // revisar status de la cash
-                                    onHandlerStatusBalance()
-                                }}
-                            >
+                                        onHandlerStatusBalance()
+                                    }}
+                                >
 
-                                <CashReconciliationModal isOpen={isOpen} onClose={onClose}
-                                    statusCashRegister={statusCashRegister}
-                                    setStatusCashRegister={setStatusCashRegister} />
-                                <TbReportMoney className="w-6 h-6 sm:w-10 sm:h-10 cursor-pointer "/>
-                            </button>
-                        </Badge>
-                    </PopoverTrigger>
-                </Popover>
+                                    <TbReportMoney className="w-6 h-6 sm:w-10 sm:h-10 cursor-pointer "/>
+                                </button>
+                            </Badge>
+                        </PopoverTrigger>
+                    </Popover>
+                </div>
             </div>
-        </div>
+            { isOpen
+                ? <CashReconciliationModal isOpen={isOpen} onClose={onClose}
+                    statusCashRegister={statusCashRegister}
+                    setStatusCashRegister={setStatusCashRegister} />
+                : <></>}
+
+        </>
     )
 }

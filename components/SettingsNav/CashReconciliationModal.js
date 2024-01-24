@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import InitCashCounting from './InitCashCounting/InitCashCounting'
-import CashCounting from './CashCounting'
+import CashCounting from './CashCounting/CashCounting'
 
 export default function CashReconciliationModal ({ isOpen, onClose, setStatusCashRegister, statusCashRegister }) {
     return (
