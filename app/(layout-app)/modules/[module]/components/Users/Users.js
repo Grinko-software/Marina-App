@@ -18,7 +18,7 @@ export default function Users ({ params }) {
         <CreateUser/>
         <section className='flex flex-row' >
             <TableUsers data={data} loading={loading} setTarget={setTarget}/>
-            <UserInfo target={target} setTarget={setTarget} deleteAction={requestData}/>
+            <UserInfo target={target} setTarget={setTarget} handleRefresh={requestData}/>
         </section>
     </section>
 }

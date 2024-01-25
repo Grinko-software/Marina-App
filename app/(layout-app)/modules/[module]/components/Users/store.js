@@ -4,9 +4,9 @@ import { requestUserList } from './service'
 const useUsersStore = create((set) => ({
     data: undefined,
     loading: false,
-    requestData: () => {
+    requestData: async () => {
         set({ loading: true })
-        requestUserList()
+        await requestUserList()
             .then((data) => {
                 set({ data: data?.data })
             })

@@ -121,41 +121,25 @@ export default function TableUsers ({ data, loading, setTarget }) {
     }, [dataModel])
 
     return <section className='w-full'>
-        {
-            loading
-                ? <div>
-                    Cargando...
-                </div>
-                : dataModel
-                    ? <section className='p-1 w-full gap-3' >
-                        <Table isHeaderSticky
-                            bottomContent={
-                                loading
-                                    ? <div className="flex w-full justify-center">
-                                        <Spinner>Cargando datos...</Spinner>
-                                    </div>
-                                    : null
-                            }>
-                            <TableHeader columns={columns}>
-                                {(column) => (
-                                    <TableColumn key={column.key} className={column.center ? 'text-center' : ''}>
-                                        {column.label}
-                                    </TableColumn>
-                                )}
-                            </TableHeader>
-                            <TableBody items={dataModel || []}>
-                                {(item) => (
-                                    <TableRow key={item.key}>
-                                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+        <section className='p-1 w-full gap-3' >
+            <Table isHeaderSticky>
+                <TableHeader columns={columns}>
+                    {(column) => (
+                        <TableColumn key={column.key} className={column.center ? 'text-center' : ''}>
+                            {column.label}
+                        </TableColumn>
+                    )}
+                </TableHeader>
+                <TableBody isLoading={loading} items={dataModel || []} emptyContent={'No hay usuarios para mostrar'} loadingContent={ <Spinner></Spinner>}>
+                    {(item) => (
+                        <TableRow key={item.key}>
+                            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
 
-                    </section>
-                    : <section>
-                    No hay datos
-                    </section>
-        }
+        </section>
+
     </section>
 }

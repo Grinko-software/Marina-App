@@ -1,24 +1,24 @@
-import { fetchGetUsers, fetchCreateUser, fetchUpdateUser } from '@/services/users'
+import { fetchGetCredentials, fetchCreateCredential, fetchGetCredentialsAssociations } from '@/services/credential'
 
-export const requestUserList = async () => {
+export const requestCredentialList = async () => {
     try {
-        return fetchGetUsers()
+        return fetchGetCredentials()
     } catch (error) {
         console.log(error)
     }
 }
 
-export const requestCreateUser = async ({ name, lastName, email, password }) => {
+export const requestCredentialAssociationList = async () => {
     try {
-        return fetchCreateUser({ name, lastName, email, password })
+        return fetchGetCredentialsAssociations()
     } catch (error) {
         console.log(error)
     }
 }
 
-export const requestUpdateUser = async ({ id, name, lastName, email, password, notify, onSuccess }) => {
+export const requestCreateCredential = async ({ name, lastName, email, password }) => {
     try {
-        return fetchUpdateUser({ id, name, lastName, email, password, notify, onSuccess })
+        return fetchCreateCredential({ name, lastName, email, password })
     } catch (error) {
         console.log(error)
     }
