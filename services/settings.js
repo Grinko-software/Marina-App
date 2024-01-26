@@ -8,7 +8,6 @@ import { getToken } from '@/services/user'
 
 export const GetPostMachines = async () => {
     try {
-        console.log(GET_POST_MACHINE)
         return await fetch(GET_POST_MACHINE,
             {
                 method: 'GET',

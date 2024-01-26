@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, Button, Divider } from '@nextui-org/react'
@@ -27,6 +28,7 @@ export default function SettingsNav () {
     const { fullName, isAdmin } = useAuthStore(({ fullName, isAdmin }) => ({ fullName, isAdmin }))
     const { isConnected } = hubScale()
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
+
     useEffect(() => {
         if (fullName) {
             setUserName(fullName)
@@ -49,7 +51,6 @@ export default function SettingsNav () {
     /* Control disable button */
     useEffect(() => {
         if (selectedCashRegister?.ID === 'no-select') {
-            //
             notify('⚙️ Se debe seleccionar una caja en ajustes para continuar!')
             setDisabled(true)
         } else {
@@ -116,7 +117,11 @@ export default function SettingsNav () {
                             color="primary"
                             radius="full"
                             variant={'solid'}
-                            onClick={() => signOut()}
+                            onClick={() => {
+                                // call api
+                                signOut()
+                            }
+                            }
                         >
                             {'Cerrar Sesion'}
                         </Button>
