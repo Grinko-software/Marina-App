@@ -1,7 +1,7 @@
 import React from 'react'
 import { useBarcode } from 'next-barcode'
 
-export default function Barcosde (props) {
+export default function Bacode (props) {
     const { productName, productCode, productCost, showDetail } = props
     const { inputRef } = useBarcode({
         value: productCode,

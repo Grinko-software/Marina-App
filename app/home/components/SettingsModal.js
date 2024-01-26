@@ -3,10 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
-// import { GetCashRegister, GetPostMachines } from './../../../services/settings'
-/* import Barcode from "../barcode";
-import BarcodeImg from "../barcodeImg";
-import { generateProductCode } from "@/utils/barcode"; */
 
 export default function SettingModal ({ isOpen, onClose }) {
     const [postMachinesData, setPostMachinesData] = useState(null)
@@ -53,7 +49,7 @@ export default function SettingModal ({ isOpen, onClose }) {
     useEffect(() => {
         // TODO: Add multi data fetch
         getPostMachines()
-        // getCashRegister()
+        getCashRegister()
     }, [])
     return (
         <>
@@ -79,9 +75,8 @@ export default function SettingModal ({ isOpen, onClose }) {
                                     )
                                 }
                                 )
-
                                 }
-                                {/*   <Divider />
+                                <Divider />
                                 <div className="flex flex-col gap-2">
                                     <p className="text-primary-500 dark:text-primary-200 font-bold">
                                         Seleccionar Caja principal
@@ -98,7 +93,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                             </Checkbox>
                                         )
                                     })}
-                                </div> */}
+                                </div>
                             </ModalBody>
                             <ModalFooter>
                                 <Button className ="dark" onClick={onClose}>
@@ -107,9 +102,9 @@ export default function SettingModal ({ isOpen, onClose }) {
                                 <Button color="danger" variant="light" onClick={onClose}>
                                     Cerrar
                                 </Button>
-                                {/*  <div>
-              <BarcodeImg elementRef = { elementRef }></BarcodeImg>
-              </div> */}
+                                <div>
+                                    {/* <BarcodeImg elementRef = { elementRef }></BarcodeImg> */}
+                                </div>
                             </ModalFooter>
                         </>
                     )}
