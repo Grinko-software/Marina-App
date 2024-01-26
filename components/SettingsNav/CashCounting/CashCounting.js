@@ -10,14 +10,20 @@ import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
 import useCashBalanceStore from '../store'
 import { getCashRegister } from '@/services/cashRegister'
+import { getIdUser } from '@/services/user'
+import { toast } from 'react-hot-toast'
 const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
+    const notify = (text) => toast(text)
     const [isSelected, setIsSelected] = useState()
     const [readQR, setReadQR] = useState(false)
     const [indicatorsBalanceEnding, setIndicatorsBalanceEnding] = useState(null)
     const [moneyOnCash, setMoneyOnCash] = useState(0)
     const [diffMoney, setDiffMoney] = useState(0)
 
-    const { getIndicatorsBalanceEnding } = useCashBalanceStore(({ getIndicatorsBalanceEnding }) => ({ getIndicatorsBalanceEnding }))
+    const { getIndicatorsBalanceEnding, createBalanceEndings } = useCashBalanceStore(({ getIndicatorsBalanceEnding, createBalanceEndings }) => ({ getIndicatorsBalanceEnding, createBalanceEndings }))
+    const onHandlerCreateBalanceEnding = () => {
+        createBalanceEndings(getCashRegister()?.ID, getIdUser(), 'Cierre de caja', moneyOnCash, diffMoney, 0, setStatusCashRegister, setReadQR, onClose, notify)
+    }
     useEffect(() => {
         setReadQR(false)
     }, [])
@@ -81,7 +87,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                                     <span className="text-default-400 text-small">$</span>
                                                 </div>
                                             }
-                                            onValueChange={(value) => { setMoneyOnCash(value) }}
+                                            onValueChange={(value) => { if (value) { setMoneyOnCash(parseFloat(value)) } }}
                                         />
                                         <Input
                                             size='lg'
@@ -122,6 +128,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                     onClick={() => {
                                         // setIsInit(false)
                                         console.log('Llamar el cierre de caja')
+                                        onHandlerCreateBalanceEnding()
                                     }}>
                                     ACEPTAR
                                 </Button>
