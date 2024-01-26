@@ -6,7 +6,6 @@ import useInventoryStore from '../store'
 import Image from 'next/image'
 import { ConvertBytesToImage, DefaultImageMarinaMarket } from '@/utils/image'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
-import { Toaster } from 'react-hot-toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
 export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, setUpdateProduct }) {
@@ -118,24 +117,6 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     return (
         <>
             <div className="flex flex-wrap gap-3">
-                <Toaster
-                    position="top-center"
-                    reverseOrder={false}
-                    gutter={8}
-                    containerClassName=""
-                    containerStyle={{}}
-                    className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                    toastOptions={{
-                        className: '',
-                        duration: 10000,
-                        success: {
-                            duration: 3000,
-                            theme: {
-                                primary: 'green',
-                                secondary: 'black'
-                            }
-                        }
-                    }} />
             </div>
             <Modal size={'2xl'}
                 isOpen={isOpen}

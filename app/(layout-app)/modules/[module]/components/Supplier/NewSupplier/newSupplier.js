@@ -2,14 +2,10 @@
 'use client'
 import React, { Suspense, createRef, useEffect, useMemo, useState } from 'react'
 import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, dropdown, useDisclosure } from '@nextui-org/react'
-import toast, { Toaster } from 'react-hot-toast'
 import useStore from './store'
-import useInventoryStore from '../../store'
-import { BiSolidCategory } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
 import { FaTruck } from 'react-icons/fa'
-
-export const notify = (text) => toast(text)
+import { notify } from '@/services/notify'
 
 export default function CreateSupplier () {
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -37,24 +33,6 @@ export default function CreateSupplier () {
     }, [complete, error])
     return (
         <section>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                toastOptions={{
-                    className: '',
-                    duration: 10000,
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black'
-                        }
-                    }
-                }} />
             <header className="flex justify-end">
                 <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
                     startContent={<FaTruck size={25}/>}>

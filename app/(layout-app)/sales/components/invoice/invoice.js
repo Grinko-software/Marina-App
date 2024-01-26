@@ -5,11 +5,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import useInventoryStore from './store'
-import toast, { Toaster } from 'react-hot-toast'
+import { notify } from '@/services/notify'
 import { Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Text, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
-import { DeleteIcon } from '@/components/ui/DeleteIcon'
-import { deleteOffer } from '@/services/offers'
-import { BiSolidOffer } from 'react-icons/bi'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 
 export const SectionInput = ({ title, children, showDivider, className }) => {
@@ -29,7 +26,6 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     const [searchInput, setSearchInput] = useState('')
     const [filteredList, setFilteredList] = useState([])
     const [errorInput, setErrorInput] = useState(false)
-    const notify = (text) => toast(text)
     const { defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers } =
      useInventoryStore(({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers }
      ) => ({ defaultForm, create, setFormData, getCustomers, customers, setTargetCustomer, targetCustomer, triggetgetCustomers }))
@@ -69,24 +65,6 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     const CardRow = ({ item, setTargetCustomer }) => {
         const { ID, business_name } = item
         return <div className="flex gap-2 flex-row w-full items-center border rounded-xl pr-2">
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                toastOptions={{
-                    className: '',
-                    duration: 10000,
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black'
-                        }
-                    }
-                }} />
             <section className='flex-1 flex gap-2 flex-wrap p-5 cursor-pointer' onClick={() => {
                 setTargetCustomer(item)
                 setOpenModal(false)
@@ -129,24 +107,6 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
     // useEffect(() => { console.log(defaultForm) }, [defaultForm])
     return (
         <>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                toastOptions={{
-                    className: '',
-                    duration: 10000,
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black'
-                        }
-                    }
-                }} />
             <div className="flex flex-wrap gap-3">
             </div>
             <Modal size={'2xl'}

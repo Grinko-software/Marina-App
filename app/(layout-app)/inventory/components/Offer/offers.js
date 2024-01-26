@@ -12,12 +12,11 @@ import useOffersStore from '@/stores/offers'
 import CreateOffer from './createOffer'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { deleteOffer } from '@/services/offers'
-import toast, { Toaster } from 'react-hot-toast'
+import { notify } from '@/services/notify'
 import { BiSolidOffer } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
 
-const notify = (text) => toast(text)
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
     return (
         <Input
@@ -60,24 +59,6 @@ const OffertCard = ({ item, deleteAction }) => {
     }
 
     return <div className="flex gap-2 flex-row w-full items-center border rounded-xl pr-2">
-        <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName=""
-            containerStyle={{}}
-            className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-            toastOptions={{
-                className: '',
-                duration: 10000,
-                success: {
-                    duration: 3000,
-                    theme: {
-                        primary: 'green',
-                        secondary: 'black'
-                    }
-                }
-            }} />
         <Image
             shadow="none"
             radius="lg"

@@ -1,5 +1,5 @@
 'use client'
-import SettingModal from '../../app/home/components/SettingsModal'
+import SettingModal from '../../../app/home/components/SettingsModal'
 import { useDisclosure } from '@nextui-org/react'
 import { AiOutlineSetting } from 'react-icons/ai'
 

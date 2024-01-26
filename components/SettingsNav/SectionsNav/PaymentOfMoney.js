@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaMoneyBillTransfer } from 'react-icons/fa6'
 import { useDisclosure } from '@nextui-org/react'
-import DrawalsCashBalance from '../SettingsNav/Drawals/DrawalsCashBalance'
+import DrawalsCashBalance from '../Drawals/DrawalsCashBalance'
 
 export function PaymentOfMoney ({ disabled }) {
     const { isOpen, onClose, onOpen } = useDisclosure()

@@ -6,14 +6,14 @@ import useAuthStore from '@/stores/user'
 import ThemeButton from '../ui/ThemeButton'
 import imgSrc from '@/app/icon.png'
 import Image from 'next/image'
-import ShortcutButton from '../ui/ShortcutButton'
-import { PaymentOfMoney } from '../ui/PaymentOfMoney'
+import ShortcutButton from './SectionsNav/ShortcutButton'
+import { PaymentOfMoney } from './SectionsNav/PaymentOfMoney'
 import { usePathname } from 'next/navigation'
-import BoxStatus from './closeBoxStatus'
+import BoxStatus from './SectionsNav/closeBoxStatus'
 import ScaleStatus from '@/components/ui/ScaleStatus'
 import hubScale from '@/app/(layout-app)/sales/components/store/connectionScale'
-import { HomeButton } from '../ui/HomeButton'
-import SwitchUserButton from '../ui/SwitchUserButton'
+import { HomeButton } from './SectionsNav/HomeButton'
+import SwitchUserButton from './SectionsNav/SwitchUserButton'
 import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
 import toast from 'react-hot-toast'
@@ -118,7 +118,6 @@ export default function SettingsNav () {
                             radius="full"
                             variant={'solid'}
                             onClick={() => {
-                                // call api
                                 signOut()
                             }
                             }

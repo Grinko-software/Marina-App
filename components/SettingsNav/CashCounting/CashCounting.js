@@ -74,7 +74,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                                 detail={'Total de ingresos en efectivo del dia'}
                                             />
                                             <CashReconciliationCard
-                                                title={'Egresos/pagos'}
+                                                title={'Retiros de caja'}
                                                 total={indicatorsBalanceEnding?.total_drawals ? formatterNumber(indicatorsBalanceEnding?.total_drawals) : '-'}
                                                 bgTitle={'bg-green-500/20'}
                                                 img={PaymentOfMoney}

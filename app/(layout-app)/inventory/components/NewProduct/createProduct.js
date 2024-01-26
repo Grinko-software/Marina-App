@@ -8,12 +8,10 @@ import { generateProductCode } from '@/utils/barcode'
 import Barcosde from '@/components/barcode'
 import useProductFormStore from './store'
 import useInventoryStore from '../../store'
-import toast, { Toaster } from 'react-hot-toast'
+import { notify } from '@/services/notify'
 import { BiSolidShoppingBags } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
-
-const notify = (text) => toast(text)
 
 export const SectionProduct = ({ title, children, showDivider }) => {
     return (
@@ -136,24 +134,6 @@ export default function CreateProduct (props) {
 
     return (
         <section>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                toastOptions={{
-                    className: '',
-                    duration: 10000,
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black'
-                        }
-                    }
-                }} />
             <header className="flex justify-end">
                 <Button className={'bg-emerald-600 dark:bg-emerald-600 font-semibold'} color='primary' onClick={onOpen}
                     startContent={<BiSolidShoppingBags size={25} />}>

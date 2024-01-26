@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react'
 import { Badge, Popover, PopoverTrigger } from '@nextui-org/react'
 import { TbReportMoney } from 'react-icons/tb'
 import useSettingsStore from '@/stores/settings'
-import { getStatus } from './services'
-import InitCashCounting from './InitCashCounting/InitCashCounting'
-import CashCounting from './CashCounting/CashCounting'
+import { getStatus } from '../services'
+import InitCashCounting from '../InitCashCounting/InitCashCounting'
+import CashCounting from '../CashCounting/CashCounting'
 
 export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance, setOpenModalCashBalance, disabled }) {
     const [isOpenInfo, setIsOpenInfo] = useState(null)

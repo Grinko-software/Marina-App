@@ -2,7 +2,7 @@
 
 import { useDisclosure } from '@nextui-org/react'
 import { PiUserSwitchLight } from 'react-icons/pi'
-import SwitchUserModal from './SwitchUserButtonModal'
+import SwitchUserModal from '../../ui/SwitchUserButtonModal'
 
 const SwitchUserButton = () => {
     const { onOpen, isOpen, onClose } = useDisclosure()
