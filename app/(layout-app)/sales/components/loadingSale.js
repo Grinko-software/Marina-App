@@ -31,7 +31,7 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
         setMethodPage(value)
         setSearchInput(null)
         setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
-        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer, value, setMethodPage)
+        createSale(listSalesActives, saleIdActive, notify, null, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer, value, setMethodPage)
         setPaymentTarget(listSalesActives, saleIdActive, null)
     }
 

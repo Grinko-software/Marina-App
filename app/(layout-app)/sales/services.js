@@ -1,4 +1,8 @@
-import { getData } from '@/services/http'
+import { POST, getData } from '@/services/http'
+import { generatePdfDocument } from './components/voucher/services'
+import { SALE_TICKET_CREATE } from '@/settings/constants'
+import { roundValueWithMath } from '@/utils/number'
+import { today } from '@/utils/date'
 export const getStateSaleMachine = (url) => {
     return new Promise((resolve, reject) => {
         let limitTime = 0
@@ -47,4 +51,127 @@ export const createSaleOnHaulmer = (url, method, modelbody, retry = 0) => {
             }
             )
     })
+}
+
+export const saveTicketOnDatabase = async ({ body, notify, onSuccessSale, listSales, totalPay, netTotal, iva, totalTaxFree, discountPctg }) => {
+    await getData(SALE_TICKET_CREATE, POST, body).then(result => {
+        if (result?.code === 200) {
+            generatePdfDocument({ listSales, totalPay, netTotal, iva, totalTaxFree, discountPctg })
+            notify('✅ Ticket generado con éxito')
+            if (onSuccessSale) {
+                onSuccessSale()
+            }
+        } else {
+            notify('❌ Problemas al guardar la venta')
+        }
+    })
+}
+
+export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, totalPay, netTotal, iva, saleProductsList, discount }) => {
+    const date = today().format('YYYY-MM-DD')
+
+    const dteBody = {
+        response: [
+            'FOLIO', 'TIMBRE'
+        ],
+        dte: {
+            Encabezado: {
+                IdDoc: {
+                    TipoDTE: isInvoice ? 33 : 39,
+                    FchEmis: date,
+                    IndServicio: '3'
+                },
+                Emisor: isInvoice
+                    ? {
+                        RUTEmisor: '77426986-K',
+                        RznSoc: 'MARINA MARKET',
+                        GiroEmis: 'MINIMARKET',
+                        DirOrigen: 'LA MARINA 200 #11001101',
+                        CmnaOrigen: 'COQUIMBO',
+                        CiudadOrigen: 'COQUIMBO',
+                        Telefono: '0 0',
+                        CorreoEmisor: '0000',
+                        Acteco: '951100'
+                    }
+                    : {
+                        RUTEmisor: '77426986-K'
+                    },
+                Receptor: isInvoice
+                    ? {
+                        GiroRecep: targetCustomer?.business_line,
+                        RUTRecep: targetCustomer?.rut,
+                        CdgIntRecep: targetCustomer?.code,
+                        RznSocRecep: targetCustomer?.business_name,
+                        DirRecep: targetCustomer?.address,
+                        CmnaRecep: targetCustomer?.commune,
+                        CiudadRecep: targetCustomer?.commune
+                    }
+                    : {
+                        RUTRecep: '66666666-6'
+                    },
+                Totales: isInvoice
+                    ? {
+                        MntNeto: netTotal,
+                        MntExe: '0',
+                        IVA: totalPay - netTotal,
+                        TasaIVA: '19',
+                        MntTotal: totalPay,
+                        VlrPagar: totalPay
+                    }
+                    : {
+                        MntNeto: netTotal,
+                        MntExe: totalTaxFreePay,
+                        IVA: iva,
+                        MntTotal: totalPay,
+                        TotalPeriodo: totalPay,
+                        VlrPagar: totalPay
+                    }
+            },
+            Detalle: isInvoice
+                ? saleProductsList?.map((item, index) => {
+                    const priceItem = item?.discount > 0
+                        ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
+                        : roundValueWithMath(item?.product?.price, 0, 0)
+                    const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
+                    const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                    const netPrctIem = roundValueWithMath(priceItem / 1.19, 0, 0)
+                    const netMontoItem = roundValueWithMath(totalItem / 1.19, 0, 0)
+                    return {
+                        NroLinDet: index + 1,
+                        NmbItem: item?.product?.name,
+                        QtyItem: quantityItem,
+                        PrcItem: netPrctIem,
+                        MontoItem: netMontoItem
+                    }
+                })
+                : saleProductsList?.map((item, index) => {
+                    let indexTaxFree = 0
+                    const priceItem = item?.discount > 0
+                        ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
+                        : roundValueWithMath(item?.product?.price, 0, 0)
+                    const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
+                    const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                    if (item?.product?.taxFree) {
+                        indexTaxFree++
+                        return {
+                            NroLinDet: index + 1,
+                            IndExe: indexTaxFree,
+                            NmbItem: item?.product?.name,
+                            QtyItem: quantityItem,
+                            PrcItem: discount ? (priceItem - (priceItem * discount)) : priceItem,
+                            MontoItem: discount ? (totalItem - (totalItem * discount)) : totalItem
+                        }
+                    } else {
+                        return {
+                            NroLinDet: index + 1,
+                            NmbItem: item?.product?.name,
+                            QtyItem: quantityItem,
+                            PrcItem: discount ? (priceItem - (priceItem * discount)) : priceItem,
+                            MontoItem: discount ? (totalItem - (totalItem * discount)) : totalItem
+                        }
+                    }
+                })
+        }
+    }
+    return dteBody
 }

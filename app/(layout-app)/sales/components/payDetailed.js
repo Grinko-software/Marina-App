@@ -7,15 +7,23 @@ import { formatter } from '@/utils/number'
 import useSalesStore from '../store'
 import InvoiceDetailed from './invoice/invoice'
 import useInvoiceStore from './invoice/store'
-export default function PayDetailed ({ payment, loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue, onOpenLoadingSale }) {
+export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue, onOpenLoadingSale }) {
     const [openModal, setOpenModal] = useState(false)
     const { targetCustomer, setTargetCustomer } = useInvoiceStore(({ targetCustomer, setTargetCustomer }) => ({ targetCustomer, setTargetCustomer }))
     const notify = (text) => toast(text)
     const {
+        loadingSale,
         listSalesActives,
         saleIdActive,
-        removeSale
+        removeSale,
+        createSaleTicket,
+        createSaleInvoice,
+        createSaleVoucher
     } = useSalesStore()
+
+    const [changeValue, setChangeValue] = useState(null)
+    const [isSuccessCompleted, setIsSuccessCompleted] = useState(null)
+    const [isDisableButtonPay, setIsDisableButtonPay] = useState(null)
 
     useEffect(() => {
         if (paymentTarget === 1) {
@@ -24,7 +32,7 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
             // nOpenLoadingSale()
             setSearchInput(null)
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
-            createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer)
+            generateSale()
             setPaymentTarget(listSalesActives, saleIdActive, null)
         }
     }, [paymentTarget])
@@ -34,15 +42,84 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
             setOpenModal(true)
         }
     }, [voucherTarget])
+
     useEffect(() => {
         setPayDetailed(0)
     }, [])
+
+    useEffect(() => {
+        if (totalPay >= 0 && payDetailed >= 0) {
+            const value = payDetailed - totalPay
+            setChangeValue(value)
+        }
+    }, [totalPay, payDetailed])
+
+    useEffect(() => {
+        if (changeValue >= 0) {
+            setIsDisableButtonPay(false)
+        } else {
+            setIsDisableButtonPay(true)
+        }
+    }, [changeValue])
 
     useEffect(() => {
         if (isNaN(payDetailed)) {
             setPayDetailed(0)
         }
     }, [payDetailed])
+
+    const onSuccessSaleWithCash = () => {
+        setIsSuccessCompleted(true)
+        setPayment(false)
+    }
+    const onSuccessSaleWithCard = () => {
+        setPayment(false)
+    }
+    const finishSale = () => {
+        setPayDetailed(null)
+        setSearchInput(null)
+        setIsSuccessCompleted(false)
+        setPaymentTarget(listSalesActives, saleIdActive, null)
+        if (isOpen) {
+            onClose()
+        }
+        setGoPay(false)
+    }
+
+    const generateSale = () => {
+        setIsDisableButtonPay(true)
+        const isCardPay = paymentTarget !== 1
+        if (voucherTarget === 3) {
+            createSaleTicket({
+                sales: listSalesActives,
+                saleId: saleIdActive,
+                notify,
+                removeSale,
+                onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash
+            })
+        } else if (voucherTarget === 2) {
+            createSaleInvoice({
+                sales: listSalesActives,
+                saleId: saleIdActive,
+                notify,
+                removeSale,
+                targetCustomer,
+                isCardPayment: isCardPay,
+                onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash
+            })
+        } else {
+            createSaleVoucher({
+                sales: listSalesActives,
+                saleId: saleIdActive,
+                notify,
+                removeSale,
+                isCardPayment: isCardPay,
+                onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash
+            })
+            // createSale(listSalesActives, saleIdActive, notify, onSuccessSale, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer, onSuccessSale)
+        }
+    }
+
     return (
         <>
             <Toaster
@@ -69,11 +146,6 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                 className='h-[40rem]'
                 isOpen={isOpen}
                 backdrop='opaque'
-                onClose={() => {
-                    onClose()
-                    setGoPay()
-                    setPaymentTarget(listSalesActives, saleIdActive, null)
-                }}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
@@ -122,42 +194,44 @@ export default function PayDetailed ({ payment, loadingSale, setPageTarget, setP
                         />
 
                         <div className='grid grid-rows-2 grid-flow-col py-4 w-8/12 content-end justify-between'>
-                            <h1 className='text-3xl font-bold'>{'TOTAL:'}</h1>
-                            <h1 className={`text-3xl font-bold ${(totalPay - payDetailed) < 0 ? 'text-green-700' : 'text-red-700'}`}>{((totalPay - payDetailed) < 0 ? 'VUELTO:' : 'SALDO PENDIENTE:')}</h1>
-                            <h1 className='text-3xl font-bold '>{ formatter.format(totalPay)}</h1>
-                            <h1 className={`text-3xl font-bold ${(totalPay - payDetailed) < 0 ? 'text-green-700' : 'text-red-700'}`}>{((totalPay - payDetailed) < 0 ? formatter.format((payDetailed - totalPay)) : formatter.format((totalPay - payDetailed)))}</h1>
+                            <p className='text-3xl font-bold'>{'TOTAL:'}</p>
+                            <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>{((changeValue) > 0 ? 'VUELTO:' : 'SALDO PENDIENTE:')}</p>
+                            <p className='text-3xl font-bold '>{ formatter.format(totalPay)}</p>
+                            <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>{((changeValue) > 0 ? formatter.format((Math.abs(changeValue))) : formatter.format((Math.abs(changeValue))))}</p>
                         </div>
                     </ModalBody>
                     <ModalFooter className='justify-center'>
-                        <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
-                            onClick={
-                                () => {
-                                    const result = totalPay - payDetailed
-                                    if (result <= 0) {
-                                        setPayDetailed(null)
-                                        setSearchInput(null)
-                                        setPaymentTarget(listSalesActives, saleIdActive, null)
-                                        createSale(listSalesActives, saleIdActive, notify, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer)
-                                    } else {
-                                        setSearchInput(null)
-                                        setPayDetailed(null)
-                                        setPaymentTarget(listSalesActives, saleIdActive, null)
-                                    }
-                                }
-                            }
-                            isLoading={loadingSale}>
-                            {((totalPay - payDetailed) <= 0 || payDetailed === null ? 'PAGAR' : 'VERIFICANDO PAGO')}
-                        </Button>
-                        <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
-                            onClick={() => {
-                                setPaymentTarget(listSalesActives, saleIdActive, null)
-                                setPayDetailed(null)
-                                onClose()
-                                setGoPay(false)
-                            }}
-                        >
+                        {
+                            isSuccessCompleted
+                                ? <div>
+                                    <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                        onClick={() => {
+                                            finishSale()
+                                        }}
+                                    >
+                                        FINALIZAR
+                                    </Button>
+                                </div>
+                                : <div>
+                                    <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
+                                        isDisabled={isDisableButtonPay}
+                                        onClick={() => { generateSale() }}
+                                        isLoading={loadingSale}
+                                    >
+                                        {((changeValue) >= 0 || payDetailed === null ? 'PAGAR' : 'VERIFICANDO PAGO')}
+                                    </Button>
+                                    <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                        onClick={() => {
+                                            setPaymentTarget(listSalesActives, saleIdActive, null)
+                                            setPayDetailed(null)
+                                            onClose()
+                                            setGoPay(false)
+                                        }}
+                                    >
                             CANCELAR
-                        </Button>
+                                    </Button>
+                                </div>
+                        }
                     </ModalFooter>
                 </ModalContent>
             </Modal>
