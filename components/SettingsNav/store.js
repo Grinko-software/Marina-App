@@ -25,7 +25,7 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, setReadQR, onClose, notify) => {
+        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, notify) => {
             set({ loading: true })
             const body = {
                 total_beginning: totalBeginnig,
@@ -47,8 +47,6 @@ const useCashBalanceStore = create(
                         setStatusCashRegister(false)
                         notify('❌ ' + result?.message)
                     }
-                    setReadQR(false)
-                    onClose()
                 }
                 )
             } catch (error) {
@@ -72,7 +70,7 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createBalanceEndings: (cashRegisterId, userId, detail, totalEndingRealCashBalance, totalEndingNominalCashBalance, totalEndingCard, setStatusCashRegister, setReadQR, onClose, notify) => {
+        createBalanceEndings: (cashRegisterId, userId, detail, totalEndingRealCashBalance, totalEndingNominalCashBalance, totalEndingCard, setStatusCashRegister, onhandlerAcctions, notify) => {
             set({ loading: true })
             const body =
             {
@@ -97,8 +95,7 @@ const useCashBalanceStore = create(
                         setStatusCashRegister(false)
                         notify('❌ ' + result?.message)
                     }
-                    setReadQR(false)
-                    onClose()
+                    onhandlerAcctions()
                 }
                 )
             } catch (error) {

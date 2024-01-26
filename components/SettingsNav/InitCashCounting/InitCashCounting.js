@@ -6,19 +6,26 @@ import InitCashReconciliationCard from '../../ui/InitCashReconciliationCard'
 import Lottie from 'lottie-react'
 import QR from '@/assets/gifs/QR.json'
 import useCashBalanceStore from '../store'
+import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
 import { toast } from 'react-hot-toast'
 export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegister }) {
     const notify = (text) => toast(text)
+    const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
     const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }))
     const [isSelected, setIsSelected] = useState(0)
     const [readQR, setReadQR] = useState(false)
     const [paymentDetailed, setPayDetailed] = useState(0)
     const [lastBalance, setLastBalance] = useState(null)
+    const onHandleState = () => {
+        setDisabled(false)
+        setReadQR(false)
+        onClose()
+    }
     const onHandlerBalance = () => {
         if (getCashRegister()?.ID) {
-            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister, setReadQR, onClose, notify)
+            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister, notify, onHandleState)
         }
     }
     useEffect(() => {
@@ -40,7 +47,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
                                         <div className='flex flex-row w-full space-x-4'>
                                             <InitCashReconciliationCard
                                                 title={ lastBalance ? 'Saldo cierre de caja anterior' : 'No se ha registrado un cierre de caja anterior'}
-                                                total={lastBalance || '-'}
+                                                total={lastBalance?.total_ending_real_cash_balance || '-'}
                                                 bgTitle={'bg-black/40'}
                                                 img={credit}
                                                 detail={'La cantidad de saldo anterior no siempre coincidirá con la cantidad de dinero con la que se inicia la jornada'}

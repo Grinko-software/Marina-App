@@ -9,6 +9,7 @@ import CashReconciliationCard from '../../ui/CashReconciliationCard'
 import QR from '@/assets/gifs/QR.json'
 import Lottie from 'lottie-react'
 import useCashBalanceStore from '../store'
+import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
 import { toast } from 'react-hot-toast'
@@ -19,10 +20,17 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const [indicatorsBalanceEnding, setIndicatorsBalanceEnding] = useState(null)
     const [moneyOnCash, setMoneyOnCash] = useState(0)
     const [diffMoney, setDiffMoney] = useState(0)
-
+    const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
     const { getIndicatorsBalanceEnding, createBalanceEndings } = useCashBalanceStore(({ getIndicatorsBalanceEnding, createBalanceEndings }) => ({ getIndicatorsBalanceEnding, createBalanceEndings }))
+
+    const onhandlerAcctions = () => {
+        // Disable to go to modules
+        setDisabled(true)
+        setReadQR(false)
+        onClose()
+    }
     const onHandlerCreateBalanceEnding = () => {
-        createBalanceEndings(getCashRegister()?.ID, getIdUser(), 'Cierre de caja', moneyOnCash, diffMoney, 0, setStatusCashRegister, setReadQR, onClose, notify)
+        createBalanceEndings(getCashRegister()?.ID, getIdUser(), 'Cierre de caja', moneyOnCash, diffMoney, 0, setStatusCashRegister, onhandlerAcctions, notify)
     }
     useEffect(() => {
         setReadQR(false)

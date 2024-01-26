@@ -56,7 +56,7 @@ export default function SettingsNav () {
         } else {
             setDisabled(false)
         }
-    }, [selectedCashRegister])
+    }, [])
     return (
         <div >
             <Card className={`${usePathname() !== '/home' ? 'bg-transparent shadow-none' : ''} `}>

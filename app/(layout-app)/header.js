@@ -18,7 +18,7 @@ export function Header () {
             <div className="flex flex-row gap-4 items items-center justify-between">
                 <SettingsNav />
             </div>
-            {isMobile ? <MobileNavBar></MobileNavBar> : <></>}
+            {isMobile ? <MobileNavBar/> : <></>}
         </section>
     )
 }
