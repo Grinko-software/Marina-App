@@ -54,19 +54,19 @@ export default function UserAvatar () {
 
                         <div className="flex flex-row gap-3 items items-center">
                             {usePathname() === '/sales' ? <div><ScaleStatus scaleStatus = {isConnected}/></div> : <></>}
-                            <div className="col-start-2 col-end-2">
+                            {/* <div className="col-start-2 col-end-2">
                                 <PaymentOfMoney />
                             </div>
                             <div className="col-start-2 col-end-2">
                                 <BoxStatus />
                             </div>
-                            <Divider orientation="vertical" className="h-12"/>
+                            <Divider orientation="vertical" className="h-12"/> */}
                             <div className="col-start-1 col-end-2">
                                 <ThemeButton/>
                             </div>
-                            <div className="col-start-2 col-end-2">
+                            {/*   <div className="col-start-2 col-end-2">
                                 <SwitchUserButton />
-                            </div>
+                            </div> */}
                             <div className="col-start-2 col-end-2">
                                 <ShortcutButton />
                             </div>
