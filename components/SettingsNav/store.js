@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { getData, GET, POST } from '@/services/http'
-import { GET_INDICATORS_LAST_BALANCE, CREATE_BALANCE_BEGINNINGS, CREATE_BALANCE_ENDINGS, GET_INDICATORS_BALANCE_ENDING } from '@/settings/constants'
+import { GET_INDICATORS_LAST_BALANCE, CREATE_BALANCE_BEGINNINGS, CREATE_BALANCE_ENDINGS, GET_INDICATORS_BALANCE_ENDING, CREATE_BALANCE_WITH_DRAWALS } from '@/settings/constants'
 const useCashBalanceStore = create(
     (set) => ({
         error: null,
@@ -25,7 +25,24 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, notify) => {
+        getIndicatorsBalanceEnding: (id, setIndicatorsBalanceEnding) => {
+            set({ loading: true })
+            try {
+                getData(GET_INDICATORS_BALANCE_ENDING.replace(':id', id), GET).then((result) => {
+                    set({ loading: false })
+                    if (result?.code === 200) {
+                        // edit state
+                        setIndicatorsBalanceEnding(result?.data)
+                    } else {
+                        setIndicatorsBalanceEnding(null)
+                    }
+                }
+                )
+            } catch (error) {
+                set({ error, loading: false })
+            }
+        },
+        createBalanceBeginnings: (cashRegisterId, userId, detail, totalBeginnig, setStatusCashRegister, notify, onHandleState) => {
             set({ loading: true })
             const body = {
                 total_beginning: totalBeginnig,
@@ -47,23 +64,7 @@ const useCashBalanceStore = create(
                         setStatusCashRegister(false)
                         notify('❌ ' + result?.message)
                     }
-                }
-                )
-            } catch (error) {
-                set({ error, loading: false })
-            }
-        },
-        getIndicatorsBalanceEnding: (id, setIndicatorsBalanceEnding) => {
-            set({ loading: true })
-            try {
-                getData(GET_INDICATORS_BALANCE_ENDING.replace(':id', id), GET).then((result) => {
-                    set({ loading: false })
-                    if (result?.code === 200) {
-                        // edit state
-                        setIndicatorsBalanceEnding(result?.data)
-                    } else {
-                        setIndicatorsBalanceEnding(null)
-                    }
+                    onHandleState()
                 }
                 )
             } catch (error) {
@@ -91,6 +92,32 @@ const useCashBalanceStore = create(
                     } else if (result?.message === 'Error en la solicitud: 400') {
                         setStatusCashRegister(false)
                         notify('❌ Primero se debe efectuar el incio de caja Nº ' + cashRegisterId + ', antes de efectuar un cierre de caja.')
+                    } else {
+                        setStatusCashRegister(false)
+                        notify('❌ ' + result?.message)
+                    }
+                    onhandlerAcctions()
+                }
+                )
+            } catch (error) {
+                set({ error, loading: false })
+            }
+        },
+        createDrawalsCashBalance: (cashRegisterId, userId, detail, total, setStatusCashRegister, onhandlerAcctions, notify) => {
+            set({ loading: true })
+            const body =
+            {
+                total,
+                user_id: userId,
+                cash_registry_id: cashRegisterId,
+                detail
+            }
+            try {
+                getData(CREATE_BALANCE_WITH_DRAWALS, POST, body).then((result) => {
+                    set({ loading: false })
+                    if (result?.code === 200) {
+                        setStatusCashRegister(true)
+                        notify('✅ Retiro de Caja Nº ' + cashRegisterId + ' con éxito!')
                     } else {
                         setStatusCashRegister(false)
                         notify('❌ ' + result?.message)

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaMoneyBillTransfer } from 'react-icons/fa6'
 import { useDisclosure } from '@nextui-org/react'
-import PaymentOfMoneyModal from './PaymentOfMoneyModal'
+import DrawalsCashBalance from '../SettingsNav/Drawals/DrawalsCashBalance'
 
 export function PaymentOfMoney ({ disabled }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -31,15 +31,9 @@ export function PaymentOfMoney ({ disabled }) {
                     className={`${show ? 'fill-gray-500 dark:fill-gray-500' : 'fill-primary-500 dark:fill-primary-300'} w-6 h-6 sm:w-10 sm:h-10 cursor-pointer `}
                 />
             </button>
-            <PaymentOfMoneyModal isOpen={isOpen} onClose={onClose} disabled={disabled}/>
+            <DrawalsCashBalance isOpen={isOpen} onClose={onClose} disabled={disabled}/>
         </>
 
     )
 }
 export default PaymentOfMoney
-/*
-   style={{
-                        fill: show ? 'gray' : 'black',
-                        color: show ? 'gray' : 'black'
-                    } }
-*/

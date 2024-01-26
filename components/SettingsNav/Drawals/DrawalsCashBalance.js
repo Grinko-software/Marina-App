@@ -2,18 +2,30 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
 import useScannerStore from '@/stores/scanner'
-import ScannerCredential from '../ScannerCredential/ScannerCredential'
-
-export default function PaymentOfMoneyModal ({ isOpen, onClose, disabled }) {
+import ScannerCredential from '../../ScannerCredential/ScannerCredential'
+import useCashBalanceStore from '../store'
+import useSettingsStore from '@/stores/settings'
+import { getCashRegister } from '@/services/cashRegister'
+import { getIdUser } from '@/services/user'
+import { notify } from '@/services/notify'
+export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(false)
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
     const { /* enabledScanner, disabledScanner, */ disabledAuthMode } = useScannerStore()
-
+    const { createDrawalsCashBalance } = useCashBalanceStore(({ createDrawalsCashBalance }) => ({ createDrawalsCashBalance }))
+    const { setStatusCashRegister } = useSettingsStore(({ setStatusCashRegister }) => ({ setStatusCashRegister }))
+    const onhandlerAcctions = () => {
+        onClose()
+    }
+    const onHandlerDrawals = () => {
+        createDrawalsCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify)
+        setReadQR(true)
+    }
     useEffect(() => {
         if (userAuthData) {
-            // setReadQR(false)
-            // alert(userAuthData?.fullName)
+            setReadQR(false)
+            alert(userAuthData?.fullName)
         }
     }, [userAuthData])
 
@@ -107,7 +119,7 @@ export default function PaymentOfMoneyModal ({ isOpen, onClose, disabled }) {
                             <ModalFooter className='justify-center'>
                                 <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                     onClick={() => {
-                                        setReadQR(true)
+                                        onHandlerDrawals()
                                     }}>
                                     ACEPTAR
                                 </Button>

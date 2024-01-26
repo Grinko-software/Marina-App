@@ -1,18 +1,20 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Badge, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@nextui-org/react'
+import { Badge, Popover, PopoverTrigger } from '@nextui-org/react'
 import { TbReportMoney } from 'react-icons/tb'
-import CashReconciliationModal from './CashReconciliationModal'
 import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
+import InitCashCounting from './InitCashCounting/InitCashCounting'
+import CashCounting from './CashCounting/CashCounting'
 
-export default function BoxStatus ({ statusCashRegister, setStatusCashRegister, openModalCashBalance, setOpenModalCashBalance, disabled }) {
+export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance, setOpenModalCashBalance, disabled }) {
     const [isOpenInfo, setIsOpenInfo] = useState(null)
     const [color, setColor] = useState('danger')
     const [box, setBox] = useState(null)
     const [message, setMessage] = useState(false)
-    const { isOpen, onClose, onOpen } = useDisclosure()
+    const [openModalCashBeginning, setOpenModalCashBeginning] = useState(false)
+    const [openModalCashEnding, setOpenModalCashEnding] = useState(false)
     const {
         selectedCashRegister
     } = useSettingsStore()
@@ -21,7 +23,11 @@ export default function BoxStatus ({ statusCashRegister, setStatusCashRegister, 
     const onHandlerStatusBalance = () => {
         getStatus(selectedCashRegister?.ID).then((status) => {
             setStatusCashRegister(status)
-            onOpen()
+            if (status) {
+                setOpenModalCashEnding(true)
+            } else {
+                setOpenModalCashBeginning(true)
+            }
         })
     }
     useEffect(() => {
@@ -44,7 +50,6 @@ export default function BoxStatus ({ statusCashRegister, setStatusCashRegister, 
 
     useEffect(() => {
         if (openModalCashBalance) {
-            onOpen()
             setOpenModalCashBalance(false)
         }
     }, [openModalCashBalance])
@@ -73,12 +78,8 @@ export default function BoxStatus ({ statusCashRegister, setStatusCashRegister, 
                     </Popover>
                 </div>
             </div>
-            { isOpen
-                ? <CashReconciliationModal isOpen={isOpen} onClose={onClose}
-                    statusCashRegister={statusCashRegister}
-                    setStatusCashRegister={setStatusCashRegister} />
-                : <></>}
-
+            {openModalCashBeginning ? <InitCashCounting isOpen={openModalCashBeginning} onClose={() => { setOpenModalCashBeginning(false) }} setStatusCashRegister={setStatusCashRegister}/> : null }
+            {openModalCashEnding ? <CashCounting isOpen={openModalCashEnding} onClose={() => { setOpenModalCashEnding(false) }} setStatusCashRegister={setStatusCashRegister}/> : null }
         </>
     )
 }

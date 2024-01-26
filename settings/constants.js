@@ -62,3 +62,4 @@ export const GET_INDICATORS_BALANCE_ENDING = '/accounting-event/indicators-balan
 
 export const CREATE_BALANCE_BEGINNINGS = '/accounting-event/create/balance-beginnings'
 export const CREATE_BALANCE_ENDINGS = '/accounting-event/create/balance-endings'
+export const CREATE_BALANCE_WITH_DRAWALS = '/accounting-event/create/withdrawals'
