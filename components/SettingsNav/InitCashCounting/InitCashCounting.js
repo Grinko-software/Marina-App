@@ -9,9 +9,9 @@ import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
-import { toast } from 'react-hot-toast'
+import { notify } from '@/services/notify'
+import { formatterNumber } from '@/utils/number'
 export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegister }) {
-    const notify = (text) => toast(text)
     const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
     const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }))
     const [isSelected, setIsSelected] = useState(0)
@@ -31,6 +31,11 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
     useEffect(() => {
         if (getCashRegister()?.ID !== 'no-select') {
             getLastIndicatorsCashBalanceEnding(getCashRegister()?.ID, setLastBalance)
+        } else {
+            onClose()
+            setTimeout(() => {
+                notify('⚙️ Se debe seleccionar una caja en ajustes para continuar!')
+            }, [500])
         }
     }, [])
 
@@ -47,7 +52,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
                                         <div className='flex flex-row w-full space-x-4'>
                                             <InitCashReconciliationCard
                                                 title={ lastBalance ? 'Saldo cierre de caja anterior' : 'No se ha registrado un cierre de caja anterior'}
-                                                total={lastBalance?.total_ending_real_cash_balance || '-'}
+                                                total={ lastBalance?.total_ending_real_cash_balance ? formatterNumber(lastBalance?.total_ending_real_cash_balance) : '-'}
                                                 bgTitle={'bg-black/40'}
                                                 img={credit}
                                                 detail={'La cantidad de saldo anterior no siempre coincidirá con la cantidad de dinero con la que se inicia la jornada'}

@@ -510,6 +510,7 @@ const useSalesStore = create(
             const iva = totalWithOutTaxFree - netTotal
 
             /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -520,7 +521,8 @@ const useSalesStore = create(
                     }
                 }),
                 payment_type_id: paymentTarget,
-                voucher_type_id: 1
+                voucher_type_id: 1,
+                cash_register_id: cashRegister?.ID
             }
 
             const device = getDeviceTuu()
@@ -647,6 +649,7 @@ const useSalesStore = create(
             const iva = totalWithOutTaxFree - netTotal
 
             /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -657,7 +660,8 @@ const useSalesStore = create(
                     }
                 }),
                 payment_type_id: paymentTarget,
-                voucher_type_id: 2
+                voucher_type_id: 2,
+                cash_register_id: cashRegister?.ID
             }
 
             const device = getDeviceTuu()
@@ -783,6 +787,7 @@ const useSalesStore = create(
             const iva = totalWithOutTaxFree - netTotal
 
             /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -793,7 +798,8 @@ const useSalesStore = create(
                     }
                 }),
                 payment_type_id: paymentTarget,
-                voucher_type_id: 3
+                voucher_type_id: 3,
+                cash_register_id: cashRegister?.ID
             }
             set({ loadingSale: true, error: null })
 

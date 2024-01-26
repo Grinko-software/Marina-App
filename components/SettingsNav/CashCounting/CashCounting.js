@@ -13,6 +13,7 @@ import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
 import { toast } from 'react-hot-toast'
+import { formatterNumber } from '@/utils/number'
 const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const notify = (text) => toast(text)
     const [isSelected, setIsSelected] = useState()
@@ -60,21 +61,21 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                         <div className='flex flex-row w-full space-x-4'>
                                             <CashReconciliationCard
                                                 title={'Ventas en Debito/Credito'}
-                                                total={indicatorsBalanceEnding?.total_sales_card ?? '-'}
+                                                total={indicatorsBalanceEnding?.total_sales_card ? formatterNumber(indicatorsBalanceEnding?.total_sales_card) : '-'}
                                                 bgTitle={'bg-black/40'}
                                                 img={credit}
                                                 detail={'Total de ingresos en tarjetas de debito/credito del dia'}
                                             />
                                             <CashReconciliationCard
                                                 title={'Ventas en Efectivo'}
-                                                total={indicatorsBalanceEnding?.total_sales_cash ?? '-'}
+                                                total={indicatorsBalanceEnding?.total_sales_cash ? formatterNumber(indicatorsBalanceEnding?.total_sales_cash) : '-'}
                                                 bgTitle={'bg-green-500/80'}
                                                 img={cash}
                                                 detail={'Total de ingresos en efectivo del dia'}
                                             />
                                             <CashReconciliationCard
                                                 title={'Egresos/pagos'}
-                                                total={indicatorsBalanceEnding?.total_drawals ?? '-'}
+                                                total={indicatorsBalanceEnding?.total_drawals ? formatterNumber(indicatorsBalanceEnding?.total_drawals) : '-'}
                                                 bgTitle={'bg-green-500/20'}
                                                 img={PaymentOfMoney}
                                                 detail={'Total de egresos de caja diarios (pagos)'}

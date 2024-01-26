@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Text } from '@nextui-org/react'
-import toast, { Toaster } from 'react-hot-toast'
+import { notify } from '@/services/notify'
 import { formatter } from '@/utils/number'
 import useSalesStore from '../store'
 import InvoiceDetailed from './invoice/invoice'
@@ -10,7 +10,6 @@ import useInvoiceStore from './invoice/store'
 export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue, onOpenLoadingSale }) {
     const [openModal, setOpenModal] = useState(false)
     const { targetCustomer, setTargetCustomer } = useInvoiceStore(({ targetCustomer, setTargetCustomer }) => ({ targetCustomer, setTargetCustomer }))
-    const notify = (text) => toast(text)
     const {
         loadingSale,
         listSalesActives,
@@ -121,26 +120,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
     }
 
     return (
-        <>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                className={' bg-primary-50 text-primary-500 dark:bg-primary-200 dark:text-primary-500'}
-                toastOptions={{
-                    className: '',
-                    duration: 10000,
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black'
-                        }
-                    }
-                }}
-            />
+        <section>
             <Modal
                 size='5xl'
                 className='h-[40rem]'
@@ -240,6 +220,6 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                 setOpenModal={setOpenModal}
                 setVoucherTargetValue={setVoucherTargetValue}
             />
-        </>
+        </section>
     )
 }
