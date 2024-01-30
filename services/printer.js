@@ -2,20 +2,19 @@ import { getData, POST } from '@/services/http'
 import { PRINTER_TICKET_API_URL } from '@/settings/constants'
 import { formatNumberWithPoints } from '@/utils/number'
 
-const VOUCHER_TYPE = {
-    1: 'voucher',
-    2: 'invoice',
-    3: 'ticket'
+export const VOUCHER_TYPE = {
+    VOUCHER: 'voucher',
+    INVOICE: 'invoice',
+    TICKET: 'ticket'
 }
 
 export const fetchPrinterTicket = async ({
     saleType,
     datetime,
-    paymentType,
     folioNumber,
     total,
-    discount,
-    discountPctg,
+    discountOffers,
+    discountExtra,
     stamp,
     totalTaxFree,
     totalNet,
@@ -25,19 +24,20 @@ export const fetchPrinterTicket = async ({
     products,
     notify
 }) => {
+    const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const data = {
-        datetime,
-        saleType: VOUCHER_TYPE[saleType],
-        // paymentType: paymentType || 'card',
-        voucherNumber: folioNumber || '',
-        stamp: stamp || '',
+        datetime: datetime || '',
+        saleType: saleType || VOUCHER_TYPE.TICKET,
+        voucherNumber: folioNumber || null,
+        stamp: stamp || null,
         total: formatNumberWithPoints(total, ''),
-        discount: formatNumberWithPoints(discount || null, ''),
-        totalTaxFree: formatNumberWithPoints(totalTaxFree, ''),
+        discountOffers: formatNumberWithPoints(discountOffers || null, null),
+        totalTaxFree: formatNumberWithPoints(totalTaxFree || null, null),
         totalNet: formatNumberWithPoints(totalNet, ''),
         iva: formatNumberWithPoints(iva, ''),
         cardDetail: cardDetail || null,
-        discountPctg: formatNumberWithPoints(discountPctg, ''),
+        discountExtra: formatNumberWithPoints(discountExtra || null, null),
+        discountTotal: formatNumberWithPoints(discountTotal || null, null),
         customerDetail: customerDetail || null,
         productList: products?.map(
             ({ name, quantity, total }) => {

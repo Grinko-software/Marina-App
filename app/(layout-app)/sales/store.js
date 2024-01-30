@@ -8,11 +8,12 @@ import { getData, GET, POST } from '@/services/http'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
-import { getStateSaleMachine, createSaleOnHaulmer, saveTicketOnDatabase, generateDTEBody } from './services'
+import { getStateSaleMachine, createSaleOnHaulmer, saveTicketOnDatabase, generateDTEBody, getTotalDiscountOffers } from './services'
 import { getDeviceTuu } from '@/services/settings'
 import { setStateMachine } from '@/services/machine'
 import { errorsMachine } from '@/utils/machine'
 import { getCashRegister } from '@/services/cashRegister'
+import { VOUCHER_TYPE, fetchPrinterTicket } from '@/services/printer'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -498,16 +499,22 @@ const useSalesStore = create(
         createSaleVoucher: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.VOUCHER
+
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget
             const date = today().format('YYYY-MM-DD')
 
-            const discount = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
-            const totalPay = discount ? (sale?.totalPrice - (sale?.totalPrice * discount)) : sale?.totalPrice// add general discount
+            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
             const totalTaxFreePay = sale?.totalTaxFree || 0
             const totalWithOutTaxFree = totalPay - totalTaxFreePay
             const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
             const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
 
             /* Model to send endpoint our bd */
             const cashRegister = getCashRegister()
@@ -548,7 +555,8 @@ const useSalesStore = create(
                                 getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data })
+                                        fetchPrinterTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
                                         removeSale(sales, saleId)
@@ -575,12 +583,14 @@ const useSalesStore = create(
                 }
             } else if (isCardPayment) {
                 await saveTicketOnDatabase({
+                    saleType,
                     listSales: saleProductsList,
                     totalPay,
                     netTotal,
                     iva,
                     totalTaxFree: totalTaxFreePay,
-                    discountPctg: discount,
+                    discountExtra: totalDiscountExtra,
+                    discountOffers: totalDiscountOffers,
                     body,
                     notify,
                     onSuccessSale: () => {
@@ -593,7 +603,7 @@ const useSalesStore = create(
                 })
             } else {
                 try {
-                    const dteBody = generateDTEBody({ discount, isInvoice: false, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
+                    const dteBody = generateDTEBody({ discount: discountTotalPctg, isInvoice: false, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
                     await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody).then(data => {
                         if (data?.data?.TIMBRE) {
                             try {
@@ -602,8 +612,9 @@ const useSalesStore = create(
                                     if (result?.code === 200) {
                                         console.log(result)
                                         const stamp = data?.data?.TIMBRE
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
-                                        // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                        const folio = data?.data?.FOLIO
+                                        fetchPrinterTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
                                         notify('✅ Pago con éxito')
                                         if (onSuccessSale) {
                                             onSuccessSale()
@@ -637,16 +648,22 @@ const useSalesStore = create(
         createSaleInvoice: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment, targetCustomer }) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.INVOICE
+
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget
             const date = today().format('YYYY-MM-DD')
 
-            const discount = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
-            const totalPay = discount ? (sale?.totalPrice - (sale?.totalPrice * discount)) : sale?.totalPrice// add general discount
+            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
             const totalTaxFreePay = sale?.totalTaxFree || 0
             const totalWithOutTaxFree = totalPay - totalTaxFreePay
             const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
             const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
 
             /* Model to send endpoint our bd */
             const cashRegister = getCashRegister()
@@ -687,7 +704,8 @@ const useSalesStore = create(
                                 getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
+                                        fetchPrinterTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
                                         removeSale(sales, saleId)
@@ -714,12 +732,14 @@ const useSalesStore = create(
                 }
             } else if (isCardPayment) {
                 await saveTicketOnDatabase({
+                    saleType,
                     listSales: saleProductsList,
                     totalPay,
                     netTotal,
                     iva,
                     totalTaxFree: totalTaxFreePay,
-                    discountPctg: discount,
+                    discountExtra: totalDiscountExtra,
+                    discountOffers: totalDiscountOffers,
                     body,
                     notify,
                     onSuccessSale: () => {
@@ -732,7 +752,7 @@ const useSalesStore = create(
                 })
             } else {
                 try {
-                    const dteBody = generateDTEBody({ discount, isInvoice: true, targetCustomer, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
+                    const dteBody = generateDTEBody({ discount: discountTotalPctg, isInvoice: true, targetCustomer, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
                     await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody).then(data => {
                         if (data?.data?.TIMBRE) {
                             try {
@@ -741,7 +761,9 @@ const useSalesStore = create(
                                     if (result?.code === 200) {
                                         console.log(result)
                                         const stamp = data?.data?.TIMBRE
-                                        generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
+                                        const folio = data?.data?.FOLIO
+                                        fetchPrinterTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                         // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                         notify('✅ Pago con éxito')
                                         if (onSuccessSale) {
@@ -776,15 +798,22 @@ const useSalesStore = create(
         createSaleTicket: async ({ sales, saleId, notify, onSuccessSale, removeSale }) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.TICKET
+
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget
 
-            const discount = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
-            const totalPay = discount ? (sale?.totalPrice - (sale?.totalPrice * discount)) : sale?.totalPrice// add general discount
+            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
             const totalTaxFreePay = sale?.totalTaxFree || 0
             const totalWithOutTaxFree = totalPay - totalTaxFreePay
+
             const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
             const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
 
             /* Model to send endpoint our bd */
             const cashRegister = getCashRegister()
@@ -804,12 +833,14 @@ const useSalesStore = create(
             set({ loadingSale: true, error: null })
 
             await saveTicketOnDatabase({
+                saleType,
                 listSales: saleProductsList,
                 totalPay,
                 netTotal,
                 iva,
                 totalTaxFree: totalTaxFreePay,
-                discountPctg: discount,
+                discountExtra: totalDiscountExtra,
+                discountOffers: totalDiscountOffers,
                 body,
                 notify,
                 onSuccessSale: () => {
