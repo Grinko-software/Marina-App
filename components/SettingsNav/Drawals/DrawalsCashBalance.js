@@ -78,21 +78,23 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                             </Button>
                                         </section>
                                         <Input
-                                            size='lg'
-                                            isRequired={true}
                                             type="number"
+                                            title="Efectivo"
+                                            autoFocus={true}
+
                                             label={
                                                 <span className="font-bold text-lg text-black dark:text-white ">CANTIDAD</span>
                                             }
-                                            placeholder="0"
                                             labelPlacement="outside"
-                                            value={paymentDetailed}
+                                            placeholder={'0'}
                                             startContent={
                                                 <div className="pointer-events-none flex items-center">
                                                     <span className="text-default-400 text-small dark:text-white">$</span>
                                                 </div>
                                             }
+                                            min={0}
                                         />
+
                                         <Input
                                             size='lg'
                                             type="text"
