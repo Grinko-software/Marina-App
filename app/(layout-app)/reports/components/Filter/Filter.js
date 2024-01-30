@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import { Accordion, AccordionItem, Button, Card, CardBody } from '@nextui-org/react'
 import { ConfigProvider } from 'antd'
@@ -8,7 +9,8 @@ import 'dayjs/locale/es-us'
 import dayjs from 'dayjs'
 import DateTypeSelector from './DateTypeSelector/DateTypeSelector'
 import useDateTypeStore from './DateTypeSelector/store'
-import RangeDatePicker from './RangeDatePicker/RangeDatePicker'
+/* import RangeDatePicker from './RangeDatePicker/RangeDatePicker' */
+import DatePicker from './DatePicker/DatePicker'
 import useFilterStore from './store'
 import useRangeDateStore from './RangeDatePicker/store'
 import moment from 'moment-timezone'
@@ -120,7 +122,15 @@ export default function Filter () {
     }, [reportsData])
 
     return <section>
-        <ConfigProvider locale={locale}>
+
+        <section className='w-full z-0'>
+            <DatePicker {...dateTypeState} {...rangeDateState}/>
+        </section>
+
+    </section>
+}
+/*
+ <ConfigProvider locale={locale}>
             <Card className='w-full overflow-hidden'>
                 <CardBody className='flex flex-row gap-5'>
                     <Accordion
@@ -134,30 +144,19 @@ export default function Filter () {
                         <AccordionItem
                             onPress={() => { !filterKeyIsOpen ? setFilterKeyIsOpen(true) : setFilterKeyIsOpen(false) }}
                             key={'filter'}
-                            aria-label="Filtro de búsqueda" /* indicator={<IconBase />} */
+                            aria-label="Filtro de búsqueda" /* indicator={<IconBase />}
                             title={
                                 <div className='font-bold'>
                                     {'Filtro de búsqueda'}
                                 </div>
                             }
                         >
-                            <div className='flex flex-row gap-5 items-end'>
-                                <FilterItem title={'Tipo de rango'}>
-                                    <DateTypeSelector {...dateTypeState} /* setRangeType={setRangeType} *//>
-                                </FilterItem>
-                                <FilterItem title={'Rango de búsqueda'}>
-                                    <section className='w-full flex'>
-                                        <RangeDatePicker {...dateTypeState} {...rangeDateState}/>
-                                    </section>
-                                </FilterItem>
-                                <Button className='mr-auto ' onClick={() => requestDataReports()}>
-                                    {'Buscar'}
-                                </Button>
-                            </div>
+                            <section className='w-full'>
+                                <DatePicker {...dateTypeState} {...rangeDateState}/>
+                            </section>
                         </AccordionItem>
                     </Accordion>
                 </CardBody>
             </Card>
         </ConfigProvider>
-    </section>
-}
+*/

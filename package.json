@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@ericblade/quagga2": "^1.8.2",
+    "@headlessui/react": "^1.7.18",
+    "@headlessui/tailwindcss": "^0.2.0",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.0",
     "@next/eslint-plugin-next": "^13.4.19",
@@ -19,6 +21,7 @@
     "@nextui-org/react": "2.2.9",
     "@react-pdf/renderer": "^3.1.12",
     "@serialport/parser-readline": "^12.0.0",
+    "@tremor/react": "^3.13.3",
     "antd": "^5.11.1",
     "apexcharts": "^3.44.0",
     "autoprefixer": "10.4.15",
@@ -65,6 +68,7 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "eslint": "^8.47.0",
     "eslint-config-next": "^13.4.19",
     "eslint-config-standard": "^17.1.0",

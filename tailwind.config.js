@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const { nextui } = require('@nextui-org/react')
+// const colors = require('tailwindcss/colors')
 module.exports = {
     darkMode: 'class',
     content: [
@@ -64,8 +65,7 @@ module.exports = {
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
+                'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
             }
         },
 
@@ -98,6 +98,13 @@ module.exports = {
             300: '3'
         }
     },
+    safelist: [
+        {
+            pattern:
+            /^(bg-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+            variants: ['hover', 'ui-selected']
+        }
+    ],
     plugins: [
         nextui({
             layout: {
@@ -160,5 +167,6 @@ module.exports = {
                 }
             }
         }),
-        require('tailwindcss'), require('autoprefixer')]
+        require('tailwindcss'), require('autoprefixer')
+    ]
 }
