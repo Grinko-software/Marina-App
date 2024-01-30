@@ -2,6 +2,7 @@ import { getData, POST } from '@/services/http'
 import { PRINTER_TICKET_API_URL } from '@/settings/constants'
 import { today } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
+import { notify } from './notify'
 
 export const VOUCHER_TYPE = {
     VOUCHER: 'voucher',
@@ -22,8 +23,7 @@ export const fetchPrinterTicket = async ({
     iva,
     cardDetail,
     customerDetail,
-    products,
-    notify
+    products
 }) => {
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const data = {
