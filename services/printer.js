@@ -1,5 +1,6 @@
 import { getData, POST } from '@/services/http'
 import { PRINTER_TICKET_API_URL } from '@/settings/constants'
+import { today } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
 
 export const VOUCHER_TYPE = {
@@ -26,9 +27,9 @@ export const fetchPrinterTicket = async ({
 }) => {
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const data = {
-        datetime: datetime || '',
+        datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
         saleType: saleType || VOUCHER_TYPE.TICKET,
-        voucherNumber: folioNumber || null,
+        voucherNumber: formatNumberWithPoints(folioNumber || null) || null,
         stamp: stamp || null,
         total: formatNumberWithPoints(total, ''),
         discountOffers: formatNumberWithPoints(discountOffers || null, null),
