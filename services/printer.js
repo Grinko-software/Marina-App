@@ -28,7 +28,7 @@ export const fetchPrinterTicket = async ({
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const data = {
         datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
-        saleType: saleType || VOUCHER_TYPE.TICKET,
+        paymentType: saleType || VOUCHER_TYPE.TICKET,
         voucherNumber: formatNumberWithPoints(folioNumber || null) || null,
         stamp: stamp || null,
         total: formatNumberWithPoints(total, ''),
