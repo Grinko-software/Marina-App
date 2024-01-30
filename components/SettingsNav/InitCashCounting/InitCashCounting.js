@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Input, Checkbox, Button, Modal, ModalBody, ModalHeader, ModalContent, ModalFooter } from '@nextui-org/react'
@@ -16,8 +17,9 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
     const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }))
     const [isSelected, setIsSelected] = useState(0)
     const [readQR, setReadQR] = useState(false)
-    const [paymentDetailed, setPayDetailed] = useState(0)
+    const [paymentDetailed, setPayDetailed] = useState(null)
     const [lastBalance, setLastBalance] = useState(null)
+    const [detail, setDetail] = useState(null)
     const onHandleState = () => {
         setDisabled(false)
         setReadQR(false)
@@ -25,7 +27,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
     }
     const onHandlerBalance = () => {
         if (getCashRegister()?.ID) {
-            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), 'Inicio de caja', paymentDetailed, setStatusCashRegister, notify, onHandleState)
+            createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), detail, paymentDetailed, setStatusCashRegister, notify, onHandleState)
         }
     }
     useEffect(() => {
@@ -81,21 +83,21 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
                                             </Button>
                                         </section>
                                         <Input
-                                            size='lg'
-                                            isRequired={true}
+                                            size="lg"
+                                            min={0}
                                             type="number"
-
                                             label={
                                                 <span className=" uppercase font-bold text-lg text-black dark:text-white ">Cantidad de dinero en caja</span>
                                             }
                                             value={paymentDetailed}
-                                            placeholder="0"
+                                            placeholder={'0'}
                                             labelPlacement="outside"
                                             startContent={
                                                 <div className="pointer-events-none flex items-center">
                                                     <span className="text-default-400 text-small">$</span>
                                                 </div>
                                             }
+                                            onValueChange={(value) => { if (value) { setPayDetailed(parseFloat(value)) } }}
                                         />
                                         <div className="flex flex-col">
                                             <Checkbox

@@ -20,7 +20,10 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const [readQR, setReadQR] = useState(false)
     const [indicatorsBalanceEnding, setIndicatorsBalanceEnding] = useState(null)
     const [moneyOnCash, setMoneyOnCash] = useState(0)
+    const [moneyNominalOnCash, setMoneyNominalOnCash] = useState(0)
     const [diffMoney, setDiffMoney] = useState(0)
+    const [totalEndingCard, setTotalEndingCard] = useState(null)
+    const [detail, setDetail] = useState(null)
     const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
     const { getIndicatorsBalanceEnding, createBalanceEndings } = useCashBalanceStore(({ getIndicatorsBalanceEnding, createBalanceEndings }) => ({ getIndicatorsBalanceEnding, createBalanceEndings }))
 
@@ -31,7 +34,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
         onClose()
     }
     const onHandlerCreateBalanceEnding = () => {
-        createBalanceEndings(getCashRegister()?.ID, getIdUser(), 'Cierre de caja', moneyOnCash, diffMoney, 0, setStatusCashRegister, onhandlerAcctions, notify)
+        createBalanceEndings(getCashRegister()?.ID, getIdUser(), detail, moneyOnCash, moneyNominalOnCash, totalEndingCard, setStatusCashRegister, onhandlerAcctions, notify)
     }
     useEffect(() => {
         setReadQR(false)
@@ -46,6 +49,11 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
             setDiffMoney(diff)
         }
     }, [moneyOnCash])
+    useEffect(() => {
+        if (indicatorsBalanceEnding) {
+            setTotalEndingCard(indicatorsBalanceEnding?.total_sales_card)
+        }
+    }, [indicatorsBalanceEnding])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
@@ -82,21 +90,36 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                             />
                                         </div>
                                         <Input
-                                            size='lg'
-                                            isRequired={true}
+                                            size="lg"
+                                            min={0}
                                             type="number"
-
                                             label={
-                                                <span className=" uppercase font-bold text-lg text-black dark:text-white ">Cantidad de dinero en caja</span>
+                                                <span className=" uppercase font-bold text-lg text-black dark:text-white ">Cantidad de dinero real en caja</span>
                                             }
-                                            placeholder="0"
                                             labelPlacement="outside"
+                                            placeholder={'0'}
                                             startContent={
                                                 <div className="pointer-events-none flex items-center">
                                                     <span className="text-default-400 text-small">$</span>
                                                 </div>
                                             }
                                             onValueChange={(value) => { if (value) { setMoneyOnCash(parseFloat(value)) } }}
+                                        />
+                                        <Input
+                                            size="lg"
+                                            min={0}
+                                            type="number"
+                                            label={
+                                                <span className=" uppercase font-bold text-lg text-black dark:text-white ">Cantidad de dinero nominal en caja</span>
+                                            }
+                                            labelPlacement="outside"
+                                            placeholder={'0'}
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className="text-default-400 text-small">$</span>
+                                                </div>
+                                            }
+                                            onValueChange={(value) => { if (value) { setMoneyNominalOnCash(parseFloat(value)) } }}
                                         />
                                         <Input
                                             size='lg'
