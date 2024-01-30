@@ -147,7 +147,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                                 }
                                             />
                                         </div>
-                                        <section className='flex flex-col gap-2'>
+                                        <section className='flex flex-col gap-2 overflow-y-auto h-[20rem]'>
                                             {(filteredList)?.length
                                                 ? filteredList.map((item) => {
                                                     return (<div key={item.id}><CardRow item={item} setTargetCustomer={setTargetCustomer}/></div>)

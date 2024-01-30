@@ -192,7 +192,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                                         FINALIZAR
                                     </Button>
                                 </div>
-                                : <div>
+                                : <div className='space-x-3'>
                                     <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
                                         isDisabled={isDisableButtonPay}
                                         onClick={() => { generateSale() }}
