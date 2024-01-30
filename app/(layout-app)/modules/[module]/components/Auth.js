@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import { useRouter } from 'next/navigation'
 import { Button, Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react'

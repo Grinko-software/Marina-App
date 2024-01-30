@@ -38,11 +38,11 @@ export default function SettingsNav () {
     useEffect(() => {
         if (selectedCashRegister?.ID !== 'no-select' && statusCashRegister === null) {
             getStatus(selectedCashRegister?.ID).then((status) => {
-                console.log(status)
                 if (!status) {
                     // Open Modal to Init Cash balance
                     setOpenModalCashBalance(true)
                 } else {
+                    setOpenModalCashBalance(true)
                     // Se debe hacer un cierre de caja
                 }
             })

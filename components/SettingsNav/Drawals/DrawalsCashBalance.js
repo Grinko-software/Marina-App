@@ -9,17 +9,18 @@ import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/user'
 import { notify } from '@/services/notify'
 export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
-    const [paymentDetailed, setPayDetailed] = useState(false)
+    const [paymentDetailed, setPayDetailed] = useState(0)
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
     const { /* enabledScanner, disabledScanner, */ disabledAuthMode } = useScannerStore()
     const { createDrawalsCashBalance } = useCashBalanceStore(({ createDrawalsCashBalance }) => ({ createDrawalsCashBalance }))
     const { setStatusCashRegister } = useSettingsStore(({ setStatusCashRegister }) => ({ setStatusCashRegister }))
     const onhandlerAcctions = () => {
+        setPayDetailed(0)
         onClose()
+        setReadQR(false)
     }
     const onHandlerDrawals = () => {
-        createDrawalsCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify)
         setReadQR(true)
     }
     useEffect(() => {
@@ -32,36 +33,27 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     useEffect(() => {
         setReadQR(false)
     }, [])
-
-    /*     useEffect(() => {
-        if (isOpen) {
-            disabledScanner()
-        } else {
-            enabledScanner()
-        }
-    }, [isOpen])
- */
-    const onScanFunction = (data) => {
+    const onSuccess = (data) => {
         setUserAuthData(data)
-        // disabledAuthMode()
-        // setReadQR(false)
+        createDrawalsCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify)
     }
 
     const closeModal = () => {
         disabledAuthMode()
         setReadQR(false)
         onClose()
+        setPayDetailed(0)
     }
 
     return (
         <>
             <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} className="space-y-2" >
                 <ModalContent>
-                    {(onClose) => (
+                    {() => (
                         <>
                             <ModalHeader className="flex flex-col gap-1 font-extrabold text-2xl">RETIRO EN EFECTIVO</ModalHeader>
                             {!readQR
-                                ? <ModalBody>
+                                ? <section><ModalBody>
                                     <div className=" space-y-12">
                                         <section className="flex flex-row space-x-3">
                                             <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
@@ -112,23 +104,42 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                         />
                                     </div>
                                 </ModalBody>
-                                : <ModalBody>
-                                    <ScannerCredential onGetUserData={onScanFunction} />
-                                    {userAuthData?.fullName}
-                                </ModalBody>}
-                            <ModalFooter className='justify-center'>
-                                <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
-                                    onClick={() => {
-                                        onHandlerDrawals()
-                                    }}>
+                                <ModalFooter className='justify-center'>
+                                    <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                        onClick={() => {
+                                            onHandlerDrawals()
+                                        }}>
                                     ACEPTAR
-                                </Button>
-                                <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
-                                    closeModal()
-                                }}>
+                                    </Button>
+                                    <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                        closeModal()
+                                    }}>
                                     CANCELAR
-                                </Button>
-                            </ModalFooter>
+                                    </Button>
+                                </ModalFooter>
+                                </section>
+
+                                : (<section>
+                                    <ModalBody>
+                                        <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={true} withoutDelay={true}/>
+                                        {userAuthData?.fullName}
+                                    </ModalBody>
+                                    <ModalFooter className='justify-center'>
+                                        <Button variant="shadow" className =" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                            onClick={() => {
+                                                setReadQR(false)
+                                            }}>
+                                    Volver
+                                        </Button>
+                                        <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                            closeModal()
+                                        }}>
+                                    CANCELAR
+                                        </Button>
+                                    </ModalFooter>
+                                </section>)
+                            }
+
                         </>
                     )}
                 </ModalContent>
