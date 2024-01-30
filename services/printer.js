@@ -41,11 +41,11 @@ export const fetchPrinterTicket = async ({
         discountTotal: formatNumberWithPoints(discountTotal || null, null),
         customerDetail: customerDetail || null,
         productList: products?.map(
-            ({ name, quantity, total }) => {
+            (item) => {
                 return {
-                    name,
-                    quantity: quantity?.toString(),
-                    total: formatNumberWithPoints(total, '')
+                    name: item?.product?.name || item?.name,
+                    quantity: item?.quantity?.toString(),
+                    total: formatNumberWithPoints(item?.total, '')
                 }
             })
     }
