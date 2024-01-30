@@ -11,6 +11,7 @@ import ConfirmModal from '@/components/ui/ConfirmModal'
 export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, setUpdateProduct }) {
     const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
     const [edit, setEdit] = useState(false)
+    const [printModal, setPrintModal] = useState(false)
     const [type, setType] = useState(false)
     const [confirm, setConfirm] = useState(false)
     const [categoryOptions, setCategoryOptions] = useState([])
@@ -118,12 +119,14 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
         <>
             <div className="flex flex-wrap gap-3">
             </div>
-            <Modal size={'2xl'}
+            <Modal
+                size={'3xl'}
                 isOpen={isOpen}
                 backdrop='opaque'
                 onClose={() => onClose}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
+                className='w-full'
             >
                 <ModalContent className=' overflow-y-scroll'>
                     <section>
@@ -248,7 +251,6 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                             </section>
                         </ModalBody>
                         {edit
-
                             ? <ModalFooter>
                                 <Button className =" bg-green-500 text-primary-50"
                                     onClick={handleUpdateProduct}
@@ -261,28 +263,46 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                     {'Cancelar'}
                                 </Button>
                             </ModalFooter>
-                            : <ModalFooter>
-                                <Button color="danger" variant="bordered"
-                                    startContent={<DeleteIcon/>}
-                                    onClick={handleDeleteProduct}
-                                    isLoading={loadingDelete}>
-                                    {loadingDelete ? 'Eliminando' : 'Eliminar'}
-                                </Button>
-                                <Button className =" bg-blue-500 text-primary-50"
-                                    onClick={() => {
-                                        setEdit(true)
-                                    }}>
-                                    {'Editar'}
-                                </Button>
-                                <Button color="danger" variant="light"
-                                    onClick={() => {
-                                        setEdit(false)
-                                        setTargetProduct(null)
-                                        onClose()
-                                    }}
-                                >
-                                    {'Cerrar'}
-                                </Button>
+                            : <ModalFooter className='flex justify-between'>
+                                <section className='flex space-x-3'>
+                                    <Button className =" bg-green-600 text-primary-50"
+                                        onClick={() => {
+                                            setPrintModal(true)
+                                        }}>
+                                        {'Imprimir código'}
+                                    </Button>
+                                    <Button className =" bg-orange-600 text-primary-50 "
+                                        onClick={() => {
+                                            setPrintModal(true)
+                                        }}>
+                                        {'Imprimir código sin nombre'}
+                                    </Button>
+                                </section>
+
+                                <section className='flex space-x-3'>
+
+                                    <Button color="danger" variant="bordered"
+                                        startContent={<DeleteIcon/>}
+                                        onClick={handleDeleteProduct}
+                                        isLoading={loadingDelete}>
+                                        {loadingDelete ? 'Eliminando' : 'Eliminar'}
+                                    </Button>
+                                    <Button className =" bg-blue-500 text-primary-50"
+                                        onClick={() => {
+                                            setEdit(true)
+                                        }}>
+                                        {'Editar'}
+                                    </Button>
+                                    <Button color="danger" variant="light"
+                                        onClick={() => {
+                                            setEdit(false)
+                                            setTargetProduct(null)
+                                            onClose()
+                                        }}
+                                    >
+                                        {'Cerrar'}
+                                    </Button>
+                                </section>
                             </ModalFooter>
                         }
                     </section>
