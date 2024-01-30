@@ -11,6 +11,8 @@ import { formatter } from '@/utils/number'
 import useScannerStore from '@/stores/scanner'
 import useSettingsStore from '@/stores/settings'
 import { notify } from '@/services/notify'
+/* Get status cash register */
+import { getStatus } from '@/components/SettingsNav/services'
 export default function SaleList (props) {
     const {
         setPayment, payment, setSearchInput, searchInput,
@@ -18,7 +20,7 @@ export default function SaleList (props) {
         voucherTarget, setGoPay, keyFocus,
         setPageTarget, loadingSale
     } = props
-    const { disabled } = useSettingsStore(({ disabled }) => ({ disabled }))
+    const { disabled, selectedCashRegister } = useSettingsStore(({ disabled, selectedCashRegister }) => ({ disabled, selectedCashRegister }))
     const {
         units,
         setUnits,
@@ -77,20 +79,22 @@ export default function SaleList (props) {
         setPayment(false)
     }
     const handleButtonClick = () => {
-        if (disabled) {
-            notify('❌ Error: Se debe iniciar primero la caja para poder efectuar una venta!')
-        } else {
-            if (!payment) {
-                setPayment(true)
-            } else if (paymentTarget === 1 && voucherTarget) {
-                setGoPay(true)
-            } else if (paymentTarget === 2 && voucherTarget) {
-            // Create sale
-                setPageTarget(true)
+        getStatus(selectedCashRegister?.ID).then((status) => {
+            if (!status) {
+                notify('❌ Error: Se debe iniciar primero la caja para poder efectuar una venta!')
             } else {
-                setGoPay(false)
+                if (!payment) {
+                    setPayment(true)
+                } else if (paymentTarget === 1 && voucherTarget) {
+                    setGoPay(true)
+                } else if (paymentTarget === 2 && voucherTarget) {
+                    // Create sale
+                    setPageTarget(true)
+                } else {
+                    setGoPay(false)
+                }
             }
-        }
+        })
     }
     useEffect(() => {
         if (keyFocus) {
