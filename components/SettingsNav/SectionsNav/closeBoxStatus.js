@@ -60,7 +60,7 @@ export default function BoxStatus ({ setStatusCashRegister, openModalCashBalance
                 <div className="flex items-center gap-3">
                     <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpenInfo(false)} isOpen={message}>
                         <PopoverTrigger>
-                            <Badge color={color} content={box} size = "lg" shape="circle" className="text-white" >
+                            <Badge color="warning" content={box} size = "lg" shape="circle" className="text-white" >
                                 <button
                                     aria-label='Toggle Dark Mode'
                                     type='button'
