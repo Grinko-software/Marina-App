@@ -11,7 +11,7 @@ import Lottie from 'lottie-react'
 import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
-import { getIdUser } from '@/services/user'
+import { getIdUser } from '@/services/account'
 import { toast } from 'react-hot-toast'
 import { formatterNumber } from '@/utils/number'
 const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {

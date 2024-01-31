@@ -9,7 +9,7 @@ import QR from '@/assets/gifs/QR.json'
 import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
-import { getIdUser } from '@/services/user'
+import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
 import { formatterNumber } from '@/utils/number'
 export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegister }) {

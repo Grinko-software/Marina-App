@@ -6,7 +6,7 @@ import ScannerCredential from '../../ScannerCredential/ScannerCredential'
 import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
-import { getIdUser } from '@/services/user'
+import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
 export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(0)
