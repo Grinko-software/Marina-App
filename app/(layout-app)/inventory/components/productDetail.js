@@ -9,6 +9,8 @@ import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 import { printBarCode } from './services'
 import Barcode from '@/components/barcode'
+import Loading from '../loading'
+import { notify } from '@/services/notify'
 export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, setUpdateProduct }) {
     const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
     const [edit, setEdit] = useState(false)
@@ -127,9 +129,13 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
             setSettingsBarCode(false)
         }
     }
+    const onSuccessful = () => {
+        setShowBarcode(false)
+        setSettingsBarCode(null)
+    }
     useEffect(() => {
         if (refBarcode?.current && showBarcode) {
-            printBarCode(refBarcode)
+            printBarCode(refBarcode, onSuccessful, notify)
         }
     }, [showBarcode, refBarcode])
 
@@ -285,47 +291,52 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                     {'Cancelar'}
                                 </Button>
                             </ModalFooter>
-                            : <ModalFooter className='flex justify-between'>
-                                <section className='flex space-x-3'>
-                                    <Button className =" bg-green-600 text-primary-50"
-                                        onClick={() => {
-                                            handlePrintBarCode('withName')
-                                        }}>
-                                        {'Imprimir código'}
-                                    </Button>
-                                    <Button className =" bg-orange-600 text-primary-50 "
-                                        onClick={() => {
-                                            handlePrintBarCode('withoutName')
-                                        }}>
-                                        {'Imprimir código sin nombre'}
-                                    </Button>
-                                </section>
+                            : showBarcode
+                                ? <ModalFooter className='flex flex-col items-center'>
+                                    <Loading/>
+                                    {'Imprimiendo ... '}
+                                </ModalFooter>
+                                : <ModalFooter className='flex justify-between'>
+                                    <section className='flex space-x-3'>
+                                        <Button className =" bg-green-600 text-primary-50"
+                                            onClick={() => {
+                                                handlePrintBarCode('withName')
+                                            }}>
+                                            {'Imprimir código'}
+                                        </Button>
+                                        <Button className =" bg-orange-600 text-primary-50 "
+                                            onClick={() => {
+                                                handlePrintBarCode('withoutName')
+                                            }}>
+                                            {'Imprimir código sin nombre'}
+                                        </Button>
+                                    </section>
 
-                                <section className='flex space-x-3'>
+                                    <section className='flex space-x-3'>
 
-                                    <Button color="danger" variant="bordered"
-                                        startContent={<DeleteIcon/>}
-                                        onClick={handleDeleteProduct}
-                                        isLoading={loadingDelete}>
-                                        {loadingDelete ? 'Eliminando' : 'Eliminar'}
-                                    </Button>
-                                    <Button className =" bg-blue-500 text-primary-50"
-                                        onClick={() => {
-                                            setEdit(true)
-                                        }}>
-                                        {'Editar'}
-                                    </Button>
-                                    <Button color="danger" variant="light"
-                                        onClick={() => {
-                                            setEdit(false)
-                                            setTargetProduct(null)
-                                            onClose()
-                                        }}
-                                    >
-                                        {'Cerrar'}
-                                    </Button>
-                                </section>
-                            </ModalFooter>
+                                        <Button color="danger" variant="bordered"
+                                            startContent={<DeleteIcon/>}
+                                            onClick={handleDeleteProduct}
+                                            isLoading={loadingDelete}>
+                                            {loadingDelete ? 'Eliminando' : 'Eliminar'}
+                                        </Button>
+                                        <Button className =" bg-blue-500 text-primary-50"
+                                            onClick={() => {
+                                                setEdit(true)
+                                            }}>
+                                            {'Editar'}
+                                        </Button>
+                                        <Button color="danger" variant="light"
+                                            onClick={() => {
+                                                setEdit(false)
+                                                setTargetProduct(null)
+                                                onClose()
+                                            }}
+                                        >
+                                            {'Cerrar'}
+                                        </Button>
+                                    </section>
+                                </ModalFooter>
                         }
                     </section>
                 </ModalContent>

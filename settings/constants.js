@@ -66,3 +66,5 @@ export const CREATE_BALANCE_WITH_DRAWALS = '/accounting-event/create/withdrawals
 
 // PRINTER
 export const PRINTER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/sale'
+
+export const PRINTER_BARCODE_API_URL = 'http://localhost:8090/escpos/receipt/barcode'
