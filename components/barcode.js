@@ -1,8 +1,7 @@
 import React from 'react'
 import { useBarcode } from 'next-barcode'
-
 export default function Bacode (props) {
-    const { productName, productCode, productCost, showDetail } = props
+    const { refBarcode, productName, productCode, productCost, showDetail } = props
     const { inputRef } = useBarcode({
         value: productCode,
         format: 'EAN13',
@@ -10,9 +9,9 @@ export default function Bacode (props) {
             background: '#FFFF'
         }
     })
-
     return (
-        <div className='flex flex-col items-center w-full bg-white'>
+
+        <div ref={refBarcode} className='flex flex-col items-center w-full bg-white'>
             {showDetail
                 ? (
                     <div>
@@ -28,5 +27,6 @@ export default function Bacode (props) {
                 : null}
             <div className="flex "><svg ref={inputRef} /></div>
         </div>
+
     )
 }

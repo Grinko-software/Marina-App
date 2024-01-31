@@ -13,9 +13,5 @@ export default function BarcodeImg ({ elementRef }) {
                 console.log(err)
             })
     }
-    return (
-        <div className='flex-col mb-10'>
-            <button className='text-black' onClick={() => { htmlToImageConvert() }}>Save</button>
-        </div>
-    )
+    return htmlToImageConvert()
 }
