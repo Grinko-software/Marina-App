@@ -53,8 +53,8 @@ export default function SettingsNav () {
         if (selectedCashRegister?.ID === 'no-select') {
             notify('⚙️ Se debe seleccionar una caja en ajustes para continuar!')
             setDisabled(true)
-        } else {
-            setDisabled(false)
+        } else if (selectedCashRegister?.ID !== 'no-select') {
+            setDisabled(!selectedCashRegister?.cash_balance_beginning)
         }
     }, [])
     return (

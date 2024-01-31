@@ -15,7 +15,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         cashRegister,
         selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister
+        getCashRegister, setDisabled
     } = useSettingsStore(({
         selectedPostMachine,
         postMachines,
@@ -23,7 +23,7 @@ export default function SettingModal ({ isOpen, onClose }) {
         getPostMachines, cashRegister,
         selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister
+        getCashRegister, setDisabled
     }) => ({
         selectedPostMachine,
         postMachines,
@@ -32,7 +32,8 @@ export default function SettingModal ({ isOpen, onClose }) {
         cashRegister,
         selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister
+        getCashRegister,
+        setDisabled
     }))
 
     useEffect(() => {
@@ -46,6 +47,11 @@ export default function SettingModal ({ isOpen, onClose }) {
             setCashRegisterData(cashRegister)
         }
     }, [cashRegister])
+    useEffect(() => {
+        if (selectedCashRegister?.ID !== 'no-select') {
+            setDisabled(!selectedCashRegister?.cash_balance_beginning)
+        }
+    }, [selectedCashRegister])
     useEffect(() => {
         // TODO: Add multi data fetch
         getPostMachines()
