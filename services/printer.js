@@ -45,6 +45,7 @@ export const fetchPrinterSaleTicket = async ({
                 return {
                     name: item?.product?.name || item?.name,
                     quantity: item?.quantity?.toString(),
+                    discount: formatNumberWithPoints(item?.discount || null, null),
                     total: formatNumberWithPoints(item?.total, '')
                 }
             })
