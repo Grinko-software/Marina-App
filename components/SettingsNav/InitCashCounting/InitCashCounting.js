@@ -14,7 +14,7 @@ import { notify } from '@/services/notify'
 import { formatterNumber } from '@/utils/number'
 export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegister }) {
     const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
-    const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings }))
+    const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings, openDrawer } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings, openDrawer }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings, openDrawer }))
     const [isSelected, setIsSelected] = useState(0)
     const [readQR, setReadQR] = useState(false)
     const [paymentDetailed, setPayDetailed] = useState(null)
@@ -30,9 +30,12 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
             createBalanceBeginnings(getCashRegister()?.ID, getIdUser(), detail, paymentDetailed, setStatusCashRegister, notify, onHandleState)
         }
     }
+    const handlerOpenDrawer = () => {
+        openDrawer(getCashRegister()?.ID, notify)
+    }
     useEffect(() => {
         if (getCashRegister()?.ID !== 'no-select') {
-            getLastIndicatorsCashBalanceEnding(getCashRegister()?.ID, setLastBalance)
+            getLastIndicatorsCashBalanceEnding(getCashRegister()?.ID, setLastBalance, handlerOpenDrawer)
         } else {
             onClose()
             setTimeout(() => {

@@ -3,18 +3,18 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { getData, GET, POST } from '@/services/http'
-import { GET_INDICATORS_LAST_BALANCE, CREATE_BALANCE_BEGINNINGS, CREATE_BALANCE_ENDINGS, GET_INDICATORS_BALANCE_ENDING, CREATE_BALANCE_WITH_DRAWALS } from '@/settings/constants'
+import { GET_INDICATORS_LAST_BALANCE, CREATE_BALANCE_BEGINNINGS, CREATE_BALANCE_ENDINGS, GET_INDICATORS_BALANCE_ENDING, CREATE_BALANCE_WITH_DRAWALS, OPEN_DRAWER_API_URL } from '@/settings/constants'
 const useCashBalanceStore = create(
     (set) => ({
         error: null,
         loading: false,
-        getLastIndicatorsCashBalanceEnding: (id, setLastBalance) => {
+        getLastIndicatorsCashBalanceEnding: (id, setLastBalance, handlerOpenDrawer) => {
             set({ loading: true })
             try {
                 getData(GET_INDICATORS_LAST_BALANCE.replace(':id', id), GET).then((result) => {
                     set({ loading: false })
                     if (result?.code === 200) {
-                        // edit state
+                        handlerOpenDrawer()
                         setLastBalance(result?.data)
                     } else {
                         setLastBalance(null)
@@ -123,6 +123,20 @@ const useCashBalanceStore = create(
                         notify('❌ ' + result?.message)
                     }
                     onhandlerAcctions()
+                }
+                )
+            } catch (error) {
+                set({ error, loading: false })
+            }
+        },
+        openDrawer: (cashRegisterId, notify) => {
+            try {
+                getData(OPEN_DRAWER_API_URL, GET, null, true).then((result) => {
+                    if (result?.code === 200) {
+                        notify('✅ Caja Nº ' + cashRegisterId + ' abierta')
+                    } else {
+                        notify('❌ ' + result?.message)
+                    }
                 }
                 )
             } catch (error) {
