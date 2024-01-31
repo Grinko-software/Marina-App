@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { BASE_MARKET_API_URL, AUTH_RENEW } from '../settings/constants'
 import { getIsRefreshing, setIsRefreshing, GET } from '../services/http'
-import { getToken, setToken } from '@/services/user'
+import { getToken, setToken } from '@/services/account'
 
 const makeRequest = async (url, method = GET, data = null, fullUrl = false) => {
     const headers = new Headers({

@@ -1,5 +1,5 @@
 import { SUPPLIER_API_URL, SUPPLIER_ASSOCIATION_API_URL } from '@/settings/constants'
-import { getToken } from './user'
+import { getToken } from './account'
 
 export const fetchGetSupplier = async () => {
     try {

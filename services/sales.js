@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { getToken } from '@/services/user'
+import { getToken } from '@/services/account'
 export const fetchGet = async (url) => {
     try {
         return await fetch(url,

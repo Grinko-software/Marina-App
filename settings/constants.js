@@ -51,6 +51,17 @@ export const REPORTS_CRITICAL_STOCK_API_URL = BASE_MARKET_API_URL + '/report/pro
 export const REPORTS_LAST_SALES_API_URL = '/report/last-sales'
 export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
 
+// USERS
+export const USERS_API_URL = BASE_AUTH_API_URL + '/user'
+export const CREATE_USER_API_URL = BASE_AUTH_API_URL + '/user/create'
+
+// KEY
+export const KEY_API_URL = BASE_AUTH_API_URL + '/key'
+export const CREATE_KEY_API_URL = BASE_AUTH_API_URL + '/key/create'
+
+// ASSOCIATION
+export const ASSOCIATION_KEY_API_URL = BASE_AUTH_API_URL + '/association'
+
 // SUPPLIER
 export const SUPPLIER_API_URL = BASE_MARKET_API_URL + '/supplier'
 export const SUPPLIER_ASSOCIATION_API_URL = BASE_MARKET_API_URL + '/supplier/:id/association/products'

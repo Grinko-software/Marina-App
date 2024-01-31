@@ -22,13 +22,13 @@ export default function MobileNavBar () {
         {
             id: 'modules',
             label: 'Módulos',
-            route: '/modules{k,'
-        },
-        {
+            route: '/modules'
+        }
+        /*      {
             id: 'admin',
             label: 'Administrar',
             route: '/modules'
-        }
+        } */
     ]
     useEffect(() => {
         if (selected && selected !== moduleApplication) {

@@ -1,5 +1,5 @@
 import { REPORTS_API_URL, REPORTS_CATEGORY_API_URL, REPORTS_INDICATORS_API_URL, REPORTS_SALES_TYPES_API_URL, REPORTS_CRITICAL_STOCK_API_URL, REPORTS_LAST_SALES_API_URL, REPORTS_SALE_DETAIL_URL } from '@/settings/constants'
-import { getToken } from './user'
+import { getToken } from './account'
 import { getData } from '@/services/http'
 export const fetchGetReportsSales = async ({ periodStart, periodType, periodQuantity }) => {
     try {

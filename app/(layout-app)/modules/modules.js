@@ -3,6 +3,7 @@ import { FaChartLine, FaClipboardList, FaShoppingCart, FaTruck, FaUsersCog } fro
 import ReportView from '../reports/components/MainReportView'
 import Sales from './[module]/components/Sales/Sales'
 import Supplier from './[module]/components/Supplier/Supplier'
+import Users from './[module]/components/Users/Users'
 
 export const modules = [
     {
@@ -29,7 +30,7 @@ export const modules = [
         name: 'Usuarios',
         description: 'Administración de usuarios/trabajadores',
         requireAdmin: true,
-        content: <div>Usuarios</div>,
+        content: <Users/>,
         icon: <FaUsersCog />
     },
     {
