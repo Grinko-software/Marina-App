@@ -9,19 +9,22 @@ import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
 export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
-    const [paymentDetailed, setPayDetailed] = useState(0)
+    const [paymentDetailed, setPayDetailed] = useState(null)
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
     const { /* enabledScanner, disabledScanner, */ disabledAuthMode } = useScannerStore()
-    const { createDrawalsCashBalance } = useCashBalanceStore(({ createDrawalsCashBalance }) => ({ createDrawalsCashBalance }))
+    const { createDrawalsCashBalance, openDrawer } = useCashBalanceStore(({ createDrawalsCashBalance, openDrawer }) => ({ createDrawalsCashBalance, openDrawer }))
     const { setStatusCashRegister } = useSettingsStore(({ setStatusCashRegister }) => ({ setStatusCashRegister }))
     const onhandlerAcctions = () => {
-        setPayDetailed(0)
+        setPayDetailed(null)
         onClose()
         setReadQR(false)
     }
     const onHandlerDrawals = () => {
         setReadQR(true)
+    }
+    const handlerOpenDrawer = () => {
+        openDrawer(getCashRegister()?.ID, notify)
     }
     useEffect(() => {
         if (userAuthData) {
@@ -35,7 +38,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     }, [])
     const onSuccess = (data) => {
         setUserAuthData(data)
-        createDrawalsCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify)
+        createDrawalsCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer)
     }
 
     const closeModal = () => {
@@ -57,7 +60,11 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                     <div className=" space-y-12">
                                         <section className="flex flex-row space-x-3">
                                             <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
-                                                onClick={() => setPayDetailed(paymentDetailed + 1000) }>
+                                                onClick={
+                                                    () => {
+                                                        setPayDetailed(paymentDetailed + 1000)
+                                                    }
+                                                }>
                                                 $1.000
                                             </Button>
                                             <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
@@ -81,7 +88,6 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                             type="number"
                                             title="Efectivo"
                                             autoFocus={true}
-
                                             label={
                                                 <span className="font-bold text-lg text-black dark:text-white ">CANTIDAD</span>
                                             }
@@ -93,6 +99,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                                 </div>
                                             }
                                             min={0}
+                                            value={paymentDetailed}
                                         />
 
                                         <Input

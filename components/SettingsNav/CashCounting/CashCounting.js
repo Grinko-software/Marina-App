@@ -25,13 +25,16 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const [totalEndingCard, setTotalEndingCard] = useState(null)
     const [detail, setDetail] = useState(null)
     const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
-    const { getIndicatorsBalanceEnding, createBalanceEndings } = useCashBalanceStore(({ getIndicatorsBalanceEnding, createBalanceEndings }) => ({ getIndicatorsBalanceEnding, createBalanceEndings }))
+    const { getIndicatorsBalanceEnding, createBalanceEndings, openDrawer } = useCashBalanceStore(({ getIndicatorsBalanceEnding, createBalanceEndings, openDrawer }) => ({ getIndicatorsBalanceEnding, createBalanceEndings, openDrawer }))
 
     const onhandlerAcctions = () => {
         // Disable to go to modules
         setDisabled(true)
         setReadQR(false)
         onClose()
+    }
+    const handlerOpenDrawer = () => {
+        openDrawer(getCashRegister()?.ID, notify)
     }
     const onHandlerCreateBalanceEnding = () => {
         createBalanceEndings(getCashRegister()?.ID, getIdUser(), detail, moneyOnCash, moneyNominalOnCash, totalEndingCard, setStatusCashRegister, onhandlerAcctions, notify)
@@ -41,7 +44,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     }, [])
     useEffect(() => {
         const idCashRegister = getCashRegister()?.ID
-        getIndicatorsBalanceEnding(idCashRegister, setIndicatorsBalanceEnding)
+        getIndicatorsBalanceEnding(idCashRegister, setIndicatorsBalanceEnding, handlerOpenDrawer)
     }, [])
     useEffect(() => {
         if (moneyOnCash) {

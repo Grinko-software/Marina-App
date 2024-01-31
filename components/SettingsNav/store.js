@@ -25,13 +25,13 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        getIndicatorsBalanceEnding: (id, setIndicatorsBalanceEnding) => {
+        getIndicatorsBalanceEnding: (id, setIndicatorsBalanceEnding, handlerOpenDrawer) => {
             set({ loading: true })
             try {
                 getData(GET_INDICATORS_BALANCE_ENDING.replace(':id', id), GET).then((result) => {
                     set({ loading: false })
                     if (result?.code === 200) {
-                        // edit state
+                        handlerOpenDrawer()
                         setIndicatorsBalanceEnding(result?.data)
                     } else {
                         setIndicatorsBalanceEnding(null)
@@ -103,7 +103,7 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createDrawalsCashBalance: (cashRegisterId, userId, detail, total, setStatusCashRegister, onhandlerAcctions, notify) => {
+        createDrawalsCashBalance: (cashRegisterId, userId, detail, total, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer) => {
             set({ loading: true })
             const body =
             {
@@ -118,6 +118,7 @@ const useCashBalanceStore = create(
                     if (result?.code === 200) {
                         setStatusCashRegister(true)
                         notify('✅ Retiro de Caja Nº ' + cashRegisterId + ' con éxito!')
+                        handlerOpenDrawer()
                     } else {
                         setStatusCashRegister(false)
                         notify('❌ ' + result?.message)
