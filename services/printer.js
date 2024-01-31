@@ -1,5 +1,5 @@
 import { getData, POST } from '@/services/http'
-import { PRINTER_TICKET_API_URL } from '@/settings/constants'
+import { PRINTER_SUPPLIER_TICKET_API_URL, PRINTER_TICKET_API_URL } from '@/settings/constants'
 import { today } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
 import { notify } from './notify'
@@ -10,7 +10,7 @@ export const VOUCHER_TYPE = {
     TICKET: 'ticket'
 }
 
-export const fetchPrinterTicket = async ({
+export const fetchPrinterSaleTicket = async ({
     saleType,
     datetime,
     folioNumber,
@@ -59,6 +59,48 @@ export const fetchPrinterTicket = async ({
                     }
                 } catch {
                     notify('❌ Ocurrió un error al imprimir la boleta.')
+                    return null
+                }
+            })
+    } catch {
+        return null
+    }
+}
+
+export const fetchPrinterSupplierTicket = async ({
+    datetime,
+    products,
+    providerName,
+    providerRut,
+    companyName,
+    companyRut
+}) => {
+    const data = {
+        datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
+        provider: {
+            name: providerName || '',
+            rut: providerRut || '',
+            company_name: companyName || '',
+            company_rut: companyRut || ''
+        },
+        products: products?.map(
+            (item) => {
+                return {
+                    name: item?.product?.name || item?.name,
+                    request: item?.request
+                }
+            })
+    }
+
+    try {
+        return getData(`${PRINTER_SUPPLIER_TICKET_API_URL}`, POST, data, true)
+            .then(response => {
+                try {
+                    if (response?.code !== 200) {
+                        notify('❌ Ocurrió un error al imprimir el ticket de proveedor.')
+                    }
+                } catch {
+                    notify('❌ Ocurrió un error al imprimir el ticket de proveedor.')
                     return null
                 }
             })

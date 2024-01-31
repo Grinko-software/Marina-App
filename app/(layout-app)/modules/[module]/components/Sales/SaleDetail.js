@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import useLastSalesStore from './store'
 import { Button, Modal, ModalBody, ModalContent, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
-import { fetchPrinterTicket } from '@/services/printer'
+import { fetchPrinterSaleTicket } from '@/services/printer'
 import toast from 'react-hot-toast'
 
 export default function SaleDetail (params) {
@@ -61,7 +61,7 @@ export default function SaleDetail (params) {
 
     const printTicket = () => {
         if (dataModel && target) {
-            fetchPrinterTicket({
+            fetchPrinterSaleTicket({
                 products: dataModel,
                 total: target?.total,
                 discountOffers: target?.discount,

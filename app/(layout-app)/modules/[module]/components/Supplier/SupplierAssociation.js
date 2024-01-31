@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import useSupplierStore from './store'
 import { Transfer } from 'antd'
-import { generateTickectSupplier } from './components/services'
+import { fetchPrinterSupplierTicket } from '@/services/printer'
 
 const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelected }) => {
     const [targetKeys, setTargetKeys] = useState(targetKeysSelected)
@@ -96,12 +96,6 @@ export default function SupplierAssociation (params) {
     }, [target])
 
     useEffect(() => {
-        if (dataModel && target) {
-            printTicket()
-        }
-    }, [dataModel, target])
-
-    useEffect(() => {
         const isSameArray = targetKeysSelected?.toString() === updatedTargetKeysSelected?.toString()
         setSaveDisabled(isSameArray)
     }, [targetKeysSelected, updatedTargetKeysSelected])
@@ -153,10 +147,14 @@ export default function SupplierAssociation (params) {
         setIsLoading(false)
     }
 
-    const printTicket = (data) => {
+    const printTicket = () => {
         if (dataModel && target) {
-            generateTickectSupplier({
-                listProducts: dataModel
+            fetchPrinterSupplierTicket({
+                products: dataModel,
+                providerName: target?.name,
+                providerRut: target?.rut,
+                companyName: target?.companyName,
+                companyRut: target?.companyRut
             })
         }
     }
