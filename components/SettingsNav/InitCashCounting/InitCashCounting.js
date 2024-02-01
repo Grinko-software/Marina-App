@@ -147,13 +147,13 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
                                         </div>
                                     </ModalBody>
                                     <ModalFooter className='justify-center'>
-                                        <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                        <Button isDisabled={!isSelected} variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                             onClick={() => {
                                                 onHandlerDrawals()
                                             }}>
                                 ACEPTAR
                                         </Button>
-                                        <Button isDisabled={!isSelected} color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                        <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
                                             setReadQR(false)
                                             onClose()
                                         }}>
