@@ -62,77 +62,78 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                         <>
                             <ModalHeader className="flex flex-col gap-1 font-extrabold text-2xl">RETIRO EN EFECTIVO</ModalHeader>
                             {!readQR
-                                ? <section><ModalBody>
-                                    <div className=" space-y-12">
-                                        <section className="flex flex-row space-x-3">
-                                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
-                                                onClick={
-                                                    () => {
-                                                        setPayDetailed(paymentDetailed + 1000)
-                                                    }
-                                                }>
+                                ? <section>
+                                    <ModalBody>
+                                        <div className=" space-y-12">
+                                            <section className="flex flex-row space-x-3">
+                                                <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
+                                                    onClick={
+                                                        () => {
+                                                            setPayDetailed(paymentDetailed + 1000)
+                                                        }
+                                                    }>
                                                 $1.000
-                                            </Button>
-                                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
-                                                onClick={() => setPayDetailed(paymentDetailed + 2000) }>
+                                                </Button>
+                                                <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
+                                                    onClick={() => setPayDetailed(paymentDetailed + 2000) }>
                                                  $2.000
-                                            </Button>
-                                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
-                                                onClick={() => setPayDetailed(paymentDetailed + 5000) }>
+                                                </Button>
+                                                <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
+                                                    onClick={() => setPayDetailed(paymentDetailed + 5000) }>
                                                 $5.000
-                                            </Button>
-                                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
-                                                onClick={() => setPayDetailed(paymentDetailed + 10000) }>
+                                                </Button>
+                                                <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
+                                                    onClick={() => setPayDetailed(paymentDetailed + 10000) }>
                                                 $10.000
-                                            </Button>
-                                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
-                                                onClick={() => setPayDetailed(paymentDetailed + 20000) }>
+                                                </Button>
+                                                <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
+                                                    onClick={() => setPayDetailed(paymentDetailed + 20000) }>
                                                 $20.000
-                                            </Button>
-                                        </section>
-                                        <Input
-                                            type="number"
-                                            title="Efectivo"
-                                            autoFocus={true}
-                                            label={
-                                                <span className="font-bold text-lg text-black dark:text-white ">CANTIDAD</span>
-                                            }
-                                            labelPlacement="outside"
-                                            placeholder={'0'}
-                                            startContent={
-                                                <div className="pointer-events-none flex items-center">
-                                                    <span className="text-default-400 text-small dark:text-white">$</span>
-                                                </div>
-                                            }
-                                            min={0}
-                                            value={paymentDetailed}
-                                            onValueChange={(value) => { if (value) { setPayDetailed(parseFloat(value)) } }}
-                                        />
+                                                </Button>
+                                            </section>
+                                            <Input
+                                                type="number"
+                                                title="Efectivo"
+                                                autoFocus={true}
+                                                label={
+                                                    <span className="font-bold text-lg text-black dark:text-white ">CANTIDAD</span>
+                                                }
+                                                labelPlacement="outside"
+                                                placeholder={'0'}
+                                                startContent={
+                                                    <div className="pointer-events-none flex items-center">
+                                                        <span className="text-default-400 text-small dark:text-white">$</span>
+                                                    </div>
+                                                }
+                                                min={0}
+                                                value={paymentDetailed}
+                                                onValueChange={(value) => { if (value) { setPayDetailed(parseFloat(value)) } }}
+                                            />
 
-                                        <Input
-                                            size='lg'
-                                            type="text"
-                                            label={
-                                                <span className="font-bold text-lg text-black dark:text-white ">DETALLE</span>
-                                            }
-                                            labelPlacement="outside"
-                                            placeholder="Ingrese detalles del retiro"
-                                        />
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter className='justify-center'>
-                                    <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
-                                        onClick={() => {
-                                            onHandlerDrawals()
-                                        }}>
+                                            <Input
+                                                size='lg'
+                                                type="text"
+                                                label={
+                                                    <span className="font-bold text-lg text-black dark:text-white ">DETALLE</span>
+                                                }
+                                                labelPlacement="outside"
+                                                placeholder="Ingrese detalles del retiro"
+                                            />
+                                        </div>
+                                    </ModalBody>
+                                    <ModalFooter className='justify-center'>
+                                        <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                            onClick={() => {
+                                                onHandlerDrawals()
+                                            }}>
                                     ACEPTAR
-                                    </Button>
-                                    <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
-                                        closeModal()
-                                    }}>
+                                        </Button>
+                                        <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                            closeModal()
+                                        }}>
                                     CANCELAR
-                                    </Button>
-                                </ModalFooter>
+                                        </Button>
+                                    </ModalFooter>
                                 </section>
 
                                 : (<section>
