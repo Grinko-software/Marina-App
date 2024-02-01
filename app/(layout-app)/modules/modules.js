@@ -41,24 +41,6 @@ export const modules = [
         requireAdmin: false,
         content: <Supplier/>,
         icon: <FaTruck />
-    },
-    {
-        key: 'products',
-        path: 'products',
-        name: 'Productos',
-        description: 'Administración de los productos',
-        requireAdmin: false,
-        content: <div>Productos</div>,
-        icon: <FaShoppingCart />
-    },
-    {
-        key: 'aaaa6',
-        path: 'aaaa6',
-        name: 'Módulo 6',
-        description: 'Descripción del módulo',
-        requireAdmin: false,
-        content: <div>6</div>,
-        icon: <FaUsersCog />
     }
 ]
 

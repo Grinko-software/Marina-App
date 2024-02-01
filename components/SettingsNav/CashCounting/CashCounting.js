@@ -159,7 +159,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                 }
                             </ModalBody>
                             <ModalFooter className='justify-center'>
-                                <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                <Button isDisabled={!isSelected} variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                     onClick={() => {
                                         // setIsInit(false)
                                         console.log('Llamar el cierre de caja')
