@@ -130,9 +130,9 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        openDrawer: (cashRegisterId, notify) => {
+        openDrawer: (cashRegisterId, notify, body) => {
             try {
-                getData(OPEN_DRAWER_API_URL, GET, null, true).then((result) => {
+                getData(OPEN_DRAWER_API_URL, POST, body, true).then((result) => {
                     if (result?.code === 200) {
                         notify('✅ Caja Nº ' + cashRegisterId + ' abierta')
                     } else {

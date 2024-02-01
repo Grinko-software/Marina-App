@@ -14,6 +14,8 @@ import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/account'
 import { toast } from 'react-hot-toast'
 import { formatterNumber } from '@/utils/number'
+import useAuthStore from '@/stores/user'
+import { today } from '@/utils/date'
 const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const notify = (text) => toast(text)
     const [isSelected, setIsSelected] = useState()
@@ -34,7 +36,11 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
         onClose()
     }
     const handlerOpenDrawer = () => {
-        openDrawer(getCashRegister()?.ID, notify)
+        const { fullName } = useAuthStore.getState()
+        const body = {
+            event_type: 'Cierre de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
+        }
+        openDrawer(getCashRegister()?.ID, notify, body)
     }
     const onHandlerCreateBalanceEnding = () => {
         createBalanceEndings(getCashRegister()?.ID, getIdUser(), detail, moneyOnCash, moneyNominalOnCash, totalEndingCard, setStatusCashRegister, onhandlerAcctions, notify)

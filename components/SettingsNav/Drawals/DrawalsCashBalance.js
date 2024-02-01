@@ -8,6 +8,8 @@ import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
+import { today } from '@/utils/date'
+import useAuthStore from '@/stores/user'
 export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(null)
     const [readQR, setReadQR] = useState(false)
@@ -24,7 +26,11 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
         setReadQR(true)
     }
     const handlerOpenDrawer = () => {
-        openDrawer(getCashRegister()?.ID, notify)
+        const { fullName } = useAuthStore.getState()
+        const body = {
+            event_type: 'Retiro de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
+        }
+        openDrawer(getCashRegister()?.ID, notify, body)
     }
     useEffect(() => {
         if (userAuthData) {

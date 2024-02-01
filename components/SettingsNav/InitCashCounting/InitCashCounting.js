@@ -12,6 +12,9 @@ import { getCashRegister } from '@/services/cashRegister'
 import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
 import { formatterNumber } from '@/utils/number'
+import { today } from '@/utils/date'
+import useAuthStore from '@/stores/user'
+
 export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegister }) {
     const { setDisabled } = useSettingsStore(({ setDisabled }) => ({ setDisabled }))
     const { getLastIndicatorsCashBalanceEnding, createBalanceBeginnings, openDrawer } = useCashBalanceStore(({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings, openDrawer }) => ({ getLastIndicatorsCashBalanceEnding, createBalanceBeginnings, openDrawer }))
@@ -31,7 +34,11 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
         }
     }
     const handlerOpenDrawer = () => {
-        openDrawer(getCashRegister()?.ID, notify)
+        const { fullName } = useAuthStore.getState()
+        const body = {
+            event_type: 'Inicio de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
+        }
+        openDrawer(getCashRegister()?.ID, notify, body)
     }
     useEffect(() => {
         if (getCashRegister()?.ID !== 'no-select') {
