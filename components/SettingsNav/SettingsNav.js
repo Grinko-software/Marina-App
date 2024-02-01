@@ -17,6 +17,7 @@ import SwitchUserButton from './SectionsNav/SwitchUserButton'
 import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
 import toast from 'react-hot-toast'
+import DepositCash from './SectionsNav/DepositCash'
 export default function SettingsNav () {
     const notify = (text) => toast(text)
     const [userName, setUserName] = useState(null)
@@ -77,6 +78,10 @@ export default function SettingsNav () {
                             <div className="col-start-2 col-end-2">
                                 <PaymentOfMoney disabled={disabled} />
                             </div>
+                            <div className="col-start-2 col-end-2">
+                                <DepositCash disabled={disabled} />
+                            </div>
+
                             <div className="col-start-2 col-end-2">
                                 <BoxStatus
                                     statusCashRegister={statusCashRegister}

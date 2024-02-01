@@ -103,21 +103,26 @@ const useCashBalanceStore = create(
                 set({ error, loading: false })
             }
         },
-        createDrawalsCashBalance: (cashRegisterId, userId, detail, total, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer) => {
+        createDepositOrWithdrawalCashBalance: (cashRegisterId, userId, detail, total, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer, eventType) => {
             set({ loading: true })
             const body =
             {
                 total,
                 user_id: userId,
                 cash_registry_id: cashRegisterId,
-                detail
+                detail,
+                event_type: eventType
             }
             try {
                 getData(CREATE_BALANCE_WITH_DRAWALS, POST, body).then((result) => {
                     set({ loading: false })
                     if (result?.code === 200) {
                         setStatusCashRegister(true)
-                        notify('✅ Retiro de Caja Nº ' + cashRegisterId + ' con éxito!')
+                        if (eventType === 'income') {
+                            notify('✅ Ingreso de efectivo a Caja Nº ' + cashRegisterId + ' con éxito!')
+                        } else {
+                            notify('✅ Retiro de efectivo Caja Nº ' + cashRegisterId + ' con éxito!')
+                        }
                         handlerOpenDrawer()
                     } else {
                         setStatusCashRegister(false)

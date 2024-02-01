@@ -10,7 +10,7 @@ import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
 import { today } from '@/utils/date'
 import useAuthStore from '@/stores/user'
-export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
+export default function DepositCash ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(null)
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
@@ -44,7 +44,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     }, [])
     const onSuccess = (data) => {
         setUserAuthData(data)
-        createDepositOrWithdrawalCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer, 'drawal')
+        createDepositOrWithdrawalCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer, 'income')
     }
 
     const closeModal = () => {
@@ -60,7 +60,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                 <ModalContent>
                     {() => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1 font-extrabold text-2xl">RETIRO EN EFECTIVO</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1 font-extrabold text-2xl">INGRESO EN EFECTIVO</ModalHeader>
                             {!readQR
                                 ? <section>
                                     <ModalBody>
@@ -117,7 +117,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                                     <span className="font-bold text-lg text-black dark:text-white ">DETALLE</span>
                                                 }
                                                 labelPlacement="outside"
-                                                placeholder="Ingrese detalles del retiro"
+                                                placeholder="Ingrese detalles del ingreso"
                                             />
                                         </div>
                                     </ModalBody>
