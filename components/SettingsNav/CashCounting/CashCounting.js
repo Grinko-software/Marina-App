@@ -54,7 +54,9 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     }, [])
     useEffect(() => {
         if (moneyOnCash) {
-            const diff = moneyOnCash - (indicatorsBalanceEnding?.total_beginning ?? 0)
+            // TODO falta agregar el indicators balance ending de ingreso a caja
+            const diff = moneyOnCash - (indicatorsBalanceEnding?.total_beginning ?? 0) - (indicatorsBalanceEnding?.total_sales_cash ?? 0) - (indicatorsBalanceEnding?.total_drawals ?? 0)
+            setDiffMoney(diff)
             setDiffMoney(diff)
         }
     }, [moneyOnCash])
@@ -167,8 +169,6 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                             <ModalFooter className='justify-center'>
                                 <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
                                     onClick={() => {
-                                        // setIsInit(false)
-                                        console.log('Llamar el cierre de caja')
                                         onHandlerCreateBalanceEnding()
                                     }}>
                                     ACEPTAR
