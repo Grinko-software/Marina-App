@@ -153,7 +153,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
                                             }}>
                                 ACEPTAR
                                         </Button>
-                                        <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                        <Button isDisabled={!isSelected} color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
                                             setReadQR(false)
                                             onClose()
                                         }}>

@@ -497,6 +497,7 @@ const useSalesStore = create(
             }
         },
         createSaleVoucher: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
+            set({ loadingSale: true, error: null })
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleType = VOUCHER_TYPE.VOUCHER
@@ -547,7 +548,7 @@ const useSalesStore = create(
                         }
                     }
                     setStateMachine('Enviando')
-                    getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(result => {
+                    await getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(result => {
                         if (result?.code === 200 && result?.data?.paymentRequestId) {
                             setStateMachine('Pendiente')
                             const idSale = result?.data?.paymentRequestId
@@ -646,6 +647,7 @@ const useSalesStore = create(
             setStateMachine(null)
         },
         createSaleInvoice: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment, targetCustomer }) => {
+            set({ loadingSale: true, error: null })
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleType = VOUCHER_TYPE.INVOICE
@@ -796,6 +798,7 @@ const useSalesStore = create(
             setStateMachine(null)
         },
         createSaleTicket: async ({ sales, saleId, notify, onSuccessSale, removeSale }) => {
+            set({ loadingSale: true, error: null })
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleType = VOUCHER_TYPE.TICKET
@@ -830,7 +833,6 @@ const useSalesStore = create(
                 voucher_type_id: 3,
                 cash_register_id: cashRegister?.ID
             }
-            set({ loadingSale: true, error: null })
 
             await saveTicketOnDatabase({
                 saleType,

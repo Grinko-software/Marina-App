@@ -69,7 +69,7 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
             onGetUserData(userAuthData)
         }
         if (onSuccess) {
-            onSuccess()
+            onSuccess(userAuthData)
         }
     }
 

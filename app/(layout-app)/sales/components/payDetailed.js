@@ -20,6 +20,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
         createSaleVoucher
     } = useSalesStore()
 
+    const [totalValue, setTotalValue] = useState(null)
     const [changeValue, setChangeValue] = useState(null)
     const [isSuccessCompleted, setIsSuccessCompleted] = useState(null)
     const [isDisableButtonPay, setIsDisableButtonPay] = useState(null)
@@ -47,11 +48,17 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
     }, [])
 
     useEffect(() => {
-        if (totalPay >= 0 && payDetailed >= 0) {
-            const value = payDetailed - totalPay
+        if (totalPay) {
+            setTotalValue(totalPay)
+        }
+    }, [openModal, totalPay])
+
+    useEffect(() => {
+        if (totalValue >= 0 && payDetailed >= 0) {
+            const value = payDetailed - totalValue
             setChangeValue(value)
         }
-    }, [totalPay, payDetailed])
+    }, [totalValue, payDetailed])
 
     useEffect(() => {
         if (changeValue >= 0) {
@@ -132,23 +139,23 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                 <ModalContent className='items-center content-center py-10' >
                     <ModalHeader className="flex flex-col text-primary-500 dark:text-primary-200">
                         <section className="flex flex-row space-x-3">
-                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
+                            <Button isDisabled={isSuccessCompleted} variant="shadow" className=' w-[10rem] h-[8rem] bg-green-700  text-white font-extrabold text-3xl'
                                 onClick={() => setPayDetailed(payDetailed + 1000) }>
                                 $1.000
                             </Button>
-                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
+                            <Button isDisabled={isSuccessCompleted} variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 2000) }>
                                 $2.000
                             </Button>
-                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
+                            <Button isDisabled={isSuccessCompleted} variant="shadow" className=' w-[10rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 5000) }>
                                 $5.000
                             </Button>
-                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
+                            <Button isDisabled={isSuccessCompleted} variant="shadow" className=' w-[10rem] h-[8rem] bg-blue-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 10000) }>
                                 $10.000
                             </Button>
-                            <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
+                            <Button isDisabled={isSuccessCompleted} variant="shadow" className=' w-[10rem] h-[8rem] bg-orange-600 text-white  font-extrabold text-3xl shadow-lg'
                                 onClick={() => setPayDetailed(payDetailed + 20000) }>
                                 $20.000
                             </Button>
@@ -167,7 +174,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                                 <div className="pointer-events-none flex items-center">
                                     <span className="text-default-400 text-small">$</span>
                                 </div>}
-                            min={totalPay}
+                            min={totalValue}
                             onValueChange={(value) => {
                                 setPayDetailed(parseInt(value))
                             }}
@@ -176,7 +183,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                         <div className='grid grid-rows-2 grid-flow-col py-4 w-8/12 content-end justify-between'>
                             <p className='text-3xl font-bold'>{'TOTAL:'}</p>
                             <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>{((changeValue) > 0 ? 'VUELTO:' : 'SALDO PENDIENTE:')}</p>
-                            <p className='text-3xl font-bold '>{ formatter.format(totalPay)}</p>
+                            <p className='text-3xl font-bold '>{ formatter.format(totalValue)}</p>
                             <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>{((changeValue) > 0 ? formatter.format((Math.abs(changeValue))) : formatter.format((Math.abs(changeValue))))}</p>
                         </div>
                     </ModalBody>
@@ -201,6 +208,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                                         {((changeValue) >= 0 || payDetailed === null ? 'PAGAR' : 'VERIFICANDO PAGO')}
                                     </Button>
                                     <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                        isDisabled={loadingSale}
                                         onClick={() => {
                                             setPaymentTarget(listSalesActives, saleIdActive, null)
                                             setPayDetailed(null)
