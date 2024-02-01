@@ -106,6 +106,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                             }
                                             min={0}
                                             value={paymentDetailed}
+                                            onValueChange={(value) => { if (value) { setPayDetailed(parseFloat(value)) } }}
                                         />
 
                                         <Input
