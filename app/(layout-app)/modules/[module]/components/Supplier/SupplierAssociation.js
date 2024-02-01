@@ -4,8 +4,11 @@ import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinn
 import useSupplierStore from './store'
 import { Transfer } from 'antd'
 import { fetchPrinterSupplierTicket } from '@/services/printer'
+import { StyleTransfer } from './style'
+import { useTheme } from 'next-themes'
 
 const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelected }) => {
+    const { theme } = useTheme()
     const [targetKeys, setTargetKeys] = useState(targetKeysSelected)
     const [selectedKeys, setSelectedKeys] = useState([])
 
@@ -37,7 +40,9 @@ const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelecte
         setDisabled(checked)
     } */
 
-    return <Transfer
+    return <StyleTransfer
+        as={Transfer}
+        isDark={theme === 'dark'}
         dataSource={dataSource}
         listStyle={{ width: '100%', height: '30rem', display: 'flex' }}
         titles={['No asignados', 'Asignados']}
