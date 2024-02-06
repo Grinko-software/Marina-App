@@ -59,7 +59,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
     useEffect(() => {
         if (userAuthData) {
             // setReadQR(false)
-            alert(userAuthData?.fullName)
+            // alert(userAuthData?.fullName)
         }
     }, [userAuthData])
     useEffect(() => {
@@ -68,7 +68,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
         } else {
             onClose()
             setTimeout(() => {
-                notify('⚙️ Se debe seleccionar una caja en ajustes para continuar!')
+                notify('⚙️ Se debe seleccionar una caja en ajustes!')
             }, [500])
         }
     }, [])

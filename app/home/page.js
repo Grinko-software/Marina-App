@@ -48,7 +48,7 @@ export default function Home () {
                             className="gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
                         >
                             <MainTittleCard
-                                disabled={disabled || salesDisabled}
+                                disabled={ salesDisabled}
                                 route ="/sales"
                                 title="Ventas"
                                 imgSrc={sales}
@@ -59,14 +59,14 @@ export default function Home () {
                                 title="Inventario"
                                 imgSrc={inventory}
                                 footerMessage="Optimiza existencias en tiempo real."
-                                disabled={disabled}
+                                // disabled={disabled}
                             />
                             <MainTittleCard
                                 route ="/modules"
                                 title="Módulos"
                                 imgSrc={reports}
                                 footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
-                                disabled={disabled}
+                                // disabled={disabled}
                             />
                         </motion.div>
                         <motion.div

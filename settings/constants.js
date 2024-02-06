@@ -1,7 +1,7 @@
-// export const BASE_AUTH_API_URL = 'https://marina-auth-api.up.railway.app'
 export const BASE_AUTH_API_URL = 'https://marina-auth-api-dev-rlfvoxmasq-uc.a.run.app'
-export const BASE_MARKET_API_URL = 'https://marina-market-api-rlfvoxmasq-uc.a.run.app'
+// export const BASE_AUTH_API_URL = 'https://marina-auth-api-prod-rlfvoxmasq-uc.a.run.app'
 // export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
+export const BASE_MARKET_API_URL = 'https://marina-market-api-rlfvoxmasq-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
@@ -74,6 +74,7 @@ export const GET_INDICATORS_BALANCE_ENDING = '/accounting-event/indicators-balan
 export const CREATE_BALANCE_BEGINNINGS = '/accounting-event/create/balance-beginnings'
 export const CREATE_BALANCE_ENDINGS = '/accounting-event/create/balance-endings'
 export const CREATE_BALANCE_WITH_DRAWALS = '/accounting-event/create/withdrawals'
+export const INDICATORS_ACCOUNTING_EVENT = '/accounting-event'
 
 // PRINTER
 export const PRINTER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/sale'

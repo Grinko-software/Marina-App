@@ -35,7 +35,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     useEffect(() => {
         if (userAuthData) {
             // setReadQR(false)
-            alert(userAuthData?.fullName)
+            // alert(userAuthData?.fullName)
         }
     }, [userAuthData])
 

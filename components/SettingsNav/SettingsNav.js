@@ -52,7 +52,7 @@ export default function SettingsNav () {
     /* Control disable button */
     useEffect(() => {
         if (selectedCashRegister?.ID === 'no-select') {
-            notify('⚙️ Se debe seleccionar una caja en ajustes para continuar!')
+            notify('⚙️ Se debe seleccionar una caja en ajustes!')
             setDisabled(true)
         } else if (selectedCashRegister?.ID !== 'no-select') {
             setDisabled(!selectedCashRegister?.cash_balance_beginning)
