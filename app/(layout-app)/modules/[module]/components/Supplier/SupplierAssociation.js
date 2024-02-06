@@ -1,4 +1,5 @@
 'use client'
+import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { useEffect, useState } from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import useSupplierStore from './store'
@@ -6,7 +7,8 @@ import { Transfer } from 'antd'
 import { fetchPrinterSupplierTicket } from '@/services/printer'
 import { StyleTransfer } from './style'
 import { useTheme } from 'next-themes'
-
+import { deleteSupplier } from '@/services/supplier'
+import toast from 'react-hot-toast'
 const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelected }) => {
     const { theme } = useTheme()
     const [targetKeys, setTargetKeys] = useState(targetKeysSelected)
@@ -77,9 +79,10 @@ const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelecte
     />
 }
 
+const notify = (text) => toast(text)
 export default function SupplierAssociation (params) {
     // eslint-disable-next-line no-unused-vars
-    const { target, setTarget, products } = params
+    const { target, setTarget, products, handleRefresh } = params
     const [isLoading, setIsLoading] = useState(false)
     const [saveDisabled, setSaveDisabled] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -88,7 +91,7 @@ export default function SupplierAssociation (params) {
     const [targetKeysSelected, setTargetKeysSelected] = useState([])
     const [updatedTargetKeysSelected, setUpdatedTargetKeysSelected] = useState([])
     const { requestSupplierDetail, requestUpdateSupplierAssociation } = useSupplierStore()
-
+    const [loadingDelete, setLoadingDelete] = useState(false)
     useEffect(() => {
         if (target) {
             onOpen()
@@ -163,6 +166,18 @@ export default function SupplierAssociation (params) {
             })
         }
     }
+    const handleDeleteProvider = () => {
+        setLoadingDelete(true)
+        deleteSupplier({ id: target.id, notify }).then(
+            (response) => {
+                setLoadingDelete(false)
+                if (handleRefresh) {
+                    handleRefresh()
+                }
+                closeModal()
+            }
+        )
+    }
 
     return <section>
         <Modal
@@ -193,6 +208,12 @@ export default function SupplierAssociation (params) {
                     }
                 </ModalBody>
                 <ModalFooter>
+                    <Button color="danger" variant="bordered"
+                        startContent={<DeleteIcon/>}
+                        onClick={handleDeleteProvider}
+                        isLoading={loadingDelete}>
+                        {loadingDelete ? 'Eliminando' : 'Eliminar'}
+                    </Button>
 
                     <Button className =" bg-green-500 text-primary-50"
                         isDisabled={saveDisabled}
