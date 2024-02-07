@@ -25,6 +25,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const [userAuthData, setUserAuthData] = useState(null)
     const [indicatorsBalanceEnding, setIndicatorsBalanceEnding] = useState(null)
     const [moneyOnCash, setMoneyOnCash] = useState(0)
+    const [totalDay, setTotalDay] = useState(0)
     const [moneyNominalOnCash, setMoneyNominalOnCash] = useState(0)
     const [diffMoney, setDiffMoney] = useState(0)
     const [totalEndingCard, setTotalEndingCard] = useState(null)
@@ -69,23 +70,25 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
         getIndicatorsBalanceEnding(idCashRegister, setIndicatorsBalanceEnding, handlerOpenDrawer)
     }, [])
     useEffect(() => {
-        if (moneyOnCash) {
+        if (moneyOnCash || totalDay) {
             // TODO falta agregar el indicators balance ending de ingreso a caja
-            const diff = moneyOnCash - (indicatorsBalanceEnding?.total_beginning ?? 0) - (indicatorsBalanceEnding?.total_sales_cash ?? 0) - (indicatorsBalanceEnding?.total_drawals ?? 0)
-            setDiffMoney(diff)
+            const diff = moneyOnCash + totalDay
             setDiffMoney(diff)
         }
-    }, [moneyOnCash])
+    }, [moneyOnCash, totalDay])
     useEffect(() => {
         if (indicatorsBalanceEnding) {
             setTotalEndingCard(indicatorsBalanceEnding?.total_sales_card)
+            setTotalDay(
+                (indicatorsBalanceEnding?.total_sales_cash + indicatorsBalanceEnding?.total_incomes + indicatorsBalanceEnding?.total_beginning) - indicatorsBalanceEnding?.total_drawals
+            )
         }
     }, [indicatorsBalanceEnding])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'5xl'}>
                 <ModalContent>
                     {(onClose) => (
                         <>
@@ -98,7 +101,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                                 <CashReconciliationCard
                                                     title={'Ventas en Debito/Credito'}
                                                     total={indicatorsBalanceEnding?.total_sales_card ? formatterNumber(indicatorsBalanceEnding?.total_sales_card) : '-'}
-                                                    bgTitle={'bg-black/40'}
+                                                    bgTitle={'bg-black/50'}
                                                     img={credit}
                                                     detail={'Total de ingresos en tarjetas de debito/credito del dia'}
                                                 />
@@ -116,6 +119,23 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                                     img={PaymentOfMoney}
                                                     detail={'Total de egresos de caja diarios (pagos)'}
                                                 />
+                                                <CashReconciliationCard
+                                                    title={'Ingresos de caja'}
+                                                    total={indicatorsBalanceEnding?.total_drawals ? formatterNumber(indicatorsBalanceEnding?.total_incomes) : '-'}
+                                                    bgTitle={'bg-green-500/20'}
+                                                    img={PaymentOfMoney}
+                                                    detail={'Total de ingresos de caja diarios'}
+                                                />
+                                                <CashReconciliationCard
+                                                    title={'Monto esperado'}
+                                                    total={indicatorsBalanceEnding?.total_drawals
+                                                        ? formatterNumber(totalDay)
+                                                        : '-'}
+                                                    bgTitle={'bg-green-500/20'}
+                                                    img={PaymentOfMoney}
+                                                    detail={'Total de efectivo esperado al cerrar caja'}
+                                                />
+
                                             </div>
                                             <Input
                                                 size="lg"
@@ -151,11 +171,11 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                             />
                                             <Input
                                                 size='lg'
-                                                isDisabled
+                                                disabled
                                                 isRequired={false}
                                                 type="number"
                                                 label={
-                                                    <span className=" uppercase font-bold text-lg text-black dark:text-white ">Saldo pendiente</span>
+                                                    <span className=" uppercase font-bold text-lg text-black dark:text-white ">{diffMoney <= 0 ? 'Saldo pendiente' : 'Saldo extra'}</span>
                                                 }
                                                 placeholder="0"
                                                 labelPlacement="outside"
@@ -164,7 +184,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                                         <span className="text-default-400 text-small">$</span>
                                                     </div>
                                                 }
-                                                value={diffMoney}
+                                                value={diffMoney <= 0 ? -diffMoney : diffMoney}
 
                                             />
                                             <div className="flex flex-col">
