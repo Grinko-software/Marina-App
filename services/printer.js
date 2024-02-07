@@ -3,6 +3,8 @@ import { PRINTER_SUPPLIER_TICKET_API_URL, PRINTER_TICKET_API_URL } from '@/setti
 import { today } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
 import { notify } from './notify'
+import { getFullNameUser } from './account'
+import { getCashRegisterName } from './cashRegister'
 
 export const VOUCHER_TYPE = {
     VOUCHER: 'voucher',
@@ -48,7 +50,9 @@ export const fetchPrinterSaleTicket = async ({
                     discount: formatNumberWithPoints(item?.discount || null, null),
                     total: formatNumberWithPoints(item?.total, '')
                 }
-            })
+            }),
+        userName: getFullNameUser(),
+        cashRegisterName: getCashRegisterName()
     }
 
     try {
