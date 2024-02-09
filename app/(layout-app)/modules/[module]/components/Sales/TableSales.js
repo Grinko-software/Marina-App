@@ -14,13 +14,21 @@ export default function TableSales ({ data, loading, setTarget }) {
     }
 
     const columns = [
-        {
+        /*  {
             key: 'id',
             label: 'ID'
-        },
+        }, */
         {
             key: 'datetime',
             label: 'Fecha compra'
+        },
+        {
+            key: 'userName',
+            label: 'Vendedor'
+        },
+        {
+            key: 'cachRegisterName',
+            label: 'Caja'
         },
         {
             key: 'total',
@@ -60,7 +68,9 @@ export default function TableSales ({ data, loading, setTarget }) {
                     discount: item?.total_discount,
                     iva: item?.total - ((item.total || 0) / 1.19),
                     type: item?.name_voucher,
-                    paymentType: item?.name_payment
+                    paymentType: item?.name_payment,
+                    userName: item?.user_name,
+                    cachRegisterName: item?.cach_register_name
                 }
             })
             const limit = 10
@@ -154,7 +164,7 @@ export default function TableSales ({ data, loading, setTarget }) {
                 </div>
             )
         default:
-            return cellValue?.toString()?.toUpperCase()
+            return cellValue ? cellValue?.toString()?.toUpperCase() : '-'
         }
     }, [dataModel])
 

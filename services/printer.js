@@ -25,9 +25,13 @@ export const fetchPrinterSaleTicket = async ({
     iva,
     cardDetail,
     customerDetail,
-    products
+    products,
+    userName,
+    cashRegisterName
 }) => {
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
+    const seller = (userName || getFullNameUser() || '').toUpperCase()
+    const cashRegister = (cashRegisterName || getCashRegisterName() || '').toUpperCase()
     const data = {
         datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
         paymentType: saleType || VOUCHER_TYPE.TICKET,
@@ -51,8 +55,8 @@ export const fetchPrinterSaleTicket = async ({
                     total: formatNumberWithPoints(item?.total, '')
                 }
             }),
-        userName: getFullNameUser(),
-        cashRegisterName: getCashRegisterName()
+        userName: seller,
+        cashRegisterName: cashRegister
     }
 
     try {
