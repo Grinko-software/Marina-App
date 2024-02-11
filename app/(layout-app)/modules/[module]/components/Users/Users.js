@@ -15,9 +15,9 @@ export default function Users ({ params }) {
 
     return <section className='w-full'>
 
-        <CreateUser/>
+        <CreateUser handleRefresh={requestData}/>
         <section className='flex flex-row' >
-            <TableUsers data={data} loading={loading} setTarget={setTarget}/>
+            <TableUsers data={data} loading={loading} setTarget={setTarget} handleRefresh={requestData}/>
             <UserInfo target={target} setTarget={setTarget} handleRefresh={requestData}/>
         </section>
     </section>

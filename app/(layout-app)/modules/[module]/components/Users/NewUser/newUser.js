@@ -11,7 +11,7 @@ import { FaTruck, FaUserPlus } from 'react-icons/fa'
 
 export const notify = (text) => toast(text)
 
-export default function CreateUser () {
+export default function CreateUser ({ handleRefresh }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isMobile, setIsMobile] = useState(true)
     const {
@@ -134,7 +134,11 @@ export default function CreateUser () {
                             </div>
                             : null}
                         <Button className =" bg-green-500 text-primary-50"
-                            onClick={() => { requestCreate(name, lastName, email, password, notify) }}
+                            onClick={() => {
+                                requestCreate(name, lastName, email, password, notify)
+                                handleRefresh()
+                                clearStore()
+                            }}
                         >
                             Crear
                         </Button>

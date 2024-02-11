@@ -6,11 +6,13 @@ import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import toast from 'react-hot-toast'
 import { deleteUser } from '@/services/users'
 import { QRCode } from 'antd'
-import { requestUpdateUser } from './service'
+import { requestUpdateUser, requestResetPassword } from './service'
 import UserPassword from './UserPassword'
 import useCredentialStore from './Credentials/store'
 import UserCredential, { DEFAULT_OPTION } from './Credentials/Credential'
 import { createUserAssociationCredential, deleteUserAssociationCredential } from '@/services/credential'
+import { EyeSlashFilledIcon } from '@/components/ui/EyeSlashFilledIcon'
+import { EyeFilledIcon } from '@/components/ui/EyeFilledIcon'
 
 const notify = (text) => toast(text)
 
@@ -25,6 +27,9 @@ export default function UserInfo (params) {
     const [loadingEdit, setLoadingEdit] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [loadingUpdate, setLoadingUpdate] = useState(false)
+    const [isVisible, setIsVisible] = useState(false)
+
+    const toggleVisibility = () => setIsVisible(!isVisible)
 
     useEffect(() => {
         if (target) {
@@ -33,6 +38,14 @@ export default function UserInfo (params) {
             closeModal()
         }
     }, [target])
+
+    useEffect(() => {
+        if (target?.id != null) {
+            requestResetPassword({ id: target?.id, notify, onSuccess: closeModalWithRefresh })
+            setUserPasswordUpdated(null)
+            handleRefresh()
+        }
+    }, [userPasswordUpdated])
 
     useEffect(() => {
         console.log(userDataUpdated)
@@ -169,6 +182,30 @@ export default function UserInfo (params) {
                                     onValueChange={(value) => { handleUpdateUserValues({ type: value }) }}
                                 />
                             </div>
+                            <div className="px-4 pt-4  flex items-center">
+                                <Input
+                                    disabled={!edit}
+                                    defaultValue={target?.password}
+                                    value={edit ? userDataUpdated?.password : target?.password}
+                                    variant={'underlined'}
+                                    label={'Contraseña'}
+                                    labelPlacement={'outside'}
+                                    placeholder={ 'Contraseña'}
+                                    onValueChange={(value) => { handleUpdateUserValues({ password: value }) }}
+                                    endContent={
+                                        <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                                            {isVisible
+                                                ? (
+                                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                                )
+                                                : (
+                                                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                                )}
+                                        </button>
+                                    }
+                                    type={isVisible ? 'text' : 'password'}
+                                />
+                            </div>
                         </section>
 
                         <section className='mx-[1rem] gap-4 flex flex-col'>
@@ -198,7 +235,13 @@ export default function UserInfo (params) {
                         edit
                             ? <section className='flex flex-row gap-2'>
                                 <Button className =" bg-green-500 text-primary-50"
-                                    isDisabled={saveDisabled}
+                                    onClick={() => {
+                                        setUserPasswordUpdated(true)
+                                    }}
+                                >
+                                    {'Resetear contraseña'}
+                                </Button>
+                                <Button className =" bg-green-500 text-primary-50"
                                     onClick={() => {
                                         handleUpdateUser()
                                     }}
