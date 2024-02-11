@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { getData, GET } from '@/services/http'
-import { PRODUCT_API_URL } from '@/settings/constants'
+import { PRODUCT_API_URL, CATEGORIES_API_URL } from '@/settings/constants'
 const useInventoryStore = create(
     persist(
         (set) => ({
@@ -70,6 +70,25 @@ const useInventoryStore = create(
                 } catch (error) {
                     set({ loading: true, error })
                     console.debug(error)
+                }
+            },
+            handlCategoriesRequest: (notify) => {
+                set({ loading: true, error: null, complete: false })
+                try {
+                    getData(CATEGORIES_API_URL, GET).then(response => {
+                        set({ loading: false, complete: true })
+                        if (response?.code === 200) {
+                            const data = response?.data?.reduce((acc, value) => {
+                                return [...acc, { id: value?.ID, label: value?.name.toUpperCase() }]
+                            }, [])
+                            set({ listCategories: data })
+                        } else {
+                            notify('❌No se pudieron obtener las categorías, reintente nuevamente!')
+                            set({ error: 'Error to get categories', complete: true })
+                        }
+                    })
+                } catch (err) {
+                    set({ loading: false, error: err, complete: true })
                 }
             },
             getListInventory: (result) => {

@@ -170,10 +170,6 @@ export default function Offers () {
             setSectionCreateOffer(false)
         }
     }, [complete, error])
-    useEffect(() => {
-        console.debug(sectionCreateOffer)
-    }, [sectionCreateOffer])
-
     return (
         <section>
             <header className="flex justify-end">

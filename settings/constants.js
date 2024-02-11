@@ -17,7 +17,7 @@ export const PRODUCT_API_URL = '/product'
 // Get categories
 export const CATEGORIES_API_URL = '/product/categories'
 export const CREATE_CATEGORIES_API_URL = '/product/create/category'
-
+export const DELETE_CATEGORIES = '/product/categories/:id'
 // Get type of stock
 export const TYPE_STOCK_API_URL = '/product/type-stock'
 // Get type of payment
