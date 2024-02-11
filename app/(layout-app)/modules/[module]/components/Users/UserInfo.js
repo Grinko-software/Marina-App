@@ -93,7 +93,7 @@ export default function UserInfo (params) {
         }
 
         if (Object.keys(restDataUpdated).length) {
-            await requestUpdateUser({ id: target?.id, name: restDataUpdated?.name, email: restDataUpdated?.email, lastName: restDataUpdated?.lastName, notify, onSuccess: closeModalWithRefresh })
+            await requestUpdateUser({ id: target?.id, name: restDataUpdated?.name, email: restDataUpdated?.email, lastName: restDataUpdated?.lastName, password: restDataUpdated?.password, notify, onSuccess: closeModalWithRefresh })
         } else {
             closeModalWithRefresh()
         }

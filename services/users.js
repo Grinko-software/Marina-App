@@ -22,14 +22,15 @@ export const fetchCreateUser = ({ name, lastName, email, password }) => {
     }
 }
 
-export const fetchUpdateUser = ({ id, name, lastName, email, type, notify, onSuccess }) => {
+export const fetchUpdateUser = ({ id, name, lastName, email, type, password, notify, onSuccess }) => {
     try {
         const queryParams = new URLSearchParams({
             id,
             name: name || '',
             LastName: lastName || '',
             email: email || '',
-            Type: type || ''
+            Type: type || '',
+            password: password || ''
         })
         return getData(`${USERS_API_URL}?${queryParams}`, PUT, undefined, true)
             .then(response => {
