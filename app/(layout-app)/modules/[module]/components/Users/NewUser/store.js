@@ -37,9 +37,9 @@ const useSupplierFormStore = create((set) => ({
     },
     clearStore: () => set({
         name: null,
-        rut: null,
-        nameCompany: null,
-        rutCompany: null,
+        lastName: null,
+        email: null,
+        password: null,
         loading: false,
         error: false,
         complete: false

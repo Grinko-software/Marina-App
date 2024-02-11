@@ -30,7 +30,7 @@ const useAuthStore = create(
                         }
                     ).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
-                            const { name, lastName, userType, token, idUser } = user
+                            const { name, lastName, userType, token, idUser, password } = user
                             // set global ls
                             setToken(token)
                             set({
@@ -40,7 +40,8 @@ const useAuthStore = create(
                                 email,
                                 isAdmin: userType === 'admin',
                                 idUser,
-                                error: null
+                                error: null,
+                                password
                             })
                             if (userType === 'admin') set({ isAdmin: true })
                         } else {

@@ -8,13 +8,12 @@ const useCashBalanceStore = create(
     (set) => ({
         error: null,
         loading: false,
-        getLastIndicatorsCashBalanceEnding: (id, setLastBalance, handlerOpenDrawer) => {
+        getLastIndicatorsCashBalanceEnding: (id, setLastBalance) => {
             set({ loading: true })
             try {
                 getData(GET_INDICATORS_LAST_BALANCE.replace(':id', id), GET).then((result) => {
                     set({ loading: false })
                     if (result?.code === 200) {
-                        handlerOpenDrawer()
                         setLastBalance(result?.data)
                     } else {
                         setLastBalance(null)

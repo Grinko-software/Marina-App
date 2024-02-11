@@ -69,7 +69,9 @@ export default function SaleDetail (params) {
                 iva: target?.iva,
                 totalTaxFree: target?.totalTaxFree,
                 totalNet: target?.total - target?.iva,
-                notify
+                notify,
+                userName: target.userName,
+                cashRegisterName: target.cashRegisterName
             })
         }
     }

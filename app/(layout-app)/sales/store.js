@@ -14,6 +14,7 @@ import { setStateMachine } from '@/services/machine'
 import { errorsMachine } from '@/utils/machine'
 import { getCashRegister } from '@/services/cashRegister'
 import { VOUCHER_TYPE, fetchPrinterSaleTicket } from '@/services/printer'
+import { getIdUser } from '@/services/account'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -530,7 +531,8 @@ const useSalesStore = create(
                 }),
                 payment_type_id: paymentTarget,
                 voucher_type_id: 1,
-                cash_register_id: cashRegister?.ID
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
             }
 
             const device = getDeviceTuu()
@@ -680,7 +682,8 @@ const useSalesStore = create(
                 }),
                 payment_type_id: paymentTarget,
                 voucher_type_id: 2,
-                cash_register_id: cashRegister?.ID
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
             }
 
             const device = getDeviceTuu()
@@ -831,7 +834,8 @@ const useSalesStore = create(
                 }),
                 payment_type_id: paymentTarget,
                 voucher_type_id: 3,
-                cash_register_id: cashRegister?.ID
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
             }
 
             await saveTicketOnDatabase({

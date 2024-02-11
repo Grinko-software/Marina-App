@@ -14,6 +14,10 @@ export const getIdUser = () => {
     const { idUser } = useAuthStore.getState()
     return idUser
 }
+export const getFullNameUser = () => {
+    const { fullName } = useAuthStore.getState()
+    return fullName
+}
 export const setToken = (token) => {
     const { setToken } = useAuthStore.getState()
     localStorage.setItem('token', token)

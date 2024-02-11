@@ -54,6 +54,7 @@ export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
 // USERS
 export const USERS_API_URL = BASE_AUTH_API_URL + '/user'
 export const CREATE_USER_API_URL = BASE_AUTH_API_URL + '/user/create'
+export const USER_RESET_PASSWORD = BASE_AUTH_API_URL + '/user/password/reset'
 
 // KEY
 export const KEY_API_URL = BASE_AUTH_API_URL + '/key'
@@ -79,5 +80,6 @@ export const INDICATORS_ACCOUNTING_EVENT = '/accounting-event'
 // PRINTER
 export const PRINTER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/sale'
 export const OPEN_DRAWER_API_URL = 'http://localhost:8090/escpos/receipt/event'
+export const EVENT_API_URL = 'http://localhost:8090/escpos/receipt/event'
 export const PRINTER_BARCODE_API_URL = 'http://localhost:8090/escpos/receipt/barcode'
 export const PRINTER_SUPPLIER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/provider'

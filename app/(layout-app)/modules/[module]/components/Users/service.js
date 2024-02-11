@@ -1,4 +1,4 @@
-import { fetchGetUsers, fetchCreateUser, fetchUpdateUser } from '@/services/users'
+import { fetchGetUsers, fetchCreateUser, fetchUpdateUser, resetUserPassword } from '@/services/users'
 
 export const requestUserList = async () => {
     try {
@@ -24,6 +24,14 @@ export const requestUpdateUser = async ({ id, name, lastName, email, password, n
     }
 }
 
+export const requestResetPassword = async ({ id, notify, onSuccess }) => {
+    try {
+        return resetUserPassword({ id, notify, onSuccess })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const getDataModelUsers = ({ data }) => {
     return data?.map((item) => {
         const credentialData = {
@@ -42,6 +50,7 @@ export const getDataModelUsers = ({ data }) => {
             email: item.email,
             type: item?.user_type?.type_name,
             hasCredential: !!item.user_key,
+            password: item.password,
             credential: credentialData?.valid ? credentialData : null
         }
     })

@@ -1,5 +1,6 @@
 import { SUPPLIER_API_URL, SUPPLIER_ASSOCIATION_API_URL } from '@/settings/constants'
 import { getToken } from './account'
+import { DELETE, getData } from './http'
 
 export const fetchGetSupplier = async () => {
     try {
@@ -93,6 +94,26 @@ export const fetchUpdatedAssociationSupplier = async ({ supplierId, ids }) => {
                 return null
             }
         })
+    } catch {
+        return null
+    }
+}
+
+export const deleteSupplier = async ({ id, notify }) => {
+    try {
+        const queryParams = new URLSearchParams({ id })
+        return getData(`${SUPPLIER_API_URL}?${queryParams}`, DELETE, undefined, true)
+            .then(response => {
+                try {
+                    if (response?.code === 200) {
+                        notify('✅ Proveedor eliminado con exito!')
+                    } else {
+                        notify('❌ El proveedor no se pudo eliminar correctamente, intente mas tarde.')
+                    }
+                } catch {
+                    return null
+                }
+            })
     } catch {
         return null
     }
