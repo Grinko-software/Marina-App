@@ -1,5 +1,5 @@
-import { DELETE, POST, GET, getData } from '@/services/http'
-import { CREATE_CATEGORIES_API_URL, DELETE_CATEGORIES, CATEGORIES_API_URL } from '@/settings/constants'
+import { DELETE, POST, getData } from '@/services/http'
+import { CREATE_CATEGORIES_API_URL, DELETE_CATEGORIES } from '@/settings/constants'
 import { create } from 'zustand'
 
 const useProductFormStore = create((set) => ({
