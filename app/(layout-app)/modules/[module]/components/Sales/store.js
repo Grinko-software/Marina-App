@@ -10,7 +10,7 @@ const useLastSalesStore = create((set) => ({
         fetchGetReportsLastSales(limitPage, currentPage).then((data) => {
             set({
                 data: data?.data?.last_sales_response,
-                totalpage: data?.data?.total_page
+                totalpage: 100
             })
         }).catch((error) => { console.debug(error) })
         set({ loading: false })
