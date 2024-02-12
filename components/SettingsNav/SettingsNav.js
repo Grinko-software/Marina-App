@@ -18,7 +18,8 @@ import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
 import toast from 'react-hot-toast'
 import DepositCash from './SectionsNav/DepositCash'
-export default function SettingsNav () {
+import { isMobileDevice } from '@/utils/agent'
+export default function SettingsNav ({ isMobile }) {
     const notify = (text) => toast(text)
     const [userName, setUserName] = useState(null)
     const [admin, setAdmin] = useState(false)
@@ -51,11 +52,14 @@ export default function SettingsNav () {
     }, [selectedCashRegister])
     /* Control disable button */
     useEffect(() => {
-        if (selectedCashRegister?.ID === 'no-select') {
-            notify('⚙️ Se debe seleccionar una caja en ajustes!')
-            setDisabled(true)
-        } else if (selectedCashRegister?.ID !== 'no-select') {
-            setDisabled(!selectedCashRegister?.cash_balance_beginning)
+        const isMobile = isMobileDevice()
+        if (!isMobile) {
+            if (selectedCashRegister?.ID === 'no-select') {
+                notify('⚙️ Se debe seleccionar una caja en ajustes!')
+                setDisabled(true)
+            } else if (selectedCashRegister?.ID !== 'no-select') {
+                setDisabled(!selectedCashRegister?.cash_balance_beginning)
+            }
         }
     }, [])
     return (
@@ -74,41 +78,46 @@ export default function SettingsNav () {
                         </div>
 
                         <div className="flex flex-row gap-3 items items-center">
-                            {usePathname() === '/sales' ? <div><ScaleStatus scaleStatus = {isConnected}/></div> : <></>}
-                            <div className="col-start-2 col-end-2">
-                                <PaymentOfMoney disabled={disabled} />
-                            </div>
-                            <div className="col-start-2 col-end-2">
-                                <DepositCash disabled={disabled} />
-                            </div>
-
-                            <div className="col-start-2 col-end-2">
-                                <BoxStatus
-                                    statusCashRegister={statusCashRegister}
-                                    setStatusCashRegister={setStatusCashRegister}
-                                    openModalCashBalance={openModalCashBalance}
-                                    setOpenModalCashBalance={setOpenModalCashBalance}
-                                    disabled={disabled}
-
-                                />
-                            </div>
-                            <Divider orientation="vertical" className="h-12"/>
-                            <div className="col-start-1 col-end-2">
-                                <ThemeButton/>
-                            </div>
-                            <div className="col-start-2 col-end-2">
-                                <SwitchUserButton />
-                            </div>
-                            <div className="col-start-2 col-end-2">
-                                <ShortcutButton />
-                            </div>
-                            <div className="col-start-2 col-end-2">
-                                {usePathname() !== '/home'
-                                    ? <div>
-                                        <HomeButton />
+                            { isMobile
+                                ? null
+                                : <>
+                                    {usePathname() === '/sales' ? <div><ScaleStatus scaleStatus = {isConnected}/></div> : <></>}
+                                    <div className="col-start-2 col-end-2">
+                                        <PaymentOfMoney disabled={disabled} />
                                     </div>
-                                    : <></>}
-                            </div>
+                                    <div className="col-start-2 col-end-2">
+                                        <DepositCash disabled={disabled} />
+                                    </div>
+
+                                    <div className="col-start-2 col-end-2">
+                                        <BoxStatus
+                                            statusCashRegister={statusCashRegister}
+                                            setStatusCashRegister={setStatusCashRegister}
+                                            openModalCashBalance={openModalCashBalance}
+                                            setOpenModalCashBalance={setOpenModalCashBalance}
+                                            disabled={disabled}
+
+                                        />
+                                    </div>
+
+                                    <Divider orientation="vertical" className="h-12"/>
+                                    <div className="col-start-1 col-end-2">
+                                        <ThemeButton/>
+                                    </div>
+                                    <div className="col-start-2 col-end-2">
+                                        <SwitchUserButton />
+                                    </div>
+                                    <div className="col-start-2 col-end-2">
+                                        <ShortcutButton />
+                                    </div>
+                                    <div className="col-start-2 col-end-2">
+                                        {usePathname() !== '/home'
+                                            ? <div>
+                                                <HomeButton />
+                                            </div>
+                                            : <></>}
+                                    </div>
+                                </>}
                             {usePathname() !== '/home'
                                 ? <div>
                                     <Divider orientation="vertical" className="h-12"/>

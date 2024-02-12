@@ -45,7 +45,7 @@ export default function Home () {
                                 delay: 0.2,
                                 ease: [0, 0.71, 0.2, 1.01]
                             }}
-                            className="gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
+                            className="h-full gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
                         >
                             <MainTittleCard
                                 disabled={ salesDisabled}
@@ -66,7 +66,7 @@ export default function Home () {
                                 title="Módulos"
                                 imgSrc={reports}
                                 footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
-                                // disabled={disabled}
+                                disabled={ salesDisabled}
                             />
                         </motion.div>
                         <motion.div
@@ -79,7 +79,7 @@ export default function Home () {
                             }}
                             className="flex sm:flex-col-reverse sm:m-0 m-4  items-center sm:items-end sm:x-5"
                         >
-                            <SettingsNav />
+                            <SettingsNav isMobile={salesDisabled}/>
                         </motion.div>
                     </div>
                 </main>
