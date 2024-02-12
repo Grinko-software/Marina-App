@@ -7,7 +7,6 @@ import SettingsNav from '@/components/SettingsNav/SettingsNav'
 export function Header () {
     const [isMobile, setIsMobile] = useState(true)
     useEffect(() => {
-        console.log('Inventory')
         if (navigator) {
             const view = isMobileDevice()
             setIsMobile(view)

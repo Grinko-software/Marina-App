@@ -10,21 +10,17 @@ export default function MobileNavBar () {
     const [selected, setSelected] = useState(moduleApplication)
     const menuItems = [
         {
-            id: 'sales',
-            label: 'Ventas',
-            route: '/sales'
-        },
-        {
             id: 'inventory',
             label: 'Inventario',
             route: '/inventory'
-        },
+        }
+        /*,
         {
             id: 'modules',
             label: 'Módulos',
             route: '/modules'
         }
-        /*      {
+             {
             id: 'admin',
             label: 'Administrar',
             route: '/modules'
@@ -50,7 +46,9 @@ export default function MobileNavBar () {
                         <Button
                             className="w-full h-[2rem] bg-transparent font-bold text-2xl py-8"
                             href="#"
-                            onClick={setSelected}
+                            onClick={() => {
+                                setSelected(item?.id)
+                            }}
                         >
                             {item.label}
                         </Button>

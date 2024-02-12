@@ -45,7 +45,7 @@ export const Tabs = ({
         <section {...props} className='flex flex-row w-full z-30 '>
             {
                 isClient
-                    ? <section className='flex flex-auto flex-col sm:flex-row '>
+                    ? <section className='flex flex-auto flex-col sm:flex-row'>
                         <Button
                             onPress={() => setOpenMenu(!openMenu)}
                             variant="bordered"
@@ -59,9 +59,9 @@ export const Tabs = ({
                                 }`}
                             />
                         </Button>
-                        <div className='z-10 sm:ml-[1rem]'>
+                        <div className='z-10 ml-0 sm:ml-[1rem]'>
                             <div className={'w-[48vh] sm:w-[36rem] p-0 rounded-2xl border-0 overflow-visible z-10 absolute  ' + (!openMenu ? 'hidden' : '')}>
-                                <Card className=" z-10 grid grid-cols-4 gap-4 sm:gap-4 sm:p-5 p-1 border-2 border-primary-300 dark:border-primary-400">
+                                <Card className=" z-10 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 sm:p-5 p-1 border-2 border-primary-300 dark:border-primary-400">
                                     {itemsTabs.sort((a, b) => {
                                         if (a?.label < b?.label) {
                                             return -1

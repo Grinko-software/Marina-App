@@ -13,10 +13,20 @@ import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
 import useScannerStore from '@/stores/scanner'
-
+import useStore from './store/store'
+import { upgradeVersion } from '@/services/sync'
+import useSyncStore from '@/stores/common/sync'
 const LIMIT_PRODUCTS_VIEW = 50
-
 export default function Card () {
+    const {
+        getData,
+        error,
+        loading,
+        setLoading,
+        data,
+        triggerAction
+    } = useStore((state) => state)
+    const { lastUpdate, setLastUpdate } = useSyncStore()
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
     const [selectedCategoryID, setSelectedCategoryID] = useState('24')
@@ -33,10 +43,9 @@ export default function Card () {
         setSearchInput(event.target.value)
     }
     const listEmpty = new Array(20).fill(null)
-    const { listCategories, listInventory: list, loadingCategories, loading } = useInventoryStore(
-        ({ listCategories, listInventory, loadingCategories, loading }) => (
-            { listCategories, listInventory, loadingCategories, loading }))
-
+    const { listCategories, listInventory: list, getCategories, getStockTypes, handleProductRequest } = useInventoryStore(
+        ({ listCategories, listInventory, getCategories, getStockTypes, handleProductRequest }) => (
+            { listCategories, listInventory, getCategories, getStockTypes, handleProductRequest }))
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
@@ -127,12 +136,35 @@ export default function Card () {
             setSearchInput('')
         }
     }, [sectionSearch])
-
+    /* set States from store inventory */
+    useEffect(() => {
+        if (data) {
+            getCategories(data?.categories)
+            getStockTypes(data?.stockTypes)
+            // if (list?.length > 0 || !updateProduct) {
+            if (list?.length > 0) {
+                if (upgradeVersion(lastUpdate, setLastUpdate)) {
+                    handleProductRequest(true, list)
+                } else {
+                    handleProductRequest(false, list)
+                }
+            } else {
+                handleProductRequest(true, list)
+            }
+        }
+    }, [data])
+    /* Handle multiple request */
+    useEffect(() => {
+        getData()
+        return () => {
+            setLoading(false)
+        }
+    }, [])
     return (
         <section className='w-11/12 items-center touch-none fixed' >
             <section className='flex flex-col gap-2'>
                 <div className='flex flex-row gap-1 justify-between'>
-                    {loadingCategories && loading
+                    { loading
                         ? <section className="w-full">
                             <Skeleton className="w-full rounded-lg bg-slate-600"></Skeleton>
                         </section>
@@ -144,7 +176,7 @@ export default function Card () {
                         />
                     }
                     <Offers isMobile={true}/>
-                    <CreateProduct isMobile={true}/>
+                    <CreateProduct isMobile={true} handleProductRequest={handleProductRequest}/>
                     <CreateCategory isMobile={true}/>
                 </div>
                 <div >
@@ -176,7 +208,7 @@ export default function Card () {
                             }
                             onClear={() => setSearchInput('')}
                         />
-                        { loadingCategories && loading
+                        { loading
                             ? <div>
                                 <ScrollShadow className="w-full pb-4">
                                     <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1">
