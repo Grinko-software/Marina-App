@@ -30,7 +30,7 @@ export default function DepositCash ({ isOpen, onClose, disabled }) {
     const handlerOpenDrawer = () => {
         const { fullName } = useAuthStore.getState()
         const body = {
-            event_type: 'Retiro de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
+            event_type: 'Inicio de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
         }
         openDrawer(getCashRegister()?.ID, notify, body)
     }

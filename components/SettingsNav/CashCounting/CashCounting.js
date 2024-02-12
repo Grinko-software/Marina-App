@@ -46,7 +46,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const handlerOpenDrawer = () => {
         const { fullName } = useAuthStore.getState()
         const body = {
-            event_type: 'Cierre de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
+            event_type: 'Retiro de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
         }
         openDrawer(getCashRegister()?.ID, notify, body)
     }
