@@ -12,12 +12,14 @@ import { today } from '@/utils/date'
 import useAuthStore from '@/stores/user'
 export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(null)
+    const [drawalsComment, setDrawalsComment] = useState('')
     const [readQR, setReadQR] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
     const { /* enabledScanner, disabledScanner, */ disabledAuthMode } = useScannerStore()
     const { createDepositOrWithdrawalCashBalance, openDrawer } = useCashBalanceStore(({ createDepositOrWithdrawalCashBalance, openDrawer }) => ({ createDepositOrWithdrawalCashBalance, openDrawer }))
     const { setStatusCashRegister } = useSettingsStore(({ setStatusCashRegister }) => ({ setStatusCashRegister }))
     const onhandlerAcctions = () => {
+        setDrawalsComment('')
         setPayDetailed(null)
         onClose()
         setReadQR(false)
@@ -44,7 +46,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     }, [])
     const onSuccess = (data) => {
         setUserAuthData(data)
-        createDepositOrWithdrawalCashBalance(getCashRegister()?.ID, getIdUser(), 'Retiro de prueba', paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer, 'drawal')
+        createDepositOrWithdrawalCashBalance(getCashRegister()?.ID, getIdUser(), drawalsComment, paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer, 'drawal')
     }
 
     const closeModal = () => {
@@ -118,6 +120,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                                 }
                                                 labelPlacement="outside"
                                                 placeholder="Ingrese detalles del retiro"
+                                                onValueChange={(value) => { if (value) { setDrawalsComment(value) } }}
                                             />
                                         </div>
                                     </ModalBody>
