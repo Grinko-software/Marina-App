@@ -28,9 +28,9 @@ export const fetchGetReportsSales = async ({ periodStart, periodType, periodQuan
     }
 }
 
-export const fetchGetReportsLastSales = async () => {
+export const fetchGetReportsLastSales = async (limitPage, currentPage) => {
     try {
-        return getData(`${REPORTS_LAST_SALES_API_URL}`)
+        return getData(`${REPORTS_LAST_SALES_API_URL}` + '?limit=' + limitPage + '&offset=' + currentPage)
     } catch {
         return null
     }

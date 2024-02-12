@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Spinner, Pagination, getKeyValue } from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
 
-export default function TableAccounting ({ data, loading }) {
+export default function TableAccounting ({ data, loading, currentPage, setCurrentPage, totalpage, setLimitPage }) {
     const [dataModel, setDataModel] = useState([])
     const columns = [
         {
@@ -45,8 +45,6 @@ export default function TableAccounting ({ data, loading }) {
             })
 
             setDataModel(tableData)
-        } else {
-            setDataModel([])
         }
     }, [data])
 
@@ -66,17 +64,6 @@ export default function TableAccounting ({ data, loading }) {
         }
     }
 
-    const [page, setPage] = React.useState(1)
-    const rowsPerPage = 15
-
-    const pages = Math.ceil(dataModel.length / rowsPerPage)
-
-    const items = React.useMemo(() => {
-        const start = (page - 1) * rowsPerPage
-        const end = start + rowsPerPage
-        return dataModel.slice(start, end)
-    }, [page, dataModel])
-
     return (
         <section>
             <Table
@@ -89,10 +76,15 @@ export default function TableAccounting ({ data, loading }) {
                             showControls
                             showShadow
                             color="default"
-                            page={page}
-                            total={pages}
-                            onChange={(page) => setPage(page)}
-
+                            page={currentPage}
+                            total={totalpage}
+                            onChange={(page) => {
+                                // paginas 1,2,3,4
+                                // limit 10,20,30,40,
+                                // offset 0,10,20,30
+                                setLimitPage(page * 10)
+                                setCurrentPage((page * 10) - 10)
+                            }}
                         />
                     </div>
                 }
@@ -108,7 +100,9 @@ export default function TableAccounting ({ data, loading }) {
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody items={items} isLoading={loading} loadingContent={<Spinner label="Cargando..."/>} emptyContent={loading === false && dataModel?.length <= 0 ? 'No se encuentras eventos contables' : null}>
+                <TableBody items={dataModel} isLoading={loading} loadingContent={<Spinner label="Cargando..."/>}
+                    emptyContent={loading === false && dataModel?.length <= 0 ? 'No se encuentras eventos contables' : null}
+                >
                     {(item) => (
                         <TableRow key={item.key}>
                             {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
