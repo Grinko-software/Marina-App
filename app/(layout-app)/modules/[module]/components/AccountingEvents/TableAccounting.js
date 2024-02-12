@@ -82,7 +82,7 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                                 // paginas 1,2,3,4
                                 // limit 10,20,30,40,
                                 // offset 0,10,20,30
-                                setLimitPage(page * 10)
+                                // setLimitPage(page * 10)
                                 setCurrentPage((page * 10) - 10)
                             }}
                         />
