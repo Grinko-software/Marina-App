@@ -169,7 +169,7 @@ export default function UserInfo (params) {
                                     onValueChange={(value) => { handleUpdateUserValues({ email: value }) }}
                                 />
                             </div>
-                            <div className="px-4 pt-4  flex items-center">
+                            {/*  <div className="px-4 pt-4  flex items-center">
                                 <Input
                                     type="text"
                                     disabled={!edit}
@@ -181,7 +181,7 @@ export default function UserInfo (params) {
                                     placeholder={ 'Seleccione el tipo de usuario'}
                                     onValueChange={(value) => { handleUpdateUserValues({ type: value }) }}
                                 />
-                            </div>
+                            </div> */}
                             <div className="px-4 pt-4  flex items-center">
                                 <Input
                                     disabled={!edit}
