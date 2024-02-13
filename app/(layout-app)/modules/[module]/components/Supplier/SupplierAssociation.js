@@ -110,11 +110,11 @@ export default function SupplierAssociation (params) {
 
     useEffect(() => {
         if (products) {
-            const dataProducts = products.map(({ name, id }) => {
+            const dataProducts = products.map(({ name, code, id }) => {
                 return {
                     key: id,
                     title: name?.toUpperCase(),
-                    description: name?.toUpperCase()
+                    description: name?.toUpperCase() + ' ' + code
                 }
             })
 
