@@ -1,5 +1,6 @@
 import React from 'react'
 import { useBarcode } from 'next-barcode'
+import { formatNumberWithPoints } from '@/utils/number'
 export default function Bacode (props) {
     const { refBarcode, productName, productCode, productCost, showDetail } = props
     const { inputRef } = useBarcode({
@@ -15,11 +16,11 @@ export default function Bacode (props) {
                 {showDetail
                     ? (
                         <div>
-                            <div className="text-black text-2xl w-auto font-bold">{productName}</div>
+                            <div className="text-black text-2xl w-auto font-medium text-center">{productName}</div>
                             <div className=" flex flex-col items-center ">
-                                <div className='flex flex-row'>
-                                    <div className="text-black text-2xl">{'$'}</div>
-                                    <div className=" text-black text-2xl">{productCost}</div>
+                                <div className='flex flex-row items-center gap-1'>
+                                    <div className="text-black text-3xl font-semibold">{'$'}</div>
+                                    <div className=" text-black text-5xl font-semibold">{formatNumberWithPoints(productCost, '-')}</div>
                                 </div>
                             </div>
                         </div>
