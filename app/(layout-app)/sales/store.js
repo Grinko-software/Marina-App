@@ -563,6 +563,7 @@ const useSalesStore = create(
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
                                         removeSale(sales, saleId)
+                                        onSuccessSale()
                                     } else {
                                         console.log(result)
                                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
@@ -713,9 +714,11 @@ const useSalesStore = create(
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
+                                        // removeSale(sales, saleId)
+                                        onSuccessSale()
                                         removeSale(sales, saleId)
+                                        set({ loadingSale: false })
                                     } else {
-                                        console.log(result)
                                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                                         setStateMachine(null)
                                     }
