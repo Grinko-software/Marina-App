@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Spinner, Pagination, getKeyValue } from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
-
+import moment from 'moment-timezone'
 export default function TableAccounting ({ data, loading, currentPage, setCurrentPage, totalpage, setLimitPage }) {
     const [dataModel, setDataModel] = useState([])
     const columns = [
@@ -13,6 +13,10 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
         {
             key: 'cashRegisterName',
             label: 'Nombre de caja'
+        },
+        {
+            key: 'date',
+            label: 'Fecha'
         },
         {
             key: 'total',
@@ -40,6 +44,7 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                     cashRegisterName: item?.cash_register_name ? item?.cash_register_name?.toUpperCase() : null,
                     eventType: item?.event_type,
                     userId: item?.user_id,
+                    date: item?.date ? moment(item?.date).format('YYYY-MM-DD hh:mm') : null,
                     userName: item?.user_name ? item?.user_name?.toUpperCase() : null
                 }
             })

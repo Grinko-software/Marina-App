@@ -13,7 +13,8 @@ const useAccountingEventsStore = create((set) => ({
                 getData(`${INDICATORS_ACCOUNTING_EVENT}` + '?limit=' + limitPage + '&offset=' + currentPage).then((data) => {
                     set({
                         data: data?.data?.response_events,
-                        totalpage: data?.data?.total_page
+                        // totalpage: data?.data?.total_page
+                        totalpage: 2
                     })
                 }).catch((error) => {
                     console.debug(error)
