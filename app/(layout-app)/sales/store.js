@@ -534,7 +534,6 @@ const useSalesStore = create(
                 cash_register_id: cashRegister?.ID,
                 user_id: getIdUser()
             }
-
             const device = getDeviceTuu()
             if (isCardPayment && device) {
                 try {
@@ -644,7 +643,6 @@ const useSalesStore = create(
                     set({ loadingSale: false })
                 }
             }
-
             set({ loadingSale: false })
             setStateMachine(null)
         },
