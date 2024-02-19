@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 'use client'
-import { Autocomplete, AutocompleteItem, Divider } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, Button, Divider } from '@nextui-org/react'
 import { QRCode } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useCredentialStore from './store'
+import { toPng } from 'html-to-image'
 
 export const DEFAULT_OPTION = {
     value: 'NINGUNA',
@@ -13,6 +14,7 @@ export const DEFAULT_OPTION = {
 export default function UserCredential ({ credential, isEdit, onValueChage }) {
     const [dataModel, setDataModel] = useState(null)
     const [selectionCode, setSelectionCode] = useState(null)
+    const [downloadQR, setDownloadQR] = useState(null)
     const [currentCredentialCode, setCurrentCredentialCode] = useState(DEFAULT_OPTION.value)
     // const [isChanged, setIsChanged] = useState(false)
     const { requestData: requestDataCredentials, associationData, data: credentialData } = useCredentialStore()
@@ -62,6 +64,25 @@ export default function UserCredential ({ credential, isEdit, onValueChage }) {
         setDataModel([DEFAULT_OPTION, ...(credentialsModelData || [])])
     }, [credentialData, associationData])
 
+    const componentRef = useRef()
+
+    const downloadQRCode = (componentRef, code) => {
+        toPng(componentRef.current)
+            .then(function (dataUrl) {
+                const link = document.createElement('a')
+                link.download = `MARINA_QR_${code}.png`
+                link.href = dataUrl
+                link.click()
+            })
+    }
+
+    useEffect(() => {
+        if (componentRef?.current && downloadQR) {
+            downloadQRCode(componentRef, credential?.code)
+        }
+        setDownloadQR(false)
+    }, [downloadQR, componentRef, credential])
+
     return <section className={`w-full items-center gap-2 grid grid-cols-1 ${(isEdit && credential) ? 'md:grid-cols-2' : ''}`}>
         {credential
             ? <div className='flex flex-row m-auto gap-5'>
@@ -70,14 +91,15 @@ export default function UserCredential ({ credential, isEdit, onValueChage }) {
                     <p className='text-md font-semibold'>{credential?.name?.toUpperCase() || 'Sin nombre'}</p>
                 </div>
                 <Divider orientation='vertical' className="h-[1-rem] w-[2px]"/>
-                <div className='h-auto gap-2 max-w-60 border mr-auto bg-white rounded-xl'>
-                    <QRCode
-                        errorLevel="H"
-                        // size={size}
-                        // iconSize={size / 4}
-                        value={credential?.code}
-                        icon="https://i.pinimg.com/originals/f5/c4/3d/f5c43df87ed342297a519ba9d202e111.png"
-                    />
+                <div className='flex flex-col gap-5'>
+                    <div className='h-auto gap-2 max-w-60 border mr-auto bg-white rounded-xl' ref={componentRef}>
+                        <QRCode
+                            value={credential?.code}
+                            icon={downloadQR ? null : 'https://i.pinimg.com/originals/f5/c4/3d/f5c43df87ed342297a519ba9d202e111.png'}
+
+                        />
+                    </div>
+                    <Button onClick={() => setDownloadQR(true)}>Descargar QR</Button>
                 </div>
             </div>
             : null}

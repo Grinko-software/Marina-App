@@ -6,8 +6,9 @@ import ErrordGif from '@/assets/gifs/animation_error.json'
 import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
 import useAuthStore from '@/stores/user'
-import { Spinner } from '@nextui-org/react'
+import { Button, Input, Spinner } from '@nextui-org/react'
 import AlertMessage from '../ui/AlertMessage'
+import { FaUnlockAlt } from 'react-icons/fa'
 
 const TIMEOUT = 1500
 const TIMEOUT_SCAN = 500
@@ -17,6 +18,8 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
     const [completed, setCompleted] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState(false)
+    const [inputCodeQR, setInputCodeQR] = useState(null)
+    const [isActivedInputQR, setIsActivedInputQR] = useState(null)
     const [errorMessage, setErrorMessage] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
     const {
@@ -73,9 +76,13 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
         }
     }
 
-    /*  const onErrorAuth = () => {
-        //
-    } */
+    const authenticateWithInputCode = () => {
+        if (changeSession) {
+            loginWithQR(inputCodeQR)
+        } else {
+            getUserData(inputCodeQR)
+        }
+    }
 
     useEffect(() => {
         if (error && completed) {
@@ -121,12 +128,30 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
                                 <Lottie className="mx-auto" animationData={ErrordGif} loop={false} />
 
                             </>
-                            : <>
-                                <Lottie className="mx-auto scale-[2]" animationData={QR} loop={true} />
-                            </>
+                            : !isActivedInputQR
+                                ? <>
+                                    <Lottie className="mx-auto scale-[2]" animationData={QR} loop={true} />
+                                </>
+                                : <div className='flex items-center'>
+                                    <div className='flex items-end gap-2'>
+                                        <Input
+                                            className='rounded-r-lg'
+                                            type="text"
+                                            value={inputCodeQR}
+                                            variant={'bordered'}
+                                            label={'Código de credencial'}
+                                            labelPlacement='outside'
+                                            onValueChange={(value) => { setInputCodeQR(value) }}
+                                        />
+                                        <Button isIconOnly
+                                            isDisabled={!inputCodeQR}
+                                            onClick={authenticateWithInputCode}>
+                                            <FaUnlockAlt />
+                                        </Button>
+                                    </div>
+                                </div>
                 }
             </section>
-
             {/*  {`| completed:${completed}\n`}
             {`| loading:${loading}`}
             {`| success:${success}`}
@@ -141,6 +166,18 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
                         ? <AlertMessage message= {errorAuthCode || errorMessage}/>
                         : null}
             </section>
+
+            {!completed &&
+            <section className='p-5'>
+                <Button
+                    onClick={ () => setIsActivedInputQR(!isActivedInputQR)}
+                >
+                    {
+                        isActivedInputQR ? 'Escanear credencial' : 'Ingresar código'
+                    }
+                </Button>
+            </section>
+            }
         </section>
     )
 }

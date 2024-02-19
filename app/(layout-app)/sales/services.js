@@ -3,6 +3,7 @@ import { SALE_TICKET_CREATE } from '@/settings/constants'
 import { roundValueWithMath } from '@/utils/number'
 import { today } from '@/utils/date'
 import { fetchPrinterSaleTicket } from '@/services/printer'
+import useSettingsStore from '@/stores/settings'
 
 export const getTotalDiscountOffers = ({ products }) => {
     const totalDiscount = products?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
@@ -62,7 +63,8 @@ export const createSaleOnHaulmer = (url, method, modelbody, retry = 0) => {
 export const saveTicketOnDatabase = async ({ body, notify, saleType, onSuccessSale, listSales, totalPay, netTotal, iva, totalTaxFree, discountExtra, discountOffers }) => {
     await getData(SALE_TICKET_CREATE, POST, body).then(result => {
         if (result?.code === 200) {
-            fetchPrinterSaleTicket({ saleType, products: listSales, total: totalPay, totalNet: netTotal, iva, totalTaxFree, discountExtra, discountOffers })
+            const printEnabled = useSettingsStore.getState()?.printEnabled
+            if (printEnabled) fetchPrinterSaleTicket({ saleType, products: listSales, total: totalPay, totalNet: netTotal, iva, totalTaxFree, discountExtra, discountOffers })
             notify('✅ Ticket generado con éxito')
             if (onSuccessSale) {
                 onSuccessSale()

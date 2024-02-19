@@ -12,6 +12,7 @@ const useSettingsStore = create(
             loading: false,
             statusCashRegister: null,
             disabled: false,
+            printEnabled: true,
             setDisabled: (disabled) => set({ disabled }),
             setStatusCashRegister: (statusCashRegister) => set({ statusCashRegister }),
             setPostMachines: (value) => set({ postMachines: value }),
@@ -33,6 +34,7 @@ const useSettingsStore = create(
             selectedCashRegister: DEFAULT_SELECTED,
             cashRegister: null,
             setCashRegister: (value) => set({ cashRegister: value }),
+            setPrintEnabled: (value) => set({ printEnabled: value }),
             setSelectedCashRegister: (value) => set({ selectedCashRegister: value }),
             getCashRegister: () => {
                 set({ loading: true, error: null })

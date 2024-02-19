@@ -15,6 +15,7 @@ import { errorsMachine } from '@/utils/machine'
 import { getCashRegister } from '@/services/cashRegister'
 import { VOUCHER_TYPE, fetchPrinterSaleTicket } from '@/services/printer'
 import { getIdUser } from '@/services/account'
+import useSettingsStore from '@/stores/settings'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -558,7 +559,8 @@ const useSalesStore = create(
                                 getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
-                                        fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data })
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
@@ -616,7 +618,8 @@ const useSalesStore = create(
                                         console.log(result)
                                         const stamp = data?.data?.TIMBRE
                                         const folio = data?.data?.FOLIO
-                                        fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers })
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
                                         notify('✅ Pago con éxito')
                                         if (onSuccessSale) {
@@ -709,7 +712,8 @@ const useSalesStore = create(
                                 getData(SALE_TICKET_CREATE, POST, body).then(result => {
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
-                                        fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer })
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
@@ -767,7 +771,8 @@ const useSalesStore = create(
                                         console.log(result)
                                         const stamp = data?.data?.TIMBRE
                                         const folio = data?.data?.FOLIO
-                                        fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer })
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                         // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                         notify('✅ Pago con éxito')
