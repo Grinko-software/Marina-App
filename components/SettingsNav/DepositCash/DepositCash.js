@@ -142,8 +142,7 @@ export default function DepositCash ({ isOpen, onClose, disabled }) {
 
                                 : (<section>
                                     <ModalBody>
-                                        <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={true} withoutDelay={true}/>
-                                        {userAuthData?.fullName}
+                                        <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={false} withoutDelay={true}/>
                                     </ModalBody>
                                     <ModalFooter className='justify-center'>
                                         <Button variant="shadow" className =" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
