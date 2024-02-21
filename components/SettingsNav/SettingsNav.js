@@ -66,9 +66,9 @@ export default function SettingsNav ({ isMobile }) {
             }
         }
         handleHealthCheck()
-        setInterval(() => {
+        /*    setInterval(() => {
             handleHealthCheck()
-        }, 30000)
+        }, 30000) */
     }, [])
 
     return (
