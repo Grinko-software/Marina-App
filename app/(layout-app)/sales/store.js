@@ -59,6 +59,7 @@ const useSalesStore = create(
         },
         addFromNewSales: (sales, saleId, product, units, offers, onCompleteFunction) => {
             units = units || 1
+            units = roundValueWithMath((units) * 1000, 3, 0) / 1000
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             let listSales = sales[saleIndex].saleProductsList
 
@@ -83,11 +84,17 @@ const useSalesStore = create(
             } else {
                 if (!searhProduct) {
                     const currentTotal = roundValueWithMath(product?.price * parseFloat(units), 0, 0)
-                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
+                    const total = roundPrice(currentTotal) || currentTotal
+                    let quantitySale = total / product?.price
+                    quantitySale = roundValueWithMath(quantitySale * 100000, 5, 0) / 100000
+                    listSales = [...listSales, { product, quantity: parseFloat(quantitySale), discount: 0, total }]
                 } else {
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const currentTotal = roundValueWithMath(product?.price * (searhProduct?.quantity + units), 0, 0)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
+                    const total = roundPrice(currentTotal) || currentTotal
+                    let quantitySale = total / product?.price
+                    quantitySale = roundValueWithMath(quantitySale * 100000, 5, 0) / 100000
+                    listSales = [...newList, { product, quantity: parseFloat(quantitySale), discount: 0, total }]
                 }
             }
 

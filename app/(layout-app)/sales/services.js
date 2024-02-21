@@ -141,7 +141,7 @@ export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, to
                         ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
                         : roundValueWithMath(item?.product?.price, 0, 0)
                     const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
-                    const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                    const quantityItem = item?.quantity
                     const netPrctIem = roundValueWithMath(priceItem / 1.19, 0, 0)
                     const netMontoItem = roundValueWithMath(totalItem / 1.19, 0, 0)
                     return {
@@ -158,7 +158,7 @@ export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, to
                         ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
                         : roundValueWithMath(item?.product?.price, 0, 0)
                     const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
-                    const quantityItem = roundValueWithMath((totalItem / priceItem) * 1000, 3, 0) / 1000
+                    const quantityItem = item?.quantity
                     if (item?.product?.taxFree) {
                         indexTaxFree++
                         return {
