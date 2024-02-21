@@ -27,7 +27,8 @@ export const fetchPrinterSaleTicket = async ({
     customerDetail,
     products,
     userName,
-    cashRegisterName
+    cashRegisterName,
+    openCashRegister = false
 }) => {
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const seller = (userName || getFullNameUser() || '').toUpperCase()
@@ -56,7 +57,8 @@ export const fetchPrinterSaleTicket = async ({
                 }
             }),
         userName: seller,
-        cashRegisterName: cashRegister
+        cashRegisterName: cashRegister,
+        openCashRegister
     }
 
     try {

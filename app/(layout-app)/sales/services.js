@@ -60,11 +60,11 @@ export const createSaleOnHaulmer = (url, method, modelbody, retry = 0) => {
     })
 }
 
-export const saveTicketOnDatabase = async ({ body, notify, saleType, onSuccessSale, listSales, totalPay, netTotal, iva, totalTaxFree, discountExtra, discountOffers }) => {
+export const saveTicketOnDatabase = async ({ body, notify, saleType, onSuccessSale, listSales, totalPay, netTotal, iva, totalTaxFree, discountExtra, discountOffers, openCashRegister = false }) => {
     await getData(SALE_TICKET_CREATE, POST, body).then(result => {
         if (result?.code === 200) {
             const printEnabled = useSettingsStore.getState()?.printEnabled || true
-            if (printEnabled) fetchPrinterSaleTicket({ saleType, products: listSales, total: totalPay, totalNet: netTotal, iva, totalTaxFree, discountExtra, discountOffers })
+            if (printEnabled) fetchPrinterSaleTicket({ saleType, products: listSales, total: totalPay, totalNet: netTotal, iva, totalTaxFree, discountExtra, discountOffers, openCashRegister })
             notify('✅ Ticket generado con éxito')
             if (onSuccessSale) {
                 onSuccessSale()

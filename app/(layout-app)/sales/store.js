@@ -560,7 +560,7 @@ const useSalesStore = create(
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
                                         const printEnabled = useSettingsStore.getState()?.printEnabled || true
-                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data })
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, openCashRegister: false })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
@@ -619,7 +619,7 @@ const useSalesStore = create(
                                         const stamp = data?.data?.TIMBRE
                                         const folio = data?.data?.FOLIO
                                         const printEnabled = useSettingsStore.getState()?.printEnabled || true
-                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers })
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, openCashRegister: true })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
                                         notify('✅ Pago con éxito')
                                         if (onSuccessSale) {
@@ -713,7 +713,7 @@ const useSalesStore = create(
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
                                         const printEnabled = useSettingsStore.getState()?.printEnabled || true
-                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer })
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer, openCashRegister: false })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
                                         notify('✅ Pago con tarjeta con éxito')
                                         setStateMachine(null)
@@ -772,7 +772,7 @@ const useSalesStore = create(
                                         const stamp = data?.data?.TIMBRE
                                         const folio = data?.data?.FOLIO
                                         const printEnabled = useSettingsStore.getState()?.printEnabled || true
-                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer })
+                                        if (printEnabled) fetchPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer, openCashRegister: true })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                         // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                         notify('✅ Pago con éxito')
@@ -805,7 +805,7 @@ const useSalesStore = create(
             set({ loadingSale: false })
             setStateMachine(null)
         },
-        createSaleTicket: async ({ sales, saleId, notify, onSuccessSale, removeSale }) => {
+        createSaleTicket: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
             set({ loadingSale: true, error: null })
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
@@ -854,6 +854,7 @@ const useSalesStore = create(
                 discountOffers: totalDiscountOffers,
                 body,
                 notify,
+                openCashRegister: !isCardPayment,
                 onSuccessSale: () => {
                     if (onSuccessSale) {
                         onSuccessSale()

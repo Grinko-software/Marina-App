@@ -101,6 +101,7 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                 saleId: saleIdActive,
                 notify,
                 removeSale,
+                isCardPayment: isCardPay,
                 onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash
             })
         } else if (voucherTarget === 2) {
