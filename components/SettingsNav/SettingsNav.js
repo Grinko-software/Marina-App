@@ -19,6 +19,9 @@ import { getStatus } from './services'
 import toast from 'react-hot-toast'
 import DepositCash from './SectionsNav/DepositCash'
 import { isMobileDevice } from '@/utils/agent'
+import PrinterStatus from '../ui/PrinterStatus'
+import hubPrint from '@/app/(layout-app)/sales/components/store/connectionPrinter'
+
 export default function SettingsNav ({ isMobile }) {
     const notify = (text) => toast(text)
     const [userName, setUserName] = useState(null)
@@ -29,6 +32,7 @@ export default function SettingsNav ({ isMobile }) {
      ) => ({ selectedCashRegister, statusCashRegister, setStatusCashRegister, setDisabled, disabled }))
     const { fullName, isAdmin } = useAuthStore(({ fullName, isAdmin }) => ({ fullName, isAdmin }))
     const { isConnected } = hubScale()
+    const { isConnectedPrint, handleHealthCheck } = hubPrint()
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
 
     useEffect(() => {
@@ -61,7 +65,12 @@ export default function SettingsNav ({ isMobile }) {
                 setDisabled(!selectedCashRegister?.cash_balance_beginning)
             }
         }
+        handleHealthCheck()
+        setInterval(() => {
+            handleHealthCheck()
+        }, 30000)
     }, [])
+
     return (
         <div >
             <Card className={`${usePathname() !== '/home' ? 'bg-transparent shadow-none' : ''} `}>
@@ -81,7 +90,15 @@ export default function SettingsNav ({ isMobile }) {
                             { isMobile
                                 ? null
                                 : <>
-                                    {usePathname() === '/sales' ? <div><ScaleStatus scaleStatus = {isConnected}/></div> : <></>}
+                                    {usePathname() === '/sales'
+                                        ? <div className="flex flex-row gap-3">
+                                            <Divider orientation="vertical" className="h-12"/>
+                                            <ScaleStatus scaleStatus = {isConnected}/>
+                                            <PrinterStatus PrinterStatus = {isConnectedPrint}/>
+                                            <Divider orientation="vertical" className="h-12"/>
+                                        </div>
+                                        : <></>
+                                    }
                                     <div className="col-start-2 col-end-2">
                                         <PaymentOfMoney disabled={disabled} />
                                     </div>
