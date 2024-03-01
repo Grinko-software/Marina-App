@@ -9,6 +9,7 @@ import useSalesStore from './store'
 import PayDetailed from './components/payDetailed'
 import { PlusIcon } from '@heroicons/react/24/solid'
 import LoadingSale from './components/loadingSale'
+import SalePrinterModal from './components/printerModal/printerModal'
 const SalesMenu = () => {
     const [payment, setPayment] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -155,6 +156,7 @@ const SalesMenu = () => {
                     setPaymentTargetValue={setPaymentTargetValue}
                     setVoucherTargetValue={setVoucherTargetValue}
                 />
+                <SalePrinterModal/>
             </div>
         </section>
     )

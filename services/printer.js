@@ -5,6 +5,7 @@ import { formatNumberWithPoints } from '@/utils/number'
 import { notify } from './notify'
 import { getFullNameUser } from './account'
 import { getCashRegisterName } from './cashRegister'
+import salePrintStore from '@/app/(layout-app)/sales/components/printerModal/store'
 
 export const VOUCHER_TYPE = {
     VOUCHER: 'voucher',
@@ -12,7 +13,7 @@ export const VOUCHER_TYPE = {
     TICKET: 'ticket'
 }
 
-export const fetchPrinterSaleTicket = async ({
+export const generateDataToPrinterSaleTicket = async ({
     saleType,
     datetime,
     folioNumber,
@@ -61,6 +62,59 @@ export const fetchPrinterSaleTicket = async ({
         openCashRegister
     }
 
+    try {
+        return data
+    } catch {
+        return null
+    }
+}
+export const saveDataToPrinterSaleTicket = async ({
+    saleType,
+    datetime,
+    folioNumber,
+    total,
+    discountOffers,
+    discountExtra,
+    stamp,
+    totalTaxFree,
+    totalNet,
+    iva,
+    cardDetail,
+    customerDetail,
+    products,
+    userName,
+    cashRegisterName,
+    openCashRegister = false
+}) => {
+    const data = await generateDataToPrinterSaleTicket({
+        saleType,
+        datetime,
+        folioNumber,
+        total,
+        discountOffers,
+        discountExtra,
+        stamp,
+        totalTaxFree,
+        totalNet,
+        iva,
+        cardDetail,
+        customerDetail,
+        products,
+        userName,
+        cashRegisterName,
+        openCashRegister
+    })
+
+    const setPrintBodyLastSale = salePrintStore.getState().setPrintBodyLastSale
+
+    try {
+        setPrintBodyLastSale(data)
+    } catch {
+        return null
+    }
+}
+
+export const fetchPrinterSaleTicket = async ({ data }) => {
     try {
         return getData(`${PRINTER_TICKET_API_URL}`, POST, data, true)
             .then(response => {

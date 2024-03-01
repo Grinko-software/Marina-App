@@ -2,7 +2,7 @@ import { POST, getData } from '@/services/http'
 import { SALE_TICKET_CREATE } from '@/settings/constants'
 import { roundValueWithMath } from '@/utils/number'
 import { today } from '@/utils/date'
-import { fetchPrinterSaleTicket } from '@/services/printer'
+import { saveDataToPrinterSaleTicket } from '@/services/printer'
 import useSettingsStore from '@/stores/settings'
 
 export const getTotalDiscountOffers = ({ products }) => {
@@ -64,7 +64,7 @@ export const saveTicketOnDatabase = async ({ body, notify, saleType, onSuccessSa
     await getData(SALE_TICKET_CREATE, POST, body).then(result => {
         if (result?.code === 200) {
             const printEnabled = useSettingsStore.getState()?.printEnabled || true
-            if (printEnabled) fetchPrinterSaleTicket({ saleType, products: listSales, total: totalPay, totalNet: netTotal, iva, totalTaxFree, discountExtra, discountOffers, openCashRegister })
+            if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: listSales, total: totalPay, totalNet: netTotal, iva, totalTaxFree, discountExtra, discountOffers, openCashRegister })
             notify('✅ Ticket generado con éxito')
             if (onSuccessSale) {
                 onSuccessSale()
