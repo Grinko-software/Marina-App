@@ -13,7 +13,7 @@ export const VOUCHER_TYPE = {
     TICKET: 'ticket'
 }
 
-export const generateDataToPrinterSaleTicket = async ({
+export const generateDataToPrinterSaleTicket = ({
     saleType,
     datetime,
     folioNumber,
@@ -86,7 +86,7 @@ export const saveDataToPrinterSaleTicket = async ({
     cashRegisterName,
     openCashRegister = false
 }) => {
-    const data = await generateDataToPrinterSaleTicket({
+    const data = generateDataToPrinterSaleTicket({
         saleType,
         datetime,
         folioNumber,
