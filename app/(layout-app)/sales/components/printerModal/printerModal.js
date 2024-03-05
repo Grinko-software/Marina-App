@@ -61,7 +61,7 @@ export default function SalePrinterModal () {
                         >
                             {'Cerrar'}
                         </Button>
-                        <Button
+                        {/*  <Button
                             className =" bg-blue-500 text-primary-50"
                             variant="flat"
                             onClick={() => {
@@ -69,7 +69,7 @@ export default function SalePrinterModal () {
                             }}
                         >
                             {'Descargar pdf'}
-                        </Button>
+                        </Button> */}
                         <Button className =" bg-green-500 text-primary-50"
                             onClick={() => { onSubmitHandler() }}
                             // isLoading={isLoading}
