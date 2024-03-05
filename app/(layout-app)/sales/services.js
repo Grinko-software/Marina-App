@@ -137,18 +137,18 @@ export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, to
             },
             Detalle: isInvoice
                 ? saleProductsList?.map((item, index) => {
-                    const priceItem = item?.discount > 0
+                    /*  const priceItem = item?.discount > 0
                         ? roundValueWithMath(((item?.total - item?.discount) / item?.quantity), 0, 0)
-                        : roundValueWithMath(item?.product?.price, 0, 0)
+                        : roundValueWithMath(item?.product?.price, 0, 0) */
                     const totalItem = roundValueWithMath(item?.discount > 0 ? (item?.total - item?.discount) : item?.total, 0, 0)
-                    const quantityItem = item?.quantity
-                    const netPrctIem = roundValueWithMath(priceItem / 1.19, 0, 0)
+                    // const quantityItem = item?.quantity
+                    // const netPrctIem = roundValueWithMath(priceItem / 1.19, 0, 0)
                     const netMontoItem = roundValueWithMath(totalItem / 1.19, 0, 0)
                     return {
                         NroLinDet: index + 1,
-                        NmbItem: item?.product?.name,
-                        QtyItem: quantityItem,
-                        PrcItem: netPrctIem,
+                        NmbItem: item?.product?.name + ' X ' + item?.quantity,
+                        QtyItem: 1,
+                        PrcItem: netMontoItem,
                         MontoItem: netMontoItem
                     }
                 })

@@ -14,7 +14,10 @@ export default function SalePrinterModal () {
         cancelPrintSale
     } = salePrintStore()
 
-    const onCalcelHandler = () => {
+    const onCancelHandler = () => {
+        cancelPrintSale()
+    }
+    const onDowndloadVoucher = () => {
         cancelPrintSale()
     }
 
@@ -48,15 +51,24 @@ export default function SalePrinterModal () {
                         {'¿Desesa imprimir comprobante de venta?'}
                     </ModalHeader>
                     <ModalBody>
-                        Selecctione si desea imprimir el comprobante de esta venta.
+                        Seleccione si desea imprimir el comprobante de esta venta.
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" variant="flat"
                             onClick={() => {
-                                onCalcelHandler()
+                                onCancelHandler()
                             }}
                         >
                             {'Cerrar'}
+                        </Button>
+                        <Button
+                            className =" bg-blue-500 text-primary-50"
+                            variant="flat"
+                            onClick={() => {
+                                onCancelHandler()
+                            }}
+                        >
+                            {'Descargar pdf'}
                         </Button>
                         <Button className =" bg-green-500 text-primary-50"
                             onClick={() => { onSubmitHandler() }}
