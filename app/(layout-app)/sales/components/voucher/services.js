@@ -4,33 +4,47 @@ import { pdf as pdff } from '@react-pdf/renderer'
 import { Voucher } from './voucher'
 import { Bill } from './bill'
 import { getMoment, today } from '@/utils/date'
-export const generatePdfDocument = async (
-    { datetime, listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg, targetCustomer }
+export const generatePdfDocument = async ({ data }) => {
+    const { customerDetail, cardDetail, datetime, discountTotal, discountExtra, iva, productList, stamp, total, totalNet, totalTaxFree, userName, voucherNumber } = data
+    // const { listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg, targetCustomer } = data
+    // const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
 
-) => {
-    const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
-    const totalDiscount = discount ||
-     listSales?.reduce((accumulator, product) => accumulator + (product?.discount > 0 ? product?.discount : 0), 0)
-
-    const blob = await pdff(targetCustomer
+    const blob = await pdff(customerDetail
         ? <Bill
-            listSales={listSales}
-            totalPay={totalPay}
-            date={date}
-            totalDiscount={totalDiscount}
+            listSales={productList}
+            totalPay={total}
+            date={datetime}
+            totalDiscount={discountTotal}
             stamp={stamp}
             totalTaxFree={totalTaxFree}
-            netTotal={netTotal}
+            netTotal={totalNet}
             iva = {iva}
-            dataCard={dataCard?.transactionDetails}
-            targetCustomer={targetCustomer}
+            dataCard={cardDetail}
+            targetCustomer={customerDetail}
 
         />
+        : <Voucher
+            listSales={productList}
+            totalPay={total}
+            date={datetime}
+            totalDiscount={discountTotal}
+            stamp={stamp}
+            totalTaxFree={totalTaxFree}
+            netTotal={totalNet}
+            iva = {iva}
+            dataCard={cardDetail}
+            discountPctg={discountExtra}
+
+        />
+
+    ).toBlob()
+
+    /*
         : <Voucher
             listSales={listSales}
             totalPay={totalPay}
             date={date}
-            totalDiscount={totalDiscount}
+            totalDiscount={discountTotal}
             stamp={stamp}
             totalTaxFree={totalTaxFree}
             netTotal={netTotal}
@@ -39,10 +53,11 @@ export const generatePdfDocument = async (
             discountPctg={discountPctg}
 
         />
-    ).toBlob()
+*/
+
     const fileURL = URL.createObjectURL(blob)
-    // window.open(fileURL, 'Boleta.pdf')
-    const iframe = document.createElement('iframe') // load content in an iframe to print later
+    window.open(fileURL, datetime ?? 'boleta')
+    /* const iframe = document.createElement('iframe') // load content in an iframe to print later
     document.body.appendChild(iframe)
 
     iframe.style.display = 'none'
@@ -56,5 +71,5 @@ export const generatePdfDocument = async (
             })
             iframe.contentWindow.print()
         }, 1)
-    }
+    } */
 }

@@ -11,14 +11,18 @@ export default function SalePrinterModal () {
         printBodyLastSale,
         setPrintBodyLastSale,
         requestPrintSale,
-        cancelPrintSale
+        cancelPrintSale,
+        downdloadVoucher
     } = salePrintStore()
 
     const onCancelHandler = () => {
         cancelPrintSale()
     }
     const onDowndloadVoucher = () => {
-        cancelPrintSale()
+        // cancelPrintSale()
+        setIsLoading(true)
+        setTimeout(() => setIsLoading(false), 1000)
+        downdloadVoucher({ printBodyLastSale })
     }
 
     const onSubmitHandler = () => {
@@ -38,45 +42,48 @@ export default function SalePrinterModal () {
     return (
         <>
             <Modal
-                size={'xl'}
+                size='5xl'
+                className='h-[23rem]'
                 isOpen={isOpen}
                 backdrop='blur'
                 onClose={() => onClose}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
-                className='w-full'
             >
-                <ModalContent className=' overflow-y-scroll'>
-                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-                        {'¿Desesa imprimir comprobante de venta?'}
+                <ModalContent className='overflow-hidden space-y-[2.5rem]'>
+                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 text-[2rem]">
+                        <h4 className='flex flex-col items-center'>
+                            {'¿Desesa imprimir comprobante de venta?'}
+                        </h4>
                     </ModalHeader>
-                    <ModalBody>
-                        Seleccione si desea imprimir el comprobante de esta venta.
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="flat"
-                            onClick={() => {
-                                onCancelHandler()
-                            }}
-                        >
-                            {'Cerrar'}
-                        </Button>
-                        {/*  <Button
-                            className =" bg-blue-500 text-primary-50"
-                            variant="flat"
-                            onClick={() => {
-                                onCancelHandler()
-                            }}
-                        >
-                            {'Descargar pdf'}
-                        </Button> */}
-                        <Button className =" bg-green-500 text-primary-50"
-                            onClick={() => { onSubmitHandler() }}
-                            // isLoading={isLoading}
-                        >
-                            {'Imprimir comprobante'}
-                        </Button>
-                    </ModalFooter>
+                    <div className='flex flex-col items-center'>
+                        <div className='flex flex-row space-x-3 '>
+                            <Button
+                                color="danger"
+                                variant="flat"
+                                className='text-[1.5rem] w-[17rem] h-[8rem]'
+                                onClick={() => {
+                                    onCancelHandler()
+                                }}
+                            >
+                                {'Cerrar'}
+                            </Button>
+                            <Button
+                                className="bg-blue-500 text-primary-50 text-[1.5rem] w-[17rem] h-[8rem]"
+                                variant="flat"
+                                onClick={() => { onDowndloadVoucher() }}
+                            >
+                                {'Descargar pdf'}
+                            </Button>
+                            <Button
+                                className="bg-green-500 text-primary-50 text-[1.5rem] w-[17rem] h-[8rem]"
+                                onClick={() => { onSubmitHandler() }}
+                            >
+                                {'Imprimir comprobante'}
+                            </Button>
+                        </div>
+                    </div>
+
                 </ModalContent>
             </Modal>
         </>

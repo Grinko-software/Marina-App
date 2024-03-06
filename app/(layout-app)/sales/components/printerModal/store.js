@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { fetchPrinterSaleTicket } from '@/services/printer'
+import { generatePdfDocument } from '../voucher/services'
 import { create } from 'zustand'
 
 const salePrintStore = create(
@@ -10,6 +11,14 @@ const salePrintStore = create(
             try {
                 if (printBodyLastSale) fetchPrinterSaleTicket({ data: printBodyLastSale })
                 set({ printBodyLastSale: null })
+            } catch {
+                return null
+            }
+        },
+        downdloadVoucher: ({ printBodyLastSale = null }) => {
+            try {
+                if (printBodyLastSale) generatePdfDocument({ data: printBodyLastSale })
+                // set({ printBodyLastSale: null })
             } catch {
                 return null
             }

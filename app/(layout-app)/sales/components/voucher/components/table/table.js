@@ -24,7 +24,7 @@ export const TableProductVoucher = ({ listSales }) =>
                         <View key={index} style={StylePdf.rowTableMandatory}>
 
                             <View style={StylePdf.tableColumn2}>
-                                <Text style={StylePdf.textRow}>{(element?.product?.name || element?.name) ?? '-'}</Text>
+                                <Text style={StylePdf.textRow}>{element?.name ?? '-'}</Text>
                             </View>
                             <View style={StylePdf.tableColumn3}>
                                 <Text style={StylePdf.textRow}>{ roundValue(element?.quantity, 2, '-')}</Text>
