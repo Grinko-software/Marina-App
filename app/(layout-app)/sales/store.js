@@ -647,7 +647,8 @@ const useSalesStore = create(
                         }
                     })
                         .catch(error => {
-                            console.log(error)
+                            notify('❌ ' + error?.message)
+                            // console.log(error)
                             set({ loadingSale: false })
                         })
                 } catch {

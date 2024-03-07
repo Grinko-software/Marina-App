@@ -47,7 +47,12 @@ export const createSaleOnHaulmer = (url, method, modelbody, retry = 0) => {
                 resolve(data)
             } else {
                 if (retry === 3) {
-                    reject(new Error('Error al consultar en haulmer'))
+                    if (data?.data?.error?.message) {
+                        const message = 'Error en haulmer: ' + data?.data?.error?.code + ' ' + data?.data?.error?.message
+                        reject(new Error(message))
+                    } else {
+                        reject(new Error('Error al consultar en haulmer'))
+                    }
                 } else {
                     return createSaleOnHaulmer(url, method, modelbody, retry)
                 }
