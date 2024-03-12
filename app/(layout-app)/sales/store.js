@@ -8,10 +8,14 @@ import { getData, GET, POST } from '@/services/http'
 import { generatePdfDocument } from './components/voucher/services'
 import { today } from '@/utils/date'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
-import { getStateSaleMachine, createSaleOnHaulmer } from './services'
+import { getStateSaleMachine, createSaleOnHaulmer, saveTicketOnDatabase, generateDTEBody, getTotalDiscountOffers } from './services'
 import { getDeviceTuu } from '@/services/settings'
 import { setStateMachine } from '@/services/machine'
 import { errorsMachine } from '@/utils/machine'
+import { getCashRegister } from '@/services/cashRegister'
+import { VOUCHER_TYPE, saveDataToPrinterSaleTicket } from '@/services/printer'
+import { getIdUser } from '@/services/account'
+import useSettingsStore from '@/stores/settings'
 const useSalesStore = create(
     (set) => ({
         loadingSale: false,
@@ -55,6 +59,7 @@ const useSalesStore = create(
         },
         addFromNewSales: (sales, saleId, product, units, offers, onCompleteFunction) => {
             units = units || 1
+            units = roundValueWithMath((units) * 1000, 3, 0) / 1000
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             let listSales = sales[saleIndex].saleProductsList
 
@@ -79,11 +84,17 @@ const useSalesStore = create(
             } else {
                 if (!searhProduct) {
                     const currentTotal = roundValueWithMath(product?.price * parseFloat(units), 0, 0)
-                    listSales = [...listSales, { product, quantity: parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
+                    const total = roundPrice(currentTotal) || currentTotal
+                    let quantitySale = total / product?.price
+                    quantitySale = roundValueWithMath(quantitySale * 100000, 5, 0) / 100000
+                    listSales = [...listSales, { product, quantity: parseFloat(quantitySale), discount: 0, total }]
                 } else {
                     const newList = listSales?.filter((item) => item?.product?.id !== product?.id)
                     const currentTotal = roundValueWithMath(product?.price * (searhProduct?.quantity + units), 0, 0)
-                    listSales = [...newList, { product, quantity: searhProduct?.quantity + parseFloat(units), discount: 0, total: roundPrice(currentTotal) || currentTotal }]
+                    const total = roundPrice(currentTotal) || currentTotal
+                    let quantitySale = total / product?.price
+                    quantitySale = roundValueWithMath(quantitySale * 100000, 5, 0) / 100000
+                    listSales = [...newList, { product, quantity: parseFloat(quantitySale), discount: 0, total }]
                 }
             }
 
@@ -134,7 +145,7 @@ const useSalesStore = create(
             set({ listSalesActives: sales })
         },
         /* Create sale */
-        createSale: (sales, saleId, notify, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer, methodPage, setMethodPage) => {
+        createSale: (sales, saleId, notify, onSuccessSale, setPayment, onClose, setGoPay, setPageTarget, pageTarget, removeSale, targetGeneral, targetCustomer, setTargetCustomer, methodPage, setMethodPage) => {
             const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
             const sale = sales[saleIndex]
             const saleProductsList = sale?.saleProductsList
@@ -269,6 +280,7 @@ const useSalesStore = create(
                     }
                 }
             /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
                     return {
@@ -279,7 +291,8 @@ const useSalesStore = create(
                     }
                 }),
                 payment_type_id: paymentTarget,
-                voucher_type_id: voucherTarget
+                voucher_type_id: voucherTarget,
+                cash_register_id: cashRegister?.ID
             }
             set({ loadingSale: true, error: null })
             if (pageTarget === 1 && (voucherTarget === 1 || voucherTarget === 2)) {
@@ -297,6 +310,9 @@ const useSalesStore = create(
                                         generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                         // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                         notify('✅ Pago con éxito')
+                                        if (onSuccessSale) {
+                                            onSuccessSale()
+                                        }
                                         setPayment(false)
                                         onClose()
                                         setGoPay(false)
@@ -466,6 +482,10 @@ const useSalesStore = create(
                             // setStateMachine('Confirmado')
                             notify('✅ Pago con tarjeta con éxito')
                         } else {
+                            // efectivo
+                            if (onSuccessSale) {
+                                onSuccessSale()
+                            }
                             notify('✅ Pago con éxito')
                         }
                         setStateMachine(null)
@@ -484,6 +504,376 @@ const useSalesStore = create(
                 set({ loadingSale: false })
                 setStateMachine(null)
             }
+        },
+        createSaleVoucher: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
+            set({ loadingSale: true, error: null })
+            const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
+            const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.VOUCHER
+
+            const saleProductsList = sale?.saleProductsList
+            const paymentTarget = sale?.paymentTarget
+            const date = today().format('YYYY-MM-DD')
+
+            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
+            const totalTaxFreePay = sale?.totalTaxFree || 0
+            const totalWithOutTaxFree = totalPay - totalTaxFreePay
+            const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
+            const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
+
+            /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
+            const body = {
+                sales_receipt: saleProductsList?.map((item) => {
+                    return {
+                        product_id: item?.product?.id,
+                        quantity: item?.quantity,
+                        total_price: item?.total,
+                        total_discount: item?.discount
+                    }
+                }),
+                payment_type_id: paymentTarget,
+                voucher_type_id: 1,
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
+            }
+
+            const device = getDeviceTuu()
+            if (isCardPayment && device) {
+                try {
+                    const bodyPosMachine = {
+                        device,
+                        amount: totalPay,
+                        dteType: 48,
+                        printVoucherOnApp: false,
+                        extraData: {
+                            taxIdnValidation: '77426986-K',
+                            sourceName: 'Marina APP'
+
+                        }
+                    }
+                    setStateMachine('Enviando')
+                    await getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(result => {
+                        if (result?.code === 200 && result?.data?.paymentRequestId) {
+                            setStateMachine('Pendiente')
+                            const idSale = result?.data?.paymentRequestId
+                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
+                                getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    set({ loadingSale: false })
+                                    if (result?.code === 200) {
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled || true
+                                        if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, openCashRegister: false })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data })
+                                        notify('✅ Pago con tarjeta con éxito')
+                                        setStateMachine(null)
+                                        removeSale(sales, saleId)
+                                    } else {
+                                        console.log(result)
+                                        notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
+                                        setStateMachine(null)
+                                    }
+                                })
+                            }).catch(error => {
+                                notify('❌ Problemas con el pago con la tarjeta')
+                                set({ loadingSale: false })
+                                setStateMachine(null)
+                            })
+                        } else {
+                            notify('❌ ' + errorsMachine.get(result?.data?.code))
+                            set({ loadingSale: false })
+                            setStateMachine(null)
+                        }
+                    })
+                } catch {
+                    set({ loadingSale: false })
+                    setStateMachine(null)
+                }
+            } else if (isCardPayment) {
+                await saveTicketOnDatabase({
+                    saleType,
+                    listSales: saleProductsList,
+                    totalPay,
+                    netTotal,
+                    iva,
+                    totalTaxFree: totalTaxFreePay,
+                    discountExtra: totalDiscountExtra,
+                    discountOffers: totalDiscountOffers,
+                    body,
+                    notify,
+                    onSuccessSale: () => {
+                        if (onSuccessSale) {
+                            onSuccessSale()
+                        }
+                        removeSale(sales, saleId)
+                        set({ loadingSale: false })
+                    }
+                })
+            } else {
+                try {
+                    const dteBody = generateDTEBody({ discount: discountTotalPctg, isInvoice: false, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
+                    await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody).then(data => {
+                        if (data?.data?.TIMBRE) {
+                            try {
+                                getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    set({ loadingSale: false })
+                                    if (result?.code === 200) {
+                                        console.log(result)
+                                        const stamp = data?.data?.TIMBRE
+                                        const folio = data?.data?.FOLIO
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled || true
+                                        if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, openCashRegister: true })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount })
+                                        notify('✅ Pago con éxito')
+                                        if (onSuccessSale) {
+                                            onSuccessSale()
+                                        }
+                                        removeSale(sales, saleId)
+                                        set({ loadingSale: false })
+                                    } else {
+                                        notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        set({ loadingSale: false })
+                                    }
+                                })
+                            } catch {
+                                set({ loadingSale: false })
+                            }
+                        } else {
+                            set({ loadingSale: false })
+                        }
+                    })
+                        .catch(error => {
+                            notify('❌ ' + error?.message)
+                            // console.log(error)
+                            set({ loadingSale: false })
+                        })
+                } catch {
+                    set({ loadingSale: false })
+                }
+            }
+
+            set({ loadingSale: false })
+            setStateMachine(null)
+        },
+        createSaleInvoice: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment, targetCustomer }) => {
+            set({ loadingSale: true, error: null })
+            const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
+            const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.INVOICE
+
+            const saleProductsList = sale?.saleProductsList
+            const paymentTarget = sale?.paymentTarget
+            const date = today().format('YYYY-MM-DD')
+
+            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
+            const totalTaxFreePay = sale?.totalTaxFree || 0
+            const totalWithOutTaxFree = totalPay - totalTaxFreePay
+            const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
+            const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
+
+            /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
+            const body = {
+                sales_receipt: saleProductsList?.map((item) => {
+                    return {
+                        product_id: item?.product?.id,
+                        quantity: item?.quantity,
+                        total_price: item?.total,
+                        total_discount: item?.discount
+                    }
+                }),
+                payment_type_id: paymentTarget,
+                voucher_type_id: 2,
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
+            }
+
+            const device = getDeviceTuu()
+            if (isCardPayment && device) {
+                try {
+                    const bodyPosMachine = {
+                        device,
+                        amount: totalPay,
+                        dteType: 33,
+                        printVoucherOnApp: false,
+                        extraData: {
+                            taxIdnValidation: '77426986-K',
+                            sourceName: 'Marina APP'
+
+                        }
+                    }
+                    setStateMachine('Enviando')
+                    getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(result => {
+                        if (result?.code === 200 && result?.data?.paymentRequestId) {
+                            setStateMachine('Pendiente')
+                            const idSale = result?.data?.paymentRequestId
+                            getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
+                                getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    set({ loadingSale: false })
+                                    if (result?.code === 200) {
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled || true
+                                        if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer, openCashRegister: false })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
+                                        notify('✅ Pago con tarjeta con éxito')
+                                        setStateMachine(null)
+                                        removeSale(sales, saleId)
+                                    } else {
+                                        console.log(result)
+                                        notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
+                                        setStateMachine(null)
+                                    }
+                                })
+                            }).catch(error => {
+                                notify('❌ Problemas con el pago con la tarjeta')
+                                set({ loadingSale: false })
+                                setStateMachine(null)
+                            })
+                        } else {
+                            notify('❌ ' + errorsMachine.get(result?.data?.code))
+                            set({ loadingSale: false })
+                            setStateMachine(null)
+                        }
+                    })
+                } catch {
+                    set({ loadingSale: false })
+                    setStateMachine(null)
+                }
+            } else if (isCardPayment) {
+                await saveTicketOnDatabase({
+                    saleType,
+                    listSales: saleProductsList,
+                    totalPay,
+                    netTotal,
+                    iva,
+                    totalTaxFree: totalTaxFreePay,
+                    discountExtra: totalDiscountExtra,
+                    discountOffers: totalDiscountOffers,
+                    body,
+                    notify,
+                    onSuccessSale: () => {
+                        if (onSuccessSale) {
+                            onSuccessSale()
+                        }
+                        removeSale(sales, saleId)
+                        set({ loadingSale: false })
+                    }
+                })
+            } else {
+                try {
+                    const dteBody = generateDTEBody({ discount: discountTotalPctg, isInvoice: true, targetCustomer, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
+                    await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody).then(data => {
+                        if (data?.data?.TIMBRE) {
+                            try {
+                                getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    set({ loadingSale: false })
+                                    if (result?.code === 200) {
+                                        console.log(result)
+                                        const stamp = data?.data?.TIMBRE
+                                        const folio = data?.data?.FOLIO
+                                        const printEnabled = useSettingsStore.getState()?.printEnabled || true
+                                        if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer, openCashRegister: true })
+                                        // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
+                                        // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                        notify('✅ Pago con éxito')
+                                        if (onSuccessSale) {
+                                            onSuccessSale()
+                                        }
+                                        removeSale(sales, saleId)
+                                        set({ loadingSale: false })
+                                    } else {
+                                        notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
+                                        set({ loadingSale: false })
+                                    }
+                                })
+                            } catch {
+                                set({ loadingSale: false })
+                            }
+                        } else {
+                            set({ loadingSale: false })
+                        }
+                    })
+                        .catch(error => {
+                            console.log(error)
+                            set({ loadingSale: false })
+                        })
+                } catch {
+                    set({ loadingSale: false })
+                }
+            }
+
+            set({ loadingSale: false })
+            setStateMachine(null)
+        },
+        createSaleTicket: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
+            set({ loadingSale: true, error: null })
+            const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
+            const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.TICKET
+
+            const saleProductsList = sale?.saleProductsList
+            const paymentTarget = sale?.paymentTarget
+
+            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
+            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
+            const totalTaxFreePay = sale?.totalTaxFree || 0
+            const totalWithOutTaxFree = totalPay - totalTaxFreePay
+
+            const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
+            const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
+
+            /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
+            const body = {
+                sales_receipt: saleProductsList?.map((item) => {
+                    return {
+                        product_id: item?.product?.id,
+                        quantity: item?.quantity,
+                        total_price: item?.total,
+                        total_discount: item?.discount
+                    }
+                }),
+                payment_type_id: paymentTarget,
+                voucher_type_id: 3,
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
+            }
+
+            await saveTicketOnDatabase({
+                saleType,
+                listSales: saleProductsList,
+                totalPay,
+                netTotal,
+                iva,
+                totalTaxFree: totalTaxFreePay,
+                discountExtra: totalDiscountExtra,
+                discountOffers: totalDiscountOffers,
+                body,
+                notify,
+                openCashRegister: !isCardPayment,
+                onSuccessSale: () => {
+                    if (onSuccessSale) {
+                        onSuccessSale()
+                    }
+                    removeSale(sales, saleId)
+                    set({ loadingSale: false })
+                }
+            })
+
+            set({ loadingSale: false })
+            setStateMachine(null)
         },
         /* Add discount */
         addDiscountSale: (listSalesActives, saleIdActive, value, cleanForm) => {

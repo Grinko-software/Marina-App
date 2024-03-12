@@ -10,6 +10,11 @@ const useSettingsStore = create(
             postMachines: null,
             error: null,
             loading: false,
+            statusCashRegister: null,
+            disabled: false,
+            printEnabled: true,
+            setDisabled: (disabled) => set({ disabled }),
+            setStatusCashRegister: (statusCashRegister) => set({ statusCashRegister }),
             setPostMachines: (value) => set({ postMachines: value }),
             setSelectedPostMachine: (value) => set({ selectedPostMachine: value }),
             getPostMachines: () => {
@@ -26,16 +31,17 @@ const useSettingsStore = create(
                     })
                 } catch (error) { console.error(error) }
             },
-            SelectedCashRegister: DEFAULT_SELECTED,
-            CashRegister: null,
-            setCashRegister: (value) => set({ CashRegister: value }),
-            setSelectedCashRegister: (value) => set({ SelectedCashRegister: value }),
+            selectedCashRegister: DEFAULT_SELECTED,
+            cashRegister: null,
+            setCashRegister: (value) => set({ cashRegister: value }),
+            setPrintEnabled: (value) => set({ printEnabled: value }),
+            setSelectedCashRegister: (value) => set({ selectedCashRegister: value }),
             getCashRegister: () => {
                 set({ loading: true, error: null })
                 try {
                     getData(GET_CASH_REGISTER, GET).then((result) => {
                         if (result?.data?.length > 0) {
-                            set({ CashRegister: result?.data })
+                            set({ cashRegister: result?.data })
                         }
                     }
                     ).catch((error) => {

@@ -1,18 +1,20 @@
+/* eslint-disable no-unused-vars */
 'use client'
 import MainTittleCard from '@/components/ui/MainCard'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Auth from '../auth'
-import UserAvatar from '../../components/ui/UserAvatar'
+import SettingsNav from '@/components/SettingsNav/SettingsNav'
 import inventory from '@/assets/images/inventory.webp'
 import reports from '@/assets/images/report.jpeg'
 import sales from '@/assets/images/sales.jpeg'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
-
+import useSettingsStore from '@/stores/settings'
 export default function Home () {
     const [salesDisabled, setSalesDisabled] = useState(true)
-
+    const [show, setShow] = useState(null)
+    const { disabled } = useSettingsStore(({ disabled }) => ({ disabled }))
     useEffect(() => {
         if (navigator) {
             const isMobile = isMobileDevice()
@@ -23,6 +25,11 @@ export default function Home () {
     useEffect(() => {
         useScannerStore.getState()?.disabledScanner()
     }, [])
+    useEffect(() => {
+        if (disabled !== null) {
+            setShow(disabled)
+        }
+    }, [disabled])
 
     return (
         <section className="bg-primary-300 dark:bg-secondary-500 sm:mx-10" >
@@ -38,10 +45,10 @@ export default function Home () {
                                 delay: 0.2,
                                 ease: [0, 0.71, 0.2, 1.01]
                             }}
-                            className="gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
+                            className="h-full gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
                         >
                             <MainTittleCard
-                                disabled={salesDisabled}
+                                disabled={ salesDisabled}
                                 route ="/sales"
                                 title="Ventas"
                                 imgSrc={sales}
@@ -52,12 +59,14 @@ export default function Home () {
                                 title="Inventario"
                                 imgSrc={inventory}
                                 footerMessage="Optimiza existencias en tiempo real."
+                                // disabled={disabled}
                             />
                             <MainTittleCard
                                 route ="/modules"
                                 title="Módulos"
                                 imgSrc={reports}
                                 footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
+                                disabled={ salesDisabled}
                             />
                         </motion.div>
                         <motion.div
@@ -70,7 +79,7 @@ export default function Home () {
                             }}
                             className="flex sm:flex-col-reverse sm:m-0 m-4  items-center sm:items-end sm:x-5"
                         >
-                            <UserAvatar />
+                            <SettingsNav isMobile={salesDisabled}/>
                         </motion.div>
                     </div>
                 </main>

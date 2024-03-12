@@ -2,7 +2,7 @@
 import useSettingsStore from '@/stores/settings'
 /* GET GENERAL */
 import { GET_POST_MACHINE, GET_CASH_REGISTER } from '@/settings/constants'
-import { getToken } from '@/services/user'
+import { getToken } from '@/services/account'
 
 /* GET GENERAL */
 

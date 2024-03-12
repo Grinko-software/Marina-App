@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
+import { Pagination, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
 import moment from 'moment-timezone'
-export default function TableSales ({ data, loading, setTarget }) {
+export default function TableSales ({ data, loading, setTarget, currentPage, setCurrentPage, totalpage, setLimitPage }) {
     const [hasMore, setHasMore] = useState(false)
     const [showAllData, setShowAllData] = useState(false)
     const [dataModel, setDataModel] = useState([])
@@ -14,13 +15,21 @@ export default function TableSales ({ data, loading, setTarget }) {
     }
 
     const columns = [
-        {
+        /*  {
             key: 'id',
             label: 'ID'
-        },
+        }, */
         {
             key: 'datetime',
             label: 'Fecha compra'
+        },
+        {
+            key: 'userName',
+            label: 'Vendedor'
+        },
+        {
+            key: 'cachRegisterName',
+            label: 'Caja'
         },
         {
             key: 'total',
@@ -60,7 +69,9 @@ export default function TableSales ({ data, loading, setTarget }) {
                     discount: item?.total_discount,
                     iva: item?.total - ((item.total || 0) / 1.19),
                     type: item?.name_voucher,
-                    paymentType: item?.name_payment
+                    paymentType: item?.name_payment,
+                    userName: item?.user_name,
+                    cachRegisterName: item?.cach_register_name
                 }
             })
             const limit = 10
@@ -154,7 +165,7 @@ export default function TableSales ({ data, loading, setTarget }) {
                 </div>
             )
         default:
-            return cellValue?.toString()?.toUpperCase()
+            return cellValue ? cellValue?.toString()?.toUpperCase() : '-'
         }
     }, [dataModel])
 
@@ -162,21 +173,32 @@ export default function TableSales ({ data, loading, setTarget }) {
         <section>
             <Table isHeaderSticky
                 onSortChange={sortItems}
+
                 bottomContent={
-                    loading
-                        ? <div className="flex w-full justify-center">
-                            <Spinner>Cargando datos...</Spinner>
-                        </div>
-                        : hasMore
-                            ? (
-                                <div className="flex w-full justify-center">
-                                    <Button variant="flat" onPress={loadMoreData}>
-                                Ver más.
-                                    </Button>
-                                </div>
-                            )
-                            : null
-                }>
+                    totalpage > 0
+                        ? (
+                            <div className="flex w-full justify-center">
+                                <Pagination
+                                    isCompact
+                                    showControls
+                                    showShadow
+                                    color="default"
+                                    page={currentPage}
+                                    total={totalpage}
+                                    onChange={(page) => {
+                                        // paginas 1,2,3,4
+                                        // limit 10,20,30,40,
+                                        // offset 0,10,20,30
+                                        // setLimitPage(page * 10)
+                                        setCurrentPage((page * 10) - 10)
+                                    }}
+                                />
+                            </div>
+                        )
+                        : null
+                }
+
+            >
                 <TableHeader columns={columns}>
                     {(column) => (
                         <TableColumn key={column.key} allowsSorting >
@@ -195,3 +217,20 @@ export default function TableSales ({ data, loading, setTarget }) {
         </section>
     )
 }
+/*
+                bottomContent={
+                    loading
+                        ? <div className="flex w-full justify-center">
+                            <Spinner>Cargando datos...</Spinner>
+                        </div>
+                        : hasMore
+                            ? (
+                                <div className="flex w-full justify-center">
+                                    <Button variant="flat" onPress={loadMoreData}>
+                                Ver más.
+                                    </Button>
+                                </div>
+                            )
+                            : null
+                }
+*/

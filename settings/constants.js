@@ -1,7 +1,8 @@
-// export const BASE_AUTH_API_URL = 'https://marina-auth-api-dev-rlfvoxmasq-uc.a.run.app'
 export const BASE_AUTH_API_URL = 'https://marina-auth-api-prod-rlfvoxmasq-uc.a.run.app'
 // export const BASE_MARKET_API_URL = 'https://marina-market-api-rlfvoxmasq-uc.a.run.app'
 export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
+// export const BASE_AUTH_API_URL = 'https://marina-auth-api-prod-rlfvoxmasq-uc.a.run.app'
+// export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
@@ -17,7 +18,7 @@ export const PRODUCT_API_URL = '/product'
 // Get categories
 export const CATEGORIES_API_URL = '/product/categories'
 export const CREATE_CATEGORIES_API_URL = '/product/create/category'
-
+export const DELETE_CATEGORIES = '/product/categories/:id'
 // Get type of stock
 export const TYPE_STOCK_API_URL = '/product/type-stock'
 // Get type of payment
@@ -51,6 +52,36 @@ export const REPORTS_CRITICAL_STOCK_API_URL = BASE_MARKET_API_URL + '/report/pro
 export const REPORTS_LAST_SALES_API_URL = '/report/last-sales'
 export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
 
+// USERS
+export const USERS_API_URL = BASE_AUTH_API_URL + '/user'
+export const CREATE_USER_API_URL = BASE_AUTH_API_URL + '/user/create'
+export const USER_RESET_PASSWORD = BASE_AUTH_API_URL + '/user/password/reset'
+
+// KEY
+export const KEY_API_URL = BASE_AUTH_API_URL + '/key'
+export const CREATE_KEY_API_URL = BASE_AUTH_API_URL + '/key/create'
+
+// ASSOCIATION
+export const ASSOCIATION_KEY_API_URL = BASE_AUTH_API_URL + '/association'
+
 // SUPPLIER
 export const SUPPLIER_API_URL = BASE_MARKET_API_URL + '/supplier'
 export const SUPPLIER_ASSOCIATION_API_URL = BASE_MARKET_API_URL + '/supplier/:id/association/products'
+// GET STATUS CASH REGISTER
+export const GET_STATUS_CASH_REGISTER = '/accounting-event/status/cash-register/:id'
+// GET INDICATORS INIT CASH
+export const GET_INDICATORS_LAST_BALANCE = '/accounting-event/last-balance-ending/:id'
+export const GET_INDICATORS_BALANCE_ENDING = '/accounting-event/indicators-balance-ending/:id'
+
+export const CREATE_BALANCE_BEGINNINGS = '/accounting-event/create/balance-beginnings'
+export const CREATE_BALANCE_ENDINGS = '/accounting-event/create/balance-endings'
+export const CREATE_BALANCE_WITH_DRAWALS = '/accounting-event/create/withdrawals'
+export const INDICATORS_ACCOUNTING_EVENT = '/accounting-event'
+
+// PRINTER
+export const PRINTER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/sale'
+export const OPEN_DRAWER_API_URL = 'http://localhost:8090/escpos/receipt/event'
+export const EVENT_API_URL = 'http://localhost:8090/escpos/receipt/event'
+export const PRINTER_BARCODE_API_URL = 'http://localhost:8090/escpos/receipt/barcode'
+export const PRINTER_SUPPLIER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/provider'
+export const PRINTER_HEALTH_URL = 'http://localhost:8090/escpos/health'

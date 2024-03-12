@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { FaChartLine, FaClipboardList, FaShoppingCart, FaTruck, FaUsersCog } from 'react-icons/fa'
+import { FaChartLine, FaClipboardList, FaTruck, FaUsersCog } from 'react-icons/fa'
+import { MdAccountBalance } from 'react-icons/md'
 import ReportView from '../reports/components/MainReportView'
 import Sales from './[module]/components/Sales/Sales'
 import Supplier from './[module]/components/Supplier/Supplier'
+import Users from './[module]/components/Users/Users'
+import AccountingEvent from './[module]/components/AccountingEvents/AccountingEvents'
 
 export const modules = [
     {
@@ -13,8 +16,8 @@ export const modules = [
         requireAdmin: false,
         content: <Sales/>,
         icon: <FaClipboardList />
-    }
-    /*  {
+    },
+    {
         key: 'reports',
         path: 'reports',
         name: 'Reportes',
@@ -24,12 +27,21 @@ export const modules = [
         icon: <FaChartLine />
     },
     {
+        key: 'accounting',
+        path: 'accounting',
+        name: 'Eventos contables',
+        description: 'Historial de todos los eventos contables',
+        requireAdmin: true,
+        content: <AccountingEvent/>,
+        icon: <MdAccountBalance />
+    },
+    {
         key: 'users',
         path: 'users',
         name: 'Usuarios',
         description: 'Administración de usuarios/trabajadores',
         requireAdmin: true,
-        content: <div>Usuarios</div>,
+        content: <Users/>,
         icon: <FaUsersCog />
     },
     {
@@ -40,25 +52,7 @@ export const modules = [
         requireAdmin: false,
         content: <Supplier/>,
         icon: <FaTruck />
-    },
-    {
-        key: 'products',
-        path: 'products',
-        name: 'Productos',
-        description: 'Administración de los productos',
-        requireAdmin: false,
-        content: <div>Productos</div>,
-        icon: <FaShoppingCart />
-    },
-    {
-        key: 'aaaa6',
-        path: 'aaaa6',
-        name: 'Módulo 6',
-        description: 'Descripción del módulo',
-        requireAdmin: false,
-        content: <div>6</div>,
-        icon: <FaUsersCog />
-    } */
+    }
 ]
 
 export const getModuleName = ({ path: pathSearch }) => {

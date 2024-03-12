@@ -14,7 +14,7 @@ export default function Header ({ module }) {
                 'data-[disabled=true]:border-default-400 data-[disabled=true]:bg-default-100'
             ]
         }}>
-            <BreadcrumbItem startContent={null} onPress={() => router.push('/modules')} >Administrar</BreadcrumbItem>
+            <BreadcrumbItem startContent={null} onPress={() => router.push('/modules')} >{'Módulos'}</BreadcrumbItem>
             <BreadcrumbItem isCurrent href=''>{getModuleName({ path: module })}</BreadcrumbItem>
         </Breadcrumbs>
     </section>

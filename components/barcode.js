@@ -1,8 +1,8 @@
 import React from 'react'
 import { useBarcode } from 'next-barcode'
-
-export default function Barcosde (props) {
-    const { productName, productCode, productCost, showDetail } = props
+import { formatNumberWithPoints } from '@/utils/number'
+export default function Bacode (props) {
+    const { refBarcode, productName, productCode, productCost, showDetail } = props
     const { inputRef } = useBarcode({
         value: productCode,
         format: 'EAN13',
@@ -10,23 +10,24 @@ export default function Barcosde (props) {
             background: '#FFFF'
         }
     })
-
     return (
-        <div className='flex flex-col items-center w-full bg-white'>
-            {showDetail
-                ? (
-                    <div>
-                        <div className="text-black text-2xl w-auto font-bold">{productName}</div>
-                        <div className=" flex flex-col items-center ">
-                            <div className='flex flex-row'>
-                                <div className="text-black text-2xl">{'$'}</div>
-                                <div className=" text-black text-2xl">{productCost}</div>
+        <section className='flex flex-col items-center'>
+            <div ref={refBarcode} className='w-[20rem] flex flex-col items-center bg-white'>
+                {showDetail
+                    ? (
+                        <div>
+                            <div className="text-black text-2xl w-auto font-medium text-center">{productName}</div>
+                            <div className=" flex flex-col items-center ">
+                                <div className='flex flex-row items-center gap-1'>
+                                    <div className="text-black text-3xl font-semibold">{'$'}</div>
+                                    <div className=" text-black text-5xl font-semibold">{formatNumberWithPoints(productCost, '-')}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )
-                : null}
-            <div className="flex "><svg ref={inputRef} /></div>
-        </div>
+                    )
+                    : null}
+                <div className="flex "><svg ref={inputRef} /></div>
+            </div>
+        </section>
     )
 }

@@ -3,10 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
-// import { GetCashRegister, GetPostMachines } from './../../../services/settings'
-/* import Barcode from "../barcode";
-import BarcodeImg from "../barcodeImg";
-import { generateProductCode } from "@/utils/barcode"; */
 
 export default function SettingModal ({ isOpen, onClose }) {
     const [postMachinesData, setPostMachinesData] = useState(null)
@@ -16,27 +12,28 @@ export default function SettingModal ({ isOpen, onClose }) {
         postMachines,
         setSelectedPostMachine,
         getPostMachines,
-        CashRegister,
-        SelectedCashRegister,
+        cashRegister,
+        selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister
+        getCashRegister, setDisabled
     } = useSettingsStore(({
         selectedPostMachine,
         postMachines,
         setSelectedPostMachine,
-        getPostMachines, CashRegister,
-        SelectedCashRegister,
+        getPostMachines, cashRegister,
+        selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister
+        getCashRegister, setDisabled
     }) => ({
         selectedPostMachine,
         postMachines,
         setSelectedPostMachine,
         getPostMachines,
-        CashRegister,
-        SelectedCashRegister,
+        cashRegister,
+        selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister
+        getCashRegister,
+        setDisabled
     }))
 
     useEffect(() => {
@@ -46,14 +43,19 @@ export default function SettingModal ({ isOpen, onClose }) {
     }, [postMachines])
     /* Handle unique request */
     useEffect(() => {
-        if (CashRegister) {
-            setCashRegisterData(CashRegister)
+        if (cashRegister) {
+            setCashRegisterData(cashRegister)
         }
-    }, [cashRegisterData])
+    }, [cashRegister])
+    useEffect(() => {
+        if (selectedCashRegister?.ID !== 'no-select') {
+            setDisabled(!selectedCashRegister?.cash_balance_beginning)
+        }
+    }, [selectedCashRegister])
     useEffect(() => {
         // TODO: Add multi data fetch
         getPostMachines()
-        // getCashRegister()
+        getCashRegister()
     }, [])
     return (
         <>
@@ -79,15 +81,14 @@ export default function SettingModal ({ isOpen, onClose }) {
                                     )
                                 }
                                 )
-
                                 }
-                                {/*   <Divider />
+                                <Divider />
                                 <div className="flex flex-col gap-2">
                                     <p className="text-primary-500 dark:text-primary-200 font-bold">
                                         Seleccionar Caja principal
                                     </p>
-                                    {[...cashRegisterData]?.map((cashRegister, index2) => {
-                                        const isCashRegistrySelected = SelectedCashRegister?.ID === cashRegister.ID
+                                    {cashRegisterData?.map((cashRegister, index2) => {
+                                        const isCashRegistrySelected = selectedCashRegister?.ID === cashRegister.ID
                                         return (
                                             <Checkbox
                                                 key={index2}
@@ -98,7 +99,7 @@ export default function SettingModal ({ isOpen, onClose }) {
                                             </Checkbox>
                                         )
                                     })}
-                                </div> */}
+                                </div>
                             </ModalBody>
                             <ModalFooter>
                                 <Button className ="dark" onClick={onClose}>
@@ -107,9 +108,9 @@ export default function SettingModal ({ isOpen, onClose }) {
                                 <Button color="danger" variant="light" onClick={onClose}>
                                     Cerrar
                                 </Button>
-                                {/*  <div>
-              <BarcodeImg elementRef = { elementRef }></BarcodeImg>
-              </div> */}
+                                <div>
+                                    {/* <BarcodeImg elementRef = { elementRef }></BarcodeImg> */}
+                                </div>
                             </ModalFooter>
                         </>
                     )}

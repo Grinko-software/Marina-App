@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Badge, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
-import { FaWeight } from 'react-icons/fa'
+import { IoScale } from 'react-icons/io5'
 
 export default function ScaleStatus ({ scaleStatus }) {
     const [isOpen, setIsOpen] = useState(null)
@@ -16,9 +16,9 @@ export default function ScaleStatus ({ scaleStatus }) {
     }, [isOpen, scaleStatus])
 
     useEffect(() => {
-        setTimeout(
+        /*      setTimeout(
             () => setIsOpen(true), 1000
-        )
+        ) */
 
         if (scaleStatus) {
             setColor('success')
@@ -50,7 +50,7 @@ export default function ScaleStatus ({ scaleStatus }) {
                                 type='button'
                                 className='flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700'
                             >
-                                <FaWeight className="w-6 h-6 sm:w-9 sm:h-9 cursor-pointer fill-primary-500 dark:fill-primary-300"/>
+                                <IoScale className="w-6 h-6 sm:w-9 sm:h-9 cursor-pointer fill-primary-500 dark:fill-primary-300"/>
                             </button>
                         </Badge>
                     </PopoverTrigger>

@@ -2,6 +2,8 @@ export const formatter = new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP'
 })
+
+export const formatterNumber = (value) => formatter.format((Math.abs(value)))
 export const roundValue = (value, decimal, errorValue = '-') => {
     if (value === null || value === undefined) return errorValue
     if (typeof value === 'string') value = Number(value.replaceAll(',', '.'))
@@ -39,6 +41,6 @@ export const roundValueWithUnit = (value, decimal) => {
         originalValue: value
     }
 }
-export const formatNumberWithPoints = (value, emptyValue, separator = '.') => {
-    return (value.toFixed(0))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator) || emptyValue || '-'
+export const formatNumberWithPoints = (value, emptyValue = '-', separator = '.') => {
+    return (value?.toFixed(0))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator) || emptyValue
 }

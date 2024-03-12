@@ -2,10 +2,12 @@
 import { useEffect, useState } from 'react'
 import useLastSalesStore from './store'
 import { Button, Modal, ModalBody, ModalContent, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
-import { generatePdfDocument } from '@/app/(layout-app)/sales/components/voucher/services'
+import { fetchPrinterSaleTicket, generateDataToPrinterSaleTicket } from '@/services/printer'
+import toast from 'react-hot-toast'
 
 export default function SaleDetail (params) {
     const { target, setTarget } = params
+    const notify = (text) => toast(text)
     const [targetValue, setTargetValue] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isLoading, setIsLoading] = useState(false)
@@ -59,15 +61,20 @@ export default function SaleDetail (params) {
 
     const printTicket = () => {
         if (dataModel && target) {
-            generatePdfDocument({
-                listSales: dataModel,
-                totalPay: target?.total,
-                discount: target?.discount,
-                datetime: target?.datetime,
-                iva: target?.iva,
-                totalTaxFree: target?.totalTaxFree,
-                netTotal: target?.total - target?.iva
-            })
+            const dataToPrint = generateDataToPrinterSaleTicket(
+                {
+                    products: dataModel,
+                    total: target?.total,
+                    discountOffers: target?.discount,
+                    datetime: target?.datetime,
+                    iva: target?.iva,
+                    totalTaxFree: target?.totalTaxFree,
+                    totalNet: target?.total - target?.iva,
+                    notify,
+                    userName: target.userName,
+                    cashRegisterName: target.cashRegisterName
+                })
+            fetchPrinterSaleTicket({ data: dataToPrint })
         }
     }
 

@@ -1,7 +1,7 @@
 import { authenticate, authenticateByAuthCode } from '@/utils/authSettings'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { setToken } from '@/services/user'
+import { setToken } from '@/services/account'
 const useAuthStore = create(
     persist(
         (set) => ({
@@ -30,7 +30,7 @@ const useAuthStore = create(
                         }
                     ).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
-                            const { name, lastName, userType, token, idUser } = user
+                            const { name, lastName, userType, token, idUser, password } = user
                             // set global ls
                             setToken(token)
                             set({
@@ -40,7 +40,8 @@ const useAuthStore = create(
                                 email,
                                 isAdmin: userType === 'admin',
                                 idUser,
-                                error: null
+                                error: null,
+                                password
                             })
                             if (userType === 'admin') set({ isAdmin: true })
                         } else {

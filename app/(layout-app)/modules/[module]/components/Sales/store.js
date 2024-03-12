@@ -4,10 +4,14 @@ import { fetchGetReportsLastSales } from '@/services/reports'
 const useLastSalesStore = create((set) => ({
     data: undefined,
     loading: false,
-    requestData: () => {
+    totalpage: undefined,
+    requestData: (limitPage, currentPage) => {
         set({ loading: true })
-        fetchGetReportsLastSales().then((data) => {
-            set({ data: data?.data })
+        fetchGetReportsLastSales(limitPage, currentPage).then((data) => {
+            set({
+                data: data?.data?.last_sales_response,
+                totalpage: data?.data?.total_page > 100 ? 100 : data?.data?.total_page
+            })
         }).catch((error) => { console.debug(error) })
         set({ loading: false })
     },

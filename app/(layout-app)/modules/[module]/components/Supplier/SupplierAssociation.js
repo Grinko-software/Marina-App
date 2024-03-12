@@ -1,11 +1,16 @@
 'use client'
+import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { useEffect, useState } from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from '@nextui-org/react'
 import useSupplierStore from './store'
 import { Transfer } from 'antd'
-import { generateTickectSupplier } from './components/services'
-
+import { fetchPrinterSupplierTicket } from '@/services/printer'
+import { StyleTransfer } from './style'
+import { useTheme } from 'next-themes'
+import { deleteSupplier } from '@/services/supplier'
+import toast from 'react-hot-toast'
 const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelected }) => {
+    const { theme } = useTheme()
     const [targetKeys, setTargetKeys] = useState(targetKeysSelected)
     const [selectedKeys, setSelectedKeys] = useState([])
 
@@ -37,7 +42,9 @@ const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelecte
         setDisabled(checked)
     } */
 
-    return <Transfer
+    return <StyleTransfer
+        as={Transfer}
+        isDark={theme === 'dark'}
         dataSource={dataSource}
         listStyle={{ width: '100%', height: '30rem', display: 'flex' }}
         titles={['No asignados', 'Asignados']}
@@ -72,9 +79,10 @@ const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelecte
     />
 }
 
+const notify = (text) => toast(text)
 export default function SupplierAssociation (params) {
     // eslint-disable-next-line no-unused-vars
-    const { target, setTarget, products } = params
+    const { target, setTarget, products, handleRefresh } = params
     const [isLoading, setIsLoading] = useState(false)
     const [saveDisabled, setSaveDisabled] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -83,7 +91,7 @@ export default function SupplierAssociation (params) {
     const [targetKeysSelected, setTargetKeysSelected] = useState([])
     const [updatedTargetKeysSelected, setUpdatedTargetKeysSelected] = useState([])
     const { requestSupplierDetail, requestUpdateSupplierAssociation } = useSupplierStore()
-
+    const [loadingDelete, setLoadingDelete] = useState(false)
     useEffect(() => {
         if (target) {
             onOpen()
@@ -96,23 +104,17 @@ export default function SupplierAssociation (params) {
     }, [target])
 
     useEffect(() => {
-        if (dataModel && target) {
-            printTicket()
-        }
-    }, [dataModel, target])
-
-    useEffect(() => {
         const isSameArray = targetKeysSelected?.toString() === updatedTargetKeysSelected?.toString()
         setSaveDisabled(isSameArray)
     }, [targetKeysSelected, updatedTargetKeysSelected])
 
     useEffect(() => {
         if (products) {
-            const dataProducts = products.map(({ name, id }) => {
+            const dataProducts = products.map(({ name, code, id }) => {
                 return {
                     key: id,
                     title: name?.toUpperCase(),
-                    description: name?.toUpperCase()
+                    description: name?.toUpperCase() + ' ' + code
                 }
             })
 
@@ -153,12 +155,28 @@ export default function SupplierAssociation (params) {
         setIsLoading(false)
     }
 
-    const printTicket = (data) => {
+    const printTicket = () => {
         if (dataModel && target) {
-            generateTickectSupplier({
-                listProducts: dataModel
+            fetchPrinterSupplierTicket({
+                products: dataModel,
+                providerName: target?.name,
+                providerRut: target?.rut,
+                companyName: target?.companyName,
+                companyRut: target?.companyRut
             })
         }
+    }
+    const handleDeleteProvider = () => {
+        setLoadingDelete(true)
+        deleteSupplier({ id: target.id, notify }).then(
+            (response) => {
+                setLoadingDelete(false)
+                if (handleRefresh) {
+                    handleRefresh()
+                }
+                closeModal()
+            }
+        )
     }
 
     return <section>
@@ -190,6 +208,12 @@ export default function SupplierAssociation (params) {
                     }
                 </ModalBody>
                 <ModalFooter>
+                    <Button color="danger" variant="bordered"
+                        startContent={<DeleteIcon/>}
+                        onClick={handleDeleteProvider}
+                        isLoading={loadingDelete}>
+                        {loadingDelete ? 'Eliminando' : 'Eliminar'}
+                    </Button>
 
                     <Button className =" bg-green-500 text-primary-50"
                         isDisabled={saveDisabled}

@@ -9,6 +9,10 @@ import { motion } from 'framer-motion'
 import useInventoryStore from '../../inventory/store'
 import { formatter } from '@/utils/number'
 import useScannerStore from '@/stores/scanner'
+import useSettingsStore from '@/stores/settings'
+import { notify } from '@/services/notify'
+/* Get status cash register */
+import { getStatus } from '@/components/SettingsNav/services'
 export default function SaleList (props) {
     const {
         setPayment, payment, setSearchInput, searchInput,
@@ -16,7 +20,7 @@ export default function SaleList (props) {
         voucherTarget, setGoPay, keyFocus,
         setPageTarget, loadingSale
     } = props
-
+    const { disabled, selectedCashRegister } = useSettingsStore(({ disabled, selectedCashRegister }) => ({ disabled, selectedCashRegister }))
     const {
         units,
         setUnits,
@@ -74,7 +78,24 @@ export default function SaleList (props) {
         removeSale(listSalesActives, saleIdActive)
         setPayment(false)
     }
-
+    const handleButtonClick = () => {
+        getStatus(selectedCashRegister?.ID).then((status) => {
+            if (!status) {
+                notify('❌ Error: Se debe iniciar primero la caja para poder efectuar una venta!')
+            } else {
+                if (!payment) {
+                    setPayment(true)
+                } else if (paymentTarget === 1 && voucherTarget) {
+                    setGoPay(true)
+                } else if (paymentTarget === 2 && voucherTarget) {
+                    // Create sale
+                    setPageTarget(true)
+                } else {
+                    setGoPay(false)
+                }
+            }
+        })
+    }
     useEffect(() => {
         if (keyFocus) {
             const focusKey = document.getElementById(keyFocus)
@@ -155,16 +176,8 @@ export default function SaleList (props) {
                 {totalPrice
                     ? <Button color="success" variant="shadow" className='text-white mt-2 mb-2 h-[4rem] w-full font-bold text-2xl'
                         onClick={() => {
-                            if (!payment) {
-                                setPayment(true)
-                            } else if (paymentTarget === 1 && voucherTarget) {
-                                setGoPay(true)
-                            } else if (paymentTarget === 2 && voucherTarget) {
-                                // Create sale
-                                setPageTarget(true)
-                            } else {
-                                setGoPay(false)
-                            }
+                            // Verificar si se hizo primero el inicio de caja
+                            handleButtonClick()
                         } }>
                         <div className="text-2xl font-bol flex flex-row gap-4 items-center">
                             <motion.div

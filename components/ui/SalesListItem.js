@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import DeleteButton from './DeleteButton'
-import { formatter } from '@/utils/number'
+import { formatter, roundValueWithMath } from '@/utils/number'
 export default function SaleListItem (props) {
     const { product: productDetail } = props
     const { product, quantity, discount, total } = productDetail
@@ -39,7 +39,7 @@ export default function SaleListItem (props) {
                                     <div className="text-lg text-red-500">{ discount > 0 ? '-$ ' + discount : null}</div>
                                 </div>
                                 <div className="flex flex-row min-w-0 gap-2 text-sm text-gray-500 truncate dark:text-gray-400">
-                                    <div>{quantity}</div>
+                                    <div>{roundValueWithMath(quantity * 100, 2, 0) / 100}</div>
                                     <div>x</div>
                                     <div>{formatter.format(price) }</div>
                                 </div>

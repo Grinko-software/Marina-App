@@ -21,7 +21,7 @@ export default function Supplier ({ params }) {
         <CreateSupplier/>
         <section className='flex flex-row' >
             <SupplierInfo data={data} loading={loading} setTarget={setTarget}/>
-            <SupplierAssociation target={target} setTarget={setTarget} products={listInventory}/>
+            <SupplierAssociation target={target} setTarget={setTarget} products={listInventory} handleRefresh={requestData}/>
         </section>
     </section>
 }
