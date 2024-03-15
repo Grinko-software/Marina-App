@@ -405,7 +405,7 @@ const useSalesStore = create(
                                             } else {
                                                 notify('✅ Pago con éxito')
                                             }
-                                            setStateMachine(null)
+                                            // setStateMachine(null)
                                             setPayment(false)
                                             onClose()
                                             setGoPay(false)
@@ -415,7 +415,7 @@ const useSalesStore = create(
                                             notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                                             onClose()
                                             setGoPay(false)
-                                            setStateMachine(null)
+                                            // setStateMachine(null)
                                         }
                                     })
                                 })
@@ -426,7 +426,7 @@ const useSalesStore = create(
                                             notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                                         }
                                         set({ loadingSale: false })
-                                        setStateMachine(null)
+                                        // setStateMachine(null)
                                     })
                             // clearList()
                             } else {
@@ -437,7 +437,7 @@ const useSalesStore = create(
                                     notify('❌ Problemas con el pago, intente efectuar el pago nuevamente')
                                 } */
                                 set({ loadingSale: false })
-                                setStateMachine(null)
+                                // setStateMachine(null)
                             }
                         })
                     } else {
@@ -452,7 +452,7 @@ const useSalesStore = create(
                                 } else {
                                     notify('✅ Pago con éxito')
                                 }
-                                setStateMachine(null)
+                                // setStateMachine(null)
                                 setPayment(false)
                                 onClose()
                                 setGoPay(false)
@@ -462,15 +462,15 @@ const useSalesStore = create(
                                 notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                                 onClose()
                                 setGoPay(false)
-                                setStateMachine(null)
+                                // setStateMachine(null)
                             }
                         })
                         set({ loadingSale: false })
-                        setStateMachine(null)
+                        // setStateMachine(null)
                     }
                 } catch {
                     set({ loadingSale: false })
-                    setStateMachine(null)
+                    // setStateMachine(null)
                 }
             } else {
                 getData(SALE_TICKET_CREATE, POST, body).then(result => {
@@ -488,7 +488,7 @@ const useSalesStore = create(
                             }
                             notify('✅ Pago con éxito')
                         }
-                        setStateMachine(null)
+                        // setStateMachine(null)
                         setPayment(false)
                         onClose()
                         setGoPay(false)
@@ -498,11 +498,11 @@ const useSalesStore = create(
                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
                         onClose()
                         setGoPay(false)
-                        setStateMachine(null)
+                        // setStateMachine(null)
                     }
                 })
                 set({ loadingSale: false })
-                setStateMachine(null)
+                // setStateMachine(null)
             }
         },
         createSaleVoucher: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
@@ -528,8 +528,12 @@ const useSalesStore = create(
 
             /* Model to send endpoint our bd */
             const cashRegister = getCashRegister()
+            let totalTaxFree = 0
             const body = {
                 sales_receipt: saleProductsList?.map((item) => {
+                    if (item?.product?.taxFree) {
+                        totalTaxFree += item?.product?.price
+                    }
                     return {
                         product_id: item?.product?.id,
                         quantity: item?.quantity,
@@ -546,17 +550,30 @@ const useSalesStore = create(
             const device = getDeviceTuu()
             if (isCardPayment && device) {
                 try {
-                    const bodyPosMachine = {
-                        device,
-                        amount: totalPay,
-                        dteType: 48,
-                        printVoucherOnApp: false,
-                        extraData: {
-                            taxIdnValidation: '77426986-K',
-                            sourceName: 'Marina APP'
+                    const bodyPosMachine = totalTaxFree > 0
+                        ? {
+                            device,
+                            amount: totalPay,
+                            dteType: 48,
+                            printVoucherOnApp: false,
+                            extraData: {
+                                exemptAmount: totalTaxFree,
+                                taxIdnValidation: '77426986-K',
+                                sourceName: 'Marina APP'
 
+                            }
                         }
-                    }
+                        : {
+                            device,
+                            amount: totalPay,
+                            dteType: 48,
+                            printVoucherOnApp: false,
+                            extraData: {
+                                taxIdnValidation: '77426986-K',
+                                sourceName: 'Marina APP'
+
+                            }
+                        }
                     setStateMachine('Enviando')
                     await getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(result => {
                         if (result?.code === 200 && result?.data?.paymentRequestId) {
@@ -564,18 +581,16 @@ const useSalesStore = create(
                             const idSale = result?.data?.paymentRequestId
                             getStateSaleMachine(GET_STATE_SALE_POSMACHINE.replace(':id', idSale)).then(data => {
                                 getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    setStateMachine(null)
                                     set({ loadingSale: false })
                                     if (result?.code === 200) {
                                         const printEnabled = useSettingsStore.getState()?.printEnabled || true
                                         if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, openCashRegister: false })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data })
                                         notify('✅ Pago con tarjeta con éxito')
-                                        setStateMachine(null)
                                         removeSale(sales, saleId)
                                     } else {
-                                        console.log(result)
                                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
-                                        setStateMachine(null)
                                     }
                                 })
                             }).catch(error => {
@@ -591,7 +606,7 @@ const useSalesStore = create(
                     })
                 } catch {
                     set({ loadingSale: false })
-                    setStateMachine(null)
+                    /// /setStateMachine(null)
                 }
             } else if (isCardPayment) {
                 await saveTicketOnDatabase({
@@ -657,7 +672,7 @@ const useSalesStore = create(
             }
 
             set({ loadingSale: false })
-            setStateMachine(null)
+            /// /setStateMachine(null)
         },
         createSaleInvoice: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment, targetCustomer }) => {
             set({ loadingSale: true, error: null })
@@ -724,28 +739,28 @@ const useSalesStore = create(
                                         if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, cardDetail: data, customerDetail: targetCustomer, openCashRegister: false })
                                         // generatePdfDocument({ listSales: saleProductsList, totalPay, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, dataCard: data, targetCustomer })
                                         notify('✅ Pago con tarjeta con éxito')
-                                        setStateMachine(null)
+                                        // setStateMachine(null)
                                         removeSale(sales, saleId)
                                     } else {
                                         console.log(result)
                                         notify('❌ Problemas al guardar la venta, pero si se efectuo el cobro')
-                                        setStateMachine(null)
+                                        // setStateMachine(null)
                                     }
                                 })
                             }).catch(error => {
                                 notify('❌ Problemas con el pago con la tarjeta')
                                 set({ loadingSale: false })
-                                setStateMachine(null)
+                                // setStateMachine(null)
                             })
                         } else {
                             notify('❌ ' + errorsMachine.get(result?.data?.code))
                             set({ loadingSale: false })
-                            setStateMachine(null)
+                            // setStateMachine(null)
                         }
                     })
                 } catch {
                     set({ loadingSale: false })
-                    setStateMachine(null)
+                    // setStateMachine(null)
                 }
             } else if (isCardPayment) {
                 await saveTicketOnDatabase({
@@ -811,7 +826,7 @@ const useSalesStore = create(
             }
 
             set({ loadingSale: false })
-            setStateMachine(null)
+            // setStateMachine(null)
         },
         createSaleTicket: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
             set({ loadingSale: true, error: null })
@@ -873,7 +888,7 @@ const useSalesStore = create(
             })
 
             set({ loadingSale: false })
-            setStateMachine(null)
+            // setStateMachine(null)
         },
         /* Add discount */
         addDiscountSale: (listSalesActives, saleIdActive, value, cleanForm) => {
