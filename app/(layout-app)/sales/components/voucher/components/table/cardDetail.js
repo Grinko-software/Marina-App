@@ -11,16 +11,16 @@ export const TableCardDetail = ({ dataCard }) =>
 
                 <View key={1} style={StylePdf.rowTableMandatory}>
                     <View style={StylePdf.tableColumn5}>
-                        <Text style={StylePdf.textRow}>{dataCard?.applicationLabel + ' ' + dataCard?.last4}</Text>
+                        <Text style={StylePdf.textRow}>{dataCard?.data?.transactionDetails?.applicationLabel + ' ' + dataCard?.data?.transactionDetails?.last4}</Text>
                     </View>
                     <View style={StylePdf.tableColumn6}>
-                        <Text style={StylePdf.textRow}>{dataCard?.aid}</Text>
+                        <Text style={StylePdf.textRow}>{dataCard?.data?.transactionDetails?.aid}</Text>
                     </View>
 
                 </View>
             </View>
             <View style={StylePdf.container}>
-                <Text style={StylePdf.subtitle}>{'#' + dataCard?.transactionNumber + ' | Cód. Aut.:' + dataCard?.authCode}
+                <Text style={StylePdf.subtitle}>{'#' + dataCard?.data?.transactionDetails?.transactionNumber + ' | Cód. Aut.:' + dataCard?.data?.transactionDetails?.authCode}
                 </Text>
             </View>
         </View>
