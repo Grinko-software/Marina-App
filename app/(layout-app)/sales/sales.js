@@ -49,7 +49,13 @@ const SalesMenu = () => {
         setPaymentTargetValue(sale.paymentTarget)
         setVoucherTargetValue(sale.voucherTarget)
         setKeyFocus(sale.keyFocus)
-        setTotalPrice(sale.totalPrice)
+        // Verificar descuentos agregados a la venta en %
+        if (sale?.discount) {
+            const newTotal = sale?.totalPrice - sale?.discount
+            setTotalPrice(newTotal)
+        } else {
+            setTotalPrice(sale.totalPrice)
+        }
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
 
     return (

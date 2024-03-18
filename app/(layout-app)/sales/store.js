@@ -513,10 +513,9 @@ const useSalesStore = create(
 
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget
-            const date = today().format('YYYY-MM-DD')
 
-            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
-            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const discountTotalPctg = sale?.discountPctg ? sale?.discountPctg >= 0 && sale?.discountPctg <= 100 ? sale?.discountPctg / 100 : null : null
+            const totalDiscountExtra = sale?.discount
             const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
 
             const totalTaxFreePay = sale?.totalTaxFree || 0
@@ -682,14 +681,14 @@ const useSalesStore = create(
 
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget
-            const date = today().format('YYYY-MM-DD')
 
-            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
-            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const discountTotalPctg = sale?.discountPctg ? sale?.discountPctg >= 0 && sale?.discountPctg <= 100 ? sale?.discountPctg / 100 : null : null
+            const totalDiscountExtra = sale?.discount
             const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
 
             const totalTaxFreePay = sale?.totalTaxFree || 0
             const totalWithOutTaxFree = totalPay - totalTaxFreePay
+
             const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
             const iva = totalWithOutTaxFree - netTotal
 
@@ -837,8 +836,8 @@ const useSalesStore = create(
             const saleProductsList = sale?.saleProductsList
             const paymentTarget = sale?.paymentTarget
 
-            const discountTotalPctg = sale?.discount ? sale?.discount >= 0 && sale?.discount <= 100 ? sale?.discount / 100 : null : null
-            const totalDiscountExtra = sale?.totalPrice * discountTotalPctg
+            const discountTotalPctg = sale?.discountPctg ? sale?.discountPctg >= 0 && sale?.discountPctg <= 100 ? sale?.discountPctg / 100 : null : null
+            const totalDiscountExtra = sale?.discount
             const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
 
             const totalTaxFreePay = sale?.totalTaxFree || 0
@@ -893,10 +892,19 @@ const useSalesStore = create(
         /* Add discount */
         addDiscountSale: (listSalesActives, saleIdActive, value, cleanForm) => {
             const saleIndex = listSalesActives?.findIndex((sale) => sale.id === saleIdActive)
-            listSalesActives[saleIndex].discount = value ? parseInt(value) : null
+            listSalesActives[saleIndex].discount = value ? (listSalesActives[saleIndex].totalPrice * (value / 100)) : null
+            listSalesActives[saleIndex].discountPctg = value ? parseInt(value) : null
             set({ listSalesActives })
             cleanForm()
+        },
+        /* Add discount */
+        removeDiscountSale: (listSalesActives, saleIdActive) => {
+            const saleIndex = listSalesActives?.findIndex((sale) => sale.id === saleIdActive)
+            listSalesActives[saleIndex].discount = null
+            listSalesActives[saleIndex].discountPctg = null
+            set({ listSalesActives })
         }
+
     }),
     {
         name: 'sales'

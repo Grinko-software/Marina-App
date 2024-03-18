@@ -183,7 +183,9 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
 
                         <div className='grid grid-rows-2 grid-flow-col py-4 w-8/12 content-end justify-between'>
                             <p className='text-3xl font-bold'>{'TOTAL:'}</p>
-                            <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>{((changeValue) > 0 ? 'VUELTO:' : 'SALDO PENDIENTE:')}</p>
+                            <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                                {((changeValue) > 0 ? 'VUELTO:' : 'SALDO PENDIENTE:')}
+                            </p>
                             <p className='text-3xl font-bold '>{ formatter.format(totalValue)}</p>
                             <p className={`text-3xl font-bold ${(changeValue) > 0 ? 'text-green-700' : 'text-red-700'}`}>{((changeValue) > 0 ? formatter.format((Math.abs(changeValue))) : formatter.format((Math.abs(changeValue))))}</p>
                         </div>

@@ -2,7 +2,7 @@
 import { Text, View } from '@react-pdf/renderer'
 // Create StylePdf
 import { StylePdf } from './styleTotal'
-import { formatter, roundValue, roundValueWithMath } from '@/utils/number'
+import { formatter, transformNumberFormat } from '@/utils/number'
 
 const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva, discountPctg }) =>
     (
@@ -12,7 +12,7 @@ const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva
                     <Text style={StylePdf.textRow}>{'Monto NETO'}</Text>
                 </View>
                 <View style={StylePdf.tableColumn2}>
-                    <Text style={StylePdf.textRow}>{netTotal ? formatter.format(netTotal) : '-'}</Text>
+                    <Text style={StylePdf.textRow}>{netTotal ? formatter.format(transformNumberFormat(netTotal)) : '-'}</Text>
                 </View>
             </View>
             {totalTaxFree
@@ -21,7 +21,7 @@ const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva
                         <Text style={StylePdf.textRow}>{'Monto EXENTO'}</Text>
                     </View>
                     <View style={StylePdf.tableColumn2}>
-                        <Text style={StylePdf.textRow}>{totalTaxFree ? formatter.format(totalTaxFree) : '-'}</Text>
+                        <Text style={StylePdf.textRow}>{totalTaxFree ? formatter.format(transformNumberFormat(totalTaxFree)) : '-'}</Text>
                     </View>
                 </View>
                 : null}
@@ -31,7 +31,7 @@ const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva
                     <Text style={StylePdf.textRow}>{'Monto IVA (19%)'}</Text>
                 </View>
                 <View style={StylePdf.tableColumn2}>
-                    <Text style={StylePdf.textRow}>{iva ? formatter.format(iva) : '-'}</Text>
+                    <Text style={StylePdf.textRow}>{iva ? formatter.format(transformNumberFormat(iva)) : '-'}</Text>
                 </View>
             </View>
             {totalDiscount > 0
@@ -40,27 +40,16 @@ const WrapperComponent = ({ totalPay, totalDiscount, totalTaxFree, netTotal, iva
                         <Text style={StylePdf.textRow}>{'Total Descuentos'}</Text>
                     </View>
                     <View style={StylePdf.tableColumn2}>
-                        <Text style={StylePdf.textRow}>{totalDiscount ? formatter.format(totalDiscount) : '-'}</Text>
+                        <Text style={StylePdf.textRow}>{totalDiscount ? formatter.format(transformNumberFormat(totalDiscount)) : '-'}</Text>
                     </View>
                 </View>
-                : null}
-            {discountPctg > 0 && discountPctg
-                ? <View style={StylePdf.rowTable}>
-                    <View style={StylePdf.tableColumn1}>
-                        <Text style={StylePdf.textRow}>{'Descuento'}</Text>
-                    </View>
-                    <View style={StylePdf.tableColumn2}>
-                        <Text style={StylePdf.textRow}>{discountPctg ? formatter.format(totalPay * discountPctg) : '-'}</Text>
-                    </View>
-                </View>
-                : null}
-
+                : null }
             <View style={StylePdf.rowTable}>
                 <View style={StylePdf.tableColumn1}>
                     <Text style={StylePdf.textRow}>{'Monto TOTAL'}</Text>
                 </View>
                 <View style={StylePdf.tableColumn2}>
-                    <Text style={StylePdf.textRow}>{totalPay ? formatter.format(totalPay) : '-'}</Text>
+                    <Text style={StylePdf.textRow}>{totalPay ? formatter.format(transformNumberFormat(totalPay)) : '-'}</Text>
                 </View>
             </View>
         </View>

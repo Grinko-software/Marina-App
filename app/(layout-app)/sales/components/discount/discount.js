@@ -22,9 +22,10 @@ export const SectionInput = ({ title, children, showDivider, className }) => {
 export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const {
         listSalesActives,
-        saleIdActive, addDiscountSale
+        saleIdActive, addDiscountSale, removeDiscountSale
     } = useSalesStore()
-    const [createCustomer, setCreateCustomer] = useState(false)
+    const [saleActive, setSaleActive] = useState(null)
+    const [discount, setDiscount] = useState(null)
     const [messageError, setMessageError] = useState(null)
     const [searchInput, setSearchInput] = useState('')
     const discountShortcuts = [10, 20, 30, 40, 50]
@@ -44,7 +45,17 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const createDiscount = () => {
         addDiscountSale(listSalesActives, saleIdActive, searchInput, cleanForm)
     }
-
+    const removeDiscount = () => {
+        removeDiscountSale(listSalesActives, saleIdActive)
+    }
+    useEffect(() => {
+        const saleIndex = listSalesActives?.findIndex((sale) => sale.id === saleIdActive)
+        const saleActive = listSalesActives[saleIndex]
+        setSaleActive(saleActive)
+    }, [])
+    useEffect(() => {
+        setDiscount(saleActive?.discount)
+    }, [saleActive])
     return (
         <Modal
             size='5xl'
@@ -53,89 +64,102 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
             backdrop='opaque'
             scrollBehavior={'inside'}
             closeButton={<></>}
-        >
-            <ModalContent>
-                {() => (
-                    <section>
-                        <ModalHeader className="flex flex-col items-center  text-primary-500 dark:text-primary-200 ml-[3.5rem]">
-                            <section className='flex flex-col items-center py-[2rem]'> <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Agregar Descuento (%)</h5> </section>
-                        </ModalHeader>
-                        <ModalBody className='flex flex-col items-center h-full space-y-[4rem]' >
-                            <section className='flex flex-col items-center px-[4rem]'>
-                                <section className='flex flex-row w-full space-x-3'>
-                                    {discountShortcuts?.map((e, index) => <Button key={index} variant="shadow" className={`${searchInput === e ? ' bg-green-700  text-white' : ' bg-green-500 text-white'} max-w-full lg:min-w-[10rem]  h-[8rem] font-extrabold text-3xl`}
-                                        onClick={() => handleInputChange(e) }>
-                                        {e + ' %' }
-                                    </Button>)}
+        >{ saleActive
+                ? <ModalContent>
+                    {() => (
+                        <section>
+                            <ModalHeader className="flex flex-col items-center  text-primary-500 dark:text-primary-200 ml-[3.5rem]">
+                                <section className='flex flex-col items-center py-[2rem]'> <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">Agregar Descuento (%)</h5> </section>
+                            </ModalHeader>
+                            <ModalBody className='flex flex-col items-center h-full space-y-[4rem]' >
+                                <section className='flex flex-col items-center px-[4rem]'>
+                                    <section className='flex flex-row w-full space-x-3'>
+                                        {discountShortcuts?.map((e, index) => <Button key={index} variant="shadow" className={`${searchInput === e ? ' bg-green-700  text-white' : ' bg-green-500 text-white'} max-w-full lg:min-w-[10rem]  h-[8rem] font-extrabold text-3xl`}
+                                            onClick={() => handleInputChange(e) }>
+                                            {e + ' %' }
+                                        </Button>)}
+                                    </section>
                                 </section>
-                            </section>
 
-                            <section className='w-full flex flex-col items-center'>
-                                <Slider
-                                    label=""
-                                    color="success"
-                                    size="lg"
-                                    step={10}
-                                    marks={[
+                                <section className='w-full flex flex-col items-center'>
+                                    <Slider
+                                        label=""
+                                        color="success"
+                                        size="lg"
+                                        step={10}
+                                        marks={[
 
-                                        {
-                                            value: 20,
-                                            label: '20%'
-                                        },
-                                        {
-                                            value: 50,
-                                            label: '50%'
-                                        },
-                                        {
-                                            value: 80,
-                                            label: '80%'
-                                        }
-                                    ]}
-                                    value={searchInput}
-                                    defaultValue={searchInput}
-                                    className="w-full px-[4rem]"
-                                    onChangeEnd={(value) => { handleInputChange(value) }}
+                                            {
+                                                value: 20,
+                                                label: '20%'
+                                            },
+                                            {
+                                                value: 50,
+                                                label: '50%'
+                                            },
+                                            {
+                                                value: 80,
+                                                label: '80%'
+                                            }
+                                        ]}
+                                        value={searchInput}
+                                        defaultValue={searchInput}
+                                        className="w-full px-[4rem]"
+                                        onChangeEnd={(value) => { handleInputChange(value) }}
 
-                                />
+                                    />
 
-                            </section>
-                            {messageError
-                                ? <div className='w-full'>
-                                    <AlertMessage message={messageError}/>
-                                </div>
-                                : null
-                            }
-                        </ModalBody>
-                        <ModalFooter className='flex flex-col items-center h-full mt-[2rem]'>
-                            <section className='flex flex-row space-x-3'>
-                                <Button color="danger"
-                                    className="text-2xl h-[5rem] w-[15rem]"
+                                </section>
+                                {messageError
+                                    ? <div className='w-full'>
+                                        <AlertMessage message={messageError}/>
+                                    </div>
+                                    : null
+                                }
+                            </ModalBody>
+                            <ModalFooter className='flex flex-col items-center h-full mt-[2rem]'>
+                                <section className='flex flex-row space-x-3'>
+                                    <Button color="danger"
+                                        className="text-2xl h-[5rem] w-[15rem]"
 
-                                    onClick={() => {
-                                        handleButton()
-                                        setCreateCustomer(false)
-                                    }}
-                                >
+                                        onClick={() => {
+                                            handleButton()
+                                        }}
+                                    >
                             Cerrar
-                                </Button>
-                                <Button
-                                    className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
-                                    isDisabled={ messageError}
-                                    onClick={() => {
-                                        handleButton()
-                                        createDiscount()
-                                    }
-                                    }
+                                    </Button>
+                                    {discount ? <Button
+                                        className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
+                                        isDisabled={ messageError}
+                                        onClick={() => {
+                                            handleButton()
+                                            removeDiscount()
+                                        }
+                                        }
 
-                                >
-                                    { searchInput ? 'Aplicar ' + searchInput + '% DSC.' : 'Aplica un DSC.' }
-                                </Button>
-                            </section>
-                        </ModalFooter>
+                                    >
+                                        { 'Quitar Descuento '}
+                                    </Button> : <Button
+                                        className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
+                                        isDisabled={ messageError}
+                                        onClick={() => {
+                                            handleButton()
+                                            createDiscount()
+                                        }
+                                        }
 
-                    </section>
-                )}
-            </ModalContent>
+                                    >
+                                        { searchInput ? 'Aplicar ' + searchInput + '% DSC.' : 'Aplica un DSC.' }
+                                    </Button> }
+
+                                </section>
+                            </ModalFooter>
+
+                        </section>
+                    )}
+                </ModalContent>
+                : <></>
+            }
 
         </Modal>
 
