@@ -94,7 +94,7 @@ export default function PayPage (props) {
                         </Button> */}
                         <div className=''>
                             <Button className='animation-fade-in h-[56px] text-lg  bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={() => (handleButton()) } startContent={<BiSolidOffer size={25}/>}>
-                                { activeSale?.discount ? (activeSale?.discount + ' % de DSC. aplicado') : ' Agregar Descuento'}
+                                { activeSale?.discount ? ('$' + activeSale?.discount + ' DSC. aplicado (' + activeSale?.discountPctg + '%)') : ' Agregar Descuento'}
                             </Button>
                         </div>
                     </div>

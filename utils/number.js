@@ -2,6 +2,14 @@ export const formatter = new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP'
 })
+export const transformNumberFormat = (value) => {
+    if (typeof value === 'string') {
+        const newValue = value.replace('.', '').replace(',', '.')
+        const parsedValue = parseFloat(newValue)
+        return parsedValue
+    }
+    return value
+}
 
 export const formatterNumber = (value) => formatter.format((Math.abs(value)))
 export const roundValue = (value, decimal, errorValue = '-') => {

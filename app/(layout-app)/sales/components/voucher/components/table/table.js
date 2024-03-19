@@ -2,7 +2,7 @@
 import { Text, View } from '@react-pdf/renderer'
 // Create StylePdf
 import { StylePdf } from './styleTable'
-import { formatter, roundValue } from '@/utils/number'
+import { formatter, roundValue, transformNumberFormat } from '@/utils/number'
 
 export const TableProductVoucher = ({ listSales }) =>
     (
@@ -30,7 +30,7 @@ export const TableProductVoucher = ({ listSales }) =>
                                 <Text style={StylePdf.textRow}>{ roundValue(element?.quantity, 2, '-')}</Text>
                             </View>
                             <View style={StylePdf.tableColumn4}>
-                                <Text style={StylePdf.textRow}>{ formatter.format(element?.total)}</Text>
+                                <Text style={StylePdf.textRow}>{ formatter.format(transformNumberFormat(element?.total))}</Text>
                             </View>
                         </View>)
                     )}

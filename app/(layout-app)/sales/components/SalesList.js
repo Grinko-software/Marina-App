@@ -7,7 +7,7 @@ import SearchBar from '../../../../components/ui/SearchBar'
 import useSalesStore from '@/app/(layout-app)/sales/store'
 import { motion } from 'framer-motion'
 import useInventoryStore from '../../inventory/store'
-import { formatter } from '@/utils/number'
+import { formatter, transformNumberFormat } from '@/utils/number'
 import useScannerStore from '@/stores/scanner'
 import useSettingsStore from '@/stores/settings'
 import { notify } from '@/services/notify'
@@ -37,10 +37,8 @@ export default function SaleList (props) {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
         setListSales(sale.saleProductsList)
         setTotalPrice(sale.totalPrice)
-        if (sale?.discount) {
-            const totalDiscount = sale?.totalPrice - (sale?.totalPrice * (sale?.discount / 100))
-            setDiscount(totalDiscount)
-        }
+        const totalDiscount = sale?.discount
+        setDiscount(totalDiscount)
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
 
     useEffect(() => {
@@ -179,20 +177,47 @@ export default function SaleList (props) {
                             // Verificar si se hizo primero el inicio de caja
                             handleButtonClick()
                         } }>
-                        <div className="text-2xl font-bol flex flex-row gap-4 items-center">
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.5 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{
-                                    duration: 0.6,
-                                    delay: 0.2,
-                                    ease: [0, 0.71, 0.2, 1.01]
-                                }}>
-                                {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'TOTAL '}
-                                { discount ? formatter.format(discount) : formatter.format(totalPrice) }
+                        { discount
+                            ? <div className="text-2xl font-bol flex flex-col  items-center">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{
+                                        duration: 0.6,
+                                        delay: 0.2,
+                                        ease: [0, 0.71, 0.2, 1.01]
+                                    }}>
 
-                            </motion.div>
-                        </div>
+                                    <div className='flex flex-row gap-1 items-center'>
+                                        <p className='text-primary-50'>
+                                            { totalPrice ? (formatter.format(transformNumberFormat(totalPrice))) : null }
+                                        </p>
+                                        <p className='text-red-600'>
+                                            { discount ? (' - ' + formatter.format(transformNumberFormat(discount))) : null }
+                                        </p>
+                                    </div>
+                                    <p className='text-primary-50'>
+                                        {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'TOTAL '}
+                                        { formatter.format(transformNumberFormat(totalPrice - discount)) }
+                                    </p>
+                                </motion.div>
+                            </div>
+
+                            : <div className="text-2xl font-bol flex flex-row gap-4 items-center">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{
+                                        duration: 0.6,
+                                        delay: 0.2,
+                                        ease: [0, 0.71, 0.2, 1.01]
+                                    }}>
+                                    {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'TOTAL '}
+                                    { totalPrice ? formatter.format(totalPrice) : null }
+                                </motion.div>
+                            </div>
+
+                        }
 
                     </Button>
                     : <></>}
