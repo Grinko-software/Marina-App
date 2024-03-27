@@ -65,9 +65,11 @@ export default function PayPage (props) {
     // Handle request
     /* Handle multiple request */
     useEffect(() => {
-        getData()
-        return () => {
-            setLoading(false)
+        if (payment?.length < 0 && voucher.length < 0) {
+            getData()
+            return () => {
+                setLoading(false)
+            }
         }
     }, [])
     useEffect(() => {

@@ -10,7 +10,8 @@ const makeRequest = async (url, method = GET, data = null, fullUrl = false) => {
     })
     const options = {
         method,
-        headers
+        headers,
+        timeout: 60000 // 1 minute in milliseconds
     }
 
     if (data) {
@@ -78,7 +79,8 @@ const refreshToken = async () => {
         'Content-Type': 'application/json'
     })
     const options = {
-        headers
+        headers,
+        timeout: 60000 // 1 minute in milliseconds
     }
     try {
         return await fetch(`${AUTH_RENEW}`, options)
