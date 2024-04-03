@@ -553,7 +553,7 @@ const useSalesStore = create(
                         ? {
                             device,
                             amount: totalPay,
-                            dteType: 48,
+                            dteType: totalTaxFree < totalPay ? 48 : 99,
                             printVoucherOnApp: false,
                             extraData: {
                                 exemptAmount: totalTaxFree,
