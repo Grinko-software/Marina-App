@@ -816,7 +816,8 @@ const useSalesStore = create(
                         }
                     })
                         .catch(error => {
-                            console.log(error)
+                            const message = error?.message || 'Error en Haulmer'
+                            notify('❌ ' + message)
                             set({ loadingSale: false })
                         })
                 } catch {
