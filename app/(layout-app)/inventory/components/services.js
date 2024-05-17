@@ -34,3 +34,10 @@ export const sendPrintToPrinter = (imgBase64, onSuccessful, notify) => {
         onSuccessful()
     }
 }
+
+export const productCreated = ({ listInventory, code }) => {
+    console.log(listInventory)
+    console.log(code)
+    const result = listInventory.find(item => item?.code === code)
+    return result
+}

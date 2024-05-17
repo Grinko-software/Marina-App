@@ -11,7 +11,7 @@ import { printBarCode } from './services'
 import Barcode from '@/components/barcode'
 import Loading from '../loading'
 import { notify } from '@/services/notify'
-export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, setUpdateProduct }) {
+export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, isMobile = false }) {
     const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
     const [edit, setEdit] = useState(false)
     const [type, setType] = useState(false)
@@ -297,20 +297,22 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                     {'Imprimiendo ... '}
                                 </ModalFooter>
                                 : <ModalFooter className='flex justify-between'>
-                                    <section className='flex space-x-3'>
-                                        <Button className =" bg-green-600 text-primary-50"
-                                            onClick={() => {
-                                                handlePrintBarCode('withName')
-                                            }}>
-                                            {'Imprimir código'}
-                                        </Button>
-                                        <Button className =" bg-orange-600 text-primary-50 "
-                                            onClick={() => {
-                                                handlePrintBarCode('withoutName')
-                                            }}>
-                                            {'Imprimir código sin nombre'}
-                                        </Button>
-                                    </section>
+                                    {isMobile
+                                        ? null
+                                        : <section className='flex space-x-3'>
+                                            <Button className =" bg-green-600 text-primary-50"
+                                                onClick={() => {
+                                                    handlePrintBarCode('withName')
+                                                }}>
+                                                {'Imprimir código'}
+                                            </Button>
+                                            <Button className =" bg-orange-600 text-primary-50 "
+                                                onClick={() => {
+                                                    handlePrintBarCode('withoutName')
+                                                }}>
+                                                {'Imprimir código sin nombre'}
+                                            </Button>
+                                        </section> }
 
                                     <section className='flex space-x-3'>
 

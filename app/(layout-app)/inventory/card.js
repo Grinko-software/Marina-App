@@ -45,7 +45,6 @@ export default function Card () {
     const [lastInViewPort, setLastInViewPort] = useState(false)
     const refShowMore = useRef(null)
     const { lastUpdate, setLastUpdate } = useSyncStore()
-    const [updateProduct, setUpdateProduct] = useState(false)
 
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
@@ -207,7 +206,7 @@ export default function Card () {
                     <CreateProduct
                         triggerAction={triggerAction}
                         handleProductRequest={handleProductRequest}
-                        setUpdateProduct={setUpdateProduct}
+
                     />
                     <CreateCategory />
                 </div>
@@ -273,7 +272,7 @@ export default function Card () {
                         </section> }
 
             </section>
-            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct} setUpdateProduct={setUpdateProduct}/>
+            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct} />
         </section>
     )
 }

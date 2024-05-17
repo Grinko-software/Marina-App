@@ -68,7 +68,7 @@ export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, .
 }
 
 export default function CreateProduct (props) {
-    const { handleProductRequest, setUpdateProduct } = props
+    const { handleProductRequest, openModal, resultCamera, setResultCamera } = props
     const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -99,7 +99,12 @@ export default function CreateProduct (props) {
             setBarcodeValue(null)
         }
     }, [isOpen])
-
+    useEffect(() => {
+        if (openModal) {
+            setBarcodeValue(resultCamera)
+            onOpen()
+        }
+    }, [openModal])
     useEffect(() => {
         setCategoryOptions(listCategories)
         setStockTypeOptions(listStockTypes)
@@ -135,10 +140,13 @@ export default function CreateProduct (props) {
     return (
         <section>
             <header className="flex justify-end">
-                <Button className={'bg-emerald-600 dark:bg-emerald-600 font-semibold'} color='primary' onClick={onOpen}
-                    startContent={<BiSolidShoppingBags size={25} />}>
-                    {isMobile ? '' : 'CREAR PRODUCTO'}
-                </Button>
+                { isMobile
+                    ? null
+                    : <Button className={'bg-emerald-600 dark:bg-emerald-600 font-semibold'} color='primary' onClick={onOpen}
+                        startContent={<BiSolidShoppingBags size={25} />}>
+                        {'CREAR PRODUCTO'}
+                    </Button>
+                }
             </header>
             <Modal size={'2xl'}
                 isOpen={isOpen}

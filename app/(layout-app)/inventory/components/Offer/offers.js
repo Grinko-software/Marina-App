@@ -14,9 +14,9 @@ import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { deleteOffer } from '@/services/offers'
 import { notify } from '@/services/notify'
 import { BiSolidOffer } from 'react-icons/bi'
+import { FaCamera } from 'react-icons/fa'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
-
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
     return (
         <Input
@@ -172,11 +172,18 @@ export default function Offers () {
     }, [complete, error])
     return (
         <section>
-            <header className="flex justify-end">
-                <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={onOpen}
-                    startContent={<BiSolidOffer size={25}/>}>
-                    {isMobile ? '' : 'OFERTAS'}
-                </Button>
+            <header className="flex justify-end space-x-3">
+                { isMobile
+                    ? <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered"
+                        onClick={onOpen}
+                        startContent={<FaCamera size={25}/>}>
+                    </Button>
+                    : <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={onOpen}
+                        startContent={<BiSolidOffer size={25}/>}>
+                        {isMobile ? '' : 'OFERTAS'}
+                    </Button>
+                }
+
             </header>
             <Modal size={'3xl'}
                 isOpen={isOpen}
