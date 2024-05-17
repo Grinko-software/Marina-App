@@ -15,7 +15,6 @@ export const Camera = ({ setOpenModal, setTargetProduct, resultCamera, setResult
     useEffect(() => {
         if (resultCamera) {
             const findCode = productCreated({ listInventory, code: resultCamera })
-            console.log(findCode)
             if (findCode) {
                 notify('✅  Producto encontrado !')
                 setTargetProduct(findCode)
@@ -31,7 +30,11 @@ export const Camera = ({ setOpenModal, setTargetProduct, resultCamera, setResult
         <header className="flex justify-end space-x-3">
             <Button
                 className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered"
-                onClick={onOpen}
+                onClick={
+                    () => {
+                        // setResultCamera(null)
+                        onOpen()
+                    }}
                 startContent={<FaCamera size={25}/>}>
 
             </Button>
@@ -46,8 +49,8 @@ export const Camera = ({ setOpenModal, setTargetProduct, resultCamera, setResult
             closeButton={<></>}
         >
             <ModalContent className=' overflow-y-scroll'>
-                <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">{'Imprimiendo etiqueta'}</ModalHeader>
-                <div className='flex flex-col items-center justify-center h-[30rem] w-full'>
+                <ModalHeader className="flex flex-col gap-1 text-center text-primary-500 dark:text-primary-200">{'Imprimiendo etiqueta'}</ModalHeader>
+                <div className='flex flex-col items-center justify-center h-[20rem] w-full'>
                     <div className='flex flex-col items-center justify-center h-[20rem] w-[20rem]'>
                         <Scanner
                             enabled={true}
@@ -61,7 +64,21 @@ export const Camera = ({ setOpenModal, setTargetProduct, resultCamera, setResult
                     </div>
 
                 </div>
+                <ModalFooter className='flex justify-between'>
+                    <Button color="danger"
+                        className='w-full'
+                        onClick={() => {
+                            setResultCamera(null)
+                            setTargetProduct(null)
+                            setTargetProduct(null)
+                            onClose()
+                        }}
+                    >
+                        {'Cerrar'}
+                    </Button>
+                </ModalFooter>
             </ModalContent>
+
         </Modal>
     </section>
 }
