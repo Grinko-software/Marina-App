@@ -49,7 +49,7 @@ export const Camera = ({ setOpenModal, setTargetProduct, resultCamera, setResult
             closeButton={<></>}
         >
             <ModalContent className=' overflow-y-scroll'>
-                <ModalHeader className="flex flex-col gap-1 text-center text-primary-500 dark:text-primary-200">{'Imprimiendo etiqueta'}</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1 text-center text-primary-500 dark:text-primary-200">{'Escanear código'}</ModalHeader>
                 <div className='flex flex-col items-center justify-center h-[20rem] w-full'>
                     <div className='flex flex-col items-center justify-center h-[20rem] w-[20rem]'>
                         <Scanner
