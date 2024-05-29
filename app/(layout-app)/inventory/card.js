@@ -131,7 +131,7 @@ export default function Card () {
             } else {
                 setMessageSearch(null)
             }
-            setFilteredList(updatedList?.slice(0, 100))
+            setFilteredList(updatedList?.slice(0, 50))
         } else if (searchSize >= 1) {
             setFilteredList([])
             setMessageSearch('Escribe al menos 3 carácteres para realizar una búsqueda.')
