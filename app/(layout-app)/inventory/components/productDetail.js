@@ -171,7 +171,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                                         : <div className="rounded-lg flex items-center m-auto w-[250px] flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
 
                                                             <Image id='imageProduct'
-                                                                src={productData?.image?.length ? ConvertBytesToImage({ imageBytes: productData?.image }) : DefaultImageMarinaMarket()}
+                                                                src={productData?.image?.length ? productData?.image : DefaultImageMarinaMarket()}
                                                                 alt="Image name"
                                                                 width={200}
                                                                 height={200}

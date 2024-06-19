@@ -27,7 +27,7 @@ const StockTable = () => {
                 (item) => {
                     let image
                     if (item?.image.length > 0) {
-                        image = ConvertBytesToImage({ imageBytes: item?.image })
+                        image = item?.image
                     } else {
                         image = DefaultImageMarinaMarket()
                     }

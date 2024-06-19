@@ -67,7 +67,7 @@ const OffertCard = ({ item, deleteAction }) => {
             alt={product?.name}
             className="w-[4rem] object-cover h-[4rem] rounded-lg bg-slate-100 dark:bg-white"
             // src={'https://confidentefinanciero.com/wp-content/uploads/2023/04/Facturacion-electronica-restaurantes-scaled.jpg'}
-            src={product?.image?.length ? ConvertBytesToImage({ imageBytes: product?.image }) : DefaultImageMarinaMarket()}
+            src={product?.image?.length ? product?.image : DefaultImageMarinaMarket()}
         />
         <section className='flex-1 flex gap-2 flex-wrap'>
             <div className="flex flex-1 min-w-[8rem] flex-col">

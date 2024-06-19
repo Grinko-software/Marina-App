@@ -11,6 +11,16 @@ const nextConfig = {
 
         // Important: return the modified config
         return config
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'storage.googleapis.com',
+                port: '',
+                pathname: '**'
+            }
+        ]
     }
 }
 

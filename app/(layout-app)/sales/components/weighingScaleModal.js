@@ -126,7 +126,7 @@ export default function WeighingScaleModal ({ isOpen, onClose, product }) {
                                             height="100"
                                             alt={product?.name}
                                             className="w-full object-cover h-[10rem] bg-slate-100 dark:bg-white"
-                                            src={product?.image?.length ? ConvertBytesToImage({ imageBytes: product?.image }) : DefaultImageMarinaMarket()}
+                                            src={product?.image?.length ? product?.image : DefaultImageMarinaMarket()}
                                         />
                                         <div className='m-5 mt-5'>
                                             <h3 className="text-2xl font-semibold text-foreground/90">{product?.name.toUpperCase()}</h3>
