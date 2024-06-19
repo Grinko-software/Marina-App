@@ -152,13 +152,14 @@ export default function Card () {
             getStockTypes(data?.stockTypes)
             // if (list?.length > 0 || !updateProduct) {
             if (list?.length > 0) {
-                if (upgradeVersion(lastUpdate, setLastUpdate)) {
+                /*                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
                     handleProductRequest(true, list)
                 } else {
                     handleProductRequest(false, list)
-                }
+                } */
+                handleProductRequest(false, list)
             } else {
-                handleProductRequest(true, list)
+                handleProductRequest(false, list)
             }
         }
     }, [data])

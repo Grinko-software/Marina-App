@@ -119,12 +119,12 @@ export default function tableProducts (props) {
             getOffers(data?.offers)
             if (list?.length > 0) {
                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
-                    handleProductRequest(true, list)
+                    handleProductRequest(false, list)
                 } else {
                     handleProductRequest(false, list)
                 }
             } else {
-                handleProductRequest(true, list)
+                handleProductRequest(false, list)
             }
         }
     }, [data])
