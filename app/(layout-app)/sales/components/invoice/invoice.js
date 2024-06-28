@@ -227,7 +227,7 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                                             isInvalid={defaultForm?.businessLine?.error}
                                                             onValueChange={(value) => {
                                                                 const newvalue = value.substring(0, 39)
-                                                                handleInputChange({ field: 'businessLine', newvalue })
+                                                                handleInputChange({ field: 'businessLine', value: newvalue })
                                                             }}
                                                         />
                                                     </section>
