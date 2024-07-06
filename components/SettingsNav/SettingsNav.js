@@ -13,6 +13,7 @@ import BoxStatus from './SectionsNav/closeBoxStatus'
 import ScaleStatus from '@/components/ui/ScaleStatus'
 import hubScale from '@/app/(layout-app)/sales/components/store/connectionScale'
 import { HomeButton } from './SectionsNav/HomeButton'
+import { ScanProduct } from './SectionsNav/ScanProduct'
 import SwitchUserButton from './SectionsNav/SwitchUserButton'
 import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
@@ -133,6 +134,9 @@ export default function SettingsNav ({ isMobile }) {
                                                 <HomeButton />
                                             </div>
                                             : <></>}
+                                    </div>
+                                    <div className="col-start-2 col-end-2">
+                                        <ScanProduct />
                                     </div>
                                 </>}
                             {usePathname() !== '/home'
