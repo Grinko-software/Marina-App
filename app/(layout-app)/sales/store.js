@@ -890,6 +890,68 @@ const useSalesStore = create(
             set({ loadingSale: false })
             // setStateMachine(null)
         },
+        cancelSale: async ({ sales, saleId, notify, onSuccessSale, removeSale, isCardPayment }) => {
+            set({ loadingSale: true, error: null })
+            const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
+            const sale = sales[saleIndex]
+            const saleType = VOUCHER_TYPE.TICKET
+
+            const saleProductsList = sale?.saleProductsList
+            const paymentTarget = sale?.paymentTarget
+
+            const discountTotalPctg = sale?.discountPctg ? sale?.discountPctg >= 0 && sale?.discountPctg <= 100 ? sale?.discountPctg / 100 : null : null
+            const totalDiscountExtra = sale?.discount
+            const totalPay = discountTotalPctg ? (sale?.totalPrice - (totalDiscountExtra)) : sale?.totalPrice// add general discount
+
+            const totalTaxFreePay = sale?.totalTaxFree || 0
+            const totalWithOutTaxFree = totalPay - totalTaxFreePay
+
+            const netTotal = roundValueWithMath((totalWithOutTaxFree) / 1.19, 0, 0)
+            const iva = totalWithOutTaxFree - netTotal
+
+            const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
+
+            /* Model to send endpoint our bd */
+            const cashRegister = getCashRegister()
+            const body = {
+                sales_receipt: saleProductsList?.map((item) => {
+                    return {
+                        product_id: item?.product?.id,
+                        quantity: item?.quantity,
+                        total_price: item?.total,
+                        total_discount: item?.discount
+                    }
+                }),
+                payment_type_id: paymentTarget,
+                voucher_type_id: 3,
+                cash_register_id: cashRegister?.ID,
+                user_id: getIdUser()
+            }
+
+            await saveTicketOnDatabase({
+                saleType,
+                listSales: saleProductsList,
+                totalPay,
+                netTotal,
+                iva,
+                totalTaxFree: totalTaxFreePay,
+                discountExtra: totalDiscountExtra,
+                discountOffers: totalDiscountOffers,
+                body,
+                notify,
+                openCashRegister: !isCardPayment,
+                onSuccessSale: () => {
+                    if (onSuccessSale) {
+                        onSuccessSale()
+                    }
+                    removeSale(sales, saleId)
+                    set({ loadingSale: false })
+                }
+            })
+
+            set({ loadingSale: false })
+            // setStateMachine(null)
+        },
         /* Add discount */
         addDiscountSale: (listSalesActives, saleIdActive, value, cleanForm) => {
             const saleIndex = listSalesActives?.findIndex((sale) => sale.id === saleIdActive)
