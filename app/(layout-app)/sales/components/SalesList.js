@@ -32,6 +32,8 @@ export default function SaleList (props) {
     const [listSales, setListSales] = useState([])
     const [totalPrice, setTotalPrice] = useState([])
     const [discount, setDiscount] = useState(null)
+    /* Loading disable button */
+    const [loadingHandleButtonClick, setLoadingHandleButtonClick] = useState(false)
 
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
@@ -77,8 +79,9 @@ export default function SaleList (props) {
         setPayment(false)
     }
     const handleButtonClick = () => {
+        setLoadingHandleButtonClick(true)
         getStatus(selectedCashRegister?.ID).then((status) => {
-            if (!status) {
+            if (!status && status !== null) {
                 notify('❌ Error: Se debe iniciar primero la caja para poder efectuar una venta!')
             } else {
                 if (!payment) {
@@ -92,6 +95,7 @@ export default function SaleList (props) {
                     setGoPay(false)
                 }
             }
+            setLoadingHandleButtonClick(false)
         })
     }
     useEffect(() => {
@@ -176,7 +180,9 @@ export default function SaleList (props) {
                         onClick={() => {
                             // Verificar si se hizo primero el inicio de caja
                             handleButtonClick()
-                        } }>
+                        } }
+                        isDisabled={loadingHandleButtonClick}
+                    >
                         { discount
                             ? <div className="text-2xl font-bol flex flex-col  items-center">
                                 <motion.div

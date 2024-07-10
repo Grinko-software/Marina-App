@@ -45,7 +45,6 @@ export default function Card () {
     const [lastInViewPort, setLastInViewPort] = useState(false)
     const refShowMore = useRef(null)
     const { lastUpdate, setLastUpdate } = useSyncStore()
-    const [updateProduct, setUpdateProduct] = useState(false)
 
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
@@ -132,7 +131,7 @@ export default function Card () {
             } else {
                 setMessageSearch(null)
             }
-            setFilteredList(updatedList)
+            setFilteredList(updatedList?.slice(0, 50))
         } else if (searchSize >= 1) {
             setFilteredList([])
             setMessageSearch('Escribe al menos 3 carácteres para realizar una búsqueda.')
@@ -153,13 +152,14 @@ export default function Card () {
             getStockTypes(data?.stockTypes)
             // if (list?.length > 0 || !updateProduct) {
             if (list?.length > 0) {
-                if (upgradeVersion(lastUpdate, setLastUpdate)) {
+                /*                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
                     handleProductRequest(true, list)
                 } else {
                     handleProductRequest(false, list)
-                }
+                } */
+                handleProductRequest(false, list)
             } else {
-                handleProductRequest(true, list)
+                handleProductRequest(false, list)
             }
         }
     }, [data])
@@ -207,7 +207,7 @@ export default function Card () {
                     <CreateProduct
                         triggerAction={triggerAction}
                         handleProductRequest={handleProductRequest}
-                        setUpdateProduct={setUpdateProduct}
+
                     />
                     <CreateCategory />
                 </div>
@@ -273,7 +273,7 @@ export default function Card () {
                         </section> }
 
             </section>
-            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct} setUpdateProduct={setUpdateProduct}/>
+            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct} />
         </section>
     )
 }

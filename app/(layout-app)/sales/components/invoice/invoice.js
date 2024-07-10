@@ -220,12 +220,15 @@ export default function InvoiceDetailed ({ openModal, setOpenModal, setVoucherTa
                                         <SectionInput title={''} >
                                             <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
                                                 <div className="flex-3">
-                                                    <h3 className="text-small pt-1">{'* Giro de empresa'}</h3>
+                                                    <h3 className="text-small pt-1">{'* Giro de empresa (40 caracteres máximo)'}</h3>
                                                     <section className="space-y-3">
                                                         <Input type="text" variant={'underlined'} defaultValue={ ''}
                                                             errorMessage={defaultForm?.businessLine?.error}
                                                             isInvalid={defaultForm?.businessLine?.error}
-                                                            onValueChange={(value) => { handleInputChange({ field: 'businessLine', value }) }}
+                                                            onValueChange={(value) => {
+                                                                const newvalue = value.substring(0, 39)
+                                                                handleInputChange({ field: 'businessLine', value: newvalue })
+                                                            }}
                                                         />
                                                     </section>
 

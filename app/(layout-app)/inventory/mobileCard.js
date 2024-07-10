@@ -8,14 +8,13 @@ import CreateProduct from './components/NewProduct/createProduct'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 import ProductDetail from './components/productDetail'
 import LoadingCard from '@/components/ui/Loading'
-import Offers from './components/Offer/offers'
-import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
 import useScannerStore from '@/stores/scanner'
 import useStore from './store/store'
 import { upgradeVersion } from '@/services/sync'
 import useSyncStore from '@/stores/common/sync'
+import Camera from './components/Camera/camera'
 const LIMIT_PRODUCTS_VIEW = 50
 export default function Card () {
     const {
@@ -38,6 +37,8 @@ export default function Card () {
     const [showMoreEnable, setShowMoreEnable] = useState(false)
     const [pageNumber, setPageNumber] = useState(1)
     const [lastInViewPort, setLastInViewPort] = useState(false)
+    const [openModal, setOpenModal] = useState(false)
+    const [resultCamera, setResultCamera] = useState(null)
     const refShowMore = useRef(null)
     const onChange = (event) => {
         setSearchInput(event.target.value)
@@ -144,12 +145,12 @@ export default function Card () {
             // if (list?.length > 0 || !updateProduct) {
             if (list?.length > 0) {
                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
-                    handleProductRequest(true, list)
+                    handleProductRequest(false, list)
                 } else {
                     handleProductRequest(false, list)
                 }
             } else {
-                handleProductRequest(true, list)
+                handleProductRequest(false, list)
             }
         }
     }, [data])
@@ -175,9 +176,14 @@ export default function Card () {
                             onSelectionChange={setSelectedCategoryID}
                         />
                     }
-                    <Offers isMobile={true}/>
-                    <CreateProduct isMobile={true} handleProductRequest={handleProductRequest}/>
-                    <CreateCategory isMobile={true}/>
+                    <Camera resultCamera={resultCamera} setResultCamera={setResultCamera} setTargetProduct={setTargetProduct} setOpenModal={setOpenModal}/>
+                    <CreateProduct
+                        triggerAction={triggerAction}
+                        handleProductRequest={handleProductRequest}
+                        openModal={openModal}
+                        resultCamera={resultCamera}
+                        setResultCamera={setResultCamera}
+                    />
                 </div>
                 <div >
                     <section className="flex flex-col p-2 shadow-md hover:shadow-lg bg-secondary-50 dark:bg-secondary-450 rounded-md ">
@@ -249,7 +255,7 @@ export default function Card () {
                     </section>
                 </div>
             </section>
-            <ProductDetail targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct}/>
+            <ProductDetail isMobile={true} targeProduct={targeProduct} isOpen={isOpen} onClose={onClose} setTargetProduct={setTargetProduct}/>
         </section>
     )
 }

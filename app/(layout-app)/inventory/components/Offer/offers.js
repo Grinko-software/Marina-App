@@ -14,9 +14,9 @@ import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import { deleteOffer } from '@/services/offers'
 import { notify } from '@/services/notify'
 import { BiSolidOffer } from 'react-icons/bi'
+import { FaCamera } from 'react-icons/fa'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
-
 export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
     return (
         <Input
@@ -67,7 +67,7 @@ const OffertCard = ({ item, deleteAction }) => {
             alt={product?.name}
             className="w-[4rem] object-cover h-[4rem] rounded-lg bg-slate-100 dark:bg-white"
             // src={'https://confidentefinanciero.com/wp-content/uploads/2023/04/Facturacion-electronica-restaurantes-scaled.jpg'}
-            src={product?.image?.length ? ConvertBytesToImage({ imageBytes: product?.image }) : DefaultImageMarinaMarket()}
+            src={product?.image?.length ? product?.image : DefaultImageMarinaMarket()}
         />
         <section className='flex-1 flex gap-2 flex-wrap'>
             <div className="flex flex-1 min-w-[8rem] flex-col">
@@ -172,11 +172,18 @@ export default function Offers () {
     }, [complete, error])
     return (
         <section>
-            <header className="flex justify-end">
-                <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={onOpen}
-                    startContent={<BiSolidOffer size={25}/>}>
-                    {isMobile ? '' : 'OFERTAS'}
-                </Button>
+            <header className="flex justify-end space-x-3">
+                { isMobile
+                    ? <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered"
+                        onClick={onOpen}
+                        startContent={<FaCamera size={25}/>}>
+                    </Button>
+                    : <Button className='bg-amber-400 dark:bg-amber-400 font-semibold' color='danger' variant="bordered" onClick={onOpen}
+                        startContent={<BiSolidOffer size={25}/>}>
+                        {isMobile ? '' : 'OFERTAS'}
+                    </Button>
+                }
+
             </header>
             <Modal size={'3xl'}
                 isOpen={isOpen}

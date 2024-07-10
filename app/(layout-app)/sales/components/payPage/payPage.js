@@ -41,7 +41,7 @@ export default function PayPage (props) {
     const [openModal, setOpenModal] = useState(false)
     const { payment, getPaymentType } = usePaymentStore()
     const { voucher, getVoucherType } = useVocuherStore()
-    const { getCustomers } = useInvoiceStore()
+    const { customers, getCustomers } = useInvoiceStore()
     const { printEnabled: isPrintActived, setPrintEnabled } = useSettingsStore()
     const [activeSale, setActiveSale] = useState(null)
     const {
@@ -65,9 +65,11 @@ export default function PayPage (props) {
     // Handle request
     /* Handle multiple request */
     useEffect(() => {
-        getData()
-        return () => {
-            setLoading(false)
+        if (!payment?.length || !voucher?.length || !customers?.length) {
+            getData()
+            return () => {
+                setLoading(false)
+            }
         }
     }, [])
     useEffect(() => {

@@ -41,7 +41,7 @@ const ProductCard = ({ item, closeButton, onClose }) => {
             alt={name}
             className="w-[4rem] object-cover h-[4rem] rounded-lg bg-slate-100 dark:bg-white"
             // src={'https://confidentefinanciero.com/wp-content/uploads/2023/04/Facturacion-electronica-restaurantes-scaled.jpg'}
-            src={image?.length ? ConvertBytesToImage({ imageBytes: image }) : DefaultImageMarinaMarket()}
+            src={image?.length ? image : DefaultImageMarinaMarket()}
         />
         <div className="flex w-full flex-col">
             <span className="text-small">{name}</span>

@@ -119,12 +119,12 @@ export default function tableProducts (props) {
             getOffers(data?.offers)
             if (list?.length > 0) {
                 if (upgradeVersion(lastUpdate, setLastUpdate)) {
-                    handleProductRequest(true, list)
+                    handleProductRequest(false, list)
                 } else {
                     handleProductRequest(false, list)
                 }
             } else {
-                handleProductRequest(true, list)
+                handleProductRequest(false, list)
             }
         }
     }, [data])
@@ -158,7 +158,7 @@ export default function tableProducts (props) {
                         color="success"
                         aria-label="Options"
                         // items={listCategories?.length > 0 ? listCategories : []}
-                        items={listCategories?.length > 0 ? listCategories?.filter((element) => element?.label === 'FRUTAS' || element?.label === 'VERDURAS' || element?.label === 'CARNES' || element?.label === 'PAN' || element?.label === 'MASCOTAS' || element?.label === 'CIGARROS' || element?.label === 'DULCES' || element?.label === 'BAZAR' || element?.label === 'OTROS' || element?.label === 'PROMOS' || element?.label === 'REMEDIOS') : [] }
+                        items={listCategories?.length > 0 ? listCategories?.filter((element) => element?.label === 'FRUTAS' || element?.label === 'VERDURAS' || element?.label === 'CARNES' || element?.label === 'PAN' || element?.label === 'MASCOTAS' || element?.label === 'CAFETERÍA' || element?.label === 'BAZAR' || element?.label === 'OTROS' || element?.label === 'PROMOS' || element?.label === 'REMEDIOS') : [] }
                         selectedKey={categoryTabSelected}
                         onSelectionChange={setCategoryTabSelected}
                         variant={'solid'}

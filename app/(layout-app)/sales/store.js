@@ -553,7 +553,7 @@ const useSalesStore = create(
                         ? {
                             device,
                             amount: totalPay,
-                            dteType: 48,
+                            dteType: totalTaxFree < totalPay ? 48 : 99,
                             printVoucherOnApp: false,
                             extraData: {
                                 exemptAmount: totalTaxFree,
@@ -816,7 +816,8 @@ const useSalesStore = create(
                         }
                     })
                         .catch(error => {
-                            console.log(error)
+                            const message = error?.message || 'Error en Haulmer'
+                            notify('❌ ' + message)
                             set({ loadingSale: false })
                         })
                 } catch {

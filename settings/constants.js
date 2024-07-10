@@ -1,12 +1,9 @@
-export const BASE_AUTH_API_URL = 'https://marina-auth-api-dev-rlfvoxmasq-uc.a.run.app'
-// export const BASE_AUTH_API_URL = 'https://marina-auth-api-prod-rlfvoxmasq-uc.a.run.app'
-// export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
-export const BASE_MARKET_API_URL = 'https://marina-market-api-rlfvoxmasq-uc.a.run.app'
+export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
 
 // AUTH
-export const AUTH_LOGIN_API_URL = BASE_AUTH_API_URL + '/auth/login'
-export const AUTH_CODE_API_URL = BASE_AUTH_API_URL + '/auth'
-export const AUTH_RENEW = BASE_AUTH_API_URL + '/auth/renew'
+export const AUTH_LOGIN_API_URL = BASE_MARKET_API_URL + '/auth/login'
+export const AUTH_CODE_API_URL = BASE_MARKET_API_URL + '/auth'
+export const AUTH_RENEW = BASE_MARKET_API_URL + '/auth/renew'
 
 // MARKET
 export const CREATE_PRODUCT_API_URL = '/product/create'
@@ -52,16 +49,16 @@ export const REPORTS_LAST_SALES_API_URL = '/report/last-sales'
 export const REPORTS_SALE_DETAIL_URL = BASE_MARKET_API_URL + '/sale-ticket'
 
 // USERS
-export const USERS_API_URL = BASE_AUTH_API_URL + '/user'
-export const CREATE_USER_API_URL = BASE_AUTH_API_URL + '/user/create'
-export const USER_RESET_PASSWORD = BASE_AUTH_API_URL + '/user/password/reset'
+export const USERS_API_URL = BASE_MARKET_API_URL + '/user'
+export const CREATE_USER_API_URL = BASE_MARKET_API_URL + '/user/create'
+export const USER_RESET_PASSWORD = BASE_MARKET_API_URL + '/user/password/reset'
 
 // KEY
-export const KEY_API_URL = BASE_AUTH_API_URL + '/key'
-export const CREATE_KEY_API_URL = BASE_AUTH_API_URL + '/key/create'
+export const KEY_API_URL = BASE_MARKET_API_URL + '/key'
+export const CREATE_KEY_API_URL = BASE_MARKET_API_URL + '/key/create'
 
 // ASSOCIATION
-export const ASSOCIATION_KEY_API_URL = BASE_AUTH_API_URL + '/association'
+export const ASSOCIATION_KEY_API_URL = BASE_MARKET_API_URL + '/association'
 
 // SUPPLIER
 export const SUPPLIER_API_URL = BASE_MARKET_API_URL + '/supplier'

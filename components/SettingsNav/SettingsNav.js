@@ -19,7 +19,6 @@ import useSettingsStore from '@/stores/settings'
 import { getStatus } from './services'
 import toast from 'react-hot-toast'
 import DepositCash from './SectionsNav/DepositCash'
-import { isMobileDevice } from '@/utils/agent'
 import PrinterStatus from '../ui/PrinterStatus'
 import hubPrint from '@/app/(layout-app)/sales/components/store/connectionPrinter'
 
@@ -57,7 +56,6 @@ export default function SettingsNav ({ isMobile }) {
     }, [selectedCashRegister])
     /* Control disable button */
     useEffect(() => {
-        const isMobile = isMobileDevice()
         if (!isMobile) {
             if (selectedCashRegister?.ID === 'no-select') {
                 notify('⚙️ Se debe seleccionar una caja en ajustes!')

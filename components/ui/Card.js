@@ -22,7 +22,7 @@ export default function Card (props) {
                             height="100"
                             alt={item?.name}
                             className="w-full object-cover h-[7rem]  bg-slate-100 dark:bg-white"
-                            src={item?.image?.length ? ConvertBytesToImage({ imageBytes: item?.image }) : DefaultImageMarinaMarket()}
+                            src={item?.image?.length ? item?.image : DefaultImageMarinaMarket()}
                         />
                     </div>
                 </CardBody>
@@ -46,7 +46,7 @@ export default function Card (props) {
                         height="100"
                         alt={item?.name}
                         className="w-full object-cover h-[10rem]  bg-slate-100 dark:bg-white shadow-md rounded-2xl"
-                        src={item?.image?.length ? ConvertBytesToImage({ imageBytes: item?.image }) : DefaultImageMarinaMarket()}
+                        src={item?.image?.length ? item?.image : DefaultImageMarinaMarket()}
                     />
                 </CardBody>
                 <CardFooter className="text-small justify-between">
