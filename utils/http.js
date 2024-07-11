@@ -22,7 +22,9 @@ const makeRequest = async (url, method = GET, data = null, fullUrl = false) => {
             .then(async response => {
                 try {
                     if (response?.status === 401) {
-                        handleUnauthorized(url, method, data)
+                        return handleUnauthorized(url, method, data)
+                    } else if (response?.status === 500) {
+                        throw new Error('Server Error: ' + response.status)
                     }
 
                     const res = await response.json()
