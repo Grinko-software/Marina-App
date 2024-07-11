@@ -19,12 +19,15 @@ const makeRequest = async (url, method = GET, data = null, fullUrl = false) => {
     }
     try {
         return await fetch(`${fullUrl ? '' : BASE_MARKET_API_URL}${url}`, options)
-            .then(response => {
+            .then(async response => {
                 try {
-                    if (response?.ok) {
-                        return response.json()
-                    } else if (response?.status === 401) {
-                        return handleUnauthorized(url, method, data)
+                    if (response?.status === 401) {
+                        handleUnauthorized(url, method, data)
+                    }
+
+                    const res = await response.json()
+                    if (res) {
+                        return res
                     } else {
                         throw new Error('Error en la solicitud: ' + response.status)
                     }
