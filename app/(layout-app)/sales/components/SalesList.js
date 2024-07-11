@@ -158,7 +158,7 @@ export default function SaleList (props) {
                                 className='animation-fade-in'
                                 color="danger"
                                 variant="bordered"
-                                onClick={() => (handleButton())}>
+                                onClick={() => { handleButton(); setGoPay(false) }}>
                                 cancelar
                             </Button>
                         </div>
