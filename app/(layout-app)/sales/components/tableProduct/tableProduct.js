@@ -92,8 +92,6 @@ export default function tableProducts (props) {
                 currentTotal += item?.total - (item?.discount || 0)
             })
             setTotalPrice(listSalesActives, saleIdActive, Math.round(currentTotal / 10) * 10, Math.round(currentTotalTaxFree / 10) * 10)
-        } else {
-            setTotalPrice(listSalesActives, saleIdActive, 0, 0)
         }
     }, [listSales])
     useEffect(() => {

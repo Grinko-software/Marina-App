@@ -4,7 +4,7 @@ import { Button } from '@nextui-org/react'
 import { DeleteIcon } from './DeleteIcon'
 import useSalesStore from '@/app/(layout-app)/sales/store'
 
-export default function DeleteButton ({ productId }) {
+export default function DeleteButton ({ productId, saleConfirm }) {
     const handleButton = () => {
         const sales = useSalesStore.getState().listSalesActives
         const saleId = useSalesStore.getState().saleIdActive
@@ -13,7 +13,7 @@ export default function DeleteButton ({ productId }) {
 
     return (
         <div className="flex flex-col items-center">
-            <Button className="flex flex-col items-center" isIconOnly color="danger" variant="faded" aria-label=""
+            <Button isDisabled={saleConfirm} className="flex flex-col items-center" isIconOnly color="danger" variant="faded" aria-label=""
                 onClick={handleButton}>
                 <DeleteIcon />
             </Button>
