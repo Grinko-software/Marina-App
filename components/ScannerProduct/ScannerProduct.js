@@ -19,7 +19,7 @@ export default function ScannerProduct () {
     const [productData, setProductData] = useState(null)
     const [error, setError] = useState(false)
     const [inputCodeValue, setInputCodeValue] = useState(null)
-    const [isActivedInputQR, setIsActivedInputQR] = useState(true)
+    const [isActivedInputQR, setIsActivedInputQR] = useState(false)
     const [errorMessage, setErrorMessage] = useState(false)
     const {
         enabledAuthMode,
