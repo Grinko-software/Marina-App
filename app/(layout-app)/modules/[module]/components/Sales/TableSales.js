@@ -54,6 +54,9 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
         {
             key: 'showTicket',
             label: 'Boleta'
+        }, {
+            key: 'isDone',
+            label: 'Estado de venta'
         }
     ]
 
@@ -71,7 +74,8 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
                     type: item?.name_voucher,
                     paymentType: item?.name_payment,
                     userName: item?.user_name,
-                    cachRegisterName: item?.cach_register_name
+                    cachRegisterName: item?.cach_register_name,
+                    isDone: item?.is_done
                 }
             })
             const limit = 10
@@ -152,6 +156,23 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
                             }}
                         >
                             {data.type}
+                        </Chip>
+                    }</p>
+                </div>
+            )
+        case 'isDone':
+            return (
+                <div className="flex flex-col">
+                    <p className="text-bold text-sm capitalize dark:text-white">{
+                        <Chip
+                            color={data.isDone ? 'secondary' : 'danger'}
+                            size="sm"
+                            variant="solid"
+                            classNames={{
+                                content: 'text-white'
+                            }}
+                        >
+                            {data.isDone ? 'Completada' : 'Cancelada'}
                         </Chip>
                     }</p>
                 </div>
