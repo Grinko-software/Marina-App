@@ -184,7 +184,7 @@ export default function SaleList (props) {
 
             </section>
             <section className='w-full'>
-                {totalPrice
+                {listSales.length > 0
                     ? <Button color="success" variant="shadow" className='text-white mt-2 mb-2 h-[4rem] w-full font-bold text-2xl'
                         onClick={() => {
                             // Verificar si se hizo primero el inicio de caja
@@ -212,7 +212,7 @@ export default function SaleList (props) {
                                         </p>
                                     </div>
                                     <p className='text-primary-50'>
-                                        {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'TOTAL '}
+                                        {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'PAGAR '}
                                         { formatter.format(transformNumberFormat(totalPrice - discount)) }
                                     </p>
                                 </motion.div>
