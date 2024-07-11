@@ -2,6 +2,7 @@
 import React from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 import ScannerProduct from '../ScannerProduct/ScannerProduct'
+import useScannerStore from '@/stores/scanner'
 
 export default function ScanProductModal ({ isOpen, onClose }) {
     const closeModal = () => {
@@ -9,6 +10,10 @@ export default function ScanProductModal ({ isOpen, onClose }) {
             onClose()
         }
     }
+
+    const {
+        disabledAuthMode
+    } = useScannerStore()
 
     return (
         <>
@@ -25,6 +30,7 @@ export default function ScanProductModal ({ isOpen, onClose }) {
                             <ModalFooter className='justify-center'>
                                 <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
                                     closeModal()
+                                    disabledAuthMode()
                                 }}>
                                     Cerrar
                                 </Button>
