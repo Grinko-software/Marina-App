@@ -1,23 +1,16 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Barcode from '@/assets/gifs/animation_barcode.json'
-import CompletedGif from '@/assets/gifs/animation_completed.json'
 import ErrordGif from '@/assets/gifs/animation_error.json'
 import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
-import useAuthStore from '@/stores/user'
 import useInventoryStore from '@/app/(layout-app)/inventory/store'
 import { Button, Input, Spinner } from '@nextui-org/react'
 import AlertMessage from '../ui/AlertMessage'
-import { FaUnlockAlt } from 'react-icons/fa'
-import { SearchIcon } from '../ui/SearchIcon'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { roundValueWithMath } from '@/utils/number'
 import Image from 'next/image'
 import { DefaultImageMarinaMarket } from '@/utils/image'
-
-const TIMEOUT = 1500
-const TIMEOUT_SCAN = 500
 
 export default function ScannerProduct () {
     const [loading, setLoading] = useState(false)
@@ -28,10 +21,9 @@ export default function ScannerProduct () {
     const [inputCodeValue, setInputCodeValue] = useState(null)
     const [isActivedInputQR, setIsActivedInputQR] = useState(true)
     const [errorMessage, setErrorMessage] = useState(false)
-    const [userAuthData, setUserAuthData] = useState(null)
     const {
         enabledAuthMode,
-        disabledAuthMode,
+        // disabledAuthMode,
         authModeEnabled,
         datetimeLastUpdate
     } = useScannerStore()
