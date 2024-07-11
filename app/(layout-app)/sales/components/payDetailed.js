@@ -12,7 +12,7 @@ import useInvoiceStore from './invoice/store'
 export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue, onOpenLoadingSale }) {
     const [openModal, setOpenModal] = useState(false)
     const [openModalCancelSale, setOpenModalCancelSale] = useState()
-    const { targetCustomer, setTargetCustomer } = useInvoiceStore(({ targetCustomer, setTargetCustomer }) => ({ targetCustomer, setTargetCustomer }))
+    const { targetCustomer } = useInvoiceStore(({ targetCustomer }) => ({ targetCustomer }))
     const {
         loadingSale,
         listSalesActives,

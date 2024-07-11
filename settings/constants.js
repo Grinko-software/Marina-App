@@ -27,6 +27,7 @@ export const PRODUCT_OFFER = '/product/offer'
 
 // Creat list
 export const SALE_TICKET_CREATE = '/sale-ticket/create'
+
 export const CANCEL_SALE = '/sale-ticket/cancel'
 // DTEMITE ENDPOINTS
 export const GET_DOCUMENT_HAULMER = '/dte'

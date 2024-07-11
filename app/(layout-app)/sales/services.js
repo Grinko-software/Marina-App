@@ -80,6 +80,19 @@ export const saveTicketOnDatabase = async ({ body, notify, saleType, onSuccessSa
     })
 }
 
+export const cancelSaleOnDatabase = async ({ body, notify, onSuccessSale }) => {
+    await getData(SALE_TICKET_CREATE, POST, body).then(result => {
+        if (result?.code === 200) {
+            notify('ℹ️ Venta cancelada')
+            if (onSuccessSale) {
+                onSuccessSale()
+            }
+        } else {
+            notify('❌ Problemas al cancelar la venta')
+        }
+    })
+}
+
 export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, totalPay, netTotal, iva, saleProductsList, discount }) => {
     const date = today().format('YYYY-MM-DD')
 
