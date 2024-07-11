@@ -21,7 +21,7 @@ export default function ScanProductModal ({ isOpen, onClose }) {
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} closeButton={<></>} >
                 <ModalContent>
                     {(onClose) => (
                         <>
