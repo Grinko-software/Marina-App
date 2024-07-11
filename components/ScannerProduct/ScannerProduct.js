@@ -57,7 +57,7 @@ export default function ScannerProduct () {
 
     useEffect(() => {
         enabledAuthMode(getUserDataProduct)
-    }, [datetimeLastUpdate, authModeEnabled])
+    }, [])
 
     useEffect(() => {
         if (error && completed) {
