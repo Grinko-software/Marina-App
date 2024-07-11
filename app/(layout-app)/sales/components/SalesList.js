@@ -158,7 +158,7 @@ export default function SaleList (props) {
                                 className='animation-fade-in'
                                 color="danger"
                                 variant="bordered"
-                                onClick={() => { handleButton(); setGoPay(false) }}>
+                                onClick={() => { handleButton() }}>
                                 cancelar
                             </Button>
                         </div>
@@ -238,6 +238,7 @@ export default function SaleList (props) {
                     : <></>}
             </section>
             <ModalCancelSale
+                onComplete={() => { setPayment(false) } }
                 isOpen={isOpen}
                 onClose={onClose}
             />
