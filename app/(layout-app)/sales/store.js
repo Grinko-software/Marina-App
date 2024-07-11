@@ -32,8 +32,7 @@ const useSalesStore = create(
                 paymentTarget: null,
                 voucherTarget: 1,
                 discount: null,
-                totalTaxFree: 0,
-                paymentViewEnabled: false
+                totalTaxFree: 0
             }],
             setLoadingSale: (value) => set({ loadingSale: value }),
             setUnits: (value) => set({ units: parseInt(value) }),
@@ -975,11 +974,6 @@ const useSalesStore = create(
                 listSalesActives[saleIndex].discount = null
                 listSalesActives[saleIndex].discountPctg = null
                 set({ listSalesActives })
-            },
-            setPaymentViewEnabled: (sales, saleId, paymentViewEnabled) => {
-                const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
-                sales[saleIndex].paymentViewEnabled = paymentViewEnabled
-                set({ listSalesActives: sales })
             }
 
         }),
