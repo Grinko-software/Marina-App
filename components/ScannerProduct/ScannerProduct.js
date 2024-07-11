@@ -6,20 +6,27 @@ import ErrordGif from '@/assets/gifs/animation_error.json'
 import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
 import useAuthStore from '@/stores/user'
+import useInventoryStore from '@/app/(layout-app)/inventory/store'
 import { Button, Input, Spinner } from '@nextui-org/react'
 import AlertMessage from '../ui/AlertMessage'
 import { FaUnlockAlt } from 'react-icons/fa'
+import { SearchIcon } from '../ui/SearchIcon'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { roundValueWithMath } from '@/utils/number'
+import Image from 'next/image'
+import { DefaultImageMarinaMarket } from '@/utils/image'
 
 const TIMEOUT = 1500
 const TIMEOUT_SCAN = 500
 
-export default function ScannerProduct ({ onGetUserData, onSuccess, changeSession, requireAdmin, withoutDelay }) {
+export default function ScannerProduct () {
     const [loading, setLoading] = useState(false)
     const [completed, setCompleted] = useState(false)
     const [success, setSuccess] = useState(false)
+    const [productData, setProductData] = useState(null)
     const [error, setError] = useState(false)
-    const [inputCodeQR, setInputCodeQR] = useState(null)
-    const [isActivedInputQR, setIsActivedInputQR] = useState(null)
+    const [inputCodeValue, setInputCodeValue] = useState(null)
+    const [isActivedInputQR, setIsActivedInputQR] = useState(true)
     const [errorMessage, setErrorMessage] = useState(false)
     const [userAuthData, setUserAuthData] = useState(null)
     const {
@@ -28,100 +35,80 @@ export default function ScannerProduct ({ onGetUserData, onSuccess, changeSessio
         authModeEnabled,
         datetimeLastUpdate
     } = useScannerStore()
-    const {
-        signInWithCode,
-        getUserDataWithCode,
-        errorAuthCode
-    } = useAuthStore()
 
-    const getUserData = async (qrValue) => {
+    const getUserDataProduct = async (codeValue) => {
         setLoading(true)
         setCompleted(false)
         setErrorMessage(null)
-        const data = await getUserDataWithCode({ authCode: qrValue, requireAdmin })
-        if (data) {
-            setUserAuthData(data)
+
+        const product = useInventoryStore.getState().getProductByCode(
+            useInventoryStore.getState().listInventory,
+            codeValue
+        )
+
+        if (product) {
             setError(false)
             setSuccess(true)
         } else {
             setError(true)
             setSuccess(false)
         }
-        setCompleted(true)
+
+        setProductData(product || null)
         setLoading(false)
-    }
-
-    const loginWithQR = async (qrValue) => {
-        setLoading(true)
-        setCompleted(false)
-        setErrorMessage(null)
-        const data = await signInWithCode({ authCode: qrValue })
-        if (data) {
-            setError(false)
-            setSuccess(true)
-        } else {
-            setError(true)
-            setSuccess(false)
-        }
         setCompleted(true)
-        setLoading(false)
     }
 
-    const onCompleteAuth = () => {
-        if (onGetUserData) {
-            onGetUserData(userAuthData)
-        }
-        if (onSuccess) {
-            onSuccess(userAuthData)
-        }
-    }
-
-    const authenticateWithInputCode = () => {
-        if (changeSession) {
-            loginWithQR(inputCodeQR)
-        } else {
-            getUserData(inputCodeQR)
-        }
+    const searchProductWithInputCode = () => {
+        getUserDataProduct(inputCodeValue)
     }
 
     useEffect(() => {
-        if (error && completed) {
-            if (requireAdmin) {
-                setErrorMessage('Se requieren permisos de administrador')
-            } else {
-                setErrorMessage('Credencial no autorizada')
-            }
-        } else {
-            setErrorMessage(null)
-        }
-    }, [error, completed, requireAdmin])
-
-    useEffect(() => {
-        if (changeSession) {
-            enabledAuthMode(loginWithQR)
-        } else {
-            enabledAuthMode(getUserData)
-        }
+        enabledAuthMode(getUserDataProduct)
     }, [datetimeLastUpdate, authModeEnabled])
 
     useEffect(() => {
-        if (completed && success) {
-            setTimeout(() => {
-                onCompleteAuth()
-            }, withoutDelay ? 0 : TIMEOUT)
-            setTimeout(() => {
-                disabledAuthMode()
-            }, withoutDelay ? TIMEOUT_SCAN : (TIMEOUT + TIMEOUT_SCAN))
+        if (error && completed) {
+            setErrorMessage('Producto no encontrado')
+        } else {
+            setErrorMessage(null)
         }
-    }, [completed, success, withoutDelay])
+    }, [error, completed])
 
     return (
         <section className='h-full flex flex-col items-center py-[3rem]'>
-            <section className='h-[15rem] flex overflow-hidden'>
+            <section className={`${productData ? '' : 'h-[15rem]'} flex overflow-hidden`}>
                 {
-                    completed && success
+                    completed && success && productData
                         ? <>
-                            <Lottie className="mx-auto" animationData={CompletedGif} loop={false} />
+                            <div className='flex flex-col min-w-[20rem] justify-center'>
+                                <div className='mx-auto mb-5'>
+                                    <Image id='imageProduct'
+                                        src={productData?.image?.length ? productData?.image : DefaultImageMarinaMarket()}
+                                        alt={productData?.name}
+                                        width={200}
+                                        height={200}
+                                    />
+                                </div>
+                                {
+                                    [
+                                        { title: 'Nombre', value: productData?.name },
+                                        { title: 'Código', value: productData?.code },
+                                        { title: 'Precio', value: `$ ${roundValueWithMath(productData?.price, 0, 0)} ` }
+                                        // { title: 'Precio costo', value: productData?.costPrice },
+                                        // { title: 'Precio neto', value: productData?.netPrice },
+                                        // { title: 'Stock disponible', value: productData?.stock },
+                                        // { title: 'Excento de IVA', value: productData?.taxFree ? 'SI' : 'NO' }
+                                    ].map(({ title, value }) => {
+                                        return (
+                                            <div key={title} className='flex flex-row w-full justify-between gap-5 text-xl'>
+                                                <p className='font-bold'>{`${title}:`}</p>
+                                                <p className='text-2xl'>{value}</p>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                         </>
                         : error
                             ? <>
@@ -137,25 +124,21 @@ export default function ScannerProduct ({ onGetUserData, onSuccess, changeSessio
                                         <Input
                                             className='rounded-r-lg'
                                             type="text"
-                                            value={inputCodeQR}
+                                            value={inputCodeValue}
                                             variant={'bordered'}
-                                            label={'Código de credencial'}
+                                            label={'Código del producto'}
                                             labelPlacement='outside'
-                                            onValueChange={(value) => { setInputCodeQR(value) }}
+                                            onValueChange={(value) => { setInputCodeValue(value) }}
                                         />
                                         <Button isIconOnly
-                                            isDisabled={!inputCodeQR}
-                                            onClick={authenticateWithInputCode}>
-                                            <FaUnlockAlt />
+                                            isDisabled={!inputCodeValue}
+                                            onClick={searchProductWithInputCode}>
+                                            <MagnifyingGlassIcon className='w-5 h-5'/>
                                         </Button>
                                     </div>
                                 </div>
                 }
             </section>
-            {/*  {`| completed:${completed}\n`}
-            {`| loading:${loading}`}
-            {`| success:${success}`}
-            {`| error:${error}`} */}
             <section className='max-w-[40rem]'>
 
                 {loading
@@ -163,7 +146,7 @@ export default function ScannerProduct ({ onGetUserData, onSuccess, changeSessio
                         {'Verificando...'}
                     </Spinner>
                     : error
-                        ? <AlertMessage message= {errorAuthCode || errorMessage}/>
+                        ? <AlertMessage message= {errorMessage}/>
                         : null}
             </section>
 
@@ -173,7 +156,7 @@ export default function ScannerProduct ({ onGetUserData, onSuccess, changeSessio
                     onClick={ () => setIsActivedInputQR(!isActivedInputQR)}
                 >
                     {
-                        isActivedInputQR ? 'Escanear credencial' : 'Ingresar código'
+                        isActivedInputQR ? 'Escanear producto' : 'Ingresar código'
                     }
                 </Button>
             </section>

@@ -20,7 +20,7 @@ const useAuthStore = create(
             },
             setEmail: () => set((state) => ({ email: state })),
             setError: () => set((state) => ({ error: state })),
-            signIn: ({ email, password }) => {
+            signIn: ({ email, password, onSuccess }) => {
                 set({ loading: true, error: null })
                 try {
                     authenticate(
@@ -44,6 +44,7 @@ const useAuthStore = create(
                                 password
                             })
                             if (userType === 'admin') set({ isAdmin: true })
+                            if (onSuccess) onSuccess()
                         } else {
                             set({ error: statusCode + ' ' + (error || message || statusText) })
                         }

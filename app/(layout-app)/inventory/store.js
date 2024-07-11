@@ -33,7 +33,7 @@ const useInventoryStore = create(
                         if (result?.code === 200) {
                             set({
                                 listInventory: result?.data?.reduce((acc, { ID, code, cost_price, image, image_url, name, net_price, sale_price, product_categories_id, stock_types_id, product_stock, tax_free }) => {
-                                    //const lastImage = lastListInventory?.find((product) => product?.id === ID)
+                                    // const lastImage = lastListInventory?.find((product) => product?.id === ID)
                                     return [...acc,
                                         {
                                             id: ID,

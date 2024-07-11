@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ErrorLogin } from './Error'
 import { validateEmail } from '@/utils/email'
 
-export default function LoginForm () {
+export default function LoginForm ({ onSuccess }) {
     const { signIn, loading, error } = useAuthStore()
     const [validateValues, setValidateValues] = useState(false)
     const [sendDisabled, setSendDisabled] = useState(false)
@@ -53,7 +53,8 @@ export default function LoginForm () {
             signIn(
                 {
                     email,
-                    password
+                    password,
+                    onSuccess
                 }
             )
         }

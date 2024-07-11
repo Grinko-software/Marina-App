@@ -20,7 +20,7 @@ export default function ScanProductModal ({ isOpen, onClose }) {
                         <>
                             <ModalHeader className="flex flex-col gap-1 font-extrabold">ESCANEAR PRODUCTO</ModalHeader>
                             <ModalBody>
-                                <ScannerProduct changeSession={true} onSuccess={closeModal}/>
+                                <ScannerProduct/>
                             </ModalBody>
                             <ModalFooter className='justify-center'>
                                 <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
