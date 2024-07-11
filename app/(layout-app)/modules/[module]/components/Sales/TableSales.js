@@ -165,7 +165,7 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
                 <div className="flex flex-col">
                     <p className="text-bold text-sm capitalize dark:text-white">{
                         <Chip
-                            color={data.isDone ? 'secondary' : 'danger'}
+                            color={data.isDone ? 'success' : 'danger'}
                             size="sm"
                             variant="solid"
                             classNames={{
