@@ -18,17 +18,20 @@ import { getIdUser } from '@/services/account'
 import useSettingsStore from '@/stores/settings'
 import { persist } from 'zustand/middleware'
 
-const structSaleEmpty = {
-    id: 1,
-    keyFocus: null,
-    totalPrice: 0,
-    saleProductsList: [],
-    paymentTarget: null,
-    voucherTarget: 1,
-    discount: null,
-    totalTaxFree: 0,
-    paymentViewEnabled: false
+const structSaleEmpty = () => {
+    return {
+        id: 1,
+        keyFocus: null,
+        totalPrice: 0,
+        saleProductsList: [],
+        paymentTarget: null,
+        voucherTarget: 1,
+        discount: null,
+        totalTaxFree: 0,
+        paymentViewEnabled: false
+    }
 }
+
 const useSalesStore = create(
     persist(
         (set) => ({
@@ -36,7 +39,7 @@ const useSalesStore = create(
             error: null,
             units: 1,
             saleIdActive: 1,
-            listSalesActives: [structSaleEmpty],
+            listSalesActives: [structSaleEmpty()],
             setLoadingSale: (value) => set({ loadingSale: value }),
             setUnits: (value) => set({ units: parseInt(value) }),
             setSelectedSaleId: (value) => set({ saleIdActive: parseInt(value) }),
@@ -137,7 +140,7 @@ const useSalesStore = create(
                     set({ saleIdActive: newSaleList[0].id })
                     set({ listSalesActives: newSaleList })
                 } else {
-                    sales[saleIndex] = structSaleEmpty
+                    sales[saleIndex] = structSaleEmpty()
                     set({ listSalesActives: sales })
                 }
             },
