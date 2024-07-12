@@ -37,16 +37,13 @@ export default function SaleList (props) {
     const [actualViewEnabled, setActualViewEnabled] = useState(false)
     const [discount, setDiscount] = useState(null)
     /* Loading disable button */
-    const [HandlePayment, setLoadingHandleButtonClick] = useState(false)
 
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
         setListSales(sale.saleProductsList)
-        setActualViewEnabled(sale.paymentViewEnabled)
         setTotalPrice(sale.totalPrice)
-        if (sale.paymentViewEnabled) {
-            setPayment(true)
-        }
+        setActualViewEnabled(sale.paymentViewEnabled)
+        if (sale.paymentViewEnabled) { setActualViewEnabled(sale.paymentViewEnabled); setPayment(sale.paymentViewEnabled); setGoPay(true) }
         const totalDiscount = sale?.discount
         setDiscount(totalDiscount)
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
@@ -80,8 +77,6 @@ export default function SaleList (props) {
 
     const handleButton = () => {
         onOpen()
-        // removeSale(listSalesActives, saleIdActive)
-        // setPayment(false)
     }
     const handleButtonClick = () => {
         setPaymentViewEnabled(listSalesActives, saleIdActive, true)
@@ -100,7 +95,6 @@ export default function SaleList (props) {
                     setGoPay(false)
                 }
             }
-            setLoadingHandleButtonClick(false)
         })
     }
     useEffect(() => {
@@ -158,7 +152,7 @@ export default function SaleList (props) {
                                 className='animation-fade-in'
                                 color="danger"
                                 variant="bordered"
-                                onClick={() => (handleButton())}>
+                                onClick={() => { handleButton() }}>
                                 cancelar
                             </Button>
                         </div>
@@ -173,7 +167,7 @@ export default function SaleList (props) {
                             {listSales?.map((product, index) =>
                                 <section key={index} id={product?.product?.code}>
                                     <Divider orientation="horizontal" />
-                                    <SaleListItem product={product} saleConfirm ={actualViewEnabled} />
+                                    <SaleListItem product={product} saleConfirm ={false} />
                                     <Divider orientation="horizontal" />
                                 </section>
                             )}
@@ -190,7 +184,6 @@ export default function SaleList (props) {
                             // Verificar si se hizo primero el inicio de caja
                             handleButtonClick()
                         } }
-                        isDisabled={HandlePayment}
                     >
                         { discount
                             ? <div className="text-2xl font-bol flex flex-col  items-center">
@@ -238,6 +231,7 @@ export default function SaleList (props) {
                     : <></>}
             </section>
             <ModalCancelSale
+                onComplete={() => { setGoPay(false); setPayment(false) } }
                 isOpen={isOpen}
                 onClose={onClose}
             />

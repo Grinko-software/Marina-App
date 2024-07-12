@@ -4,7 +4,7 @@ import { notify } from '@/services/notify'
 
 import useSalesStore from '../../store'
 
-export default function ModalCancelSale ({ isOpen, onClose }) {
+export default function ModalCancelSale ({ isOpen, onClose, onComplete }) {
     const {
         loadingSale,
         listSalesActives,
@@ -30,6 +30,7 @@ export default function ModalCancelSale ({ isOpen, onClose }) {
 
     const onSuccessCancelSale = () => {
         setPaymentTarget(listSalesActives, saleIdActive, null)
+        onComplete()
         onClose()
     }
 
