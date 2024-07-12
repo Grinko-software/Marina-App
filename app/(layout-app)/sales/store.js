@@ -120,6 +120,7 @@ const useSalesStore = create(
                 const newList = listSales?.filter((item) => item?.product?.id !== productId)
 
                 sales[saleIndex].saleProductsList = newList
+                /* No puede remover productos en la vista de los pagos */
                 set({ listSalesActives: sales })
             },
             /*

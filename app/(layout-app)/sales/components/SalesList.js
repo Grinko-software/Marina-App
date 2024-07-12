@@ -42,7 +42,6 @@ export default function SaleList (props) {
     /* Cuando se cambia el estado la lista de ventas se debe buscar la lista activa y setearla en el USE state de listSales */
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
-        console.log(sale)
         setListSales(sale.saleProductsList)
         setTotalPrice(sale.totalPrice)
         const totalDiscount = sale?.discount
@@ -179,7 +178,7 @@ export default function SaleList (props) {
                             {listSales?.map((product, index) =>
                                 <section key={index} id={product?.product?.code}>
                                     <Divider orientation="horizontal" />
-                                    <SaleListItem product={product} />
+                                    <SaleListItem product={product} viewPaymentOpen={payment} />
                                     <Divider orientation="horizontal" />
                                 </section>
                             )}

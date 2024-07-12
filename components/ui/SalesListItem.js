@@ -2,8 +2,7 @@
 import React from 'react'
 import DeleteButton from './DeleteButton'
 import { formatter, roundValueWithMath } from '@/utils/number'
-export default function SaleListItem (props) {
-    const { product: productDetail, saleConfirm } = props
+export default function SaleListItem ({ product: productDetail, saleConfirm, viewPaymentOpen }) {
     const { product, quantity, discount, total } = productDetail
     const { id, name, code, price, taxFree } = product
     return (
@@ -45,7 +44,7 @@ export default function SaleListItem (props) {
                                 </div>
                             </div>
                         </div>
-                        <DeleteButton productId={id} saleConfirm ={saleConfirm}/>
+                        {viewPaymentOpen ? null : <DeleteButton productId={id} saleConfirm ={saleConfirm}/> }
                     </div>
                 </div>
             </div>
