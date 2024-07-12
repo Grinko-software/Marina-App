@@ -7,7 +7,7 @@ import { formatter } from '@/utils/number'
 import useSalesStore from '../store'
 import InvoiceDetailed from './invoice/invoice'
 import useInvoiceStore from './invoice/store'
-export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue, onOpenLoadingSale }) {
+export default function PayDetailed ({ payment, setPayment, isOpen, onClose, totalPay, payDetailed, setPayDetailed, paymentTarget, voucherTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue }) {
     const [openModal, setOpenModal] = useState(false)
     const { targetCustomer, setTargetCustomer } = useInvoiceStore(({ targetCustomer, setTargetCustomer }) => ({ targetCustomer, setTargetCustomer }))
     const {
@@ -89,7 +89,6 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
         if (isOpen) {
             onClose()
         }
-        setGoPay(false)
     }
 
     const generateSale = () => {
@@ -123,7 +122,6 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                 isCardPayment: isCardPay,
                 onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash
             })
-            // createSale(listSalesActives, saleIdActive, notify, onSuccessSale, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer, onSuccessSale)
         }
     }
 
@@ -216,7 +214,6 @@ export default function PayDetailed ({ payment, setPageTarget, setPayment, isOpe
                                             setPaymentTarget(listSalesActives, saleIdActive, null)
                                             setPayDetailed(null)
                                             onClose()
-                                            setGoPay(false)
                                         }}
                                     >
                             CANCELAR

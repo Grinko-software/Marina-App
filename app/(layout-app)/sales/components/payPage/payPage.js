@@ -78,17 +78,9 @@ export default function PayPage (props) {
     }, [listSalesActives])
 
     return (
-        <section className='animation-fade-in h-full w-full'>
+        <section className='animation-fade-in h-full w-full p-2'>
             {openModal ? <Discount openModal={openModal} setOpenModal={setOpenModal} handleButton={handleButton}/> : null}
-            <section className="z-10 h-[3.5rem] w-[7rem] rounded-t-[12px] bg-secondary-50 dark:bg-secondary-450">
-                <Button isDisabled = {true} size="lg" className="flex flex-col items-center h-full w-full font-bold" isIconOnly variant="ligth" aria-label="" onClick={() => {
-                    setPaymentTarget(listSalesActives, saleIdActive, null)
-                    setPayment(false)
-                } }>
-                Volver
-                </Button>
-            </section>
-            <section className='flex flex-col h-3/4 mt-[-0.2rem] sm:h-[93%] items-center px-5 shadow-md hover:shadow-lg  rounded-tl-[0px] bg-secondary-50 dark:bg-secondary-450 rounded-[14px]'>
+            <section className='flex flex-col h-full p-5 items-center shadow-md hover:shadow-lg  bg-secondary-50 dark:bg-secondary-450 rounded-[14px]'>
                 <div className='flex flex-col w-full h-full'>
                     <div className='flex flex-row py-[0.7rem] items-end justify-end gap-5'>
                         {/*  <Button className='animation-fade-in h-[56px] text-lg font-semibold' variant="bordered" onClick={() => setPrintEnabled(!isPrintActived) } startContent={<MdPrint size={25}/>}>

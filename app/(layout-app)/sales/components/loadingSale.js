@@ -9,7 +9,7 @@ import cardloading from '@/assets/gifs/card-loading.json'
 import useSalesStore from '../store'
 import { CreditIcon } from '@/components/ui/CreditIcon'
 import toast from 'react-hot-toast'
-export default function LoadingSale ({ payment, loadingSale, setPageTarget, setPayment, isOpen, onClose, setGoPay, totalPay, payDetailed, setPayDetailed, listSales, createSale, paymentTarget, voucherTarget, clearList, pageTarget, onOpen, setPaymentTarget, setSearchInput, setVoucherTargetValue }) {
+export default function LoadingSale ({ isOpen, onClose, setPayDetailed, paymentTarget, onOpen, setPaymentTarget, setSearchInput }) {
     const notify = (text) => toast(text)
     const [methodPage, setMethodPage] = useState(null)
     const { status, setStatus } = useMachineStore(({ status, setStatus }) => ({ status, setStatus }))
@@ -24,14 +24,12 @@ export default function LoadingSale ({ payment, loadingSale, setPageTarget, setP
         setPaymentTarget(listSalesActives, saleIdActive, null)
         setPayDetailed(null)
         onClose()
-        setGoPay(false)
         setLoadingSale(false)
     }
     const handleButton = (value) => {
         setMethodPage(value)
         setSearchInput(null)
         setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
-        createSale(listSalesActives, saleIdActive, notify, null, setPayment, onClose, setGoPay, setPageTarget, paymentTarget, removeSale, voucherTarget, targetCustomer, setTargetCustomer, value, setMethodPage)
         setPaymentTarget(listSalesActives, saleIdActive, null)
     }
 

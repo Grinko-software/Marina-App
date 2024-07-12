@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
 import SaleListItem from '../../../../components/ui/SalesListItem'
-import { Divider, ScrollShadow, Button, Input, Skeleton, useDisclosure } from '@nextui-org/react'
+import { Divider, ScrollShadow, Button, Input, useDisclosure } from '@nextui-org/react'
 import SearchBar from '../../../../components/ui/SearchBar'
 import useSalesStore from '@/app/(layout-app)/sales/store'
 import { motion } from 'framer-motion'
@@ -15,55 +14,63 @@ import { notify } from '@/services/notify'
 import { getStatus } from '@/components/SettingsNav/services'
 import ModalCancelSale from './modalCancelSale/modalCancelSale'
 export default function SaleList (props) {
+    /* Estados para controlar el Modal de cancelar la venta */
     const { onOpen, isOpen, onClose } = useDisclosure()
     const {
         setPayment, payment, setSearchInput, searchInput,
-        paymentTarget,
-        voucherTarget, setGoPay, keyFocus,
-        setPageTarget, loadingSale
+        /*        paymentTarget,
+        voucherTarget, */
+        keyFocus, loadingSale
     } = props
-    const { disabled, selectedCashRegister } = useSettingsStore(({ disabled, selectedCashRegister }) => ({ disabled, selectedCashRegister }))
+    const { selectedCashRegister } = useSettingsStore(({ selectedCashRegister }) => ({ selectedCashRegister }))
     const {
         units,
         setUnits,
-        removeSale,
         listSalesActives,
-        saleIdActive,
-        setPaymentViewEnabled
+        saleIdActive, setPaymentViewEnabled
     } = useSalesStore()
-
+    /* Esta es la lista de venta ACTIVA */
     const [listSales, setListSales] = useState([])
-    const [totalPrice, setTotalPrice] = useState([])
-    const [actualViewEnabled, setActualViewEnabled] = useState(false)
+    /* Este es el total del precio de la venta */
+    const [totalPrice, setTotalPrice] = useState(null)
+    /* Este es el descuento total */
     const [discount, setDiscount] = useState(null)
-    /* Loading disable button */
-
+    /* Cuando no hay una caja activada se bloquea el botón de pago */
+    const [loadingHandleButtonClick, setLoadingHandleButtonClick] = useState(false)
+    /* Estado para controlar las unidades que se desean agregar por producto */
+    const [inputValue, setInputValue] = useState(1)
+    /* Cuando se cambia el estado la lista de ventas se debe buscar la lista activa y setearla en el USE state de listSales */
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
+        console.log(sale)
         setListSales(sale.saleProductsList)
         setTotalPrice(sale.totalPrice)
-        setActualViewEnabled(sale.paymentViewEnabled)
-        if (sale.paymentViewEnabled) { setActualViewEnabled(sale.paymentViewEnabled); setPayment(sale.paymentViewEnabled); setGoPay(true) }
         const totalDiscount = sale?.discount
         setDiscount(totalDiscount)
+        /* Evaluar si se debe mostrar la vista de pago o la vista de productos para vender */
+        setPayment(sale?.paymentViewEnabled)
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
-
+    /* Cada vez que cambia el estado de total price, se debe limpiar el input del buscador por producto y el descuento */
+    const onClear = () => {
+        setSearchInput('')
+        setDiscount(null)
+    }
+    useEffect(() => {
+        onClear()
+    }, [totalPrice])
+    /* Debemos esperar a que carguen los productos para efectuar una venta */
     const { loading } = useInventoryStore()
-    const [inputValue, setInputValue] = useState(1)
+    /* Controla que no sea NAN la unidad por producto */
     useEffect(() => {
         if (!isNaN(units)) {
             setInputValue(units)
         }
     }, [units])
-
+    /* onchange para buscar por producto */
     const onChange = (event) => {
         setSearchInput(event.target.value)
     }
-
-    const onClear = () => {
-        setSearchInput('')
-        setDiscount(null)
-    }
+    /* Esto es para incrementar o disminuir las unidades por producto */
     const IncreaseUnit = () => {
         const Units = inputValue + 1
         setUnits(Units)
@@ -74,29 +81,32 @@ export default function SaleList (props) {
             setUnits(Units)
         }
     }
-
+    /* Esteh handle se efectúa cuando se cancela una venta */
     const handleButton = () => {
         onOpen()
+        // removeSale(listSalesActives, saleIdActive)
+        // setPayment(false)
     }
+    /* Aquí verificamos primero si hay una caja iniciada.
+    En caso de que si,
+    setPayment -> se encarga de mostrar la vista de pago
+    */
     const handleButtonClick = () => {
-        setPaymentViewEnabled(listSalesActives, saleIdActive, true)
+        setLoadingHandleButtonClick(true)
         getStatus(selectedCashRegister?.ID).then((status) => {
-            if (!status && status !== null) {
+            if (status == null) {
                 notify('❌ Error: Se debe iniciar primero la caja para poder efectuar una venta!')
             } else {
                 if (!payment) {
+                    /* Nos muestra la pantalla de pago */
+                    setPaymentViewEnabled({ sales: listSalesActives, saleId: saleIdActive, paymentViewEnabled: true })
                     setPayment(true)
-                } else if (paymentTarget === 1 && voucherTarget) {
-                    setGoPay(true)
-                } else if (paymentTarget === 2 && voucherTarget) {
-                    // Create sale
-                    setPageTarget(true)
-                } else {
-                    setGoPay(false)
                 }
             }
+            setLoadingHandleButtonClick(false)
         })
     }
+    /* Scroll mothh por producto */
     useEffect(() => {
         if (keyFocus) {
             const focusKey = document.getElementById(keyFocus)
@@ -107,7 +117,9 @@ export default function SaleList (props) {
         <section className='flex mt-[-4.2px] flex-1 flex-col items-center w-full animation-fade-in'>
             <section className='w-full h-full rounded-xl rounded-tr-[0px] bg-primary-50 shadow  dark:bg-secondary-450'>
                 <section className='flex flex-row px-1'>
+                    {/* Search para buscar por prducto */}
                     <SearchBar onChange={onChange} onClear={onClear} defaultValue={searchInput}/>
+                    {/* Input para agregar x unidades al escanear un producto */}
                     <Input
                         onFocus={''}
                         className='w-auto mt-3 px-1'
@@ -160,14 +172,14 @@ export default function SaleList (props) {
                         : <h5 className="animation-fade-in m-5 text-2xl font-bold leading-none text-gray-900 dark:text-white">{loading ? 'Espere un momento...' : 'Escanee un producto para comenzar la venta...'}</h5>
                     }
                 </section>
-
+                {/* Lista que muestra los productos agregados a la venta */}
                 <section className="flow-root px-3 max-h-[44rem]">
                     <ul className="divide-y divide-gray-200 dark:divide-white">
                         <ScrollShadow className="w-full h-[31rem] pr-1 ">
                             {listSales?.map((product, index) =>
                                 <section key={index} id={product?.product?.code}>
                                     <Divider orientation="horizontal" />
-                                    <SaleListItem product={product} saleConfirm ={false} />
+                                    <SaleListItem product={product} />
                                     <Divider orientation="horizontal" />
                                 </section>
                             )}
@@ -184,6 +196,7 @@ export default function SaleList (props) {
                             // Verificar si se hizo primero el inicio de caja
                             handleButtonClick()
                         } }
+                        isDisabled={loadingHandleButtonClick }
                     >
                         { discount
                             ? <div className="text-2xl font-bol flex flex-col  items-center">
@@ -197,7 +210,7 @@ export default function SaleList (props) {
                                     }}>
 
                                     <div className='flex flex-row gap-1 items-center'>
-                                        <p className='text-red-600'>
+                                        <p className='text-primary-50'>
                                             { totalPrice ? (formatter.format(transformNumberFormat(totalPrice))) : null }
                                         </p>
                                         <p className='text-red-600'>
@@ -205,7 +218,7 @@ export default function SaleList (props) {
                                         </p>
                                     </div>
                                     <p className='text-primary-50'>
-                                        {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'PAGAR '}
+                                        {loadingSale ? 'Cargando pago ... ' : 'PAGAR '}
                                         { formatter.format(transformNumberFormat(totalPrice - discount)) }
                                     </p>
                                 </motion.div>
@@ -220,8 +233,8 @@ export default function SaleList (props) {
                                         delay: 0.2,
                                         ease: [0, 0.71, 0.2, 1.01]
                                     }}>
-                                    {loadingSale ? 'Cargando pago ... ' : paymentTarget && voucherTarget ? 'PAGAR  ' : 'PAGAR '}
-                                    { totalPrice && actualViewEnabled ? formatter.format(totalPrice) : null }
+                                    {loadingSale ? 'Cargando pago ... ' : 'PAGAR ' }
+                                    { totalPrice && payment ? formatter.format(totalPrice) : null }
                                 </motion.div>
                             </div>
 
@@ -231,7 +244,10 @@ export default function SaleList (props) {
                     : <></>}
             </section>
             <ModalCancelSale
-                onComplete={() => { setGoPay(false); setPayment(false) } }
+                onComplete={() => {
+                    setPayment(false)
+                }
+                }
                 isOpen={isOpen}
                 onClose={onClose}
             />
