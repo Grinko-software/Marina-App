@@ -178,7 +178,7 @@ export default function SaleList (props) {
                             {listSales?.map((product, index) =>
                                 <section key={index} id={product?.product?.code}>
                                     <Divider orientation="horizontal" />
-                                    <SaleListItem product={product} viewPaymentOpen={payment} />
+                                    <SaleListItem deleteEnable={listSales?.length > 1} product={product} viewPaymentOpen={payment} />
                                     <Divider orientation="horizontal" />
                                 </section>
                             )}
@@ -233,7 +233,7 @@ export default function SaleList (props) {
                                         ease: [0, 0.71, 0.2, 1.01]
                                     }}>
                                     {loadingSale ? 'Cargando pago ... ' : 'PAGAR ' }
-                                    { totalPrice && payment ? formatter.format(totalPrice) : null }
+                                    { totalPrice ? formatter.format(totalPrice) : null }
                                 </motion.div>
                             </div>
 
