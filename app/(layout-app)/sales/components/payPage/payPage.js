@@ -78,7 +78,7 @@ export default function PayPage (props) {
     }, [listSalesActives])
 
     return (
-        <section className='animation-fade-in h-full w-full'>
+        <section className='animation-fade-in h-full w-full p-2'>
             {openModal ? <Discount openModal={openModal} setOpenModal={setOpenModal} handleButton={handleButton}/> : null}
             <section className="z-10 h-[3.5rem] w-[7rem] rounded-t-[12px] bg-secondary-50 dark:bg-secondary-450">
                 <Button size="lg" className="flex flex-col items-center h-full w-full font-bold" isIconOnly variant="ligth" aria-label="" onClick={() => {

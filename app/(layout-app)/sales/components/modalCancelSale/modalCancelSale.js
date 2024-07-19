@@ -30,6 +30,7 @@ export default function ModalCancelSale ({ isOpen, onClose, onComplete }) {
 
     const onSuccessCancelSale = () => {
         setPaymentTarget(listSalesActives, saleIdActive, null)
+        onComplete()
         onClose()
         onComplete()
     }

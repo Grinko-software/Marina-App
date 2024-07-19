@@ -11,13 +11,12 @@ import { PlusIcon } from '@heroicons/react/24/solid'
 import LoadingSale from './components/loadingSale'
 import SalePrinterModal from './components/printerModal/printerModal'
 const SalesMenu = () => {
+    /* Este estado muestra la pantalla de pago */
     const [payment, setPayment] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [openLoadingSale, setOpenLoadingSale] = useState(false)
     const [searchInput, setSearchInput] = useState(null)
-    const [goPay, setGoPay] = useState(false)
     const [payDetailed, setPayDetailed] = useState(null)
-    const [pageTarget, setPageTarget] = useState(null)
     const [paymentTargetValue, setPaymentTargetValue] = useState(null)
     const [voucherTargetValue, setVoucherTargetValue] = useState(null)
     const [keyFocus, setKeyFocus] = useState(null)
@@ -25,7 +24,6 @@ const SalesMenu = () => {
 
     const {
         listSales,
-        createSale,
         loadingSale,
         saleIdActive,
         setSelectedSaleId,
@@ -40,9 +38,6 @@ const SalesMenu = () => {
     const onOpenLoadingSale = () => {
         setOpenLoadingSale(true)
     }
-    useEffect(() => {
-        setPayment(false)
-    }, [saleIdActive])
 
     useEffect(() => {
         const sale = listSalesActives?.find((sale) => sale.id === saleIdActive)
@@ -57,7 +52,6 @@ const SalesMenu = () => {
             setTotalPrice(sale.totalPrice)
         }
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
-
     return (
         <section className='h-full w-full flex md:flex-col'>
             <div className="flex h-full w-full space-x-2">
@@ -104,14 +98,13 @@ const SalesMenu = () => {
                     </section>
 
                     <SaleList
-                        loadingSale={loadingSale}
-                        setPageTarget={setPageTarget}
-                        payment={payment} setPayment={setPayment}
+                        loadingSale={loadingSale} // loading al efectuar una venta
+                        payment={payment}
+                        setPayment={setPayment}
                         setSearchInput={setSearchInput}
                         searchInput={searchInput}
                         paymentTarget={paymentTargetValue}
                         voucherTarget={voucherTargetValue}
-                        setGoPay={setGoPay}
                         keyFocus={keyFocus}
                     />
 
@@ -122,17 +115,13 @@ const SalesMenu = () => {
                     onClose={onClose}
                     onOpen={onOpen}
                     totalPay={totalPrice}
-                    setGoPay={setGoPay}
                     setPayDetailed={setPayDetailed}
                     payDetailed={payDetailed}
                     listSales={listSales}
-                    createSale={createSale}
                     paymentTarget={paymentTargetValue}
                     voucherTarget={voucherTargetValue}
                     setPayment={setPayment}
                     loadingSale={loadingSale}
-                    pageTarget={pageTarget}
-                    setPageTarget={setPageTarget}
                     setPaymentTarget={setPaymentTarget}
                     setSearchInput={setSearchInput}
                     setPaymentTargetValue={setPaymentTargetValue}
@@ -146,17 +135,13 @@ const SalesMenu = () => {
                     onClose={onCloseLoadingSale}
                     onOpen={onOpenLoadingSale}
                     totalPay={totalPrice}
-                    setGoPay={setGoPay}
                     setPayDetailed={setPayDetailed}
                     payDetailed={payDetailed}
                     listSales={listSales}
-                    createSale={createSale}
                     paymentTarget={paymentTargetValue}
                     voucherTarget={voucherTargetValue}
                     setPayment={setPayment}
                     loadingSale={loadingSale}
-                    pageTarget={pageTarget}
-                    setPageTarget={setPageTarget}
                     setPaymentTarget={setPaymentTarget}
                     setSearchInput={setSearchInput}
                     setPaymentTargetValue={setPaymentTargetValue}
