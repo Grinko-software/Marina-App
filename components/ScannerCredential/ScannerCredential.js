@@ -24,9 +24,9 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
     const [userAuthData, setUserAuthData] = useState(null)
     const {
         enabledAuthMode,
-        disabledAuthMode,
-        authModeEnabled,
-        datetimeLastUpdate
+        disabledAuthMode
+        // authModeEnabled,
+        // datetimeLastUpdate
     } = useScannerStore()
     const {
         signInWithCode,
@@ -102,7 +102,7 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
         } else {
             enabledAuthMode(getUserData)
         }
-    }, [datetimeLastUpdate, authModeEnabled])
+    }, [])
 
     useEffect(() => {
         if (completed && success) {

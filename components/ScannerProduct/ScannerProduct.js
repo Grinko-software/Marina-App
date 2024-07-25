@@ -22,10 +22,10 @@ export default function ScannerProduct () {
     const [isActivedInputQR, setIsActivedInputQR] = useState(false)
     const [errorMessage, setErrorMessage] = useState(false)
     const {
-        enabledAuthMode,
+        enabledAuthMode
         // disabledAuthMode,
-        authModeEnabled,
-        datetimeLastUpdate
+        // authModeEnabled,
+        // datetimeLastUpdate
     } = useScannerStore()
 
     const getUserDataProduct = async (codeValue) => {

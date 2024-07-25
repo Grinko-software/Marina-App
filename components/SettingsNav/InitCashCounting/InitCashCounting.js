@@ -75,7 +75,7 @@ export default function InitCashCounting ({ isOpen, onClose, setStatusCashRegist
 
     return (
         <>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} >
                 <ModalContent>
                     {(onClose) => (
                         <>

@@ -88,7 +88,7 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'5xl'}>
+            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'5xl'}>
                 <ModalContent>
                     {(onClose) => (
                         <>

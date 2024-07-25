@@ -3,11 +3,17 @@ import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Tabs, Tab } from '@nextui-org/react'
 import ScannerCredential from '../ScannerCredential/ScannerCredential'
 import LoginForm from '@/app/login/components/FormLogin'
+import useScannerStore from '@/stores/scanner'
 
 export default function SwitchUserModal ({ isOpen, onClose }) {
+    const {
+        disabledAuthMode
+    } = useScannerStore()
+
     const closeModal = () => {
         if (isOpen) {
             onClose()
+            disabledAuthMode()
         }
     }
     const [selected, setSelected] = useState('qr')
@@ -16,7 +22,7 @@ export default function SwitchUserModal ({ isOpen, onClose }) {
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} >
                 <ModalContent>
                     {(onClose) => (
                         <>
