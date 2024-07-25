@@ -58,7 +58,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
 
     return (
         <>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size={'4xl'} className="space-y-2" >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} className="space-y-2" >
                 <ModalContent>
                     {() => (
                         <>
