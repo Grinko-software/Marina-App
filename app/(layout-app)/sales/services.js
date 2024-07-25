@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 import { POST, getData } from '@/services/http'
 import { SALE_TICKET_CREATE } from '@/settings/constants'
 import { roundValueWithMath } from '@/utils/number'
@@ -103,7 +104,9 @@ export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, to
         dte: {
             Encabezado: {
                 IdDoc: {
-                    TipoDTE: isInvoice ? 33 : 39,
+                    TipoDTE: isInvoice
+                        ? iva === 0 ? 34 : 33
+                        : iva === 0 ? 41 : 39,
                     FchEmis: date,
                     IndServicio: '3'
                 },
@@ -144,7 +147,12 @@ export const generateDTEBody = ({ isInvoice, totalTaxFreePay, targetCustomer, to
                         MntTotal: totalPay,
                         VlrPagar: totalPay
                     }
-                    : {
+                    : iva === 0 ? {
+                        MntExe: totalTaxFreePay,
+                        MntTotal: totalPay,
+                        TotalPeriodo: totalPay,
+                        VlrPagar: totalPay
+                    } : {
                         MntNeto: netTotal,
                         MntExe: totalTaxFreePay,
                         IVA: iva,
