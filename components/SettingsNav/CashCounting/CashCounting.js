@@ -100,7 +100,8 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                             <div className='flex flex-row w-full space-x-4'>
                                                 <CashReconciliationCard
                                                     title={'Ventas en Debito/Credito'}
-                                                    total={indicatorsBalanceEnding?.total_sales_card ? formatterNumber(indicatorsBalanceEnding?.total_sales_card) : '-'}
+                                                    // total={indicatorsBalanceEnding?.total_sales_card ? formatterNumber(indicatorsBalanceEnding?.total_sales_card) : '-'}
+                                                    total={'-'}
                                                     bgTitle={'bg-black/50'}
                                                     img={credit}
                                                     detail={'Total de ingresos en tarjetas de debito/credito del dia'}
