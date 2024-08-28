@@ -1,4 +1,5 @@
-export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
+// export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
+export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-llhboxpn4q-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_MARKET_API_URL + '/auth/login'
