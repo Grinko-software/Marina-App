@@ -122,14 +122,14 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                                 />
                                                 <CashReconciliationCard
                                                     title={'Ingresos de caja'}
-                                                    total={indicatorsBalanceEnding?.total_drawals ? formatterNumber(indicatorsBalanceEnding?.total_incomes) : '-'}
+                                                    total={indicatorsBalanceEnding?.total_incomes ? formatterNumber(indicatorsBalanceEnding?.total_incomes) : '-'}
                                                     bgTitle={'bg-green-500/20'}
                                                     img={PaymentOfMoney}
                                                     detail={'Total de ingresos de caja diarios'}
                                                 />
                                                 <CashReconciliationCard
                                                     title={'Monto esperado'}
-                                                    total={indicatorsBalanceEnding?.total_drawals
+                                                    total={totalDay
                                                         ? formatterNumber(totalDay)
                                                         : '-'}
                                                     bgTitle={'bg-green-500/20'}
