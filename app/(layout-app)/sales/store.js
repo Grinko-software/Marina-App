@@ -193,9 +193,10 @@ const useSalesStore = create(
                     voucher_type_id: 1,
                     cash_register_id: cashRegister?.ID,
                     user_id: getIdUser(),
-                    is_done: true
+                    is_done: true,
+                    total: totalPay
                 }
-
+                console.log(totalPay)
                 const device = getDeviceTuu()
                 if (isCardPayment && device) {
                     try {
@@ -359,7 +360,8 @@ const useSalesStore = create(
                     payment_type_id: paymentTarget,
                     voucher_type_id: 2,
                     cash_register_id: cashRegister?.ID,
-                    user_id: getIdUser()
+                    user_id: getIdUser(),
+                    total: totalPay
                 }
 
                 const device = getDeviceTuu()
@@ -515,7 +517,8 @@ const useSalesStore = create(
                     payment_type_id: paymentTarget,
                     voucher_type_id: 3,
                     cash_register_id: cashRegister?.ID,
-                    user_id: getIdUser()
+                    user_id: getIdUser(),
+                    total: totalPay
                 }
 
                 await saveTicketOnDatabase({
@@ -579,7 +582,8 @@ const useSalesStore = create(
                     payment_type_id: paymentTarget,
                     voucher_type_id: 3,
                     cash_register_id: cashRegister?.ID,
-                    user_id: getIdUser()
+                    user_id: getIdUser(),
+                    total: totalPay
                 }
 
                 await cancelSaleOnDatabase({
