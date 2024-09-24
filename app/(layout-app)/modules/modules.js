@@ -6,6 +6,7 @@ import Sales from './[module]/components/Sales/Sales'
 import Supplier from './[module]/components/Supplier/Supplier'
 import Users from './[module]/components/Users/Users'
 import AccountingEvent from './[module]/components/AccountingEvents/AccountingEvents'
+import WorkerPerformance from './[module]/components/WorkerPerformance/WorkerPerformance'
 
 export const modules = [
     {
@@ -51,6 +52,15 @@ export const modules = [
         description: 'Administración de proveedores',
         requireAdmin: false,
         content: <Supplier/>,
+        icon: <FaTruck />
+    },
+    {
+        key: 'performance',
+        path: 'performance',
+        name: 'Rendimiento',
+        description: 'Rendimiento de trabajadores',
+        requireAdmin: false,
+        content: <WorkerPerformance/>,
         icon: <FaTruck />
     }
 ]
