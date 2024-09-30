@@ -15,17 +15,24 @@ export default function Sales ({ params }) {
         requestData(limitPage, currentPage)
     }, [currentPage])
 
-    return <section className='w-full'>
-        <section className='grid grid-cols w-full gap-3' >
-            <TableSales
-                data={ data }
-                loading={loading}
-                setTarget={setTarget}
-                totalpage={totalpage}
-                setCurrentPage={setCurrentPage}
-                setLimitPage={setLimitPage}
-            />
-            <SaleDetail target={target} setTarget={setTarget} />
+    return (
+        <section className='w-full'>
+            <section className='grid grid-cols w-full gap-3'>
+                <div className='sm:hidden'>
+                    <SaleDetail target={target} setTarget={setTarget} />
+                </div>
+                <TableSales
+                    data={data}
+                    loading={loading}
+                    setTarget={setTarget}
+                    totalpage={totalpage}
+                    setCurrentPage={setCurrentPage}
+                    setLimitPage={setLimitPage}
+                />
+                <div className='hidden sm:block'>
+                    <SaleDetail target={target} setTarget={setTarget} />
+                </div>
+            </section>
         </section>
-    </section>
+    )
 }
