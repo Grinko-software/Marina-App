@@ -2,10 +2,10 @@
 
 const Widget = ({ title, count }) => {
     return (
-        <div className="w-full border rounded-lg items-center bg-teal-400 p-2">
-            <div className="flex flex-col gap-1 items-center">
-                <p>{title}</p>
-                <p className="text-2xl">{count}</p>
+        <div className="w-full border rounded-lg shadow-md bg-white p-4 transition-transform transform hover:scale-105">
+            <div className="flex flex-col items-center text-center">
+                <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
+                <p className="text-3xl font-bold text-teal-600">{count}</p>
             </div>
         </div>
     )

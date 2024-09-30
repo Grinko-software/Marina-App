@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { FaChartLine, FaClipboardList, FaTruck, FaUsersCog } from 'react-icons/fa'
+import { GiPodium } from 'react-icons/gi'
 import { MdAccountBalance } from 'react-icons/md'
 import ReportView from '../reports/components/MainReportView'
 import Sales from './[module]/components/Sales/Sales'
@@ -61,7 +62,7 @@ export const modules = [
         description: 'Rendimiento de trabajadores',
         requireAdmin: false,
         content: <WorkerPerformance/>,
-        icon: <FaTruck />
+        icon: <GiPodium />
     }
 ]
 
