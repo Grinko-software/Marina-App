@@ -63,14 +63,14 @@ export default function Board () {
         <DndContext onDragEnd={handleDragEnd}>
             <section className='flex flex-row text-white rounded-xl p-4'>
                 {/* Zona fija de tarjetas sin asignar */}
-                <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-64 min-h-[42rem] flex flex-col space-y-2 z-auto">
+                <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] flex flex-col space-y-2 z-auto">
                     <p className="text-gray-500">Tarjetas sin asignar</p>
                     {renderItems(unassignedItems)}
                 </div>
 
                 {/* Droppable column for "Por hacer" */}
                 <Droppable id="todo">
-                    <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-64 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
+                    <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
                         <p className="text-gray-500">Por hacer</p>
                         {renderItems(todoItems)}
                     </div>
@@ -78,7 +78,7 @@ export default function Board () {
 
                 {/* Droppable column for "Realizando" */}
                 <Droppable id="in-progress">
-                    <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-64 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
+                    <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
                         <p className="text-gray-500">Realizando</p>
                         {renderItems(inProgressItems)}
                     </div>
@@ -86,7 +86,7 @@ export default function Board () {
 
                 {/* Droppable column for "Lista para evaluar" */}
                 <Droppable id="ready-to-evaluate">
-                    <div className="bg-orange-50 border border-primary-200 rounded-lg p-4 w-64 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
+                    <div className="bg-orange-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
                         <p className="text-gray-500">Lista para evaluar</p>
                         {renderItems(readyToEvaluateItems)}
                     </div>
