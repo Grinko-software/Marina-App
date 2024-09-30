@@ -61,33 +61,33 @@ export default function Board () {
     }
     return (
         <DndContext onDragEnd={handleDragEnd}>
-            <section className='flex flex-row text-white rounded-xl p-4'>
+            <section className='flex flex-row p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white'>
                 {/* Zona fija de tarjetas sin asignar */}
-                <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] flex flex-col space-y-2 z-auto">
-                    <p className="text-gray-500">Tarjetas sin asignar</p>
+                <div className="bg-gray-50 dark:bg-secondary-500 border border-gray-300 dark:border-gray-700 rounded-lg p-4 w-80 min-h-[42rem] flex flex-col space-y-2 z-auto">
+                    <p className="text-gray-500 dark:text-white">Tarjetas sin asignar</p>
                     {renderItems(unassignedItems)}
                 </div>
 
                 {/* Droppable column for "Por hacer" */}
                 <Droppable id="todo">
-                    <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
-                        <p className="text-gray-500">Por hacer</p>
+                    <div className="bg-gray-50 dark:bg-secondary-500 border border-gray-300 dark:border-gray-700 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
+                        <p className="text-gray-500 dark:text-white">Por hacer</p>
                         {renderItems(todoItems)}
                     </div>
                 </Droppable>
 
                 {/* Droppable column for "Realizando" */}
                 <Droppable id="in-progress">
-                    <div className="bg-gray-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
-                        <p className="text-gray-500">Realizando</p>
+                    <div className="bg-gray-50 dark:bg-secondary-500 border border-gray-300 dark:border-gray-700 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
+                        <p className="text-gray-500 dark:text-white">Realizando</p>
                         {renderItems(inProgressItems)}
                     </div>
                 </Droppable>
 
                 {/* Droppable column for "Lista para evaluar" */}
                 <Droppable id="ready-to-evaluate">
-                    <div className="bg-orange-50 border border-primary-200 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
-                        <p className="text-gray-500">Lista para evaluar</p>
+                    <div className="bg-gray-50 dark:bg-secondary-500 border border-gray-300 dark:border-gray-700 rounded-lg p-4 w-80 min-h-[42rem] max-h-[42rem] overflow-y-scroll flex flex-col space-y-2">
+                        <p className="text-gray-500 dark:text-white">Lista para evaluar</p>
                         {renderItems(readyToEvaluateItems)}
                     </div>
                 </Droppable>
