@@ -2,13 +2,14 @@
 import { useEffect, useState } from 'react'
 import Filter from './Filter'
 import Widgets from './Widgets'
-import { getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
+import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
 
 export default function WorkerPerformance () {
     // const { requestData } = useAccountingEventsStore()
     const [users, setUsers] = useState([])
     const [taskTypes, setTaskTypes] = useState([])
     const [taskStates, setTaskStates] = useState([])
+    const [taskDifficulties, setTaskDifficulties] = useState([])
 
     useEffect(() => {
         requestUserList().then((data) => {
@@ -31,13 +32,19 @@ export default function WorkerPerformance () {
                 setTaskStates(items || [])
             }
         })
+
+        requestTaskDifficultList().then((data) => {
+            if (data) {
+                const items = getDataModelTaskDifficulties({ data: data?.data })
+                setTaskDifficulties(items || [])
+            }
+        })
     }, [])
-    /* useEffect(() => { console.debug(loading) }, [loading]) */
 
     return <section className='w-full h-full'>
         <section className='flex w-full h-full' >
             <div className='w-full h-full flex flex-col gap-3'>
-                <Filter users={users} taskTypes={taskTypes} taskStates={taskStates}/>
+                <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties}/>
                 <Widgets/>
                 <div className='border border-green-300 flex flex-1 items-center'>
                     <p className='text-center m-auto'>

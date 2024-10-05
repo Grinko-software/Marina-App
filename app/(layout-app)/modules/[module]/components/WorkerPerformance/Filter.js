@@ -2,8 +2,10 @@
 
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
+import CreateTaskType from './NewTaskType/newTaskType'
+import CreateTask from './NewTask/newTask'
 
-export default function Filter ({ users, taskTypes, taskStates }) {
+export default function Filter ({ users, taskTypes, taskStates, taskDifficulties }) {
     const [selectionTaskType, setSelectionTaskType] = useState(null)
     const [selectionTaskState, setSelectionTaskState] = useState(null)
     const [selectionUser, setSelectionUser] = useState(null)
@@ -74,9 +76,10 @@ export default function Filter ({ users, taskTypes, taskStates }) {
                     </Button>
                 </div>
                 <div>
-                    <Button className='mr-auto h-full' onClick={() => {}}>
-                        {'Crear'}
-                    </Button>
+                    <CreateTaskType />
+                </div>
+                <div>
+                    <CreateTask users={users} taskTypes={taskTypes} difficultTypes={taskDifficulties}/>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { fetchGetTaskStates, fetchGetTaskTypes } from '@/services/task'
+import { fetchCreateTaskType, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes } from '@/services/task'
 import { fetchGetUsers } from '@/services/users'
 
 export const requestUserList = async () => {
@@ -20,6 +20,22 @@ export const requestTaskTypesList = async () => {
 export const requestTaskStatesList = async () => {
     try {
         return fetchGetTaskStates()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const requestTaskDifficultList = async () => {
+    try {
+        return fetchGetTaskDifficult()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const requestCreateTaskType = async ({ name }) => {
+    try {
+        return fetchCreateTaskType({ name })
     } catch (error) {
         console.log(error)
     }
@@ -70,6 +86,22 @@ export const getDataModelTaskStates = ({ data }) => {
 
             value: item?.key,
             label: item?.state_name?.toUpperCase()
+        }
+    })
+
+    return items
+}
+
+export const getDataModelTaskDifficulties = ({ data }) => {
+    const items = data?.map((item) => {
+        return {
+            id: item.ID,
+            key: item.ID,
+            name: item.difficulties_name,
+            cashBonus: item?.cash_bonus,
+
+            value: item?.key,
+            label: item?.difficulties_name?.toUpperCase()
         }
     })
 

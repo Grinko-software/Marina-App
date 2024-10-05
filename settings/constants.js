@@ -87,4 +87,5 @@ export const PRINTER_HEALTH_URL = 'http://localhost:8090/escpos/health'
 // TASK
 export const TAASK_TYPE_API_URL = BASE_MARKET_API_URL + '/task-type'
 export const TAASK_STATE_API_URL = BASE_MARKET_API_URL + '/task-state'
+export const TAASK_DIFFUCULT_API_URL = BASE_MARKET_API_URL + '/task-difficulties'
 export const CREATE_TAASK_TYPE_API_URL_URL = BASE_MARKET_API_URL + '/task-type/create'
