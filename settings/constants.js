@@ -1,5 +1,5 @@
 // export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-rlfvoxmasq-uc.a.run.app'
-export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-llhboxpn4q-uc.a.run.app'
+export const BASE_MARKET_API_URL = 'https://marina-market-api-dev-llhboxpn4q-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_MARKET_API_URL + '/auth/login'
@@ -83,3 +83,8 @@ export const EVENT_API_URL = 'http://localhost:8090/escpos/receipt/event'
 export const PRINTER_BARCODE_API_URL = 'http://localhost:8090/escpos/receipt/barcode'
 export const PRINTER_SUPPLIER_TICKET_API_URL = 'http://localhost:8090/escpos/receipt/provider'
 export const PRINTER_HEALTH_URL = 'http://localhost:8090/escpos/health'
+
+// TASK
+export const TAASK_TYPE_API_URL = BASE_MARKET_API_URL + '/task-type'
+export const TAASK_STATE_API_URL = BASE_MARKET_API_URL + '/task-state'
+export const CREATE_TAASK_TYPE_API_URL_URL = BASE_MARKET_API_URL + '/task-type/create'

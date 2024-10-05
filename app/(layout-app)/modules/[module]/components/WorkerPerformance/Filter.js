@@ -1,10 +1,16 @@
 'use client'
 
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function Filter () {
-    const [selectionCode, setSelectionCode] = useState(null)
+export default function Filter ({ users, taskTypes, taskStates }) {
+    const [selectionTaskType, setSelectionTaskType] = useState(null)
+    const [selectionTaskState, setSelectionTaskState] = useState(null)
+    const [selectionUser, setSelectionUser] = useState(null)
+
+    useEffect(() => {
+        //
+    }, [selectionTaskType])
 
     return <section className='w-full flex'>
         <div className="w-full flex flex-row justify-between">
@@ -13,10 +19,9 @@ export default function Filter () {
                     <Autocomplete
                         label="Empleados"
                         placeholder="Busca un empleado"
-                        defaultItems={[{ value: 1, label: 'Item 1' }]}
-                        // defaultSelectedKey={currentCredentialCode}
-                        value={selectionCode}
-                        onSelectionChange={(value) => setSelectionCode(value)}
+                        defaultItems={users}
+                        selectedKey={selectionUser}
+                        onSelectionChange={(value) => setSelectionUser(value)}
                         allowsEmptyCollection={false}
                         isClearable={false}
                         size='sm'
@@ -31,10 +36,9 @@ export default function Filter () {
                     <Autocomplete
                         label="Tipo de tarea"
                         placeholder="Busca un tipo"
-                        defaultItems={[{ value: 1, label: 'Item 1' }]}
-                        // defaultSelectedKey={currentCredentialCode}
-                        value={selectionCode}
-                        onSelectionChange={(value) => setSelectionCode(value)}
+                        defaultItems={taskTypes}
+                        selectedKey={selectionTaskType}
+                        onSelectionChange={(value) => setSelectionTaskType(value)}
                         allowsEmptyCollection={false}
                         isClearable={false}
                         size='sm'
@@ -49,10 +53,9 @@ export default function Filter () {
                     <Autocomplete
                         label="Estado de tarea"
                         placeholder="Busca un estado"
-                        defaultItems={[{ value: 1, label: 'Item 1' }]}
-                        // defaultSelectedKey={currentCredentialCode}
-                        value={selectionCode}
-                        onSelectionChange={(value) => setSelectionCode(value)}
+                        defaultItems={taskStates}
+                        selectedKey={selectionTaskState}
+                        onSelectionChange={(value) => setSelectionTaskState(value)}
                         allowsEmptyCollection={false}
                         isClearable={false}
                         size='sm'
