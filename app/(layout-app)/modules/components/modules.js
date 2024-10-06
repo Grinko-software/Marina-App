@@ -1,4 +1,5 @@
 'use client'
+
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
@@ -34,7 +35,7 @@ export function Modules () {
                     <p className="text-md font-bold">{'MÓDULOS'}</p>
                 </CardHeader>
                 <CardBody>
-                    <div className='gap-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 p-1 w-full'>
+                    <div className='gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-1 w-full'>
                         {
                             modules?.map(({ key, path, name, description, content: component, icon }) => {
                                 return <ModuleView key={key} path={path} name={name} description={description} icon={icon}>

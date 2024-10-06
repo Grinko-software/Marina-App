@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Filter from './Filter'
 import Widgets from './Widgets'
 import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
+import Board from './components/Board'
 
 export default function WorkerPerformance () {
     // const { requestData } = useAccountingEventsStore()
@@ -48,7 +49,7 @@ export default function WorkerPerformance () {
                 <Widgets/>
                 <div className='border border-green-300 flex flex-1 items-center'>
                     <p className='text-center m-auto'>
-                        CARDS
+                        <Board></Board>
                     </p>
                 </div>
             </div>

@@ -66,7 +66,7 @@ export default function Home () {
                                 title="Módulos"
                                 imgSrc={reports}
                                 footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
-                                disabled={ salesDisabled}
+                                // disabled={ salesDisabled}
                             />
                         </motion.div>
                         <motion.div
