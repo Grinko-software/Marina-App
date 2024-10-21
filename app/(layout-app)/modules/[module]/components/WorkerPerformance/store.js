@@ -1,19 +1,18 @@
 import { create } from 'zustand'
-import { getData } from '@/services/http'
-import { INDICATORS_ACCOUNTING_EVENT } from '@/settings/constants'
-const useAccountingEventsStore = create((set) => ({
+import { requestTaskList } from './service'
+
+const useFilterStore = create((set) => ({
     data: null,
     loading: false,
     totalpage: undefined,
     setLoading: (value) => set({ loading: value }),
-    requestData: (limitPage, currentPage) => {
+    requestData: ({ taskTypeId, taskStateId, userId }) => {
         try {
             set({ loading: true })
             setTimeout(() => {
-                getData(`${INDICATORS_ACCOUNTING_EVENT}` + '?limit=' + limitPage + '&offset=' + currentPage).then((data) => {
+                requestTaskList({ taskTypeId: null, taskStateId: null, userId: null }).then((data) => {
                     set({
-                        data: data?.data?.response_events,
-                        totalpage: data?.data?.total_page
+                        data: data?.data
                     })
                 }).catch((error) => {
                     console.debug(error)
@@ -26,4 +25,4 @@ const useAccountingEventsStore = create((set) => ({
     }
 }))
 
-export default useAccountingEventsStore
+export default useFilterStore

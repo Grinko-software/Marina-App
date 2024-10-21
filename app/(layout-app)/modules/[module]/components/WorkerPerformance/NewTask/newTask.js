@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Autocomplete, AutocompleteItem, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from '@nextui-org/react'
+import { DatePicker } from '@nextui-org/date-picker'
 import useStore from './store'
 import { isMobileDevice } from '@/utils/agent'
 import { TbShoppingCartPlus } from 'react-icons/tb'
@@ -15,6 +16,7 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
         taskType, setTaskType,
         difficultType, setDifficultType,
         userTask, setUserTask,
+        dateTask, setDateTask,
         error, requestCreate, clearStore, complete
     } = useStore()
 
@@ -31,6 +33,7 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
             onClose()
         }
     }, [complete, error])
+
     return (
         <section>
             <header className="flex justify-end">
@@ -61,6 +64,7 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                                     allowsEmptyCollection={false}
                                     isClearable={false}
                                     variant={'underlined'}
+                                    labelPlacement={'outside'}
                                 >
                                     {(item) => <AutocompleteItem key={item.value}>
                                         {`${item.label}`}
@@ -77,6 +81,7 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                                     allowsEmptyCollection={false}
                                     isClearable={false}
                                     variant={'underlined'}
+                                    labelPlacement={'outside'}
                                 >
                                     {(item) => <AutocompleteItem key={item.value}>
                                         {`${item.label}`}
@@ -93,6 +98,7 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                                     allowsEmptyCollection={false}
                                     isClearable={false}
                                     variant={'underlined'}
+                                    labelPlacement={'outside'}
                                 >
                                     {(item) => <AutocompleteItem key={item.value}>
                                         {`${item.label}`}
@@ -101,7 +107,6 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                             </div>
                             <div className="p-4 flex items-center">
                                 <Input
-                                    autoFocus={true}
                                     type="text"
                                     value={name}
                                     variant={'underlined'}
@@ -116,10 +121,22 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                                     type="text"
                                     value={description}
                                     variant={'underlined'}
-                                    label={'Descripción Tarea'}
                                     labelPlacement={'outside'}
+                                    label={'Descripción Tarea'}
                                     placeholder={ 'Ingrese la descripción de la tarea'}
                                     onValueChange={(value) => { setDescription(value) }}
+                                />
+                            </div>
+                            <div className="p-4 flex items-center">
+                                <DatePicker
+                                    da
+                                    variant={'underlined'}
+                                    labelPlacement={'outside'}
+                                    fo
+                                    label="Fecha límite"
+                                    placeholder={ 'Selecciona la fecha de la tarea'}
+                                    value={dateTask}
+                                    onChange={setDateTask}
                                 />
                             </div>
                         </section>
@@ -131,7 +148,16 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                             </div>
                             : null}
                         <Button className =" bg-green-500 text-primary-50"
-                            onClick={() => { requestCreate(taskType, difficultType, userTask, name, description, notify) }}
+                            onClick={() => {
+                                requestCreate(
+                                    name,
+                                    description,
+                                    taskType,
+                                    difficultType,
+                                    userTask,
+                                    dateTask,
+                                    notify)
+                            }}
                         >
                             Crear
                         </Button>

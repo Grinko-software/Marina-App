@@ -4,15 +4,25 @@ import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import CreateTaskType from './NewTaskType/newTaskType'
 import CreateTask from './NewTask/newTask'
+import useFilterStore from './store'
 
 export default function Filter ({ users, taskTypes, taskStates, taskDifficulties }) {
     const [selectionTaskType, setSelectionTaskType] = useState(null)
     const [selectionTaskState, setSelectionTaskState] = useState(null)
     const [selectionUser, setSelectionUser] = useState(null)
+    const { loading, requestData } = useFilterStore()
 
     useEffect(() => {
         //
     }, [selectionTaskType])
+
+    useEffect(() => {
+        requestTaskList()
+    }, [])
+
+    const requestTaskList = () => {
+        return requestData({ taskTypeId: selectionTaskType, taskStateId: selectionTaskState, userId: selectionUser })
+    }
 
     return <section className='w-full flex'>
         <div className="w-full flex flex-row justify-between">
@@ -71,7 +81,7 @@ export default function Filter ({ users, taskTypes, taskStates, taskDifficulties
             </div>
             <div className="flex flex-row gap-5">
                 <div>
-                    <Button className='mr-auto h-full' onClick={() => {}}>
+                    <Button className='mr-auto h-full' onClick={requestTaskList} isLoading={loading}>
                         {'Buscar'}
                     </Button>
                 </div>

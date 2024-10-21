@@ -85,7 +85,9 @@ export const PRINTER_SUPPLIER_TICKET_API_URL = 'http://localhost:8090/escpos/rec
 export const PRINTER_HEALTH_URL = 'http://localhost:8090/escpos/health'
 
 // TASK
-export const TAASK_TYPE_API_URL = BASE_MARKET_API_URL + '/task-type'
-export const TAASK_STATE_API_URL = BASE_MARKET_API_URL + '/task-state'
-export const TAASK_DIFFUCULT_API_URL = BASE_MARKET_API_URL + '/task-difficulties'
-export const CREATE_TAASK_TYPE_API_URL_URL = BASE_MARKET_API_URL + '/task-type/create'
+export const TASKS_API_URL_URL = BASE_MARKET_API_URL + '/task'
+export const TASK_TYPE_API_URL = BASE_MARKET_API_URL + '/task-type'
+export const TASK_STATE_API_URL = BASE_MARKET_API_URL + '/task-state'
+export const TASK_DIFFUCULT_API_URL = BASE_MARKET_API_URL + '/task-difficulties'
+export const CREATE_TASK_TYPE_API_URL_URL = BASE_MARKET_API_URL + '/task-type/create'
+export const CREATE_TASK_API_URL_URL = BASE_MARKET_API_URL + '/task/create'

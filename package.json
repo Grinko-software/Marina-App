@@ -17,7 +17,8 @@
     "@material-tailwind/react": "^2.1.0",
     "@next/eslint-plugin-next": "^13.4.19",
     "@next/font": "^13.4.15",
-    "@nextui-org/react": "2.2.9",
+    "@nextui-org/date-picker": "^2.1.8",
+    "@nextui-org/react": "^2.4.8",
     "@react-pdf/renderer": "^3.1.12",
     "@serialport/parser-readline": "^12.0.0",
     "@yudiel/react-qr-scanner": "^2.0.0-beta.3",
@@ -64,7 +65,7 @@
     "styled-components": "^6.1.8",
     "swiper": "^11.0.5",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss": "3.3.3",
+    "tailwindcss": "^3.4.14",
     "use-barcode-detection": "^1.0.2",
     "zustand": "^4.4.1"
   },

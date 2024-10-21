@@ -4,6 +4,7 @@ import Filter from './Filter'
 import Widgets from './Widgets'
 import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
 import Board from './components/Board'
+import useFilterStore from './store'
 
 export default function WorkerPerformance () {
     // const { requestData } = useAccountingEventsStore()
@@ -11,6 +12,7 @@ export default function WorkerPerformance () {
     const [taskTypes, setTaskTypes] = useState([])
     const [taskStates, setTaskStates] = useState([])
     const [taskDifficulties, setTaskDifficulties] = useState([])
+    const { data, loading } = useFilterStore()
 
     useEffect(() => {
         requestUserList().then((data) => {
@@ -46,7 +48,7 @@ export default function WorkerPerformance () {
         <section className='flex w-full h-full' >
             <div className='w-full h-full flex flex-col gap-3'>
                 <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties}/>
-                <Widgets/>
+                <Widgets loading={loading} data={data}/>
                 <div className='border border-green-300 flex flex-1 items-center'>
                     <p className='text-center m-auto'>
                         <Board></Board>
