@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import CardTask from './Card'
+import TaskDetail from './TaskDetail'
+import { useDisclosure } from '@nextui-org/react'
 
 export default function TasksBoard ({
     todoTasks = [],
@@ -8,6 +10,9 @@ export default function TasksBoard ({
     readyToEvaluateTasks = [],
     unassignedTasks = []
 }) {
+    const { isOpen, onClose, onOpen } = useDisclosure()
+    const [targetTaskDetail, setTargetTaskDetail] = useState()
+
     const [itemsData, setItemsData] = useState([])
 
     const [todoItems, setTodoItems] = useState([])
@@ -33,6 +38,18 @@ export default function TasksBoard ({
         )
     }, [unassignedItems, todoItems, inProgressItems, readyToEvaluateItems])
 
+    useEffect(() => {
+        if (targetTaskDetail) {
+            onOpen()
+        } else {
+            onClose()
+        }
+    }, [targetTaskDetail])
+
+    const openTaskDetail = (task) => {
+        setTargetTaskDetail(task)
+    }
+
     const renderItems = (items) => {
         return items.map((item) => {
             return (
@@ -44,6 +61,7 @@ export default function TasksBoard ({
                     description={`Tarea ${item.id}: ${item.description}`}
                     user={item.user?.name}
                     userId={item.user?.id}
+                    openDetail={() => openTaskDetail(item)}
 
                     imageUrl="https://empleosurgentes.com/wp-content/uploads/2021/05/empleo-de-limpieza-personal-de-limpieza-cleaning-staff-trabajador-de-limpieza-cleaning-employee-cleaning-operators-industrial-cleaning-auxiliar-de-bodega.jpg"
                 />
@@ -61,6 +79,13 @@ export default function TasksBoard ({
                     </div>
                 )
             })}
+            <TaskDetail
+                data={targetTaskDetail}
+                isOpen={isOpen}
+                onClose={() => {
+                    setTargetTaskDetail(null)
+                }}
+            />
         </section>
     )
 }

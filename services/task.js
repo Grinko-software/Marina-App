@@ -1,5 +1,5 @@
 import { CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL } from '@/settings/constants'
-import { GET, getData } from './http'
+import { GET, PUT, getData } from './http'
 import { getToken } from './account'
 
 export const fetchGetTaskTypes = async () => {
@@ -92,6 +92,14 @@ export const fetchCreateTask = async ({
                 return null
             }
         })
+    } catch {
+        return null
+    }
+}
+
+export const fetchRateTask = async ({ taskId, taskRate }) => {
+    try {
+        return await getData(TASKS_API_URL_URL, PUT, null, true)
     } catch {
         return null
     }
