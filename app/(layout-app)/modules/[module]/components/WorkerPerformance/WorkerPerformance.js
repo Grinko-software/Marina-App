@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import Filter from './Filter'
 import Widgets from './Widgets'
 import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
-import Board from './components/Board'
+
 import useFilterStore from './store'
+import TasksBoard from './components/TasksBoard'
 
 export default function WorkerPerformance () {
     // const { requestData } = useAccountingEventsStore()
@@ -12,7 +13,58 @@ export default function WorkerPerformance () {
     const [taskTypes, setTaskTypes] = useState([])
     const [taskStates, setTaskStates] = useState([])
     const [taskDifficulties, setTaskDifficulties] = useState([])
-    const { data, loading } = useFilterStore()
+    const { data: tasks = [], loading } = useFilterStore()
+
+    const [todoTasks, setTodoTasks] = useState([])
+    const [inProgressTasks, setInProgressTasks] = useState([])
+    const [readyToEvaluateTasks, setReadyToEvaluateTasks] = useState([])
+    const [unassignedTasks, setUnassignedTasks] = useState([])
+
+    useEffect(() => {
+        if (tasks) {
+            // console.log(tasks)
+        }
+    }, [tasks])
+
+    useEffect(() => {
+        const todoItems = []
+        const inProgressItems = []
+        const readyToEvaluateItems = []
+        const unassignedItems = []
+
+        if (tasks?.length) {
+            for (const task of tasks) {
+                const taskUser = task.user
+                const taskState = task.state?.id
+                if (!taskUser) {
+                    // unassignedItems
+                    unassignedItems.push(task)
+                } else {
+                    switch (taskState) {
+                    case 1:
+                        // todoItems
+                        todoItems.push(task)
+                        break
+                    case 2:
+                        // inProgressItems
+                        inProgressItems.push(task)
+                        break
+                    case 3:
+                        // readyToEvaluateItems
+                        readyToEvaluateItems.push(task)
+                        break
+                    default:
+                                        // code block
+                    }
+                }
+            }
+        }
+
+        setTodoTasks(todoItems)
+        setInProgressTasks(inProgressItems)
+        setReadyToEvaluateTasks(readyToEvaluateItems)
+        setUnassignedTasks(unassignedItems)
+    }, [tasks])
 
     useEffect(() => {
         requestUserList().then((data) => {
@@ -48,11 +100,21 @@ export default function WorkerPerformance () {
         <section className='flex w-full h-full' >
             <div className='w-full h-full flex flex-col gap-3'>
                 <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties}/>
-                <Widgets loading={loading} data={data}/>
-                <div className='border border-green-300 flex flex-1 items-center'>
-                    <p className='text-center m-auto'>
-                        <Board></Board>
-                    </p>
+                <Widgets
+                    loading={loading}
+                    countTotalTasks={tasks?.length}
+                    countTodoTasks={todoTasks?.length}
+                    countInProgressTasks={inProgressTasks?.length}
+                    countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
+                    countUnassignedTasks={unassignedTasks?.length}
+                />
+                <div className='flex flex-1 items-center'>
+                    <TasksBoard
+                        todoTasks={todoTasks}
+                        inProgressTasks={inProgressTasks}
+                        readyToEvaluateTasks={readyToEvaluateTasks}
+                        unassignedTasks={unassignedTasks}
+                    ></TasksBoard>
                 </div>
             </div>
         </section>
