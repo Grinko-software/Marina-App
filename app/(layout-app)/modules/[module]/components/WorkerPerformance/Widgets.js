@@ -11,14 +11,20 @@ const Widget = ({ title, count }) => {
     )
 }
 
-export default function Widgets () {
+export default function Widgets ({
+    countTotalTasks = 0,
+    countTodoTasks = 0,
+    countInProgressTasks = 0,
+    countReadyToEvaluateTasks = 0,
+    countUnassignedTasks = 0
+}) {
     return <section className='w-full flex'>
         <div className="flex flex-row w-full gap-5 justify-between">
-            <Widget title='Total tareas' count={10}/>
-            <Widget title='Tareas completada' count={5}/>
-            <Widget title='Tareas en curso' count={2}/>
-            <Widget title='Tareas por hacer' count={3}/>
-            <Widget title='Tareas sin asignar' count={0}/>
+            <Widget title='Total tareas' count={countTotalTasks}/>
+            <Widget title='Tareas por hacer' count={countTodoTasks}/>
+            <Widget title='Tareas en curso' count={countInProgressTasks}/>
+            <Widget title='Tareas listas para evaluar' count={countReadyToEvaluateTasks}/>
+            <Widget title='Tareas sin asignar' count={countUnassignedTasks}/>
         </div>
     </section>
 }
