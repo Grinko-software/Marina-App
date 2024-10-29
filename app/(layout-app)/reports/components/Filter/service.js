@@ -1,6 +1,5 @@
 import { fetchGetReportsSales, fetchGetReportsByCategoty, fetchGetReportsIndicators, fetchGetReportsSalesTypes, fetchGetReportsCriticalStock } from '@/services/reports'
-import { getMoment } from 'utils/date'
-
+import { getMoment } from '@/utils/date'
 export const equivalentDateUnit = {
     daily: 'day',
     weekly: 'week',

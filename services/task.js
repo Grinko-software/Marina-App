@@ -1,5 +1,5 @@
-import { CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL } from '@/settings/constants'
-import { GET, getData } from './http'
+import { TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL } from '@/settings/constants'
+import { GET, getData, POST } from './http'
 import { getToken } from './account'
 
 export const fetchGetTaskTypes = async () => {
@@ -92,6 +92,35 @@ export const fetchCreateTask = async ({
                 return null
             }
         })
+    } catch {
+        return null
+    }
+}
+export const fetchGetTaskByEmployee = async ({ employeeID }) => {
+    try {
+        return await getData(TASKS_API_EMPLOYEE_URL_URL.replace(':employeeID', employeeID), GET, null, true)
+    } catch {
+        return null
+    }
+}
+
+export const fetchCompleteTaskByEmployee = async ({ taskId, employeeId, description }) => {
+    const data = {
+        description
+    }
+    try {
+        return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK.replace(':taskID', taskId).replace(':employeeID', employeeId), POST, data, true)
+    } catch {
+        return null
+    }
+}
+
+export const uploadImageTaskByEmployee = async ({ taskID, taskCompletionId }) => {
+    const data = {
+        Task_completion_id: taskCompletionId
+    }
+    try {
+        return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE.replace(':taskID', taskID), POST, data, true)
     } catch {
         return null
     }

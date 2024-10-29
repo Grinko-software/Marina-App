@@ -93,6 +93,7 @@ const useAuthStore = create(
                 return ok
             },
             getUserDataWithCode: async ({ authCode, requireAdmin }) => {
+                console.log(authCode)
                 let resultData = null
                 try {
                     await authenticateByAuthCode(
@@ -103,6 +104,7 @@ const useAuthStore = create(
                         if (user.token) {
                             const { name, lastName, userType, idUser } = user
                             const isAdmin = userType === 'admin'
+                            set({ idUser })
                             if (!requireAdmin || (requireAdmin && isAdmin)) {
                                 resultData = {
                                     name,

@@ -4,7 +4,7 @@ import { InputComponent, SectionProduct, SelectComponent } from './NewProduct/cr
 import ProductImage from './NewProduct/productImage'
 import useInventoryStore from '../store'
 import Image from 'next/image'
-import { ConvertBytesToImage, DefaultImageMarinaMarket } from '@/utils/image'
+import { DefaultImageMarinaMarket } from '@/utils/image'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 import { printBarCode } from './services'

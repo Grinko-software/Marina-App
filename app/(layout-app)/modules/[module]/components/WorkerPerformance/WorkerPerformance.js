@@ -5,9 +5,12 @@ import Widgets from './Widgets'
 import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
 import Board from './components/Board'
 import useFilterStore from './store'
+import useAuthStore from '@/stores/user'
+import EmployeePerformance from './EmployeePerformance/EmployeePerformance'
 
 export default function WorkerPerformance () {
     // const { requestData } = useAccountingEventsStore()
+    const { isAdmin, idUser } = useAuthStore()
     const [users, setUsers] = useState([])
     const [taskTypes, setTaskTypes] = useState([])
     const [taskStates, setTaskStates] = useState([])
@@ -47,13 +50,18 @@ export default function WorkerPerformance () {
     return <section className='w-full h-full'>
         <section className='flex w-full h-full' >
             <div className='w-full h-full flex flex-col gap-3'>
-                <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties}/>
-                <Widgets loading={loading} data={data}/>
-                <div className='border border-green-300 flex flex-1 items-center'>
-                    <p className='text-center m-auto'>
-                        <Board></Board>
-                    </p>
-                </div>
+                {isAdmin
+                    ? <>
+                        <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties}/>
+                        <Widgets loading={loading} data={data}/>
+                        <div className='border border-green-300 flex flex-1 items-center'>
+                            <p className='text-center m-auto'>
+                                <Board></Board>
+                            </p>
+                        </div>
+                    </>
+                    : <EmployeePerformance taskStates={taskStates} idUser={idUser} taskDifficulties={taskDifficulties}/>
+                }
             </div>
         </section>
     </section>
