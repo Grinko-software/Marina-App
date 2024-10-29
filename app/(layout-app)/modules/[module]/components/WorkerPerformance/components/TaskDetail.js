@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 import TaskScore from './TaskDetailScore'
 import { TASK_STATES, fetchRateTask } from '@/services/task'
@@ -14,6 +14,7 @@ const ItemDetail = ({ label, value }) => {
 }
 
 export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {} }) {
+    const [detailItemsData, setDetailItemsData] = useState([])
     const [ratingView, setRatingView] = useState(false)
     const [editView, setEditView] = useState(false)
     const { requestData } = useFilterStore()
@@ -33,6 +34,44 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
         closeModal()
     }
 
+    useEffect(() => {
+        let detailData = []
+        if (data) {
+            detailData = [
+                {
+                    label: 'Descripción',
+                    value: data?.description
+                },
+                {
+                    label: 'Tipo de tarea',
+                    value: data?.type?.name
+                },
+                {
+                    label: 'Tipo de dificultad',
+                    value: data?.taskDifficult?.name
+                },
+                {
+                    label: 'Encargado',
+                    value: data?.user?.name
+                },
+                {
+                    label: 'Fecha límite',
+                    value: data?.dateLimit ? getMoment(data?.dateLimit).calendar() : null
+                }
+            ]
+
+            if (data.rate) {
+                detailData.push(
+                    {
+                        label: 'Evaluación',
+                        value: `${data.rate} ★`
+                    }
+                )
+            }
+        }
+
+        setDetailItemsData(detailData)
+    }, [data])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
@@ -49,28 +88,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                     ratingView
                                         ? <TaskScore score={data?.rate} onRateTask={onRateTask}/>
                                         : <div>
-                                            {[
-                                                {
-                                                    label: 'Descripción',
-                                                    value: data?.description
-                                                },
-                                                {
-                                                    label: 'Tipo de tarea',
-                                                    value: data?.type?.name
-                                                },
-                                                {
-                                                    label: 'Tipo de dificultad',
-                                                    value: data?.taskDifficult?.name
-                                                },
-                                                {
-                                                    label: 'Encargado',
-                                                    value: data?.user?.name
-                                                },
-                                                {
-                                                    label: 'Fecha límite',
-                                                    value: data?.dateLimit ? getMoment(data?.dateLimit).calendar() : null
-                                                }
-                                            ].map((item, index) => (
+                                            {detailItemsData.map((item, index) => (
                                                 <ItemDetail key={index} label={item.label} value={item.value} />
                                             ))}
                                         </div>

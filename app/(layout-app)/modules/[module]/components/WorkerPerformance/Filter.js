@@ -43,7 +43,7 @@ export default function Filter ({ users, taskTypes, taskStates, taskDifficulties
                         selectedKey={selectionUser}
                         onSelectionChange={(value) => setSelectionUser(value)}
                         allowsEmptyCollection={false}
-                        isClearable={false}
+                        isClearable={true}
                         size='sm'
                         className="max-w-xs"
                     >
@@ -60,7 +60,7 @@ export default function Filter ({ users, taskTypes, taskStates, taskDifficulties
                         selectedKey={selectionTaskType}
                         onSelectionChange={(value) => setSelectionTaskType(value)}
                         allowsEmptyCollection={false}
-                        isClearable={false}
+                        isClearable={true}
                         size='sm'
                         className="max-w-xs"
                     >
@@ -77,7 +77,7 @@ export default function Filter ({ users, taskTypes, taskStates, taskDifficulties
                         selectedKey={selectionTaskState}
                         onSelectionChange={(value) => setSelectionTaskState(value)}
                         allowsEmptyCollection={false}
-                        isClearable={false}
+                        isClearable={true}
                         size='sm'
                         className="max-w-xl"
                     >

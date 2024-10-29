@@ -9,6 +9,7 @@ export default function TasksBoard ({
     inProgressTasks = [],
     readyToEvaluateTasks = [],
     unassignedTasks = [],
+    completedTasks = [],
     filterData = {}
 }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -29,13 +30,19 @@ export default function TasksBoard ({
     }, [todoTasks, inProgressTasks, readyToEvaluateTasks, unassignedTasks])
 
     useEffect(() => {
+        const dataItems = [
+            { title: 'Tarjetas sin asignar', items: unassignedItems },
+            { title: 'Por hacer', items: todoItems },
+            { title: 'Realizando', items: inProgressItems },
+            { title: 'Lista para evaluar', items: readyToEvaluateItems }
+        ]
+        if (completedTasks?.length) {
+            dataItems.push(
+                { title: 'Completadas', items: completedTasks }
+            )
+        }
         setItemsData(
-            [
-                { title: 'Tarjetas sin asignar', items: unassignedItems, droppable: false },
-                { title: 'Por hacer', items: todoItems, droppable: true },
-                { title: 'Realizando', items: inProgressItems, droppable: true },
-                { title: 'Lista para evaluar', items: readyToEvaluateItems, droppable: true }
-            ]
+            dataItems
         )
     }, [unassignedItems, todoItems, inProgressItems, readyToEvaluateItems])
 
@@ -83,7 +90,7 @@ export default function TasksBoard ({
             <TaskDetail
                 data={targetTaskDetail}
                 isOpen={isOpen}
-                filterData={{}}
+                filterData={filterData}
                 onClose={() => {
                     setTargetTaskDetail(null)
                 }}

@@ -36,6 +36,10 @@ const useFilterStore = create((set) => ({
                                 // readyToEvaluateItems
                                 stateKey = TASK_STATES.READY_TO_EVALUATE
                                 break
+                            case 4:
+                                // readyToEvaluateItems
+                                stateKey = TASK_STATES.COMPLETED
+                                break
                             default:
                                                 // code block
                             }

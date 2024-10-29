@@ -20,6 +20,7 @@ export default function WorkerPerformance () {
     const [inProgressTasks, setInProgressTasks] = useState([])
     const [readyToEvaluateTasks, setReadyToEvaluateTasks] = useState([])
     const [unassignedTasks, setUnassignedTasks] = useState([])
+    const [completedTasks, setCompletedTasks] = useState([])
     const [filterData, setFilterData] = useState({})
 
     useEffect(() => {
@@ -33,6 +34,7 @@ export default function WorkerPerformance () {
         const inProgressItems = []
         const readyToEvaluateItems = []
         const unassignedItems = []
+        const completedItems = []
 
         if (tasks?.length) {
             for (const task of tasks) {
@@ -50,6 +52,9 @@ export default function WorkerPerformance () {
                 case TASK_STATES.READY_TO_EVALUATE:
                     readyToEvaluateItems.push(task)
                     break
+                case TASK_STATES.COMPLETED:
+                    completedItems.push(task)
+                    break
                 default:
                     // code block
                 }
@@ -60,6 +65,7 @@ export default function WorkerPerformance () {
         setInProgressTasks(inProgressItems)
         setReadyToEvaluateTasks(readyToEvaluateItems)
         setUnassignedTasks(unassignedItems)
+        setCompletedTasks(completedItems)
     }, [tasks])
 
     useEffect(() => {
@@ -106,10 +112,12 @@ export default function WorkerPerformance () {
                 />
                 <div className='flex flex-1 items-center'>
                     <TasksBoard
+                        filterData={filterData}
                         todoTasks={todoTasks}
                         inProgressTasks={inProgressTasks}
                         readyToEvaluateTasks={readyToEvaluateTasks}
                         unassignedTasks={unassignedTasks}
+                        completedTasks={completedTasks}
                     ></TasksBoard>
                 </div>
             </div>

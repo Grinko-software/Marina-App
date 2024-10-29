@@ -6,7 +6,8 @@ export const TASK_STATES = {
     TODO: 'TODO',
     IN_PROGRESS: 'IN_PROGRESS',
     READY_TO_EVALUATE: 'READY_TO_EVALUATE',
-    UNASSIGNED: 'UNASSIGNED'
+    UNASSIGNED: 'UNASSIGNED',
+    COMPLETED: 'COMPLETED'
 }
 
 export const fetchGetTaskTypes = async () => {
@@ -94,7 +95,7 @@ export const fetchCreateTask = async ({
                     name,
                     description,
                     task_type_id: taskType,
-                    // date_limit: dateTask,
+                    date_limit: dateTask,
                     user_id: userTask,
                     task_difficulties_id: difficultType,
                     state_task_id: 1

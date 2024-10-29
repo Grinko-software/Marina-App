@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { requestCreateTask } from '../service'
+import { getMoment } from '@/utils/date'
 
 const useSupplierFormStore = create((set) => ({
     name: null,
@@ -42,7 +43,7 @@ const useSupplierFormStore = create((set) => ({
                 taskType: Number(taskType),
                 difficultType: Number(difficultType),
                 userTask: Number(userTask),
-                dateTask
+                dateTask: getMoment(dateTask).format('YYYY-MM-DD')
             })])
             set({ loading: false, error: null, complete: true })
             if (data?.code === 200) {
