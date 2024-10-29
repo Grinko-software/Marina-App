@@ -69,10 +69,11 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                 )
             }
             if (data.rate) {
+                const stars = `${'★'.repeat(data.rate)}`
                 detailData.push(
                     {
                         label: 'Evaluación',
-                        value: `${data.rate} ★`
+                        value: `${data.rate} ${stars}`
                     }
                 )
             }
