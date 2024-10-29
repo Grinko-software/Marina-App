@@ -82,7 +82,7 @@ export default function TasksBoard ({
             {itemsData.map((item) => {
                 return (
                     <div key={item.title} className="bg-gray-50 dark:bg-secondary-500 border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex-1 min-h-[42rem] max-h-[42rem] overflow-y-auto flex flex-col space-y-2">
-                        <p className="text-gray-500 dark:text-white">{item.title}</p>
+                        <p className="text-gray-500 dark:text-white">{`${item.title} (${item?.items?.length || 0})`}</p>
                         {renderItems(item.items)}
                     </div>
                 )

@@ -35,12 +35,16 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
     }
 
     useEffect(() => {
-        let detailData = []
-        if (data) {
+        if (isOpen && data) {
+            let detailData = []
             detailData = [
                 {
                     label: 'Descripción',
                     value: data?.description
+                },
+                {
+                    label: 'Encargado',
+                    value: data?.user?.name
                 },
                 {
                     label: 'Tipo de tarea',
@@ -51,15 +55,19 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                     value: data?.taskDifficult?.name
                 },
                 {
-                    label: 'Encargado',
-                    value: data?.user?.name
-                },
-                {
                     label: 'Fecha límite',
                     value: data?.dateLimit ? getMoment(data?.dateLimit).calendar() : null
                 }
             ]
 
+            if (data.taskCompletion) {
+                detailData.push(
+                    {
+                        label: 'Comentarios',
+                        value: data.taskCompletion?.description
+                    }
+                )
+            }
             if (data.rate) {
                 detailData.push(
                     {
@@ -68,10 +76,10 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                     }
                 )
             }
+            setDetailItemsData(detailData)
         }
+    }, [isOpen])
 
-        setDetailItemsData(detailData)
-    }, [data])
     return (
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">

@@ -16,6 +16,22 @@ const useFilterStore = create((set) => ({
                     const itemsData = data?.data?.map((item) => {
                         let stateKey = null
                         const taskUser = item?.user
+                            ? {
+                                id: item?.user?.ID,
+                                name: item?.user?.name,
+                                last_name: item?.user?.last_name,
+                                email: item?.user?.email
+                            }
+                            : null
+                        const taskCompletion = item?.task_completion
+                            ? {
+                                id: item?.task_completion?.id,
+                                taskId: item?.task_completion?.task_id,
+                                employeeId: item?.task_completion?.employee_id,
+                                description: item?.task_completion?.description,
+                                completionDate: item?.task_completion?.CompletionDate
+                            }
+                            : null
 
                         const taskStateId = item.state_task_id
 
@@ -53,6 +69,7 @@ const useFilterStore = create((set) => ({
 
                             // -
                             taskCompletionId: item.task_completion_id,
+                            taskCompletion: taskCompletion || null,
 
                             // type
                             typeId: item.task_type_id,
