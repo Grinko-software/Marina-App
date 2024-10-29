@@ -2,10 +2,18 @@
 import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 import TaskScore from './TaskDetailScore'
-import { fetchRateTask } from '@/services/task'
+import { TASK_STATES, fetchRateTask } from '@/services/task'
 import useFilterStore from '../store'
+import { getMoment } from '@/utils/date'
 
-export default function TaskDetail ({ isOpen, onClose, data = {} }) {
+const ItemDetail = ({ label, value }) => {
+    return <div className="flex justify-between p-2 border-b border-gray-300">
+        <span className="font-bold">{label?.toUpperCase()}:</span>
+        <span className="text-gray-700">{value?.toUpperCase() || '-'}</span>
+    </div>
+}
+
+export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {} }) {
     const [ratingView, setRatingView] = useState(false)
     const [editView, setEditView] = useState(false)
     const { requestData } = useFilterStore()
@@ -15,7 +23,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {} }) {
             onClose()
             setRatingView(false)
             setEditView(false)
-            requestData({})
+            requestData(filterData)
         }
     }
 
@@ -34,14 +42,37 @@ export default function TaskDetail ({ isOpen, onClose, data = {} }) {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1 font-extrabold">
-                                {data?.name}
+                                {data?.name?.toUpperCase()}
                             </ModalHeader>
                             <ModalBody>
                                 {
                                     ratingView
-                                        ? <TaskScore score={3} onRateTask={onRateTask}/>
+                                        ? <TaskScore score={data?.rate} onRateTask={onRateTask}/>
                                         : <div>
-                                            {data?.description}
+                                            {[
+                                                {
+                                                    label: 'Descripción',
+                                                    value: data?.description
+                                                },
+                                                {
+                                                    label: 'Tipo de tarea',
+                                                    value: data?.type?.name
+                                                },
+                                                {
+                                                    label: 'Tipo de dificultad',
+                                                    value: data?.taskDifficult?.name
+                                                },
+                                                {
+                                                    label: 'Encargado',
+                                                    value: data?.user?.name
+                                                },
+                                                {
+                                                    label: 'Fecha límite',
+                                                    value: data?.dateLimit ? getMoment(data?.dateLimit).calendar() : null
+                                                }
+                                            ].map((item, index) => (
+                                                <ItemDetail key={index} label={item.label} value={item.value} />
+                                            ))}
                                         </div>
                                 }
                             </ModalBody>
@@ -52,17 +83,32 @@ export default function TaskDetail ({ isOpen, onClose, data = {} }) {
                                     Cerrar
                                 </Button>
                                 {
-                                    ratingView
-                                        ? <Button color="default" variant="shadow" className="w-[12rem] h-[4rem] text-xl font-extrabold" onClick={() => {
-                                            setRatingView(false)
-                                        }}>
+                                    data?.stateKey === TASK_STATES.READY_TO_EVALUATE
+                                        ? ratingView
+                                            ? <Button
+                                                color="default"
+                                                variant="shadow"
+                                                className="w-[12rem] h-[4rem] text-xl font-extrabold"
+                                                onClick={() => {
+                                                    setRatingView(false)
+                                                }}
+                                            >
                                             Volver
-                                        </Button>
-                                        : <Button color="default" variant="shadow" className="w-[12rem] h-[4rem] text-xl font-extrabold" onClick={() => {
-                                            setRatingView(true)
-                                        }}>
+                                            </Button>
+                                            : <Button
+                                                color="default"
+                                                variant="shadow"
+                                                className="w-[12rem] h-[4rem] text-xl font-extrabold"
+                                                onClick={() => {
+                                                    setRatingView(true)
+                                                }}
+                                                isDisabled={data?.stateKey !== TASK_STATES.READY_TO_EVALUATE}
+                                            >
                                             Calificar
-                                        </Button>
+                                            </Button>
+                                        : editView
+                                            ? <></>
+                                            : <></>
                                 }
                             </ModalFooter>
                         </>

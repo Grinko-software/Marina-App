@@ -6,7 +6,7 @@ import CreateTaskType from './NewTaskType/newTaskType'
 import CreateTask from './NewTask/newTask'
 import useFilterStore from './store'
 
-export default function Filter ({ users, taskTypes, taskStates, taskDifficulties }) {
+export default function Filter ({ users, taskTypes, taskStates, taskDifficulties, filterData, setFilterData }) {
     const [selectionTaskType, setSelectionTaskType] = useState(null)
     const [selectionTaskState, setSelectionTaskState] = useState(null)
     const [selectionUser, setSelectionUser] = useState(null)
@@ -20,8 +20,16 @@ export default function Filter ({ users, taskTypes, taskStates, taskDifficulties
         requestTaskList()
     }, [])
 
+    useEffect(() => {
+        setFilterData({
+            taskTypeId: selectionTaskType || undefined,
+            taskStateId: selectionTaskState || undefined,
+            userId: selectionUser || undefined
+        })
+    }, [selectionTaskType, selectionTaskState, selectionUser])
+
     const requestTaskList = () => {
-        return requestData({ taskTypeId: selectionTaskType, taskStateId: selectionTaskState, userId: selectionUser })
+        return requestData(filterData)
     }
 
     return <section className='w-full flex'>

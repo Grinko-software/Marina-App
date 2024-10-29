@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { requestTaskList } from './service'
+import { TASK_STATES } from '@/services/task'
 
 const useFilterStore = create((set) => ({
     data: null,
@@ -9,10 +10,37 @@ const useFilterStore = create((set) => ({
     requestData: ({ taskTypeId, taskStateId, userId }) => {
         try {
             set({ loading: true })
-            requestTaskList({ taskTypeId: null, taskStateId: null, userId: null })
+            requestTaskList({ taskTypeId, taskStateId, userId })
                 .then((data) => {
                     console.log(data?.data)
                     const itemsData = data?.data?.map((item) => {
+                        let stateKey = null
+                        const taskUser = item?.user
+
+                        const taskStateId = item.state_task_id
+
+                        if (!taskUser) {
+                            // unassignedItems
+                            stateKey = TASK_STATES.UNASSIGNED
+                        } else {
+                            switch (taskStateId) {
+                            case 1:
+                                // todoItems
+                                stateKey = TASK_STATES.TODO
+                                break
+                            case 2:
+                                // inProgressItems
+                                stateKey = TASK_STATES.IN_PROGRESS
+                                break
+                            case 3:
+                                // readyToEvaluateItems
+                                stateKey = TASK_STATES.READY_TO_EVALUATE
+                                break
+                            default:
+                                                // code block
+                            }
+                        }
+
                         return {
                             id: item.id,
                             name: item.name,
@@ -30,12 +58,7 @@ const useFilterStore = create((set) => ({
                             },
                             // user
                             userId: item.user_id,
-                            user: {
-                                id: item?.user?.ID,
-                                name: item?.user?.name,
-                                last_name: item?.user?.last_name,
-                                email: item?.user?.email
-                            },
+                            user: taskUser,
                             // level
                             taskDifficultId: item.task_difficulties_id,
                             taskDifficult: {
@@ -44,11 +67,14 @@ const useFilterStore = create((set) => ({
                                 cash_bonus: item.task_difficulties?.cash_bonus
                             },
                             // state
+                            stateKey: stateKey || null,
                             stateId: item.state_task_id,
                             state: {
                                 id: item.state_task?.ID,
                                 name: item.state_task?.state_name
-                            }
+                            },
+                            // rating
+                            rate: item.rating || null
                         }
                     })
                     set({

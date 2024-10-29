@@ -6,6 +6,7 @@ import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskT
 
 import useFilterStore from './store'
 import TasksBoard from './components/TasksBoard'
+import { TASK_STATES } from '@/services/task'
 
 export default function WorkerPerformance () {
     // const { requestData } = useAccountingEventsStore()
@@ -19,6 +20,7 @@ export default function WorkerPerformance () {
     const [inProgressTasks, setInProgressTasks] = useState([])
     const [readyToEvaluateTasks, setReadyToEvaluateTasks] = useState([])
     const [unassignedTasks, setUnassignedTasks] = useState([])
+    const [filterData, setFilterData] = useState({})
 
     useEffect(() => {
         if (tasks) {
@@ -34,28 +36,22 @@ export default function WorkerPerformance () {
 
         if (tasks?.length) {
             for (const task of tasks) {
-                const taskUser = task.user
-                const taskState = task.state?.id
-                if (!taskUser) {
-                    // unassignedItems
+                const taskState = task.stateKey
+                switch (taskState) {
+                case TASK_STATES.UNASSIGNED:
                     unassignedItems.push(task)
-                } else {
-                    switch (taskState) {
-                    case 1:
-                        // todoItems
-                        todoItems.push(task)
-                        break
-                    case 2:
-                        // inProgressItems
-                        inProgressItems.push(task)
-                        break
-                    case 3:
-                        // readyToEvaluateItems
-                        readyToEvaluateItems.push(task)
-                        break
-                    default:
-                                        // code block
-                    }
+                    break
+                case TASK_STATES.TODO:
+                    todoItems.push(task)
+                    break
+                case TASK_STATES.IN_PROGRESS:
+                    inProgressItems.push(task)
+                    break
+                case TASK_STATES.READY_TO_EVALUATE:
+                    readyToEvaluateItems.push(task)
+                    break
+                default:
+                    // code block
                 }
             }
         }
@@ -99,7 +95,7 @@ export default function WorkerPerformance () {
     return <section className='w-full h-full'>
         <section className='flex w-full h-full' >
             <div className='w-full h-full flex flex-col gap-3'>
-                <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties}/>
+                <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
                 <Widgets
                     loading={loading}
                     countTotalTasks={tasks?.length}

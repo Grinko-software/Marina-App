@@ -8,7 +8,8 @@ export default function TasksBoard ({
     todoTasks = [],
     inProgressTasks = [],
     readyToEvaluateTasks = [],
-    unassignedTasks = []
+    unassignedTasks = [],
+    filterData = {}
 }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targetTaskDetail, setTargetTaskDetail] = useState()
@@ -82,6 +83,7 @@ export default function TasksBoard ({
             <TaskDetail
                 data={targetTaskDetail}
                 isOpen={isOpen}
+                filterData={{}}
                 onClose={() => {
                     setTargetTaskDetail(null)
                 }}
