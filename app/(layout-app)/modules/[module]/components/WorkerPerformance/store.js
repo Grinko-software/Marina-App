@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { requestTaskList } from './service'
-import { TASK_STATES } from '@/services/task'
+import { TASK_STATES, getTaskStateById } from '@/services/task'
 
 const useFilterStore = create((set) => ({
     data: null,
@@ -39,26 +39,7 @@ const useFilterStore = create((set) => ({
                             // unassignedItems
                             stateKey = TASK_STATES.UNASSIGNED
                         } else {
-                            switch (taskStateId) {
-                            case 1:
-                                // todoItems
-                                stateKey = TASK_STATES.TODO
-                                break
-                            case 2:
-                                // inProgressItems
-                                stateKey = TASK_STATES.IN_PROGRESS
-                                break
-                            case 3:
-                                // readyToEvaluateItems
-                                stateKey = TASK_STATES.READY_TO_EVALUATE
-                                break
-                            case 4:
-                                // readyToEvaluateItems
-                                stateKey = TASK_STATES.COMPLETED
-                                break
-                            default:
-                                                // code block
-                            }
+                            stateKey = getTaskStateById(taskStateId)
                         }
 
                         return {

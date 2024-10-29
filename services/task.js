@@ -10,6 +10,29 @@ export const TASK_STATES = {
     COMPLETED: 'COMPLETED'
 }
 
+export const getTaskStateById = (taskStateId) => {
+    let stateKey = null
+
+    switch (taskStateId) {
+    case 1:
+        stateKey = TASK_STATES.TODO
+        break
+    case 2:
+        stateKey = TASK_STATES.IN_PROGRESS
+        break
+    case 3:
+        stateKey = TASK_STATES.READY_TO_EVALUATE
+        break
+    case 4:
+        stateKey = TASK_STATES.COMPLETED
+        break
+    default:
+        //
+    }
+
+    return stateKey
+}
+
 export const fetchGetTaskTypes = async () => {
     try {
         return await getData(TASK_TYPE_API_URL, GET, null, true)
