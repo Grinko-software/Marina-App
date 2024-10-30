@@ -1,4 +1,4 @@
-import { fetchGetTaskByEmployee, fetchCompleteTaskByEmployee } from '@/services/task'
+import { fetchGetTaskByEmployee, fetchCompleteTaskByEmployee, getTaskStateById } from '@/services/task'
 export const getTasksByEmployee = ({ employeeID }) => {
     return fetchGetTaskByEmployee({ employeeID })
 }
@@ -19,12 +19,12 @@ export const parseTaskByEmployee = ({ data, taskDifficulties, taskStates }) => {
             dateLimit: item?.date_limit,
             userId: item?.user_id,
             taskDifficultiesId: item?.task_difficulties_id,
-            taskState: getStateTask({ task: item, taskStates }),
+            taskState: getStateTask({ task: item }),
             stateTaskId: item?.state_task_id,
             rating: item?.rating
         }
     })
 }
-export const getStateTask = ({ task, taskStates }) => {
-    return taskStates.find(({ id }) => id === task.state_task_id)?.name
+export const getStateTask = ({ task }) => {
+    return getTaskStateById(task.state_task_id)
 }

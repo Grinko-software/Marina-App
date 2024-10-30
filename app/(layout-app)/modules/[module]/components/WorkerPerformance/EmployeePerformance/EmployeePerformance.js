@@ -1,7 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { Accordion, AccordionItem } from '@nextui-org/react'
 import { getTasksByEmployee, parseTaskByEmployee } from './service'
 import EvidenceTask from './components/EvidenceTask/evidenceTask'
+import { getMoment } from '@/utils/date'
 
 export default function EmployeePerformance ({ idUser, taskDifficulties, taskStates }) {
     const [tasksUser, setTasksUser] = useState([])
@@ -16,35 +18,36 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
     }, [taskDifficulties])
 
     return (
-        <div className="flex flex-col items-center p-4 sm:p-6 w-full lg:max-w-[900px] mx-auto">
+        <div className="flex flex-col items-center p-4 sm:p-6 w-full xl:max-w-[1200px] mx-auto">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">Actividades por hacer</h2>
-            <ul className="w-full bg-white rounded-lg shadow-md p-4 space-y-3">
-                {tasksUser.map((task, index) => (
-                    <li
-                        key={task.id}
-                        className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 space-y-2 sm:space-y-0 sm:space-x-3 w-full ${
-                            tasksUser.length - 1 === index ? '' : 'border-b border-gray-200'
-                        }`}
+            <Accordion className="w-full bg-white rounded-lg shadow-md">
+                {tasksUser.map(({ id, name, taskState, description, rating, dateLimit }) => (
+                    <AccordionItem
+                        key={id}
+                        title={
+                            <div className="flex justify-between items-center w-full p-2">
+                                <span className="uppercase font-bold text-gray-800">{name}</span>
+                                <span className={`text-xs sm:text-sm font-semibold ${
+                                    taskState === 'COMPLETED' ? 'text-green-500' : 'text-yellow-500'
+                                }`}>
+                                    {taskState}
+                                </span>
+                            </div>
+                        }
                     >
-                        <label className="flex-1 text-gray-800 capitalize font-bold text-sm sm:text-base">
-                            {task.name}
-                        </label>
-                        <span
-                            className={`text-xs sm:text-sm font-semibold ${
-                                task.taskState === 'COMPLETED' ? 'text-green-500' : 'text-yellow-500'
-                            }`}
-                        >
-                            {task.taskState}
-                        </span>
-                        <span className="text-xs sm:text-sm font-semibold text-black flex-1">
-                            {task.description}
-                        </span>
-                        <div className="w-full sm:w-auto">
-                            <EvidenceTask employeeId={idUser} taskId={task.id} />
+                        <div className="text-gray-600 px-2 flex flex-col gap-2">
+                            <p><strong>Descripción:</strong> {description}</p>
+                            <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
+                            {taskState === 'COMPLETED' && (
+                                <p><strong>Puntuación:</strong> {rating} ★</p>
+                            )}
+                            {taskState !== 'COMPLETED' && (
+                                <EvidenceTask employeeId={idUser} taskId={id} />
+                            )}
                         </div>
-                    </li>
+                    </AccordionItem>
                 ))}
-            </ul>
+            </Accordion>
         </div>
     )
 }
