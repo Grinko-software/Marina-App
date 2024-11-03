@@ -1,13 +1,20 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
-
 import { Camera } from 'react-camera-pro'
-
+import { Button as ButtonNextUi } from '@nextui-org/react'
 const Wrapper = styled.div`
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 `
 
 const Control = styled.div`
@@ -26,7 +33,7 @@ const Control = styled.div`
   padding: 50px;
   box-sizing: border-box;
   flex-direction: column-reverse;
-
+  z-index: 50;
   @media (max-aspect-ratio: 1/1) {
     flex-direction: row;
     bottom: 0;
@@ -42,23 +49,10 @@ const Control = styled.div`
 const Button = styled.button`
   outline: none;
   color: white;
-  opacity: 1;
   background: transparent;
-  background-color: transparent;
-  background-position-x: 0%;
-  background-position-y: 0%;
-  background-repeat: repeat;
-  background-image: none;
-  padding: 0;
-  text-shadow: 0px 0px 4px black;
-  background-position: center center;
-  background-repeat: no-repeat;
-  pointer-events: auto;
   cursor: pointer;
-  z-index: 2;
-  filter: invert(100%);
   border: none;
-
+  filter: invert(100%);
   &:hover {
     opacity: 0.7;
   }
@@ -81,51 +75,30 @@ const TakePhotoButton = styled(Button)`
 
 const ChangeFacingCameraButton = styled(Button)`
   background: url(https://img.icons8.com/ios/50/000000/switch-camera.png);
-  background-position: center;
   background-size: 40px;
-  background-repeat: no-repeat;
   width: 40px;
   height: 40px;
-  padding: 40px;
-  &:disabled {
-    opacity: 1;
-    cursor: default;
-  }
-  @media (max-width: 400px) {
-    padding: 40px 5px;
-  }
 `
 
-const ImagePreview = styled.div`
-  width: 120px;
-  height: 120px;
-  ${({ image }) => (image ? `background-image:  url(${image});` : '')}
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-
-  @media (max-width: 400px) {
-    width: 50px;
-    height: 120px;
-  }
-`
-
-const CameraComponent = () => {
+const CameraComponent = ({ handleClear, setImage }) => {
     const [numberOfCameras, setNumberOfCameras] = useState(0)
-    const [image, setImage] = useState(null)
     const camera = useRef(null)
 
     return (
         <Wrapper>
-            <Camera ref={camera} aspectRatio="cover" numberOfCamerasCallback={setNumberOfCameras} />
+            <Camera
+                ref={camera}
+                numberOfCamerasCallback={setNumberOfCameras}
+                style={{ width: '100%', height: '100%' }}
+            />
             <Control>
-                <ImagePreview image={image} />
+                <ButtonNextUi color="danger" variant="faded" onClick={() => { handleClear() }}>Cancelar</ButtonNextUi>
                 <TakePhotoButton
                     onClick={() => {
                         if (camera.current) {
                             const photo = camera.current.takePhoto()
-                            console.log(photo)
                             setImage(photo)
+                            handleClear()
                         }
                     }}
                 />
@@ -133,8 +106,7 @@ const CameraComponent = () => {
                     disabled={numberOfCameras <= 1}
                     onClick={() => {
                         if (camera.current) {
-                            const result = camera.current.switchCamera()
-                            console.log(result)
+                            camera.current.switchCamera()
                         }
                     }}
                 />

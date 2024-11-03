@@ -2,24 +2,52 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react'
-import useStoreEvidenceStore from './store'
 import { BiCheckCircle } from 'react-icons/bi'
 import { notify } from '@/services/notify'
 import EvidenceImageTask from './evidenceImageTask'
 import { completeTask } from '../../service'
-export default function EvidenceTask ({ taskId, employeeId }) {
+import { uploadImageTaskByEmployee } from '@/services/task'
+export default function EvidenceTask ({ taskId, employeeId, handleRequestGetTask }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
-
+    const [completationTaskId, setCompletationTaskId] = useState(null)
     const [image, setImage] = useState(null)
     const [comment, setComment] = useState('')
     const [complete, setComplete] = useState(false)
     const [error, setError] = useState(null)
 
-    const handleSubmit = async (comment) => {
-        const result = await completeTask({ taskId, employeeId, description: comment })
-        console.log(result)
+    const handleUploadImageTaskByEmployee = async ({ completationTaskId }) => {
+        try {
+            const uploadImage = await uploadImageTaskByEmployee({
+                taskId, employeeId, imageBase64: image, completationTaskId
+            })
+
+            if (uploadImage.data) {
+                notify('✅ Imágen enviada con éxito')
+                handleClear()
+                setComplete(true)
+                handleRequestGetTask()
+            } else {
+                notify('❌ Hubo un error al subir la imágen')
+            }
+        } catch (error) {
+            notify(error.message)
+            setError(error.message)
+        }
     }
-    const handleclear = () => {
+    const handleSubmit = async () => {
+        try {
+            const result = await completeTask({ taskId, employeeId, description: comment })
+            if (!result.data) notify('❌ Hubo un error al enviar la tarea')
+
+            notify('✅ Tarea enviada correctamente')
+            const completationTaskId = result.data.id
+            setCompletationTaskId(completationTaskId)
+        } catch (error) {
+            notify(error.message)
+            setError(error.message)
+        }
+    }
+    const handleClear = () => {
         setComment('')
         setImage(null)
         setError(null)
@@ -27,12 +55,12 @@ export default function EvidenceTask ({ taskId, employeeId }) {
     }
 
     useEffect(() => {
-        if (complete) {
-            handleclear()
-            onClose()
+        if (completationTaskId) {
+            console.log(completationTaskId)
+            handleUploadImageTaskByEmployee({ completationTaskId })
         }
-    }, [complete])
-
+    }, [completationTaskId])
+    const disableSendButton = comment === '' || comment === undefined || image === null || image === undefined
     return (
         <div>
             <div className="flex justify-end">
@@ -80,15 +108,25 @@ export default function EvidenceTask ({ taskId, employeeId }) {
                                 <h1>{error}</h1>
                             </div>
                             : null}
-                        <Button className =" bg-green-500 text-primary-50"
-                            onClick={() => { handleSubmit(comment, notify) }}
-                        >
+                        {completationTaskId
+                            ? <Button className =" bg-green-500 text-primary-50"
+                                onClick={() => {
+                                    handleUploadImageTaskByEmployee({ completationTaskId })
+                                }}
+                            >
+                            Re subir Imagen
+                            </Button>
+                            : <Button className =" bg-green-500 text-primary-50"
+                                isDisabled={disableSendButton}
+                                onClick={() => { handleSubmit(comment, notify) }}
+                            >
                             Enviar
-                        </Button>
+                            </Button>
+                        }
                         <Button color="danger" variant="flat"
                             onClick={() => {
                                 onClose()
-                                handleclear()
+                                handleClear()
                             }}
                         >
                             Cancelar

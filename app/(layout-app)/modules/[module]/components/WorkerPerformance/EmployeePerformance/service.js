@@ -1,15 +1,14 @@
-import { fetchGetTaskByEmployee, fetchCompleteTaskByEmployee, getTaskStateById } from '@/services/task'
+import { fetchGetTaskByEmployee, fetchCompleteTaskByEmployee, getTaskStateById, uploadImageTaskByEmployee } from '@/services/task'
 export const getTasksByEmployee = ({ employeeID }) => {
     return fetchGetTaskByEmployee({ employeeID })
 }
 export const completeTask = ({ taskId, employeeId, description }) => {
     return fetchCompleteTaskByEmployee({ taskId, employeeId, description })
 }
-export const parseTaskByEmployee = ({ data, taskDifficulties, taskStates }) => {
-    console.log(data)
-    console.log(taskDifficulties)
-    console.log(taskStates)
-
+export const uploadImageTaskEmployee = ({ taskId, employeeId, description }) => {
+    return uploadImageTaskByEmployee({ taskId, employeeId, description })
+}
+export const parseTaskByEmployee = ({ data }) => {
     return data?.map((item) => {
         return {
             id: item.id,

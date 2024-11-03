@@ -153,12 +153,12 @@ export const fetchCompleteTaskByEmployee = async ({ taskId, employeeId, descript
     }
 }
 
-export const uploadImageTaskByEmployee = async ({ taskID, taskCompletionId }) => {
+export const uploadImageTaskByEmployee = async ({ taskID, imageBase64, completationTaskId }) => {
     const data = {
-        Task_completion_id: taskCompletionId
+        base_64_string: imageBase64
     }
     try {
-        return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE.replace(':taskID', taskID), POST, data, true)
+        return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE.replace(':taskID', completationTaskId), POST, data, true)
     } catch {
         return null
     }

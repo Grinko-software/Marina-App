@@ -1,23 +1,15 @@
-/* eslint-disable no-unused-vars */
 'use client'
 import { Button } from '@nextui-org/react'
 import ImageComponent from 'next/image'
-import { useEffect, useState, useRef } from 'react'
-import useStoreEvidenceStore from './store'
+import { useEffect, useState } from 'react'
 import html2canvas from 'html2canvas'
-import CameraComponent from '@/components/camera/Camera'
 import { isMobileDevice } from '@/utils/agent'
+import ModalCamera from '../ModalCamera/ModalCamera'
 export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
     const [selectedImage, setSelectedImage] = useState(null)
-    const [selectedImageBytes, setSelectedImageBytes] = useState(null)
+
     const [optimizedImage, setOptimizedImage] = useState(null)
     const [isMobile, setIsMobile] = useState(true)
-    const camera = useRef(null)
-
-    const {
-        data,
-        setFormData
-    } = useStoreEvidenceStore()
 
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -27,7 +19,6 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
 
     const removeSelectedImage = () => {
         setSelectedImage(null)
-        setSelectedImageBytes(null)
         setOptimizedImage(null)
     }
 
@@ -42,10 +33,6 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
             setImage(optimizedImage)
         }
     }, [optimizedImage, setImage])
-
-    useEffect(() => {
-        setFormData({ ...data, image: optimizedImage })
-    }, [selectedImageBytes, optimizedImage])
 
     useEffect(() => {
         if (selectedImage) {
@@ -85,13 +72,12 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
     }, [selectedImage])
     useEffect(() => {
         const view = isMobileDevice()
-        console.log(view)
         setIsMobile(view)
     }, [])
     return (
         <section>
             {isMobile
-                ? <CameraComponent/>
+                ? <ModalCamera image={image} setImage={setImage} />
                 : <div className="flex flex-col items-center justify-center min-w-[200px] lg:min-w-[800px]">
                     { selectedImage
                         ? (
