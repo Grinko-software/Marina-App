@@ -5,6 +5,7 @@ import TaskScore from './TaskDetailScore'
 import { TASK_STATES, fetchRateTask } from '@/services/task'
 import useFilterStore from '../store'
 import { getMoment } from '@/utils/date'
+import { Image } from 'antd'
 
 const ItemDetail = ({ label, value }) => {
     return <div className="flex justify-between p-2 border-b border-gray-300 gap-5">
@@ -14,7 +15,10 @@ const ItemDetail = ({ label, value }) => {
 }
 
 export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {} }) {
-    const [detailItemsData, setDetailItemsData] = useState([])
+    const [detailItemsData, setDetailItemsData] = useState({
+        items: [],
+        images: []
+    })
     const [ratingView, setRatingView] = useState(false)
     const [editView, setEditView] = useState(false)
     const { requestData } = useFilterStore()
@@ -77,7 +81,10 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                     }
                 )
             }
-            setDetailItemsData(detailData)
+            setDetailItemsData({
+                items: detailData,
+                images: data?.taskCompletion?.images || []
+            })
         }
     }, [isOpen])
 
@@ -85,9 +92,9 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
         <>
             <div className="flex flex-wrap gap-3 w-max h-max">
             </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} closeButton={<></>} >
+            <Modal isDismissable={false} backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} closeButton={<></>} >
                 <ModalContent>
-                    {(onClose) => (
+                    {() => (
                         <>
                             <ModalHeader className="flex flex-col gap-1 font-extrabold">
                                 {data?.name?.toUpperCase()}
@@ -96,10 +103,27 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                 {
                                     ratingView
                                         ? <TaskScore score={data?.rate} onRateTask={onRateTask}/>
-                                        : <div>
-                                            {detailItemsData.map((item, index) => (
-                                                <ItemDetail key={index} label={item.label} value={item.value} />
-                                            ))}
+                                        : <div className='space-y-5'>
+                                            <div>
+                                                {detailItemsData.items.map((item, index) => (
+                                                    <ItemDetail key={index} label={item.label} value={item.value} />
+                                                ))}
+                                            </div>
+                                            <div className='flex flex-row flex-wrap justify-center gap-5 overflow-y-auto max-h-[25rem]'>
+                                                {detailItemsData.images.map((item, index) => (
+                                                    <Image
+                                                        key={index}
+                                                        shadow="none"
+                                                        radius="lg"
+                                                        width="50"
+                                                        height="50"
+                                                        alt={name}
+                                                        className="object-cover max-h-[20rem] border w-full min-w-[15rem] rounded-lg bg-slate-100 dark:bg-white"
+                                                        // src={'https://confidentefinanciero.com/wp-content/uploads/2023/04/Facturacion-electronica-restaurantes-scaled.jpg'}
+                                                        src={item}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                 }
                             </ModalBody>

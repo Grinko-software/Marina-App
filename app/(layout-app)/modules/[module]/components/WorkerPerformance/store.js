@@ -29,7 +29,10 @@ const useFilterStore = create((set) => ({
                                 taskId: item?.task_completion?.task_id,
                                 employeeId: item?.task_completion?.employee_id,
                                 description: item?.task_completion?.description,
-                                completionDate: item?.task_completion?.CompletionDate
+                                completionDate: item?.task_completion?.CompletionDate,
+                                images: item?.task_completion?.img?.map((item) => {
+                                    return item?.url
+                                }) || null
                             }
                             : null
 
