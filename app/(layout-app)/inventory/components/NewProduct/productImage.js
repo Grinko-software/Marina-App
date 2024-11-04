@@ -5,7 +5,6 @@ import ImageComponent from 'next/image'
 import { useEffect, useState } from 'react'
 import useProductFormStore from './store'
 import html2canvas from 'html2canvas'
-import { ConvertBytesToImage } from '@/utils/image'
 
 export default function ProductImage ({ defaultImg, setImage }) {
     const [selectedImage, setSelectedImage] = useState(null)

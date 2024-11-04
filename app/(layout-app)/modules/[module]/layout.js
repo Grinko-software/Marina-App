@@ -2,7 +2,8 @@
 import React from 'react'
 import Header from './header'
 
-export default function LayoutApp ({ children, params }) {
+export default function LayoutApp (props) {
+    const { children, params } = props
     const { module } = params
     return (
 
