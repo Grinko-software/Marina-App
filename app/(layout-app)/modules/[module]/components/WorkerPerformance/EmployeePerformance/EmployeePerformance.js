@@ -5,6 +5,7 @@ import { getTasksByEmployee, parseTaskByEmployee } from './service'
 import EvidenceTask from './components/EvidenceTask/evidenceTask'
 import { getMoment } from '@/utils/date'
 import { NAMES_TASK } from '@/services/task'
+import { TaskScore } from '../components/TaskDetailScore'
 
 export default function EmployeePerformance ({ idUser, taskDifficulties, taskStates }) {
     const [tasksUser, setTasksUser] = useState([])
@@ -51,7 +52,12 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
                                     <p><strong>Descripción:</strong> {description}</p>
                                     <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
                                     {taskState === 'COMPLETED' && (
-                                        <p><strong>Puntuación:</strong> {rating} ★</p>
+                                        <div className='flex flex-row items-center justify-start gap-2'>
+                                            <strong>Puntuación:</strong>
+
+                                            <TaskScore score={rating}/>
+
+                                        </div>
                                     )}
                                     {taskState !== 'COMPLETED' && (
                                         <EvidenceTask taskState={taskState} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask}/>

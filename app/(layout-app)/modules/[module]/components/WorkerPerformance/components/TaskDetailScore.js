@@ -48,7 +48,6 @@ export function TaskScore ({ score = 0 }) {
 
     return (
         <div className='text-xl flex flex-row'>
-            <p className='mr-2'>{score}</p>
             <p className='text-yellow-400'>{generateStars(score)}</p>
             <p className='text-default-300'>{generateStars(5 - score)}</p>
         </div>
