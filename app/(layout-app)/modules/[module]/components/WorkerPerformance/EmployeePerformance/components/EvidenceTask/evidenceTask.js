@@ -70,7 +70,6 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
 
     useEffect(() => {
         if (completationTaskId) {
-            console.log(completationTaskId)
             handleUploadImageTaskByEmployee({ completationTaskId })
         }
     }, [completationTaskId])
