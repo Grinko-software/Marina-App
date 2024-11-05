@@ -39,7 +39,7 @@ export default function EvidenceImageTask ({ image, setImage }) {
 
     return (
         <section>
-            {!isMobile
+            {isMobile
                 ? <ModalCamera image={image} setImage={setImage} />
                 : <div className="flex flex-col items-center justify-center min-w-[200px] lg:min-w-[800px]">
                     { selectedImage
