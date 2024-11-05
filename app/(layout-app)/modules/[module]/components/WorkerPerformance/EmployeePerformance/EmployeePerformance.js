@@ -4,6 +4,7 @@ import { Accordion, AccordionItem, Spinner } from '@nextui-org/react'
 import { getTasksByEmployee, parseTaskByEmployee } from './service'
 import EvidenceTask from './components/EvidenceTask/evidenceTask'
 import { getMoment } from '@/utils/date'
+import { NAMES_TASK } from '@/services/task'
 
 export default function EmployeePerformance ({ idUser, taskDifficulties, taskStates }) {
     const [tasksUser, setTasksUser] = useState([])
@@ -41,7 +42,7 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
                                         <span className={`text-xs sm:text-sm font-semibold ${
                                             taskState === 'COMPLETED' ? 'text-green-500' : 'text-yellow-500'
                                         }`}>
-                                            {taskState}
+                                            { NAMES_TASK[taskState]}
                                         </span>
                                     </div>
                                 }
@@ -52,8 +53,8 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
                                     {taskState === 'COMPLETED' && (
                                         <p><strong>Puntuación:</strong> {rating} ★</p>
                                     )}
-                                    {taskState !== 'COMPLETED' && taskState !== 'READY_TO_EVALUATE' && (
-                                        <EvidenceTask employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask}/>
+                                    {taskState !== 'COMPLETED' && (
+                                        <EvidenceTask taskState={taskState} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask}/>
                                     )}
                                 </div>
                             </AccordionItem>

@@ -1,5 +1,5 @@
-import { TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
-import { GET, getData, POST } from './http'
+import { TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
+import { PUT, GET, getData, POST } from './http'
 import { getToken } from './account'
 
 export const TASK_STATES = {
@@ -8,6 +8,13 @@ export const TASK_STATES = {
     READY_TO_EVALUATE: 'READY_TO_EVALUATE',
     UNASSIGNED: 'UNASSIGNED',
     COMPLETED: 'COMPLETED'
+}
+export const NAMES_TASK = {
+    UNASSIGNED: 'Tarjetas sin asignar',
+    TODO: 'Por hacer',
+    IN_PROGRESS: 'En progreso',
+    READY_TO_EVALUATE: 'Lista para evaluar',
+    COMPLETED: 'Completada'
 }
 
 export const getTaskStateById = (taskStateId) => {
@@ -148,6 +155,14 @@ export const fetchCompleteTaskByEmployee = async ({ taskId, employeeId, descript
     }
     try {
         return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK.replace(':taskID', taskId).replace(':employeeID', employeeId), POST, data, true)
+    } catch {
+        return null
+    }
+}
+
+export const fetchStartTaskByEmployee = async ({ taskId }) => {
+    try {
+        return await getData(TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId), PUT, null, true)
     } catch {
         return null
     }

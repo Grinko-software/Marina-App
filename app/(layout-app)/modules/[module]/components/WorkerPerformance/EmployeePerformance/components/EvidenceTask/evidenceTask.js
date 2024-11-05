@@ -5,9 +5,9 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 import { BiCheckCircle } from 'react-icons/bi'
 import { notify } from '@/services/notify'
 import EvidenceImageTask from './evidenceImageTask'
-import { completeTask } from '../../service'
+import { completeTask, startTask } from '../../service'
 import { uploadImageTaskByEmployee } from '@/services/task'
-export default function EvidenceTask ({ taskId, employeeId, handleRequestGetTask }) {
+export default function EvidenceTask ({ taskState, taskId, employeeId, handleRequestGetTask }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [completationTaskId, setCompletationTaskId] = useState(null)
     const [image, setImage] = useState(null)
@@ -47,6 +47,20 @@ export default function EvidenceTask ({ taskId, employeeId, handleRequestGetTask
             setError(error.message)
         }
     }
+    const handleChangeStartTask = async ({ taskId }) => {
+        try {
+            const result = await startTask({ taskId })
+            if (!result.data) {
+                notify('❌ Hubo un error al iniciar la tarea')
+            } else {
+                notify('✅ Tarea iniciada correctamente')
+                handleRequestGetTask()
+            }
+        } catch (error) {
+            notify(error.message)
+            setError(error.message)
+        }
+    }
     const handleClear = () => {
         setComment('')
         setImage(null)
@@ -64,12 +78,24 @@ export default function EvidenceTask ({ taskId, employeeId, handleRequestGetTask
     return (
         <div>
             <div className="flex justify-end">
-                <Button
-                    className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
-                    onClick={onOpen}
-                    startContent={<BiCheckCircle size={25}/>}>
-                    {'Finalizar'}
-                </Button>
+                { taskState === 'TODO'
+                    ? <Button
+                        className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
+                        onClick={() => {
+                            handleChangeStartTask({ taskId })
+                        }}
+                        startContent={<BiCheckCircle size={25}/>}>
+                        {'Iniciar tarea'}
+                    </Button>
+                    : taskState !== 'READY_TO_EVALUATE'
+                        ? <Button
+                            className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
+                            onClick={onOpen}
+                            startContent={<BiCheckCircle size={25}/>}>
+                            {'Finalizar'}
+                        </Button>
+                        : null
+                }
             </div>
             <Modal
                 size={'4xl'}

@@ -12,7 +12,6 @@ const useFilterStore = create((set) => ({
             set({ loading: true })
             requestTaskList({ taskTypeId, taskStateId, userId })
                 .then((data) => {
-                    console.log(data?.data)
                     const itemsData = data?.data?.map((item) => {
                         let stateKey = null
                         const taskUser = item?.user

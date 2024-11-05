@@ -1,9 +1,12 @@
-import { fetchGetTaskByEmployee, fetchCompleteTaskByEmployee, getTaskStateById, uploadImageTaskByEmployee } from '@/services/task'
+import { fetchStartTaskByEmployee, fetchGetTaskByEmployee, fetchCompleteTaskByEmployee, getTaskStateById, uploadImageTaskByEmployee } from '@/services/task'
 export const getTasksByEmployee = ({ employeeID }) => {
     return fetchGetTaskByEmployee({ employeeID })
 }
 export const completeTask = ({ taskId, employeeId, description }) => {
     return fetchCompleteTaskByEmployee({ taskId, employeeId, description })
+}
+export const startTask = ({ taskId }) => {
+    return fetchStartTaskByEmployee({ taskId })
 }
 export const uploadImageTaskEmployee = ({ taskId, employeeId, description }) => {
     return uploadImageTaskByEmployee({ taskId, employeeId, description })

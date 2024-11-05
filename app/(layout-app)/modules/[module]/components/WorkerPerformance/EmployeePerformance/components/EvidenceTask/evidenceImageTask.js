@@ -43,8 +43,8 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
                 img.src = e.target.result
 
                 img.onload = async () => {
-                    const maxWidth = 200
-                    const maxHeight = 200
+                    const maxWidth = 1600
+                    const maxHeight = 1600
 
                     let newWidth = img.width
                     let newHeight = img.height
@@ -59,11 +59,11 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
                         newWidth = (img.width * maxHeight) / img.height
                     }
 
-                    html2canvas(document.getElementById('imageProduct'), {
+                    html2canvas(document.getElementById('imageTaskEvidence'), {
                         width: newWidth,
                         height: newHeight
                     }).then((canvas) => {
-                        const optimizedImageData = canvas.toDataURL('image/jpeg', 0.7)
+                        const optimizedImageData = canvas.toDataURL('image/jpeg', 1)
                         setOptimizedImage(optimizedImageData)
                     })
                 }
@@ -84,7 +84,7 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
                             <div className="rounded-lg flex items-center flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                 <label htmlFor={selectedImage ? 'dropzone-file' : ''}>
                                     <ImageComponent
-                                        id='imageProduct'
+                                        id='imageTaskEvidence'
                                         src={URL.createObjectURL(selectedImage)}
                                         alt="Image name"
                                         width={200}
