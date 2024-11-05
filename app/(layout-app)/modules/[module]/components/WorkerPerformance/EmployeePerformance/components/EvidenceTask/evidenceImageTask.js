@@ -2,91 +2,54 @@
 import { Button } from '@nextui-org/react'
 import ImageComponent from 'next/image'
 import { useEffect, useState } from 'react'
-import html2canvas from 'html2canvas'
 import { isMobileDevice } from '@/utils/agent'
 import ModalCamera from '../ModalCamera/ModalCamera'
-export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
-    const [selectedImage, setSelectedImage] = useState(null)
 
-    const [optimizedImage, setOptimizedImage] = useState(null)
+export default function EvidenceImageTask ({ image, setImage }) {
+    const [selectedImage, setSelectedImage] = useState(null)
     const [isMobile, setIsMobile] = useState(true)
 
-    const imageChange = (e) => {
+    const imageChange = async (e) => {
         if (e.target.files && e.target.files.length > 0) {
-            setSelectedImage(e.target.files[0])
+            const file = e.target.files[0]
+            const base64 = await convertToBase64(file)
+            setSelectedImage(base64)
+            setImage(base64)
         }
     }
 
     const removeSelectedImage = () => {
         setSelectedImage(null)
-        setOptimizedImage(null)
+        setImage(null)
     }
 
-    useEffect(() => {
-        if (defaultImg) {
-            setOptimizedImage(defaultImg)
-        }
-    }, [defaultImg])
-
-    useEffect(() => {
-        if (setImage) {
-            setImage(optimizedImage)
-        }
-    }, [optimizedImage, setImage])
-
-    useEffect(() => {
-        if (selectedImage) {
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
             const reader = new FileReader()
-            reader.readAsDataURL(selectedImage)
-            reader.onload = async (e) => {
-                const img = new Image()
-                img.src = e.target.result
+            reader.readAsDataURL(file)
+            reader.onload = () => resolve(reader.result)
+            reader.onerror = (error) => reject(error)
+        })
+    }
 
-                img.onload = async () => {
-                    const maxWidth = 1600
-                    const maxHeight = 1600
-
-                    let newWidth = img.width
-                    let newHeight = img.height
-
-                    if (img.width > maxWidth) {
-                        newWidth = maxWidth
-                        newHeight = (img.height * maxWidth) / img.width
-                    }
-
-                    if (newHeight > maxHeight) {
-                        newHeight = maxHeight
-                        newWidth = (img.width * maxHeight) / img.height
-                    }
-
-                    html2canvas(document.getElementById('imageTaskEvidence'), {
-                        width: newWidth,
-                        height: newHeight
-                    }).then((canvas) => {
-                        const optimizedImageData = canvas.toDataURL('image/jpeg', 1)
-                        setOptimizedImage(optimizedImageData)
-                    })
-                }
-            }
-        }
-    }, [selectedImage])
     useEffect(() => {
         const view = isMobileDevice()
         setIsMobile(view)
     }, [])
+
     return (
         <section>
-            {isMobile
+            {!isMobile
                 ? <ModalCamera image={image} setImage={setImage} />
                 : <div className="flex flex-col items-center justify-center min-w-[200px] lg:min-w-[800px]">
                     { selectedImage
                         ? (
                             <div className="rounded-lg flex items-center flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <label htmlFor={selectedImage ? 'dropzone-file' : ''}>
+                                <label htmlFor="dropzone-file">
                                     <ImageComponent
                                         id='imageTaskEvidence'
-                                        src={URL.createObjectURL(selectedImage)}
-                                        alt="Image name"
+                                        src={selectedImage}
+                                        alt="Selected Evidence"
                                         width={200}
                                         height={200}
                                     />
@@ -97,7 +60,7 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
                             </div>
                         )
                         : (
-                            <label htmlFor={!selectedImage ? 'dropzone-file' : ''} className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                            <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-200" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -108,7 +71,8 @@ export default function EvidenceImageTask ({ image, defaultImg, setImage }) {
                                 </div>
                             </label>
                         )}
-                    <input id="dropzone-file"
+                    <input
+                        id="dropzone-file"
                         type="file"
                         className="hidden"
                         accept="image/*"
