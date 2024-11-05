@@ -10,7 +10,7 @@ import { Image } from 'antd'
 const ItemDetail = ({ label, value, component }) => {
     return <div className="flex justify-between p-2 border-b border-gray-300 gap-5">
         <span className="font-bold">{label?.toUpperCase()}:</span>
-        {component || <span className="text-gray-700 text-justify">{value?.toUpperCase() || '-'}</span>}
+        {component || <span className="text-justify">{value?.toUpperCase() || '-'}</span>}
     </div>
 }
 

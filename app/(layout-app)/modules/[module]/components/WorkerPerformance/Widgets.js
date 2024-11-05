@@ -1,13 +1,18 @@
 'use client'
 
+import { Card, CardBody } from '@nextui-org/react'
+
 const Widget = ({ title, count }) => {
     return (
-        <div className="w-full border rounded-lg shadow-md bg-white p-4 transition-transform transform hover:scale-105">
-            <div className="flex flex-col items-center text-center">
-                <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
-                <p className="text-3xl font-bold text-teal-600">{count}</p>
-            </div>
-        </div>
+        <Card className="w-full rounded-lg shadow-md p-4 ">
+            <CardBody>
+                <div className="flex flex-col items-center text-center">
+                    <h4 className="text-lg font-semibold">{title}</h4>
+                    <p className="text-3xl font-bold text-teal-600">{count}</p>
+                </div>
+            </CardBody>
+        </Card>
+
     )
 }
 
