@@ -1,7 +1,7 @@
 import { Button } from '@nextui-org/react'
 import { useState } from 'react'
 
-export default function TaskScore ({ taskId, score = 0, onRateTask }) {
+export default function TaskScoreInput ({ taskId, score = 0, onRateTask }) {
     const [rating, setRating] = useState(score)
 
     const handleClick = (index) => {
@@ -37,6 +37,20 @@ export default function TaskScore ({ taskId, score = 0, onRateTask }) {
                 Completar
             </Button>
             }
+        </div>
+    )
+}
+
+export function TaskScore ({ score = 0 }) {
+    const generateStars = (score) => {
+        return `${'★'.repeat(score)}`
+    }
+
+    return (
+        <div className='text-xl flex flex-row'>
+            <p className='mr-2'>{score}</p>
+            <p className='text-yellow-400'>{generateStars(score)}</p>
+            <p className='text-default-300'>{generateStars(5 - score)}</p>
         </div>
     )
 }

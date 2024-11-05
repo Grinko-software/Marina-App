@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
-import TaskScore from './TaskDetailScore'
+import TaskScoreInput, { TaskScore } from './TaskDetailScore'
 import { TASK_STATES, fetchRateTask } from '@/services/task'
 import useFilterStore from '../store'
 import { getMoment } from '@/utils/date'
@@ -72,16 +72,10 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                 )
             }
             if (data.rate) {
-                const starsCompleted = `${'★'.repeat(data.rate)}`
-                const starsIncompleted = `${'★'.repeat(5 - data.rate)}`
                 detailData.push(
                     {
                         label: 'Evaluación',
-                        component: <div className='text-xl flex flex-row'>
-                            <p className='mr-2'>{data.rate}</p>
-                            <p className='text-yellow-400'>{starsCompleted}</p>
-                            <p className='text-default-300'>{starsIncompleted}</p>
-                        </div>
+                        component: <TaskScore score={data.rate}/>
                     }
                 )
             }
@@ -106,7 +100,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                             <ModalBody>
                                 {
                                     ratingView
-                                        ? <TaskScore score={data?.rate} onRateTask={onRateTask}/>
+                                        ? <TaskScoreInput score={data?.rate} onRateTask={onRateTask}/>
                                         : <div className='space-y-5'>
                                             <div>
                                                 {detailItemsData.items.map((item, index) => (
