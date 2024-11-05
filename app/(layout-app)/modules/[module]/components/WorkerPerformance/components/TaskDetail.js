@@ -7,10 +7,10 @@ import useFilterStore from '../store'
 import { getMoment } from '@/utils/date'
 import { Image } from 'antd'
 
-const ItemDetail = ({ label, value }) => {
+const ItemDetail = ({ label, value, component }) => {
     return <div className="flex justify-between p-2 border-b border-gray-300 gap-5">
         <span className="font-bold">{label?.toUpperCase()}:</span>
-        <span className="text-gray-700 text-justify">{value?.toUpperCase() || '-'}</span>
+        {component || <span className="text-gray-700 text-justify">{value?.toUpperCase() || '-'}</span>}
     </div>
 }
 
@@ -33,7 +33,6 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
     }
 
     const onRateTask = async (rate) => {
-        console.log(data?.id, rate)
         await fetchRateTask({ taskId: data?.id, taskRate: rate })
         closeModal()
     }
@@ -73,11 +72,16 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                 )
             }
             if (data.rate) {
-                const stars = `${'★'.repeat(data.rate)}`
+                const starsCompleted = `${'★'.repeat(data.rate)}`
+                const starsIncompleted = `${'★'.repeat(5 - data.rate)}`
                 detailData.push(
                     {
                         label: 'Evaluación',
-                        value: `${data.rate} ${stars}`
+                        component: <div className='text-xl flex flex-row'>
+                            <p className='mr-2'>{data.rate}</p>
+                            <p className='text-yellow-400'>{starsCompleted}</p>
+                            <p className='text-default-300'>{starsIncompleted}</p>
+                        </div>
                     }
                 )
             }
@@ -106,7 +110,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                         : <div className='space-y-5'>
                                             <div>
                                                 {detailItemsData.items.map((item, index) => (
-                                                    <ItemDetail key={index} label={item.label} value={item.value} />
+                                                    <ItemDetail key={index} label={item.label} value={item.value} component={item.component} />
                                                 ))}
                                             </div>
                                             <div className='flex flex-row flex-wrap justify-center gap-5 overflow-y-auto max-h-[25rem]'>
