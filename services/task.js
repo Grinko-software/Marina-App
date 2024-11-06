@@ -69,7 +69,7 @@ export const fetchGetTasks = async ({ userId, taskTypeId, taskStateId }) => {
         const params = new URLSearchParams()
 
         if (userId) params.append('user_id', userId)
-        if (taskTypeId) params.append('task_type_id', taskTypeId)
+        if (taskTypeId) params.append('type_id', taskTypeId)
         if (taskStateId) params.append('state_id', taskStateId)
 
         const url = `${TASKS_API_URL_URL}?${params.toString()}`
