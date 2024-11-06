@@ -20,7 +20,6 @@ const ProductsTransfer = ({ dataSource, targetKeysSelected, setTargetKeysSelecte
 
     const handleChange = (newTargetKeys, direction, moveKeys) => {
         setTargetKeys(newTargetKeys)
-        console.log('targetKeys: ', newTargetKeys)
     }
 
     const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
