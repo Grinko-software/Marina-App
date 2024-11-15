@@ -11,6 +11,7 @@ export default function LayoutApp ({ children }) {
         if (navigator) {
             const view = isMobileDevice()
             setIsMobile(view)
+            /*  */
         }
     }, [])
     return (
