@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Pagination, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
 import moment from 'moment-timezone'
-export default function TableSales ({ data, loading, setTarget, currentPage, setCurrentPage, totalpage, setLimitPage }) {
+export default function TableSales ({ setOpenModalToPrint, data, loading, setTarget, currentPage, setCurrentPage, totalpage, setLimitPage }) {
     const [hasMore, setHasMore] = useState(false)
     const [showAllData, setShowAllData] = useState(false)
     const [dataModel, setDataModel] = useState([])
@@ -96,6 +96,7 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
 
     const openTicket = (ticketId) => {
         setTarget(ticketId)
+        setOpenModalToPrint(true)
     }
 
     const sortItems = (items, sortDescriptor) => {
@@ -180,7 +181,9 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
         case 'showTicket':
             return (
                 <div className="flex flex-col">
-                    <Button variant="flat" onPress={() => openTicket(data)}>
+                    <Button variant="flat" onPress={() => {
+                        openTicket(data)
+                    }}>
                                 Generar ticket
                     </Button>
                 </div>
@@ -238,20 +241,3 @@ export default function TableSales ({ data, loading, setTarget, currentPage, set
         </section>
     )
 }
-/*
-                bottomContent={
-                    loading
-                        ? <div className="flex w-full justify-center">
-                            <Spinner>Cargando datos...</Spinner>
-                        </div>
-                        : hasMore
-                            ? (
-                                <div className="flex w-full justify-center">
-                                    <Button variant="flat" onPress={loadMoreData}>
-                                Ver más.
-                                    </Button>
-                                </div>
-                            )
-                            : null
-                }
-*/

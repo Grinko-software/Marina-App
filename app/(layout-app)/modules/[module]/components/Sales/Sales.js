@@ -10,7 +10,7 @@ export default function Sales ({ params }) {
     const [target, setTarget] = useState(null)
     const [limitPage, setLimitPage] = useState(10)
     const [currentPage, setCurrentPage] = useState(0)
-
+    const [openModalToPrint, setOpenModalToPrint] = useState(false)
     useEffect(() => {
         requestData(limitPage, currentPage)
     }, [currentPage])
@@ -19,7 +19,10 @@ export default function Sales ({ params }) {
         <section className='w-full'>
             <section className='grid grid-cols w-full gap-3'>
                 <div className='sm:hidden'>
-                    <SaleDetail target={target} setTarget={setTarget} />
+                    <SaleDetail
+                        openModalToPrint={openModalToPrint}
+                        setOpenModalToPrint={setOpenModalToPrint}
+                        target={target} setTarget={setTarget} />
                 </div>
                 <TableSales
                     data={data}
@@ -28,10 +31,8 @@ export default function Sales ({ params }) {
                     totalpage={totalpage}
                     setCurrentPage={setCurrentPage}
                     setLimitPage={setLimitPage}
+                    setOpenModalToPrint={setOpenModalToPrint}
                 />
-                <div className='hidden sm:block'>
-                    <SaleDetail target={target} setTarget={setTarget} />
-                </div>
             </section>
         </section>
     )

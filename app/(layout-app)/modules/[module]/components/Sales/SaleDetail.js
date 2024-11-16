@@ -6,7 +6,7 @@ import { fetchPrinterSaleTicket, generateDataToPrinterSaleTicket } from '@/servi
 import toast from 'react-hot-toast'
 
 export default function SaleDetail (params) {
-    const { target, setTarget } = params
+    const { target, setTarget, openModalToPrint, setOpenModalToPrint } = params
     const notify = (text) => toast(text)
     const [targetValue, setTargetValue] = useState(null)
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -15,12 +15,10 @@ export default function SaleDetail (params) {
     const { requestSaleDetail } = useLastSalesStore()
 
     useEffect(() => {
-        if (target) {
+        if (openModalToPrint) {
             setTargetValue(target?.target)
-        } else {
-            setTargetValue(null)
         }
-    }, [target])
+    }, [openModalToPrint])
 
     useEffect(() => {
         if (targetValue) {
@@ -33,13 +31,15 @@ export default function SaleDetail (params) {
     }, [targetValue])
 
     useEffect(() => {
-        if (dataModel && target) {
+        if (dataModel) {
             printTicket()
         }
-    }, [dataModel, target])
+    }, [dataModel])
 
     const closeModal = () => {
+        setOpenModalToPrint(false)
         setTarget(null)
+        setTargetValue(null)
         if (isOpen) {
             onClose()
         }
@@ -95,7 +95,10 @@ export default function SaleDetail (params) {
                         isLoading
                             ? <Spinner>Cargando boleta...</Spinner>
                             : <div>
-                                <Button className='w-full m-auto text-md' onPress={() => printTicket()}>
+                                <Button
+                                    className='w-full m-auto text-md'
+                                    onPress={() => { printTicket() }}
+                                >
                                     Imprimir Ticket
                                 </Button>
                             </div>
