@@ -1,55 +1,111 @@
-import { Button } from '@nextui-org/react'
-import { useState } from 'react'
+import { TASK_STARS_LIMIT } from '@/settings/constants'
+import { Button, Slider, Textarea } from '@nextui-org/react'
+import { FaStar } from 'react-icons/fa'
+import { BsCashCoin } from 'react-icons/bs'
+import { formatNumberWithPoints } from '@/utils/number'
 
-export default function TaskScoreInput ({ taskId, score = 0, onRateTask }) {
-    const [rating, setRating] = useState(score)
-
-    const handleClick = (index) => {
-        setRating(index)
-        // onRateTask(index)
-    }
-
+export default function TaskScoreInput ({
+    score = 0,
+    rate = 1,
+    onRateChange,
+    feedbackRate,
+    setFeedbackRate,
+    starValue = 500
+}) {
     return (
         <div className="flex flex-col items-center">
-            <div className="py-2 flex m-auto gap-2">
-                {[1, 2, 3, 4, 5].map((index) => (
-                    <span
-                        key={index}
-                        className={`cursor-pointer text-8xl transition-colors duration-200 
-                        ${index <= rating ? 'text-yellow-400' : 'text-gray-400'}`}
-                        onClick={() => handleClick(index)}
+            <Slider
+                // showTooltip={true}
+                step={1}
+                // formatOptions={{}}
+                maxValue={10}
+                showSteps={true}
+                size="lg"
+                minValue={1}
+                marks={[
+                    {
+                        value: 1,
+                        label: '1'
+                    },
+                    {
+                        value: 3,
+                        label: '3'
+                    },
+                    {
+                        value: 5,
+                        label: '5'
+                    },
+                    {
+                        value: 7,
+                        label: '7'
+                    },
+                    {
+                        value: 9,
+                        label: '9'
+                    }
+                ]}
+                defaultValue={1}
+                className="max-w-xl"
+
+                value={rate}
+                onChange={onRateChange}
+                startContent={
+                    <Button
+                        isIconOnly
+                        variant="light"
+                        radius="full"
+                        onPress={() => onRateChange((prev) => prev > 1 ? prev - 1 : 1)}
                     >
-                    ★
-                    </span>
-                ))}
+                        <FaStar className="text-xl" />
+                    </Button>
+                }
+                endContent={
+                    <Button
+                        isIconOnly
+                        variant="light"
+                        radius="full"
+                        onPress={() => onRateChange((prev) => prev <= 9 ? prev + 1 : 10)}
+                    >
+                        <FaStar className="text-3xl" />
+                    </Button>
+                }
+            />
+            <div className="w-full mx-auto p-4 flex items-center">
+                <div className='mx-auto w-full max-w-xl'>
+                    <Textarea
+                        type="text"
+                        value={feedbackRate}
+                        variant={'underlined'}
+                        labelPlacement={'outside'}
+                        label={'Descripción de la evaluación'}
+                        placeholder={ 'Ingrese la descripción de la evaluación'}
+                        onValueChange={(value) => { setFeedbackRate(value) }}
+                    />
+                </div>
             </div>
-            {
-                rating &&
-            <Button
-                variant="shadow"
-                color="success"
-                className="w-[12rem] h-[4rem] text-xl font-extrabold"
-                onClick={() => {
-                    onRateTask(rating)
-                }}
-                isDisabled={!rating}
-            >
-                Completar
-            </Button>
-            }
+            <div className='flex flex-row items-center gap-10 py-2'>
+                <div className='flex flex-row gap-2 items-center'>
+                    <FaStar className="text-3xl"/>
+                    <span className="text-2xl">{rate}</span>
+                </div>
+                <div className='flex flex-row gap-2 items-center'>
+                    <BsCashCoin className="text-3xl"/>
+                    <span className="text-2xl">$ {formatNumberWithPoints(rate * starValue)}</span>
+                </div>
+            </div>
         </div>
     )
 }
 
 export function TaskScore ({ score = 0 }) {
     const generateStars = (score) => {
-        return `${'★'.repeat(score)}`
+        return `${'★'.repeat(Math.abs(score))}`
     }
 
     return (
         <div className='text-xl flex flex-row'>
             <p className='text-yellow-400'>{generateStars(score)}</p>
-            <p className='text-default-300'>{generateStars(5 - score)}</p>
+            <p className='text-default-300'>{generateStars(TASK_STARS_LIMIT - score)}</p>
         </div>
     )
 }

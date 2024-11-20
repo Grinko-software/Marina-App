@@ -78,7 +78,8 @@ const useFilterStore = create((set) => ({
                                 name: item.state_task?.state_name
                             },
                             // rating
-                            rate: item.rating || null
+                            rate: item.rating || null,
+                            feedback: item.feedback || null
                         }
                     })
                     set({

@@ -23,7 +23,8 @@ export const parseTaskByEmployee = ({ data }) => {
             taskDifficultiesId: item?.task_difficulties_id,
             taskState: getStateTask({ task: item }),
             stateTaskId: item?.state_task_id,
-            rating: item?.rating
+            rating: item?.rating,
+            feedback: item?.feedback
         }
     })
 }

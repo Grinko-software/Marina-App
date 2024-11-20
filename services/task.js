@@ -108,7 +108,6 @@ export const fetchCreateTask = async ({
     name,
     description,
     taskType,
-    difficultType,
     userTask,
     dateTask
 }) => {
@@ -127,7 +126,6 @@ export const fetchCreateTask = async ({
                     task_type_id: taskType,
                     date_limit: dateTask,
                     user_id: userTask,
-                    task_difficulties_id: difficultType,
                     state_task_id: 1
                 })
             }).then(response => {
@@ -179,10 +177,11 @@ export const uploadImageTaskByEmployee = async ({ taskID, imageBase64, completat
     }
 }
 
-export const fetchRateTask = async ({ taskId, taskRate }) => {
+export const fetchRateTask = async ({ taskId, taskRate, feedbackRate }) => {
     try {
         return await getData(`${TASKS_RATE_API_URL_URL}/${taskId}`, POST, {
-            rating: taskRate
+            rating: taskRate,
+            feedback: feedbackRate
         }, true)
     } catch {
         return null

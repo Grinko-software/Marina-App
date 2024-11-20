@@ -57,7 +57,6 @@ export const requestCreateTask = async ({
     name,
     description,
     taskType,
-    difficultType,
     userTask,
     dateTask
 }) => {
@@ -66,7 +65,6 @@ export const requestCreateTask = async ({
             name,
             description,
             taskType,
-            difficultType,
             userTask,
             dateTask
         })

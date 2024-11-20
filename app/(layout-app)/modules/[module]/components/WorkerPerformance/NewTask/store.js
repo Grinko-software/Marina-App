@@ -6,13 +6,11 @@ const useSupplierFormStore = create((set) => ({
     name: null,
     description: null,
     taskType: null,
-    difficultType: null,
     userTask: null,
     dateTask: null,
     setName: (value) => set({ name: value }),
     setDescription: (value) => set({ description: value }),
     setTaskType: (value) => set({ taskType: value }),
-    setDifficultType: (value) => set({ difficultType: value }),
     setUserTask: (value) => set({ userTask: value }),
     setDateTask: (value) => set({ dateTask: value }),
     error: null,
@@ -20,14 +18,13 @@ const useSupplierFormStore = create((set) => ({
     complete: false,
     setLoading: (value) => set({ loading: value }),
     setError: (value) => set({ error: value }),
-    requestCreate: async (name, description, taskType, difficultType, userTask, dateTask, notify) => {
+    requestCreate: async (name, description, taskType, userTask, dateTask, notify) => {
         set({ loading: true, error: null, complete: false })
         // has requered values
         const missingRequeredValues = (
             !name ||
             !description ||
             !taskType ||
-            !difficultType ||
             !userTask ||
             !dateTask
         )
@@ -41,7 +38,6 @@ const useSupplierFormStore = create((set) => ({
                 name,
                 description,
                 taskType: Number(taskType),
-                difficultType: Number(difficultType),
                 userTask: Number(userTask),
                 dateTask: getMoment(dateTask).format('YYYY-MM-DD')
             })])

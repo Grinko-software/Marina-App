@@ -96,3 +96,5 @@ export const TASKS_API_EMPLOYEE_URL_URL = BASE_MARKET_API_URL + '/task/:employee
 export const TASKS_API_EMPLOYEE_COMPLETE_TASK = BASE_MARKET_API_URL + '/task/:taskID/:employeeID'
 export const TASKS_API_EMPLOYEE_START_TASK = BASE_MARKET_API_URL + '/task/start/:taskID'
 export const TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE = BASE_MARKET_API_URL + '/task/image/:taskID'
+
+export const TASK_STARS_LIMIT = 10

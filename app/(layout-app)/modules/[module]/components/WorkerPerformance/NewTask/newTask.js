@@ -7,14 +7,13 @@ import { isMobileDevice } from '@/utils/agent'
 import { TbShoppingCartPlus } from 'react-icons/tb'
 import { notify } from '@/services/notify'
 
-export default function CreateTask ({ users, taskTypes, difficultTypes }) {
+export default function CreateTask ({ users, taskTypes }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isMobile, setIsMobile] = useState(true)
     const {
         name, setName,
         description, setDescription,
         taskType, setTaskType,
-        difficultType, setDifficultType,
         userTask, setUserTask,
         dateTask, setDateTask,
         error, requestCreate, clearStore, complete
@@ -89,23 +88,6 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                                 </Autocomplete>
                             </div>
                             <div className="p-4 flex items-center">
-                                <Autocomplete
-                                    label="Dificultad"
-                                    placeholder="Busca un tipo de dificultad"
-                                    defaultItems={difficultTypes}
-                                    selectedKey={difficultType}
-                                    onSelectionChange={(value) => setDifficultType(value)}
-                                    allowsEmptyCollection={false}
-                                    isClearable={false}
-                                    variant={'underlined'}
-                                    labelPlacement={'outside'}
-                                >
-                                    {(item) => <AutocompleteItem key={item.value}>
-                                        {`${item.label}`}
-                                    </AutocompleteItem>}
-                                </Autocomplete>
-                            </div>
-                            <div className="p-4 flex items-center">
                                 <Input
                                     type="text"
                                     value={name}
@@ -153,7 +135,6 @@ export default function CreateTask ({ users, taskTypes, difficultTypes }) {
                                     name,
                                     description,
                                     taskType,
-                                    difficultType,
                                     userTask,
                                     dateTask,
                                     notify)

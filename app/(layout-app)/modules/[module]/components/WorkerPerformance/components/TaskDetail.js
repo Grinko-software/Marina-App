@@ -23,6 +23,9 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
     const [editView, setEditView] = useState(false)
     const { requestData } = useFilterStore()
 
+    const [rate, setRate] = useState(data?.rate)
+    const [feedbackRate, setFeedbackRate] = useState('')
+
     const closeModal = () => {
         if (isOpen) {
             onClose()
@@ -32,8 +35,8 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
         }
     }
 
-    const onRateTask = async (rate) => {
-        await fetchRateTask({ taskId: data?.id, taskRate: rate })
+    const onRateTask = async (rate, feedback) => {
+        await fetchRateTask({ taskId: data?.id, taskRate: rate, feedbackRate: feedback })
         closeModal()
     }
 
@@ -63,11 +66,11 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                 }
             ]
 
-            if (data.taskCompletion) {
+            if (data.feedback) {
                 detailData.push(
                     {
                         label: 'Comentarios',
-                        value: data.taskCompletion?.description
+                        value: data?.feedback
                     }
                 )
             }
@@ -100,7 +103,12 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                             <ModalBody>
                                 {
                                     ratingView
-                                        ? <TaskScoreInput score={data?.rate} onRateTask={onRateTask}/>
+                                        ? <TaskScoreInput
+                                            rate={rate}
+                                            onRateChange={setRate}
+                                            feedbackRate={feedbackRate}
+                                            setFeedbackRate={setFeedbackRate}
+                                        />
                                         : <div className='space-y-5'>
                                             <div>
                                                 {detailItemsData.items.map((item, index) => (
@@ -126,23 +134,30 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                 }
                             </ModalBody>
                             <ModalFooter className='justify-center'>
-                                <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-xl font-extrabold" onClick={() => {
-                                    closeModal()
-                                }}>
-                                    Cerrar
+                                <Button
+                                    color={ratingView ? 'default' : 'danger'}
+                                    variant="shadow"
+                                    className="w-[12rem] h-[4rem] text-xl font-extrabold" onClick={() => {
+                                        if (ratingView) {
+                                            setRatingView(false)
+                                        } else {
+                                            closeModal()
+                                        }
+                                    }}>
+                                    {ratingView ? 'Volver' : 'Cerrar'}
                                 </Button>
                                 {
                                     data?.stateKey === TASK_STATES.READY_TO_EVALUATE
                                         ? ratingView
                                             ? <Button
-                                                color="default"
+                                                color="success"
                                                 variant="shadow"
                                                 className="w-[12rem] h-[4rem] text-xl font-extrabold"
                                                 onClick={() => {
-                                                    setRatingView(false)
+                                                    onRateTask(rate, feedbackRate)
                                                 }}
                                             >
-                                            Volver
+                                                Calificar
                                             </Button>
                                             : <Button
                                                 color="default"
@@ -153,7 +168,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                                 }}
                                                 isDisabled={data?.stateKey !== TASK_STATES.READY_TO_EVALUATE}
                                             >
-                                            Calificar
+                                                Calificar
                                             </Button>
                                         : editView
                                             ? <></>
