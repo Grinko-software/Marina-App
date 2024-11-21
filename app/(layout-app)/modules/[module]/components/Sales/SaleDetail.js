@@ -35,12 +35,6 @@ export default function SaleDetail (params) {
         }
     }, [targetValue])
 
-    useEffect(() => {
-        if (dataModel) {
-            printTicket()
-        }
-    }, [dataModel])
-
     const closeModal = () => {
         setOpenModalToPrint(false)
         setTarget(null)
