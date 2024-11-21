@@ -284,7 +284,8 @@ const useSalesStore = create(
                         await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody).then(data => {
                             if (data?.data?.TIMBRE) {
                                 try {
-                                    getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    const newBody = { ...body, invoice_number: data?.data?.FOLIO, stamp: data?.data?.TIMBRE }
+                                    getData(SALE_TICKET_CREATE, POST, newBody).then(result => {
                                         set({ loadingSale: false })
                                         if (result?.code === 200) {
                                             console.log(result)
@@ -439,13 +440,15 @@ const useSalesStore = create(
                         const dteBody = generateDTEBody({ discount: discountTotalPctg, isInvoice: true, targetCustomer, iva, netTotal, saleProductsList, totalPay, totalTaxFreePay })
                         await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody).then(data => {
                             if (data?.data?.TIMBRE) {
+                                const newBody = { ...body, invoice_number: data?.data?.FOLIO, stamp: data?.data?.TIMBRE }
+                                console.log(newBody)
                                 try {
-                                    getData(SALE_TICKET_CREATE, POST, body).then(result => {
+                                    getData(SALE_TICKET_CREATE, POST, newBody).then(result => {
                                         set({ loadingSale: false })
                                         if (result?.code === 200) {
                                             console.log(result)
                                             const stamp = data?.data?.TIMBRE
-                                            const folio = data?.data?.FOLIO
+                                            const folio = data?.data?.FOLIO// enviar
                                             const printEnabled = useSettingsStore.getState()?.printEnabled || true
                                             if (printEnabled) saveDataToPrinterSaleTicket({ saleType, products: saleProductsList, total: totalPay, stamp, folioNumber: folio, totalNet: netTotal, iva, totalTaxFree: totalTaxFreePay, discountExtra: totalDiscountExtra, discountOffers: totalDiscountOffers, customerDetail: targetCustomer, openCashRegister: true })
                                             // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
