@@ -101,7 +101,6 @@ export function TaskScore ({ score = 0 }) {
     const generateStars = (score) => {
         return `${'★'.repeat(Math.abs(score))}`
     }
-
     return (
         <div className='text-xl flex flex-row'>
             <p className='text-yellow-400'>{generateStars(score)}</p>

@@ -139,6 +139,14 @@ export const fetchCreateTask = async ({
         return null
     }
 }
+/* export const fetchGetTasks = async () => {
+    try {
+        return await getData(TASKS_API_URL_URL, GET, null, true)
+    } catch {
+        return null
+    }
+} */
+
 export const fetchGetTaskByEmployee = async ({ employeeID }) => {
     try {
         return await getData(TASKS_API_EMPLOYEE_URL_URL.replace(':employeeID', employeeID), GET, null, true)

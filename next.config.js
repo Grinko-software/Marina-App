@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: false,
     eslint: {
-        ignoreDuringBuilds: true
+        ignoreDuringBuilds: false
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
         // Note: we provide webpack above so you should not `require` it
