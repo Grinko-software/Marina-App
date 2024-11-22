@@ -45,11 +45,10 @@ export function TaskScore ({ score = 0 }) {
     const generateStars = (score) => {
         return `${'★'.repeat(score)}`
     }
-
     return (
         <div className='text-xl flex flex-row'>
             <p className='text-yellow-400'>{generateStars(score)}</p>
-            <p className='text-default-300'>{generateStars(5 - score)}</p>
+            <p className='text-default-300'>{generateStars(9 - score)}</p>
         </div>
     )
 }

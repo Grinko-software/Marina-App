@@ -79,7 +79,8 @@
     "eslint-plugin-n": "^16.0.2",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "prettier-plugin-tailwindcss": "^0.6.8"
   },
   "bundleDependencies": [
     "bwip-js"
