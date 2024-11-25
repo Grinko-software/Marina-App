@@ -13,6 +13,7 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
     const [tasksUser, setTasksUser] = useState([])
     const [loading, setLoading] = useState(false)
     const hasTask = tasksUser?.length > 0
+    const hasGeneralTasks = tasksToDo?.length > 0
     const handleRequestGetTask = useCallback(() => {
         if (taskStates?.length > 0) {
             setLoading(true)
@@ -24,8 +25,7 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
             })
             getGeneralTasks({ stateId: idStateToDo }).then((result) => {
                 const tasks = parseTaskByEmployee({ data: result.data, taskDifficulties, taskStates })
-                console.log(tasks)
-                setTasksToDo(tasks)
+                setTasksToDo(tasks.filter(t => t.userId === null))
                 setLoading(false)
             })
         }
@@ -43,34 +43,36 @@ export default function EmployeePerformance ({ idUser, taskDifficulties, taskSta
                     <Spinner color='success' size="lg" className='' label='Cargando tareas ...'/>
                 </div>
                 : <div className='w-full flex flex-col gap-10'>
-                    <div className='w-full'>
-                        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">Actividades por hacer</h2>
-                        <Accordion className="w-full bg-white rounded-lg shadow-md">
-                            {tasksToDo?.map(({ id, name, taskState, description, rating, dateLimit }) => (
-                                <AccordionItem
-                                    key={id}
-                                    title={
-                                        <div className="flex justify-between items-center w-full p-2">
-                                            <span className="uppercase font-bold text-gray-800">{name}</span>
-                                            <span className={`text-xs sm:text-sm font-semibold ${
-                                                taskState === 'COMPLETED' ? 'text-green-500' : 'text-yellow-500'
-                                            }`}>
-                                                { NAMES_TASK[taskState]}
-                                            </span>
+                    { hasGeneralTasks
+                        ? <div className='w-full'>
+                            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">Actividades por hacer</h2>
+                            <Accordion className="w-full bg-white rounded-lg shadow-md">
+                                {tasksToDo?.map(({ id, name, taskState, description, rating, dateLimit }) => (
+                                    <AccordionItem
+                                        key={id}
+                                        title={
+                                            <div className="flex justify-between items-center w-full p-2">
+                                                <span className="uppercase font-bold text-gray-800">{name}</span>
+                                                <span className={`text-xs sm:text-sm font-semibold ${
+                                                    taskState === 'COMPLETED' ? 'text-green-500' : 'text-yellow-500'
+                                                }`}>
+                                                    { NAMES_TASK[taskState]}
+                                                </span>
+                                            </div>
+                                        }
+                                    >
+                                        <div className="text-gray-600 px-2 flex flex-col gap-2">
+                                            <p><strong>Descripción:</strong> {description}</p>
+                                            <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
+                                            {taskState !== 'COMPLETED' && (
+                                                <EvidenceTask taskState={taskState} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask}/>
+                                            )}
                                         </div>
-                                    }
-                                >
-                                    <div className="text-gray-600 px-2 flex flex-col gap-2">
-                                        <p><strong>Descripción:</strong> {description}</p>
-                                        <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
-                                        {taskState !== 'COMPLETED' && (
-                                            <EvidenceTask taskState={taskState} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask}/>
-                                        )}
-                                    </div>
-                                </AccordionItem>
-                            ))}
-                        </Accordion>
-                    </div>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </div>
+                        : null}
                     {hasTask
                         ? <div className='w-full'>
                             <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">Actividades asignadas</h2>

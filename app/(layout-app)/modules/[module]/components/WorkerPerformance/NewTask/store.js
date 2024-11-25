@@ -18,17 +18,17 @@ const useSupplierFormStore = create((set) => ({
     complete: false,
     setLoading: (value) => set({ loading: value }),
     setError: (value) => set({ error: value }),
-    requestCreate: async (name, description, taskType, userTask, dateTask, notify) => {
+    requestCreate: async (name, description, taskType, userTask, dateTask, notify, idUser, isAdmin) => {
         set({ loading: true, error: null, complete: false })
         // has requered values
         const missingRequeredValues = (
             !name ||
             !description ||
             !taskType ||
-            !userTask ||
+            //! userTask ||
             !dateTask
         )
-
+        const userIdtask = isAdmin ? userTask : idUser
         if (missingRequeredValues) {
             set({ loading: false, error: 'Rellena todos los campos necesarios' })
             return
@@ -38,7 +38,7 @@ const useSupplierFormStore = create((set) => ({
                 name,
                 description,
                 taskType: Number(taskType),
-                userTask: Number(userTask),
+                userTask: userIdtask ? Number(userIdtask) : null,
                 dateTask: getMoment(dateTask).format('YYYY-MM-DD')
             })])
             set({ loading: false, error: null, complete: true })

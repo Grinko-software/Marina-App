@@ -21,11 +21,6 @@ export default function EvidenceImageTask ({ images, setImages }) {
         }
     }
 
-    /*     const removeSelectedImage = () => {
-        setSelectedImages(null)
-        setImages(null)
-    } */
-
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader()
@@ -42,7 +37,7 @@ export default function EvidenceImageTask ({ images, setImages }) {
 
     return (
         <div>
-            {!isMobile
+            {isMobile
                 ? <ModalCamera images={images} setImages={setImages} />
                 : <div className="flex flex-col items-center justify-center min-w-[200px] lg:min-w-[800px]">
                     { selectedImages?.length > 0

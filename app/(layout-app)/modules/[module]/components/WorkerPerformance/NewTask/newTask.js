@@ -1,13 +1,18 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Autocomplete, AutocompleteItem, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from '@nextui-org/react'
+import {
+    Autocomplete, AutocompleteItem, Button, Input, Modal, ModalBody,
+    ModalContent, ModalFooter, ModalHeader, useDisclosure
+} from '@nextui-org/react'
 import { DatePicker } from '@nextui-org/date-picker'
 import useStore from './store'
 import { isMobileDevice } from '@/utils/agent'
 import { TbShoppingCartPlus } from 'react-icons/tb'
 import { notify } from '@/services/notify'
+import useAuthStore from '@/stores/user'
 
-export default function CreateTask ({ users, taskTypes }) {
+export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
+    const { idUser } = useAuthStore()
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isMobile, setIsMobile] = useState(true)
     const {
@@ -36,12 +41,17 @@ export default function CreateTask ({ users, taskTypes }) {
     return (
         <section>
             <header className="flex justify-end">
-                <Button className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary' onClick={onOpen}
-                    startContent={<TbShoppingCartPlus size={25}/>}>
+                <Button
+                    className='bg-emerald-600 dark:bg-emerald-600 font-semibold'
+                    color='primary'
+                    onClick={onOpen}
+                    startContent={<TbShoppingCartPlus size={25} />}
+                >
                     {isMobile ? '' : 'CREAR TAREA'}
                 </Button>
             </header>
-            <Modal size={'4xl'}
+            <Modal
+                size={'4xl'}
                 isOpen={isOpen}
                 backdrop='opaque'
                 onClose={() => onClose}
@@ -50,10 +60,12 @@ export default function CreateTask ({ users, taskTypes }) {
                 id='modal-supplier'
             >
                 <ModalContent>
-                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">Nueva tarea</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
+                        Nueva tarea
+                    </ModalHeader>
                     <ModalBody>
-                        <section className="mt-3 grid grid-cols-2">
-                            <div className="p-4 flex items-center">
+                        <section className="mt-3 grid gap-4 grid-cols-1 md:grid-cols-2 items-start">
+                            <div className="p-4">
                                 <Autocomplete
                                     label="Tipo de tarea"
                                     placeholder="Busca un tipo"
@@ -65,58 +77,62 @@ export default function CreateTask ({ users, taskTypes }) {
                                     variant={'underlined'}
                                     labelPlacement={'outside'}
                                 >
-                                    {(item) => <AutocompleteItem key={item.value}>
-                                        {`${item.label}`}
-                                    </AutocompleteItem>}
+                                    {(item) => (
+                                        <AutocompleteItem key={item.value}>
+                                            {`${item.label}`}
+                                        </AutocompleteItem>
+                                    )}
                                 </Autocomplete>
                             </div>
-                            <div className="p-4 flex items-center">
-                                <Autocomplete
-                                    label="Responsable"
-                                    placeholder="Busca un usuario"
-                                    defaultItems={users}
-                                    selectedKey={userTask}
-                                    onSelectionChange={(value) => setUserTask(value)}
-                                    allowsEmptyCollection={false}
-                                    isClearable={false}
-                                    variant={'underlined'}
-                                    labelPlacement={'outside'}
-                                >
-                                    {(item) => <AutocompleteItem key={item.value}>
-                                        {`${item.label}`}
-                                    </AutocompleteItem>}
-                                </Autocomplete>
-                            </div>
-                            <div className="p-4 flex items-center">
+                            {isAdmin && (
+                                <div className="p-4">
+                                    <Autocomplete
+                                        label="Responsable"
+                                        placeholder="Busca un usuario"
+                                        defaultItems={users}
+                                        selectedKey={userTask}
+                                        onSelectionChange={(value) => setUserTask(value)}
+                                        allowsEmptyCollection={false}
+                                        isClearable={false}
+                                        variant={'underlined'}
+                                        labelPlacement={'outside'}
+                                    >
+                                        {(item) => (
+                                            <AutocompleteItem key={item.value}>
+                                                {`${item.label}`}
+                                            </AutocompleteItem>
+                                        )}
+                                    </Autocomplete>
+                                </div>
+                            )}
+                            <div className="p-4">
                                 <Input
                                     type="text"
                                     value={name}
                                     variant={'underlined'}
                                     label={'Nombre Tarea'}
                                     labelPlacement={'outside'}
-                                    placeholder={ 'Ingrese el nombre de la tarea'}
+                                    placeholder={'Ingrese el nombre de la tarea'}
                                     onValueChange={(value) => { setName(value) }}
                                 />
                             </div>
-                            <div className="p-4 flex items-center">
-                                <Textarea
+                            <div className="p-4">
+                                <Input
                                     type="text"
                                     value={description}
                                     variant={'underlined'}
-                                    labelPlacement={'outside'}
                                     label={'Descripción Tarea'}
-                                    placeholder={ 'Ingrese la descripción de la tarea'}
+                                    labelPlacement={'outside'}
+                                    placeholder={'Ingrese la descripción de la tarea'}
                                     onValueChange={(value) => { setDescription(value) }}
                                 />
                             </div>
-                            <div className="p-4 flex items-center">
+                            <div className="p-4">
                                 <DatePicker
-                                    da
                                     variant={'underlined'}
                                     labelPlacement={'outside'}
-                                    fo
                                     label="Fecha límite"
-                                    placeholder={ 'Selecciona la fecha de la tarea'}
+                                    placeholder={'Selecciona la fecha de la tarea'}
                                     value={dateTask}
                                     onChange={setDateTask}
                                 />
@@ -124,12 +140,13 @@ export default function CreateTask ({ users, taskTypes }) {
                         </section>
                     </ModalBody>
                     <ModalFooter>
-                        {error
-                            ? <div className='flex mx-5 self-center'>
+                        {error && (
+                            <div className='flex mx-5 self-center'>
                                 <h1>{error}</h1>
                             </div>
-                            : null}
-                        <Button className =" bg-green-500 text-primary-50"
+                        )}
+                        <Button
+                            className="bg-green-500 text-primary-50"
                             onClick={() => {
                                 requestCreate(
                                     name,
@@ -137,12 +154,17 @@ export default function CreateTask ({ users, taskTypes }) {
                                     taskType,
                                     userTask,
                                     dateTask,
-                                    notify)
+                                    notify,
+                                    idUser,
+                                    isAdmin
+                                )
                             }}
                         >
                             Crear
                         </Button>
-                        <Button color="danger" variant="flat"
+                        <Button
+                            color="danger"
+                            variant="flat"
                             onClick={() => {
                                 onClose()
                                 clearStore()
