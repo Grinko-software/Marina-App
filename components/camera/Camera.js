@@ -97,7 +97,7 @@ const CameraComponent = ({ handleClear, setImage }) => {
                     onClick={() => {
                         if (camera.current) {
                             const photo = camera.current.takePhoto()
-                            setImage(photo)
+                            setImage(photo) // Esta función ya se encargará de agregar la nueva imagen al arreglo
                             handleClear()
                         }
                     }}

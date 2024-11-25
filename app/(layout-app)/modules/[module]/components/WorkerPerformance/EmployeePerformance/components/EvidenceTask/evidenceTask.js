@@ -10,27 +10,27 @@ import { uploadImageTaskByEmployee } from '@/services/task'
 export default function EvidenceTask ({ taskState, taskId, employeeId, handleRequestGetTask }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [completationTaskId, setCompletationTaskId] = useState(null)
-    const [image, setImage] = useState(null)
+    const [images, setImages] = useState([])
     const [comment, setComment] = useState('')
     const [complete, setComplete] = useState(false)
     const [error, setError] = useState(null)
 
     const handleUploadImageTaskByEmployee = async ({ completationTaskId }) => {
         try {
-            const uploadImage = await uploadImageTaskByEmployee({
-                taskId, employeeId, imageBase64: image, completationTaskId
-            })
-
-            if (uploadImage.data) {
-                notify('✅ Imágen enviada con éxito')
-                handleClear()
-                setComplete(true)
-                handleRequestGetTask()
-            } else {
-                notify('❌ Hubo un error al subir la imágen')
+            for (const img of images) {
+                await uploadImageTaskByEmployee({
+                    taskId,
+                    employeeId,
+                    imageBase64: img,
+                    completationTaskId
+                })
             }
+            notify('✅ Imágenes enviadas con éxito')
+            handleClear()
+            setComplete(true)
+            handleRequestGetTask()
         } catch (error) {
-            notify(error.message)
+            notify('❌ Hubo un error al subir las imágenes')
             setError(error.message)
         }
     }
@@ -63,7 +63,7 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
     }
     const handleClear = () => {
         setComment('')
-        setImage(null)
+        setImages(null)
         setError(null)
         setComplete(false)
     }
@@ -73,7 +73,7 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
             handleUploadImageTaskByEmployee({ completationTaskId })
         }
     }, [completationTaskId])
-    const disableSendButton = comment === '' || comment === undefined || image === null || image === undefined
+    const disableSendButton = comment === '' || images.length === 0
     return (
         <div>
             <div className="flex justify-end">
@@ -105,28 +105,25 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
                 scrollBehavior={'inside'}
                 closeButton={<></>}
                 id='modal-task-evidence'
+                className='h-full '
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
                         {'Terminar tarea'}
                     </ModalHeader>
-                    <ModalBody>
-                        <div className="p-4 flex flex-col items-center">
-                            <EvidenceImageTask image={image} setImage={setImage} defaultImg={null} />
-                        </div>
-                        <div className="p-4 flex items-center">
-                            <Input
-                                autoFocus={true}
-                                type="text"
-                                value={comment}
-                                variant={'underlined'}
-                                label={'Comentarios'}
-                                labelPlacement={'outside'}
-                                placeholder={ 'Ingrese comentario'}
-                                onValueChange={(value) => { setComment(value) }}
-                            />
-                        </div>
-                    </ModalBody>
+                    <div className='flex flex-col items-center justify-center w-full px-6 gap-10'>
+                        <EvidenceImageTask images={images} setImages={setImages} defaultImg={null} />
+                        <Input
+                            autoFocus={true}
+                            type="text"
+                            value={comment}
+                            variant={'underlined'}
+                            label={'Comentarios'}
+                            labelPlacement={'outside'}
+                            placeholder={ 'Ingrese comentario'}
+                            onValueChange={(value) => { setComment(value) }}
+                        />
+                    </div>
                     <ModalFooter>
                         {error
                             ? <div className='flex mx-5 self-center'>
@@ -141,11 +138,12 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
                             >
                             Re subir Imagen
                             </Button>
-                            : <Button className =" bg-green-500 text-primary-50"
+                            : <Button
+                                className="bg-green-500 text-primary-50"
                                 isDisabled={disableSendButton}
-                                onClick={() => { handleSubmit(comment, notify) }}
+                                onClick={() => handleSubmit(comment, notify)}
                             >
-                            Enviar
+    Enviar
                             </Button>
                         }
                         <Button color="danger" variant="flat"
