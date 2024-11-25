@@ -1,9 +1,8 @@
 'use client'
 import AlertMessage from '@/components/ui/AlertMessage'
-import { Alert } from '@material-tailwind/react'
 import { useEffect, useState } from 'react'
 
-function Icon () {
+export function Icon () {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
