@@ -166,9 +166,12 @@ export const fetchCompleteTaskByEmployee = async ({ taskId, employeeId, descript
     }
 }
 
-export const fetchStartTaskByEmployee = async ({ taskId }) => {
+export const fetchStartTaskByEmployee = async ({ taskId, employeeId, description }) => {
+    const data = {
+        description
+    }
     try {
-        return await getData(TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId), PUT, null, true)
+        return await getData(TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId).replace(':employeeID', employeeId), POST, data, true)
     } catch {
         return null
     }
