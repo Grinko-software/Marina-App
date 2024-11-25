@@ -8,8 +8,8 @@ export const getTasksByEmployee = ({ employeeID }) => {
 export const completeTask = ({ taskId, employeeId, description }) => {
     return fetchCompleteTaskByEmployee({ taskId, employeeId, description })
 }
-export const startTask = ({ taskId }) => {
-    return fetchStartTaskByEmployee({ taskId })
+export const startTask = ({ taskId, employeeId, description }) => {
+    return fetchStartTaskByEmployee({ taskId, employeeId, description })
 }
 export const uploadImageTaskEmployee = ({ taskId, employeeId, description }) => {
     return uploadImageTaskByEmployee({ taskId, employeeId, description })

@@ -2,13 +2,14 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react'
-import { BiCheckCircle } from 'react-icons/bi'
+import { BiCheckCircle, BiTask } from 'react-icons/bi'
 import { notify } from '@/services/notify'
 import EvidenceImageTask from './evidenceImageTask'
-import { completeTask, startTask } from '../../service'
+import { completeTask, startTask as startTaskService } from '../../service'
 import { uploadImageTaskByEmployee } from '@/services/task'
 export default function EvidenceTask ({ taskState, taskId, employeeId, handleRequestGetTask }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
+    const [initTask, setInitTask] = useState(null)
     const [completationTaskId, setCompletationTaskId] = useState(null)
     const [images, setImages] = useState([])
     const [comment, setComment] = useState('')
@@ -34,7 +35,7 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
             setError(error.message)
         }
     }
-    const handleSubmit = async () => {
+    const finishTask = async () => {
         try {
             const result = await completeTask({ taskId, employeeId, description: comment })
             if (!result.data) notify('❌ Hubo un error al enviar la tarea')
@@ -47,18 +48,24 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
             setError(error.message)
         }
     }
-    const handleChangeStartTask = async ({ taskId }) => {
+    const startTask = async () => {
         try {
-            const result = await startTask({ taskId })
-            if (!result.data) {
-                notify('❌ Hubo un error al iniciar la tarea')
-            } else {
-                notify('✅ Tarea iniciada correctamente')
-                handleRequestGetTask()
-            }
+            const result = await startTaskService({ taskId, employeeId, description: comment })
+            if (!result.data) notify('❌ Hubo un error al enviar la tarea')
+
+            notify('✅ Tarea enviada correctamente')
+            const completationTaskId = result.data.id
+            setCompletationTaskId(completationTaskId)
         } catch (error) {
             notify(error.message)
             setError(error.message)
+        }
+    }
+    const handleSubmit = async () => {
+        if (initTask) {
+            startTask()
+        } else {
+            finishTask()
         }
     }
     const handleClear = () => {
@@ -73,6 +80,15 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
             handleUploadImageTaskByEmployee({ completationTaskId })
         }
     }, [completationTaskId])
+
+    useEffect(() => {
+        if (taskState === 'TODO') {
+            // handleRequestGetTask()
+            setInitTask(true)
+        } else {
+            setInitTask(false)
+        }
+    }, [taskState])
     const disableSendButton = comment === '' || images.length === 0
     return (
         <div>
@@ -80,10 +96,11 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
                 { taskState === 'TODO'
                     ? <Button
                         className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
-                        onClick={() => {
-                            handleChangeStartTask({ taskId })
-                        }}
-                        startContent={<BiCheckCircle size={25}/>}>
+                        // onClick={() => {
+                        // handleChangeStartTask({ taskId })
+                        // }}
+                        onClick={onOpen}
+                        startContent={<BiTask size={25}/>}>
                         {'Iniciar tarea'}
                     </Button>
                     : taskState !== 'READY_TO_EVALUATE'
@@ -109,7 +126,7 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-                        {'Terminar tarea'}
+                        {taskState ? 'Iniciar tarea' : 'Terminar tarea'}
                     </ModalHeader>
                     <div className='flex flex-col items-center justify-center w-full px-6 gap-10'>
                         <EvidenceImageTask images={images} setImages={setImages} defaultImg={null} />
