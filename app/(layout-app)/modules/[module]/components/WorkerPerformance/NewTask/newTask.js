@@ -37,7 +37,34 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
             onClose()
         }
     }, [complete, error])
+    useEffect(() => {
+        const handleFocus = (e) => {
+            const target = e.target
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
+        }
 
+        document.addEventListener('focusin', handleFocus)
+        return () => document.removeEventListener('focusin', handleFocus)
+    }, [])
+    useEffect(() => {
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            const modal = document.getElementById('modal-supplier')
+            const adjustForKeyboard = (e) => {
+                const keyboardHeight = e.target.offsetHeight
+                modal.style.paddingBottom = `${keyboardHeight}px`
+            }
+
+            window.addEventListener('focusin', adjustForKeyboard)
+            window.addEventListener('focusout', () => (modal.style.paddingBottom = '0px'))
+
+            return () => {
+                window.removeEventListener('focusin', adjustForKeyboard)
+                window.removeEventListener('focusout', () => (modal.style.paddingBottom = '0px'))
+            }
+        }
+    }, [])
     return (
         <section>
             <header className="flex justify-end">
@@ -51,7 +78,7 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
                 </Button>
             </header>
             <Modal
-                size={'4xl'}
+                size={isMobile ? 'full' : '4xl'}
                 isOpen={isOpen}
                 backdrop='opaque'
                 onClose={() => onClose}
