@@ -122,7 +122,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                                 (detailItemsData.imagesInit.length || detailItemsData.imagesFinish.length)
                                                     ? <div className='flex flex-col items-center mx-auto'>
                                                         <Tabs
-                                                            aria-label="Options"
+                                                            aria-label="Images"
                                                             size="md"
                                                             className='mx-auto py-2'
                                                             selectedKey={imagesTab}
