@@ -37,7 +37,7 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
             onClose()
         }
     }, [complete, error])
-    useEffect(() => {
+    /*   useEffect(() => {
         const handleFocus = (e) => {
             const target = e.target
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
@@ -64,7 +64,7 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
                 window.removeEventListener('focusout', () => (modal.style.paddingBottom = '0px'))
             }
         }
-    }, [])
+    }, []) */
     return (
         <section>
             <header className="flex justify-end">
