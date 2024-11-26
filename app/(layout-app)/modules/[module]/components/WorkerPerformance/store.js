@@ -35,6 +35,39 @@ const useFilterStore = create((set) => ({
                             }
                             : null
 
+                        /*
+
+                            "id": 38,
+                            "task_id": 33,
+                            "employee_id": 19,
+                            "description": "ojito",
+                            "img": [
+                                {
+                                    "ID": 20,
+                                    "url": "https://storage.googleapis.com/marina-app/task/9c278b29-ad42-4772-b072-e58eb0053c7a",
+                                    "task_completion_id": 38
+                                },
+                                {
+                                    "ID": 21,
+                                    "url": "https://storage.googleapis.com/marina-app/task/188b8192-ff7a-4a61-a94e-e3d9291f73f4",
+                                    "task_completion_id": 38
+                                }
+                            ],
+                            "CompletionDate": "2024-11-25T14:21:49.676728Z"
+                            */
+                        const taskInitation = item?.task_initation
+                            ? {
+                                id: item?.task_initation?.id,
+                                taskId: item?.task_initation?.task_id,
+                                employeeId: item?.task_initation?.employee_id,
+                                description: item?.task_initation?.description,
+                                initationDate: item?.task_initation?.CompletionDate,
+                                images: item?.task_initation?.img?.map((item) => {
+                                    return item?.url
+                                }) || null
+                            }
+                            : null
+
                         const taskStateId = item.state_task_id
 
                         if (!taskUser) {
@@ -51,7 +84,9 @@ const useFilterStore = create((set) => ({
                             dateLimit: item.date_limit,
 
                             // -
+                            taskInitationId: item.task_initation_id,
                             taskCompletionId: item.task_completion_id,
+                            taskInitation: taskInitation || null,
                             taskCompletion: taskCompletion || null,
 
                             // type
