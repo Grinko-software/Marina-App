@@ -16,7 +16,7 @@ export default function LayoutApp ({ children }) {
     }, [])
     return (
 
-        <section className="min-h-full w-screen h-full bg-primary-200 dark:bg-secondary-500 overflow-x-hidden touch-none fixed">
+        <section className="w-screen h-full bg-primary-200 dark:bg-secondary-500 lg:min-h-full lg:w-screen lg:h-full lg:overflow-x-hidden lg:touch-none lg:fixed">
             <motion.div
                 className='min-h-full flex flex-col'
                 initial={{ opacity: 0, scale: 0.5 }}
