@@ -1,8 +1,10 @@
-import { TASK_STARS_LIMIT } from '@/settings/constants'
-import { Button, Slider, Textarea } from '@nextui-org/react'
+import { TASK_STARS_DEFAULT_VALUE, TASK_STARS_LIMIT } from '@/settings/constants'
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Slider, Textarea, useDisclosure } from '@nextui-org/react'
 import { FaStar } from 'react-icons/fa'
 import { BsCashCoin } from 'react-icons/bs'
 import { formatNumberWithPoints } from '@/utils/number'
+import { useState } from 'react'
+import { fetchRateTask } from '@/services/task'
 
 export default function TaskScoreInput ({
     score = 0,
@@ -10,7 +12,7 @@ export default function TaskScoreInput ({
     onRateChange,
     feedbackRate,
     setFeedbackRate,
-    starValue = 500
+    starValue = TASK_STARS_DEFAULT_VALUE
 }) {
     return (
         <div className="flex flex-col items-center">
@@ -93,6 +95,87 @@ export default function TaskScoreInput ({
                     <span className="text-2xl">$ {formatNumberWithPoints(rate * starValue)}</span>
                 </div>
             </div>
+        </div>
+    )
+}
+
+export function TaskScoreInputMobile ({
+    taskId,
+    score = 0,
+    starValue = TASK_STARS_DEFAULT_VALUE,
+    handleReaload = () => {}
+}) {
+    const { isOpen, onClose, onOpen } = useDisclosure()
+    const [rate, setRate] = useState(1)
+    const [feedbackRate, setFeedbackRate] = useState('')
+
+    const onRateTask = async (rate, feedback) => {
+        await fetchRateTask({ taskId, taskRate: rate, feedbackRate: feedback })
+        if (handleReaload) handleReaload()
+        onClose()
+    }
+
+    return (
+        <div>
+            <Button
+                className='bg-emerald-600 dark:bg-emerald-600 font-semibold'
+                color='primary'
+                onClick={onOpen}
+                // startContent={<TbShoppingCartPlus size={25} />}
+            >
+                Calificar
+            </Button>
+            <Modal
+                backdrop="blur"
+                isOpen={isOpen}
+                placement={'bottom'}
+                size={''}
+                radius="lg"
+                id='modal-supplier'
+                classNames={{
+                    body: 'py-6 w-full h-full',
+                    closeButton: 'hidden'
+                }}
+            >
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
+                        Nueva tarea
+                    </ModalHeader>
+                    <ModalBody>
+                        <section className="w-full">
+                            <TaskScoreInput
+                                rate={rate}
+                                onRateChange={setRate}
+                                feedbackRate={feedbackRate}
+                                setFeedbackRate={setFeedbackRate}
+
+                                score={score}
+                                starValue={starValue}
+                            />
+                        </section>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            className="bg-green-500 text-primary-50"
+                            onClick={() => {
+                                onRateTask(rate, feedbackRate)
+                            }}
+
+                        >
+                            Enviar
+                        </Button>
+                        <Button
+                            color="danger"
+                            variant="flat"
+                            onClick={() => {
+                                onClose()
+                            }}
+                        >
+                            Cerrar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </div>
     )
 }

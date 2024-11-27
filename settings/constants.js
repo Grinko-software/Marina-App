@@ -98,3 +98,4 @@ export const TASKS_API_EMPLOYEE_START_TASK = BASE_MARKET_API_URL + '/task/start/
 export const TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE = BASE_MARKET_API_URL + '/task/image/:taskID'
 
 export const TASK_STARS_LIMIT = 10
+export const TASK_STARS_DEFAULT_VALUE = 500

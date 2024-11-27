@@ -29,7 +29,13 @@ export const parseTaskByEmployee = ({ data }) => {
             stateTaskId: item?.state_task_id,
             rating: item?.rating,
             feedback: item?.feedback,
-            username: item?.user?.name
+            username: item?.user?.name,
+            imagesInit: item?.task_initation?.img?.map((item) => {
+                return item?.url
+            }) || [],
+            imagesFinish: item?.task_completion?.img?.map((item) => {
+                return item?.url
+            }) || []
         }
     })
 }

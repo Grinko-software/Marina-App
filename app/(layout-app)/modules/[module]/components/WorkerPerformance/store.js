@@ -34,27 +34,6 @@ const useFilterStore = create((set) => ({
                                 }) || null
                             }
                             : null
-
-                        /*
-
-                            "id": 38,
-                            "task_id": 33,
-                            "employee_id": 19,
-                            "description": "ojito",
-                            "img": [
-                                {
-                                    "ID": 20,
-                                    "url": "https://storage.googleapis.com/marina-app/task/9c278b29-ad42-4772-b072-e58eb0053c7a",
-                                    "task_completion_id": 38
-                                },
-                                {
-                                    "ID": 21,
-                                    "url": "https://storage.googleapis.com/marina-app/task/188b8192-ff7a-4a61-a94e-e3d9291f73f4",
-                                    "task_completion_id": 38
-                                }
-                            ],
-                            "CompletionDate": "2024-11-25T14:21:49.676728Z"
-                            */
                         const taskInitation = item?.task_initation
                             ? {
                                 id: item?.task_initation?.id,
