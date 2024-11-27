@@ -11,11 +11,9 @@ export default function LayoutApp (props) {
             <header className="sticky z-20 bg-primary-200 dark:bg-secondary-500 top-0">
                 <Header module={module}/>
             </header>
-            <div className="h-auto flex-1 flex">
-                <main className="flex flex-1">
-                    {children}
-                </main>
-            </div>
+            <main className="flex flex-1">
+                {children}
+            </main>
         </section>
     )
 }

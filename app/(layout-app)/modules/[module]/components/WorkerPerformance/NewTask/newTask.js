@@ -10,11 +10,13 @@ import { isMobileDevice } from '@/utils/agent'
 import { TbShoppingCartPlus } from 'react-icons/tb'
 import { notify } from '@/services/notify'
 import useAuthStore from '@/stores/user'
+import CustomDatePicker from '@/components/DatePicker/DatePicker'
 
 export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
     const { idUser } = useAuthStore()
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isMobile, setIsMobile] = useState(true)
+
     const {
         name, setName,
         description, setDescription,
@@ -37,34 +39,18 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
             onClose()
         }
     }, [complete, error])
-    /*   useEffect(() => {
-        const handleFocus = (e) => {
+    useEffect(() => {
+        const adjustScrollOnFocus = (e) => {
             const target = e.target
-            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            if (target.tagName === 'INPUT') {
                 target.scrollIntoView({ behavior: 'smooth', block: 'center' })
             }
         }
 
-        document.addEventListener('focusin', handleFocus)
-        return () => document.removeEventListener('focusin', handleFocus)
+        document.addEventListener('focusin', adjustScrollOnFocus)
+        return () => document.removeEventListener('focusin', adjustScrollOnFocus)
     }, [])
-    useEffect(() => {
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            const modal = document.getElementById('modal-supplier')
-            const adjustForKeyboard = (e) => {
-                const keyboardHeight = e.target.offsetHeight
-                modal.style.paddingBottom = `${keyboardHeight}px`
-            }
 
-            window.addEventListener('focusin', adjustForKeyboard)
-            window.addEventListener('focusout', () => (modal.style.paddingBottom = '0px'))
-
-            return () => {
-                window.removeEventListener('focusin', adjustForKeyboard)
-                window.removeEventListener('focusout', () => (modal.style.paddingBottom = '0px'))
-            }
-        }
-    }, []) */
     return (
         <section>
             <header className="flex justify-end">
@@ -78,31 +64,41 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
                 </Button>
             </header>
             <Modal
-                size={isMobile ? 'full' : '4xl'}
+                backdrop="blur"
                 isOpen={isOpen}
-                backdrop='opaque'
-                onClose={() => onClose}
-                scrollBehavior={'inside'}
-                closeButton={<></>}
+                placement={'top'}
+                size={isMobile ? '' : '4xl'}
+                radius="lg"
                 id='modal-supplier'
+                classNames={{
+                    body: 'py-6 w-full h-full',
+                    closeButton: 'hidden'
+                }}
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
                         Nueva tarea
                     </ModalHeader>
                     <ModalBody>
-                        <section className="mt-3 grid gap-4 grid-cols-1 md:grid-cols-2 items-start">
+                        <section className=" mt-3 grid gap-4 grid-cols-1 md:grid-cols-2 items-start">
                             <div className="p-4">
                                 <Autocomplete
                                     label="Tipo de tarea"
                                     placeholder="Busca un tipo"
                                     defaultItems={taskTypes}
                                     selectedKey={taskType}
-                                    onSelectionChange={(value) => setTaskType(value)}
+                                    onSelectionChange={(value) => {
+                                        setTaskType(value)
+                                        document.activeElement.blur()
+                                    }}
                                     allowsEmptyCollection={false}
-                                    isClearable={false}
+                                    isClearable={true}
                                     variant={'underlined'}
                                     labelPlacement={'outside'}
+                                    classNames={{
+                                        listbox: 'z-50'
+                                    }}
+                                    portal
                                 >
                                     {(item) => (
                                         <AutocompleteItem key={item.value}>
@@ -154,16 +150,26 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
                                     onValueChange={(value) => { setDescription(value) }}
                                 />
                             </div>
-                            <div className="p-4">
-                                <DatePicker
-                                    variant={'underlined'}
-                                    labelPlacement={'outside'}
-                                    label="Fecha límite"
-                                    placeholder={'Selecciona la fecha de la tarea'}
-                                    value={dateTask}
-                                    onChange={setDateTask}
-                                />
-                            </div>
+                            {isMobile
+                                ? <div className="p-4 flex w-full items-end justify-end">
+                                    <CustomDatePicker
+                                        label="Fecha límite"
+                                        placeholder={'Selecciona la fecha de la tarea'}
+                                        value={dateTask}
+                                        onChange={setDateTask}
+                                    />
+                                </div>
+                                : <div className="p-4">
+                                    <DatePicker
+                                        variant={'underlined'}
+                                        labelPlacement={'outside'}
+                                        label="Fecha límite"
+                                        placeholder={'Selecciona la fecha de la tarea'}
+                                        value={dateTask}
+                                        onChange={setDateTask}
+                                    />
+                                </div>
+                            }
                         </section>
                     </ModalBody>
                     <ModalFooter>

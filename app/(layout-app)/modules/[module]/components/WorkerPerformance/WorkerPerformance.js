@@ -106,7 +106,7 @@ export default function WorkerPerformance () {
             <div className='w-full h-full flex flex-col gap-3'>
                 { isAdmin
                     ? <Filter isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
-                    : <FilterEmployee isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
+                    : <FilterEmployee isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
                 }
                 { isAdmin
                     ? <>

@@ -20,7 +20,16 @@
 body { 
   @apply bg-primary-300 dark:bg-secondary-500
 }
+input, textarea, select {
+  font-size: 16px !important;
+}
+.date-picker input {
+  font-size: 16px !important;
+}
 
+.date-picker label {
+  font-size: 16px !important;
+}
 @layer components {
   .animation-fade-in {
     animation: fadeIn 1s;
