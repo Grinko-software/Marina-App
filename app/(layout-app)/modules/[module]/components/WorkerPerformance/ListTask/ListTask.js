@@ -44,14 +44,14 @@ export default function ListTask ({ taskDifficulties, taskStates }) {
                 </div>
                 : <div className='w-full flex flex-col gap-10'>
                     { hasGeneralTasks
-                        ? <div className='w-full flex flex-col gap-3 divide-y'>
+                        ? <div className='w-full flex flex-col divide-y-2 divide-default'>
                             {
                                 [
                                     { title: 'Actividades por hacer', tasks: tasksToDo || [], state: TASK_STATES.TODO },
                                     { title: 'Actividades a evaluar', tasks: tasksReadyToEvaluate || [], state: TASK_STATES.READY_TO_EVALUATE }
                                 ].map((item) => {
                                     return (
-                                        <div className='w-full' key={item.title}>
+                                        <div className='w-full py-3' key={item.title}>
                                             <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">{item.title}</h2>
                                             {item?.tasks?.length
                                                 ? <>
