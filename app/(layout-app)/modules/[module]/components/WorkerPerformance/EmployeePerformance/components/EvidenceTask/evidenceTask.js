@@ -122,9 +122,9 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-                        {taskState ? 'Iniciar tarea' : 'Terminar tarea'}
+                        {initTask ? 'Iniciar tarea' : 'Terminar tarea'}
                     </ModalHeader>
-                    <div className='flex flex-col items-center justify-center w-full px-6 gap-10'>
+                    <div className='max-h-[calc(100vh-16rem)] overflow-y-scroll flex flex-col items-center justify-center w-full px-6 gap-10'>
                         <EvidenceImageTask images={images} setImages={setImages} defaultImg={null} />
                         <Input
                             autoFocus={true}
