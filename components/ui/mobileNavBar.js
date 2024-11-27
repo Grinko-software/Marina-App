@@ -16,7 +16,7 @@ export default function MobileNavBar () {
             route: '/inventory'
         },
         {
-            id: 'logout',
+            id: 'login',
             label: 'Cerrar sesión',
             route: '/'
         }
@@ -28,11 +28,10 @@ export default function MobileNavBar () {
     ]
     useEffect(() => {
         if (selected && selected !== moduleApplication) {
-            if (selected === 'logout') {
+            if (selected === 'login') {
                 signOut()
-            } else {
-                router.push('/' + selected)
             }
+            router.push('/' + selected)
         }
     }, [selected])
 
