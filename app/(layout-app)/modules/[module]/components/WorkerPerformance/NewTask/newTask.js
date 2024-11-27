@@ -89,7 +89,7 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
                                     selectedKey={taskType}
                                     onSelectionChange={(value) => {
                                         setTaskType(value)
-                                        document.activeElement.blur()
+                                        // document.activeElement.blur()
                                     }}
                                     allowsEmptyCollection={false}
                                     isClearable={true}

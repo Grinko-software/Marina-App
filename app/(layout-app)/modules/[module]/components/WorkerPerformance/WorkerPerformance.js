@@ -10,6 +10,7 @@ import useAuthStore from '@/stores/user'
 import EmployeePerformance from './EmployeePerformance/EmployeePerformance'
 import TasksBoard from './components/TasksBoard'
 import { TASK_STATES } from '@/services/task'
+import ListTask from './ListTask/ListTask'
 
 export default function WorkerPerformance () {
     const [isMobile, setIsMobile] = useState(true)
@@ -111,7 +112,10 @@ export default function WorkerPerformance () {
                 { isAdmin
                     ? <>
                         {isMobile
-                            ? null
+                            ? <ListTask
+                                taskDifficulties={taskDifficulties}
+                                taskStates={taskStates}
+                            />
                             : <>
                                 <Widgets
                                     loading={loading}
