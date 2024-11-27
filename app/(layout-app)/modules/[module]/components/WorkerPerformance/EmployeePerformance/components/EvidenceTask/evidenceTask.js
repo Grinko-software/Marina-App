@@ -96,9 +96,6 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
                 { taskState === 'TODO'
                     ? <Button
                         className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
-                        // onClick={() => {
-                        // handleChangeStartTask({ taskId })
-                        // }}
                         onClick={onOpen}
                         startContent={<BiTask size={25}/>}>
                         {'Iniciar tarea'}
@@ -114,7 +111,6 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
                 }
             </div>
             <Modal
-                size={'4xl'}
                 isOpen={isOpen}
                 backdrop='opaque'
                 placement={'top'}

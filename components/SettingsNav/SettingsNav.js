@@ -155,7 +155,7 @@ export default function SettingsNav ({ isMobile }) {
                             }
                             }
                         >
-                            {'Cerrar Sesion'}
+                            {'Cerrar Sesión'}
                         </Button>
                         : <></>}
                 </CardHeader>

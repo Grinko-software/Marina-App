@@ -15,6 +15,7 @@ export const uploadImageTaskEmployee = ({ taskId, employeeId, description }) => 
     return uploadImageTaskByEmployee({ taskId, employeeId, description })
 }
 export const parseTaskByEmployee = ({ data }) => {
+    // console.log(data)
     return data?.map((item) => {
         return {
             id: item.id,
@@ -27,7 +28,8 @@ export const parseTaskByEmployee = ({ data }) => {
             taskState: getStateTask({ task: item }),
             stateTaskId: item?.state_task_id,
             rating: item?.rating,
-            feedback: item?.feedback
+            feedback: item?.feedback,
+            username: item?.user?.name
         }
     })
 }

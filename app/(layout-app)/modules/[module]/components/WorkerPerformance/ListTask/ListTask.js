@@ -15,7 +15,6 @@ export default function ListTask ({ taskDifficulties, taskStates }) {
             setLoading(true)
             const idStateToDo = getIdTask({ tasks: taskStates, stateNames: 'TO DO' })
             getGeneralTasks({ stateId: idStateToDo }).then((result) => {
-                console.log(result)
                 const tasks = parseTaskByEmployee({ data: result.data, taskDifficulties, taskStates })
                 setTasksToDo(tasks)
                 setLoading(false)
@@ -37,7 +36,7 @@ export default function ListTask ({ taskDifficulties, taskStates }) {
                         ? <div className='w-full'>
                             <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">Actividades por hacer</h2>
                             <Accordion className="w-full bg-white rounded-lg shadow-md">
-                                {tasksToDo?.map(({ id, name, taskState, description, rating, dateLimit }) => (
+                                {tasksToDo?.map(({ id, name, taskState, description, username, dateLimit }) => (
                                     <AccordionItem
                                         key={id}
                                         title={
@@ -52,6 +51,7 @@ export default function ListTask ({ taskDifficulties, taskStates }) {
                                         }
                                     >
                                         <div className="text-gray-600 px-2 flex flex-col gap-2">
+                                            <p><strong>Usuario asignado:</strong> {username ?? 'No asignado'}</p>
                                             <p><strong>Descripción:</strong> {description}</p>
                                             <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
                                         </div>
