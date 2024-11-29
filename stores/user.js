@@ -104,7 +104,7 @@ const useAuthStore = create(
                         if (user.token) {
                             const { name, lastName, userType, idUser } = user
                             const isAdmin = userType === 'admin'
-                            set({ idUser })
+                            // set({ idUser })
                             if (!requireAdmin || (requireAdmin && isAdmin)) {
                                 resultData = {
                                     name,

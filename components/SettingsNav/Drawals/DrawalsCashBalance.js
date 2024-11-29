@@ -6,14 +6,14 @@ import ScannerCredential from '../../ScannerCredential/ScannerCredential'
 import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
-import { getIdUser } from '@/services/account'
 import { notify } from '@/services/notify'
 import { today } from '@/utils/date'
-import useAuthStore from '@/stores/user'
+
 export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     const [paymentDetailed, setPayDetailed] = useState(null)
     const [drawalsComment, setDrawalsComment] = useState('')
     const [readQR, setReadQR] = useState(false)
+    const [targetRequestData, setTargetRequestData] = useState(null)
     const [userAuthData, setUserAuthData] = useState(null)
     const { /* enabledScanner, disabledScanner, */ disabledAuthMode } = useScannerStore()
     const { createDepositOrWithdrawalCashBalance, openDrawer } = useCashBalanceStore(({ createDepositOrWithdrawalCashBalance, openDrawer }) => ({ createDepositOrWithdrawalCashBalance, openDrawer }))
@@ -27,13 +27,16 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
     const onHandlerDrawals = () => {
         setReadQR(true)
     }
-    const handlerOpenDrawer = () => {
-        const { fullName } = useAuthStore.getState()
+    const handlerOpenDrawer = ({ cashRegisterId, cashRegisterName, userName }) => {
         const body = {
-            event_type: 'Retiro de caja', date: today().format('DD-MM-YYYY HH:mm:ss'), cash_registry_name: getCashRegister()?.name, user_name: fullName
+            event_type: 'Retiro de caja',
+            date: today().format('DD-MM-YYYY HH:mm:ss'),
+            cash_registry_name: cashRegisterName,
+            user_name: userName
         }
-        openDrawer(getCashRegister()?.ID, notify, body)
+        openDrawer(cashRegisterId, notify, body)
     }
+
     useEffect(() => {
         if (userAuthData) {
             // setReadQR(false)
@@ -43,10 +46,45 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
 
     useEffect(() => {
         setReadQR(false)
+        setTargetRequestData(null)
     }, [])
+
     const onSuccess = (data) => {
         setUserAuthData(data)
-        createDepositOrWithdrawalCashBalance(getCashRegister()?.ID, getIdUser(), drawalsComment, paymentDetailed, setStatusCashRegister, onhandlerAcctions, notify, handlerOpenDrawer, 'drawal')
+
+        const targetData = {
+            cashRegistryName: getCashRegister()?.name,
+            cashRegistryID: getCashRegister()?.ID,
+            userId: data?.id,
+            userName: data?.fullName,
+            drawalsComment,
+            paymentDetailed
+        }
+
+        setTargetRequestData(targetData)
+    }
+
+    const onConfirmRequest = () => {
+        const onSuccessRequest = () => {
+            handlerOpenDrawer({
+                userName: targetRequestData?.userName,
+                cashRegisterId: targetRequestData.cashRegistryID,
+                cashRegisterName: targetRequestData.cashRegistryName
+            })
+            closeModal()
+        }
+
+        createDepositOrWithdrawalCashBalance(
+            targetRequestData?.cashRegistryID,
+            targetRequestData?.userId,
+            drawalsComment,
+            paymentDetailed,
+            setStatusCashRegister,
+            onhandlerAcctions,
+            notify,
+            onSuccessRequest,
+            'drawal'
+        )
     }
 
     const closeModal = () => {
@@ -54,11 +92,12 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
         setReadQR(false)
         onClose()
         setPayDetailed(0)
+        setTargetRequestData(null)
     }
 
     return (
         <>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} className="space-y-2" >
+            <Modal backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} className="space-y-2">
                 <ModalContent>
                     {() => (
                         <>
@@ -78,7 +117,7 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                                 </Button>
                                                 <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-indigo-600 text-white font-extrabold text-3xl shadow-lg'
                                                     onClick={() => setPayDetailed(paymentDetailed + 2000) }>
-                                                 $2.000
+                                                $2.000
                                                 </Button>
                                                 <Button variant="shadow" className=' w-[10rem] h-[8rem] bg-red-600 text-white  font-extrabold text-3xl shadow-lg'
                                                     onClick={() => setPayDetailed(paymentDetailed + 5000) }>
@@ -139,24 +178,66 @@ export default function DrawalsCashBalance ({ isOpen, onClose, disabled }) {
                                     </ModalFooter>
                                 </section>
 
-                                : (<section>
-                                    <ModalBody>
-                                        <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={false} withoutDelay={true}/>
-                                    </ModalBody>
-                                    <ModalFooter className='justify-center'>
-                                        <Button variant="shadow" className =" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
-                                            onClick={() => {
-                                                setReadQR(false)
+                                : targetRequestData
+                                    ? (<section>
+                                        <ModalBody>
+                                            <div className='space-y-3'>
+                                                {
+                                                    [
+                                                        {
+                                                            label: 'MONTO',
+                                                            value: targetRequestData?.paymentDetailed
+                                                        },
+                                                        {
+                                                            label: 'DETALLE',
+                                                            value: targetRequestData?.drawalsComment
+                                                        },
+                                                        {
+                                                            label: 'USUARIO',
+                                                            value: targetRequestData?.userName
+                                                        }
+                                                    ].map(({ label, value }) => {
+                                                        return <div key={label} className="flex justify-between p-2 border-b border-gray-300 gap-5">
+                                                            <span className="font-bold">{label?.toUpperCase()}:</span>
+                                                            <span className="text-justify">{`${value || ''}`.toUpperCase() || '-'}</span>
+                                                        </div>
+                                                    })
+                                                }
+                                            </div>
+                                        </ModalBody>
+                                        <ModalFooter className='justify-center'>
+                                            <Button variant="shadow" className =" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                                onClick={() => {
+                                                    setReadQR(false)
+                                                    setTargetRequestData(null)
+                                                }}>
+                                                Volver
+                                            </Button>
+                                            <Button color="success" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                                onConfirmRequest()
                                             }}>
+                                                CONFIRMAR
+                                            </Button>
+                                        </ModalFooter>
+                                    </section>)
+                                    : (<section>
+                                        <ModalBody>
+                                            <ScannerCredential onSuccess={onSuccess} changeSession={false} requireAdmin={false} withoutDelay={true}/>
+                                        </ModalBody>
+                                        <ModalFooter className='justify-center'>
+                                            <Button variant="shadow" className =" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                                onClick={() => {
+                                                    setReadQR(false)
+                                                }}>
                                     Volver
-                                        </Button>
-                                        <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
-                                            closeModal()
-                                        }}>
+                                            </Button>
+                                            <Button color="danger" variant="shadow" className="w-[12rem] h-[4rem] text-2xl font-extrabold" onClick={() => {
+                                                closeModal()
+                                            }}>
                                     CANCELAR
-                                        </Button>
-                                    </ModalFooter>
-                                </section>)
+                                            </Button>
+                                        </ModalFooter>
+                                    </section>)
                             }
 
                         </>
