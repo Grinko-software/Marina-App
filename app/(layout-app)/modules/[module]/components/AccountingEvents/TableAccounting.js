@@ -116,7 +116,7 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                 >
                     {(item) => (
                         <TableRow key={item.key}>
-                            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                            {(columnKey) => <TableCell className="w-[150px]" >{getKeyValue(item, columnKey)}</TableCell>}
                         </TableRow>
                     )}
                 </TableBody>
