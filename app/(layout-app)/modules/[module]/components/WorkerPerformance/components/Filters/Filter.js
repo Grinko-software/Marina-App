@@ -2,9 +2,10 @@
 
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
-import CreateTaskType from './NewTaskType/newTaskType'
-import CreateTask from './NewTask/newTask'
-import useFilterStore from './store'
+import CreateTaskType from '../../NewTaskType/newTaskType'
+import CreateTask from '../../NewTask/newTask'
+import useFilterStore from '../../store'
+import PayButton from '../../PayButton/PayButton'
 
 export default function Filter ({ isMobile, isAdmin = true, users, taskTypes, taskStates, taskDifficulties, filterData, setFilterData }) {
     const [selectionTaskType, setSelectionTaskType] = useState(null)
@@ -33,7 +34,8 @@ export default function Filter ({ isMobile, isAdmin = true, users, taskTypes, ta
     }
 
     return isMobile
-        ? <section className='w-full flex items-end justify-end'>
+        ? <section className='w-full flex items-end space-x-2 justify-end'>
+            <PayButton />
             <CreateTask isAdmin={isAdmin} users={users} taskTypes={taskTypes} difficultTypes={taskDifficulties}/>
         </section>
         : <section className='w-full flex'>
@@ -96,6 +98,9 @@ export default function Filter ({ isMobile, isAdmin = true, users, taskTypes, ta
                         <Button className='mr-auto h-full' onClick={requestTaskList} isLoading={loading}>
                             {'Buscar'}
                         </Button>
+                    </div>
+                    <div>
+                        <PayButton />
                     </div>
                     <div>
                         <CreateTaskType />

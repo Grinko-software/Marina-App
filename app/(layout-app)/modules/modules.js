@@ -7,7 +7,7 @@ import Sales from './[module]/components/Sales/Sales'
 import Supplier from './[module]/components/Supplier/Supplier'
 import Users from './[module]/components/Users/Users'
 import AccountingEvent from './[module]/components/AccountingEvents/AccountingEvents'
-import WorkerPerformance from './[module]/components/WorkerPerformance/WorkerPerformance'
+import RootWorkPerformance from './[module]/components/WorkerPerformance'
 
 export const modules = [
     {
@@ -61,7 +61,7 @@ export const modules = [
         name: 'Rendimiento',
         description: 'Rendimiento de trabajadores',
         requireAdmin: false,
-        content: <WorkerPerformance/>,
+        content: <RootWorkPerformance/>,
         icon: <GiPodium />
     }
 ]

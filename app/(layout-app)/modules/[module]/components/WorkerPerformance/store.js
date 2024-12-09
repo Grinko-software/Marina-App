@@ -107,7 +107,9 @@ const useFilterStore = create((set) => ({
         } catch (e) {
             set({ loading: false })
         }
-    }
+    },
+    isSectionPayment: false, // 'boolean'
+    setIsSectionPayment: (isSectionPayment) => set({ isSectionPayment })
 }))
 
 export default useFilterStore

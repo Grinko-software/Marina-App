@@ -1,6 +1,10 @@
 import { fetchCreateTaskType, fetchCreateTask, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes, fetchGetTasks } from '@/services/task'
 import { fetchGetUsers } from '@/services/users'
 
+export const getListTaskToPay = () => {
+
+}
+
 export const requestUserList = async () => {
     try {
         return fetchGetUsers()

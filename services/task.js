@@ -1,5 +1,5 @@
-import { TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
-import { GET, getData, POST } from './http'
+import { CHANGE_STATE_PAID, TASK_VALUES, TASKS_PAYMENT_API_URL_URL, TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
+import { PUT, GET, getData, POST } from './http'
 import { getToken } from './account'
 
 export const TASK_STATES = {
@@ -139,13 +139,35 @@ export const fetchCreateTask = async ({
         return null
     }
 }
-/* export const fetchGetTasks = async () => {
+/*
+
+{
+    "from":"2024-10-29T00:00:00Z",
+    "to":"2024-11-29T00:00:00Z"
+}
+*/
+export const fetchGetPaymentList = async (userId, body) => {
     try {
-        return await getData(TASKS_API_URL_URL, GET, null, true)
+        return await getData(TASKS_PAYMENT_API_URL_URL.replace(':userId', userId), POST, body, true)
     } catch {
         return null
     }
-} */
+}
+export const fetchToChangeStateCompletedPaid = async (taskId) => {
+    try {
+        return await getData(CHANGE_STATE_PAID.replace(':taskId', taskId), PUT, null, true)
+    } catch {
+        return null
+    }
+}
+
+export const getValuesStart = async (taskId) => {
+    try {
+        return await getData(TASK_VALUES.replace(':taskId', taskId), GET, null, true)
+    } catch {
+        return null
+    }
+}
 
 export const fetchGetTaskByEmployee = async ({ employeeID }) => {
     try {
