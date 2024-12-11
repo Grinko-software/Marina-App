@@ -4,7 +4,7 @@ import React from 'react'
 import { BiMoney } from 'react-icons/bi'
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react'
 import ContentFilterPayment from './components/ContentFilterPayment'
-export default function FilterMobilePayment ({ users, filterData, setFilterData }) {
+export default function FilterMobilePayment ({ users }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     return (
         <>
@@ -34,23 +34,11 @@ export default function FilterMobilePayment ({ users, filterData, setFilterData 
                         {/* Coomment */}
                         <ContentFilterPayment
                             users={users}
-                            filterData={filterData}
-                            setFilterData={setFilterData}
+                            isMobile={true}
+                            onClose={onClose}
                         />
                     </div>
-                    <ModalFooter>
-                        <Button
-                            className="bg-green-500 text-primary-50"
-                            // isDisabled={disableSendButton}
-                            // onClick={() => handleSubmit(comment, notify)}
-                        >
-                            Enviar
-                        </Button>
 
-                        <Button color="danger" variant="flat">
-                            Cancelar
-                        </Button>
-                    </ModalFooter>
                 </ModalContent>
             </Modal>
         </>

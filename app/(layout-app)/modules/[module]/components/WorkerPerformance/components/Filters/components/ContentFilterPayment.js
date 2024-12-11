@@ -2,32 +2,29 @@
 'use client'
 
 import { Autocomplete, AutocompleteItem, Button, DatePicker } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
-import { getLocalTimeZone, today } from '@internationalized/date'
-import PayButton from '../../../PayButton/PayButton'
-import useFilterStore from '../../../store'
-export default function ContentFilterPayment ({ users, filterData, setFilterData }) {
-    const [selectionUser, setSelectionUser] = useState(null)
-    const { loading, requestData } = useFilterStore()
+import useFilterStorePayment from '../storePayment'
+import CustomDatePicker from '@/components/DatePicker/DatePicker'
 
-    useEffect(() => {
-        requestTaskList()
-    }, [])
+export default function ContentFilterPayment ({ users, isMobile = false, onClose = () => {} }) {
+    const {
+        selectionUser, setSelectionUser,
+        fromDate, setFromDate,
+        toDate, setToDate,
+        loading, requestData
+    } = useFilterStorePayment()
 
-    useEffect(() => {
-        setFilterData({
-            userId: selectionUser || undefined
-        })
-    }, [selectionUser])
-
-    const requestTaskList = () => {
-        return requestData(filterData)
+    const requestPaymentList = () => {
+        if (onClose) {
+            onClose()
+        }
+        return requestData({ userId: selectionUser, fromDate, toDate })
     }
-
-    return <div className='w-full flex'>
-        <div className="w-full flex flex-row justify-between">
-            <div className="flex flex-row gap-5">
-                <div>
+    const isDisabled = fromDate === null || toDate === null || selectionUser === null
+    return (
+        <div className="w-full flex flex-col gap-4  md:max-h-7   md:gap-5 md:flex-row md:items-center ">
+            <div className="flex flex-col gap-4 md:flex-row md:gap-5 md:items-center">
+                {/* Autocomplete */}
+                <div className="w-full   md:max-w-xs">
                     <Autocomplete
                         label="Empleados"
                         placeholder="Busca un empleado"
@@ -36,40 +33,39 @@ export default function ContentFilterPayment ({ users, filterData, setFilterData
                         onSelectionChange={(value) => setSelectionUser(value)}
                         allowsEmptyCollection={false}
                         isClearable={true}
-                        size='sm'
-                        className="max-w-xs"
+                        className='h-full md:min-h-7'
                     >
-                        {(item) => <AutocompleteItem key={item.value}>
-                            {`${item.label}`}
-                        </AutocompleteItem>}
+                        {(item) => (
+                            <AutocompleteItem key={item.value}>
+                                {`${item.label}`}
+                            </AutocompleteItem>
+                        )}
                     </Autocomplete>
                 </div>
-                {/* Calendar */}
-                <div>
-                    <div className="w-full max-w-xl flex flex-row ">
-                        <div className="w-full flex flex-col gap-1">
-                            <DatePicker
-                                label="Desde"
-                                // minValue={today(getLocalTimeZone())}
-                                defaultValue={today(getLocalTimeZone()).subtract({ days: 1 })}
-                            />
-                        </div>
-                        <div className="w-full flex flex-col gap-1">
-                            <DatePicker
-                                label="Hasta"
-                                // maxValue={today(getLocalTimeZone())}
-                                defaultValue={today(getLocalTimeZone()).add({ days: 1 })}
-                            />
-                        </div>
-                    </div>
+                {/* Calendarios */}
+                <div className="w-full  md:max-w-xs">
+                    <CustomDatePicker
+                        label="Desde"
+                        value={fromDate}
+                        onChange={setFromDate}
+                    />
+                </div>
+                <div className="w-full md:max-w-xs">
+                    <CustomDatePicker
+                        label="Hasta"
+                        value={toDate}
+                        onChange={setToDate}
+                    />
                 </div>
             </div>
-            <div className="flex flex-row gap-5">
-                <Button onClick={requestTaskList} isLoading={loading}>
-                    {'Buscar'}
-                </Button>
-                <PayButton />
-            </div>
+
+            {/* Botones */}
+
+            <Button isDisabled={isDisabled} onClick={requestPaymentList} isLoading={loading}
+                className='bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase ' color='primary'>
+                    Buscar
+            </Button>
+
         </div>
-    </div>
+    )
 }

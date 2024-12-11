@@ -1,6 +1,7 @@
 import { CHANGE_STATE_PAID, TASK_VALUES, TASKS_PAYMENT_API_URL_URL, TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
 import { PUT, GET, getData, POST } from './http'
 import { getToken } from './account'
+import { formatDateToISO } from '@/utils/date'
 
 export const TASK_STATES = {
     TODO: 'TODO',
@@ -146,9 +147,17 @@ export const fetchCreateTask = async ({
     "to":"2024-11-29T00:00:00Z"
 }
 */
-export const fetchGetPaymentList = async (userId, body) => {
+export const fetchGetPaymentList = async ({
+    userId,
+    fromDate,
+    toDate
+}) => {
+    const body = {
+        from: formatDateToISO(fromDate),
+        to: formatDateToISO(toDate)
+    }
     try {
-        return await getData(TASKS_PAYMENT_API_URL_URL.replace(':userId', userId), POST, body, true)
+        return await getData(TASKS_PAYMENT_API_URL_URL.replace(':employeeId', userId), POST, body, true)
     } catch {
         return null
     }

@@ -1,4 +1,4 @@
-import { fetchCreateTaskType, fetchCreateTask, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes, fetchGetTasks } from '@/services/task'
+import { fetchGetPaymentList, fetchCreateTaskType, fetchCreateTask, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes, fetchGetTasks } from '@/services/task'
 import { fetchGetUsers } from '@/services/users'
 
 export const getListTaskToPay = () => {
@@ -142,4 +142,20 @@ export const getDataModelTaskDifficulties = ({ data }) => {
     })
 
     return items
+}
+
+export const getPaymentList = async ({
+    userId,
+    fromDate,
+    toDate
+}) => {
+    try {
+        return fetchGetPaymentList({
+            userId,
+            fromDate,
+            toDate
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }

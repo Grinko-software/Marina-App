@@ -1,73 +1,50 @@
 /* eslint-disable no-unused-vars */
 'use client'
-import { useEffect, useState } from 'react'
-import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from '../service'
+import { useEffect, useState, useCallback } from 'react'
+import { getDataModelUsers, requestUserList } from '../service'
 import { isMobileDevice } from '@/utils/agent'
-import useFilterStore from '../store'
-import useAuthStore from '@/stores/user'
-import { TASK_STATES } from '@/services/task'
+import useFilterStorePayment from '../components/Filters/storePayment'
 import FilterPayment from '../components/Filters/FilterPayment'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner } from '@nextui-org/react'
 const ViewPayment = () => {
     const [isMobile, setIsMobile] = useState(true)
-    const { isAdmin } = useAuthStore()
     const [users, setUsers] = useState([])
-    const [taskTypes, setTaskTypes] = useState([])
-    const [taskStates, setTaskStates] = useState([])
-    const [taskDifficulties, setTaskDifficulties] = useState([])
-    const { data: tasks = [] } = useFilterStore()
-
-    const [todoTasks, setTodoTasks] = useState([])
-    const [inProgressTasks, setInProgressTasks] = useState([])
-    const [readyToEvaluateTasks, setReadyToEvaluateTasks] = useState([])
-    const [unassignedTasks, setUnassignedTasks] = useState([])
-    const [completedTasks, setCompletedTasks] = useState([])
-    const [filterData, setFilterData] = useState({})
-
-    useEffect(() => {
-        const view = isMobileDevice()
-        setIsMobile(view)
-    }, [])
-
-    useEffect(() => {
-        const todoItems = []
-        const inProgressItems = []
-        const readyToEvaluateItems = []
-        const unassignedItems = []
-        const completedItems = []
-
-        if (tasks?.length) {
-            for (const task of tasks) {
-                const taskState = task.stateKey
-                switch (taskState) {
-                case TASK_STATES.UNASSIGNED:
-                    unassignedItems.push(task)
-                    break
-                case TASK_STATES.TODO:
-                    todoItems.push(task)
-                    break
-                case TASK_STATES.IN_PROGRESS:
-                    inProgressItems.push(task)
-                    break
-                case TASK_STATES.READY_TO_EVALUATE:
-                    readyToEvaluateItems.push(task)
-                    break
-                case TASK_STATES.COMPLETED:
-                    completedItems.push(task)
-                    break
-                default:
-                    // code block
-                }
-            }
+    const { data, loading } = useFilterStorePayment()
+    const columns = [
+        {
+            key: 'name',
+            label: 'Nombre'
+            // center: true
+        },
+        {
+            key: 'rating',
+            label: 'Rating'
+            // center: true
         }
-
-        setTodoTasks(todoItems)
-        setInProgressTasks(inProgressItems)
-        setReadyToEvaluateTasks(readyToEvaluateItems)
-        setUnassignedTasks(unassignedItems)
-        setCompletedTasks(completedItems)
-    }, [tasks])
-
+    ]
+    const renderCell = useCallback((data, columnKey) => {
+        const cellValue = data[columnKey]
+        switch (columnKey) {
+        case 'name':
+            return (
+                <div className="flex flex-col">
+                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                </div>
+            )
+        case 'rating':
+            return (
+                <div className="flex flex-col">
+                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                </div>
+            )
+        default:
+            return (
+                <div className="flex flex-col">
+                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                </div>
+            )
+        }
+    }, [data])
     useEffect(() => {
         requestUserList().then((data) => {
             if (data) {
@@ -75,59 +52,28 @@ const ViewPayment = () => {
                 setUsers(items || [])
             }
         })
-
-        requestTaskTypesList().then((data) => {
-            if (data) {
-                const items = getDataModelTaskTypes({ data: data?.data })
-                setTaskTypes(items || [])
-            }
-        })
-
-        requestTaskStatesList().then((data) => {
-            if (data) {
-                const items = getDataModelTaskStates({ data: data?.data })
-                setTaskStates(items || [])
-            }
-        })
-
-        requestTaskDifficultList().then((data) => {
-            if (data) {
-                const items = getDataModelTaskDifficulties({ data: data?.data })
-                setTaskDifficulties(items || [])
-            }
-        })
+        const view = isMobileDevice()
+        setIsMobile(view)
     }, [])
+
     return (
-        <div className='h-full w-full'>
-            <FilterPayment isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
-            <div>
-                <Table aria-label="Example static collection table">
-                    <TableHeader>
-                        <TableColumn>NAME</TableColumn>
-                        <TableColumn>ROLE</TableColumn>
-                        <TableColumn>STATUS</TableColumn>
+        <div className='h-full w-full  md:mt-2'>
+            <FilterPayment isMobile={isMobile} users={users}/>
+            <div className='mt-[4rem] md:mt-7'>
+                <Table isHeaderSticky>
+                    <TableHeader columns={columns}>
+                        {(column) => (
+                            <TableColumn key={column.key} className={column.center ? 'text-center' : ''}>
+                                {column.label}
+                            </TableColumn>
+                        )}
                     </TableHeader>
-                    <TableBody>
-                        <TableRow key="1">
-                            <TableCell>Tony Reichert</TableCell>
-                            <TableCell>CEO</TableCell>
-                            <TableCell>Active</TableCell>
-                        </TableRow>
-                        <TableRow key="2">
-                            <TableCell>Zoey Lang</TableCell>
-                            <TableCell>Technical Lead</TableCell>
-                            <TableCell>Paused</TableCell>
-                        </TableRow>
-                        <TableRow key="3">
-                            <TableCell>Jane Fisher</TableCell>
-                            <TableCell>Senior Developer</TableCell>
-                            <TableCell>Active</TableCell>
-                        </TableRow>
-                        <TableRow key="4">
-                            <TableCell>William Howard</TableCell>
-                            <TableCell>Community Manager</TableCell>
-                            <TableCell>Vacation</TableCell>
-                        </TableRow>
+                    <TableBody isLoading={loading} items={data || []} emptyContent={'No hay tareas asociadas'} loadingContent={ <Spinner></Spinner>}>
+                        {(item) => (
+                            <TableRow key={item.key}>
+                                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </div>
