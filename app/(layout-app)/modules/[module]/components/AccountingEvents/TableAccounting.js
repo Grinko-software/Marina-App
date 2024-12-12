@@ -30,6 +30,10 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
         {
             key: 'userName',
             label: 'Nombre de usuario'
+        },
+        {
+            key: 'detail',
+            label: 'Detalle'
         }
     ]
 
@@ -46,7 +50,8 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                     cashRegisterName: item?.cash_register_name ? item?.cash_register_name?.toUpperCase() : null,
                     eventType: item?.event_type,
                     userId: item?.user_id,
-                    userName: item?.user_name ? item?.user_name?.toUpperCase() : null
+                    userName: item?.user_name ? item?.user_name?.toUpperCase() : null,
+                    detail: item?.detail ? item?.detail?.toUpperCase() : '-'
                 }
             })
 
@@ -111,7 +116,7 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                 >
                     {(item) => (
                         <TableRow key={item.key}>
-                            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                            {(columnKey) => <TableCell className="w-[150px]" >{getKeyValue(item, columnKey)}</TableCell>}
                         </TableRow>
                     )}
                 </TableBody>
