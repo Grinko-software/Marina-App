@@ -1,4 +1,4 @@
-import { fetchGetPaymentList, fetchCreateTaskType, fetchCreateTask, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes, fetchGetTasks } from '@/services/task'
+import { getValuesStar, setValueStar, fetchToChangeStateFromCompleteToPaid, fetchGetPaymentList, fetchCreateTaskType, fetchCreateTask, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes, fetchGetTasks } from '@/services/task'
 import { fetchGetUsers } from '@/services/users'
 
 export const getListTaskToPay = () => {
@@ -155,6 +155,30 @@ export const getPaymentList = async ({
             fromDate,
             toDate
         })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const putStateTaskPaid = async ({ taskId }) => {
+    try {
+        return fetchToChangeStateFromCompleteToPaid(taskId)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getValueByStar = async () => {
+    try {
+        return getValuesStar()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const changePriceStar = async (newPrice) => {
+    try {
+        return setValueStar(newPrice)
     } catch (error) {
         console.log(error)
     }

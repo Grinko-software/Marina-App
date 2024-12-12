@@ -170,9 +170,27 @@ export const fetchToChangeStateCompletedPaid = async (taskId) => {
     }
 }
 
-export const getValuesStart = async (taskId) => {
+export const fetchToChangeStateFromCompleteToPaid = async (taskId) => {
     try {
-        return await getData(TASK_VALUES.replace(':taskId', taskId), GET, null, true)
+        return await getData(CHANGE_STATE_PAID.replace(':taskId', taskId), PUT, null, true)
+    } catch {
+        return null
+    }
+}
+
+export const getValuesStar = async () => {
+    try {
+        return await getData(TASK_VALUES, GET, null, true)
+    } catch {
+        return null
+    }
+}
+export const setValueStar = async (price) => {
+    const body = {
+        price: Number(price)
+    }
+    try {
+        return await getData(TASK_VALUES, PUT, body, true)
     } catch {
         return null
     }

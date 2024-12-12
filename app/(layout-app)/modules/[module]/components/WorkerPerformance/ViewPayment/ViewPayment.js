@@ -18,7 +18,7 @@ const ViewPayment = () => {
         },
         {
             key: 'rating',
-            label: 'Rating'
+            label: 'Estrellas'
             // center: true
         }
     ]
@@ -59,7 +59,7 @@ const ViewPayment = () => {
     return (
         <div className='h-full w-full  md:mt-2'>
             <FilterPayment isMobile={isMobile} users={users}/>
-            <div className='mt-[4rem] md:mt-7'>
+            <div className='mt-[15rem] md:mt-7'>
                 <Table isHeaderSticky>
                     <TableHeader columns={columns}>
                         {(column) => (
