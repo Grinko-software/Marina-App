@@ -16,7 +16,7 @@ export default function LayoutApp ({ children }) {
     }, [])
     return (
 
-        <section className="min-h-full w-screen h-full bg-primary-200 dark:bg-secondary-500 overflow-x-hidden touch-none fixed">
+        <section className="w-screen h-full bg-primary-200 dark:bg-secondary-500 overflow-x-hidden touch-none fixed">
             <motion.div
                 className='min-h-full flex flex-col'
                 initial={{ opacity: 0, scale: 0.5 }}
@@ -31,7 +31,7 @@ export default function LayoutApp ({ children }) {
                     <Header/>
                 </header>
                 <div className="h-auto flex-1 max-h-full overflow-hidden flex">
-                    <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem]">
+                    <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem] overflow-hidden">
                         {children}
                     </main>
                 </div>

@@ -22,6 +22,46 @@ body {
 }
 
 @layer components {
+  .no-select {
+    user-select: none; 
+    -webkit-user-select: none; 
+    -ms-user-select: none; 
+    touch-action: pan-y; 
+  }
+  
+  .touch-auto {
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 30px; 
+    height: 12px;
+  }
+
+  /* Color del fondo del scrollbar */
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #44ab1436;
+    border-radius: 10px;
+  }
+
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #44ab14;
+    border-radius: 10px; 
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #44ab14;
+  }
+  
   .animation-fade-in {
     animation: fadeIn 1s;
     animation: fadeIn 1s;

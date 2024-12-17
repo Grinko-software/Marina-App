@@ -55,7 +55,7 @@ const SalesMenu = () => {
     return (
         <section className='h-full w-full flex md:flex-col'>
             <div className="flex h-full w-full space-x-2">
-                <section className="w-full flex-1">
+                <section className="w-full flex-1 h-full">
                     {payment
                         ? <PayPage setPayment={setPayment}
                             paymentTarget={paymentTargetValue}

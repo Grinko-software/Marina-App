@@ -13,14 +13,11 @@ import Offers from './components/Offer/offers'
 import CreateCategory from './components/NewCategory/newCategory'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
-import { getMultiDataRequest, reMapData } from './services'
 import useStore from './store/store'
 import useScannerStore from '@/stores/scanner'
 import useSyncStore from '@/stores/common/sync'
-import { upgradeVersion } from '@/services/sync'
 
 const LIMIT_PRODUCTS_VIEW = 50
-// const notify = (text) => toast.success(text)
 
 export default function Card () {
     const {
@@ -261,11 +258,11 @@ export default function Card () {
                                 }
                             </section>
                         </section>
-                        : <section style={{ scrollbarGutter: 'stable' }} className='max-h-[44rem] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start'>
+                        : <section style={{ scrollbarGutter: 'stable' }} className='w-full flex flex-wrap h-[calc(100vh-20rem)]  no-select custom-scrollbar overflow-y-auto content-start snap-mandatory snap-y'>
                             {listInventory?.map((item, index) => (
-                                <div ref={index + 1 === listInventory.length && showMoreEnable ? refShowMore : null} key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0'>
-                                    <div className='mx-1 my-1'>
-                                        <CardUi item={item} setTargetProduct={setTargetProduct}/>
+                                <div ref={index + 1 === listInventory.length && showMoreEnable ? refShowMore : null} key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%]'>
+                                    <div className='h-full p-2'>
+                                        <CardUi isFromSales={false} item={item} setTargetProduct={setTargetProduct}/>
                                     </div>
                                 </div>
                             ))}

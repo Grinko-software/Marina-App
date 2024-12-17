@@ -135,9 +135,8 @@ export default function tableProducts (props) {
     }, [])
 
     return (
-        <section className='animation-fade-in h-full w-full flex flex-col'>
-            {/* <section className='flex flex-row rounded-t-[12px] w-full space-x-5 bg-secondary-50 dark:bg-secondary-450 pt-1 items-center'> */}
-            <div style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }} className='rounded-t-[12px] top-[0px] overflow-x-auto overflow-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full'>
+        <section className='animation-fade-in  w-full flex flex-col'>
+            <div style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }} className='rounded-t-[12px] top-[0px] overflow-x-auto overflow-y-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full'>
                 {loadingCategories
                     ? <section className="pt-3 px-3  flex bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
@@ -175,24 +174,40 @@ export default function tableProducts (props) {
                     </Tabs>
                 }
             </div>
-            {/*         </section> */}
             <section className='flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450'>
-                <section style={{ scrollbarGutter: 'stable' }} className='max-h-[44rem] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start '>
+                <section
+                    style={{ scrollbarGutter: 'stable' }}
+                    className='w-full flex flex-wrap no-select custom-scrollbar h-[calc(100vh-20rem)] overflow-y-auto'
+                >
                     {loading && listInventory?.length < 0
-                        ? <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1 w-full">
-                            {listEmpty?.map((item, key) => (<LoadingCard key={key}/>))}
-                        </div>
+                        ? (
+                            <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1 w-full">
+                                {listEmpty?.map((item, key) => (
+                                    <LoadingCard key={key} />
+                                ))}
+                            </div>
+                        )
                         : (filteredList.length ? filteredList : listInventory)?.length > 0
-                            ? (filteredList.length ? filteredList : listInventory)?.map((item, index) => (
-                                <div key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/5 xlg:w-1/6 snap-start shrink-0'>
-                                    <div className='mx-2 my-2.5  h-[90%] w-auto'>
-                                        <CardUi className key={index} item={item} index={index} isFromSales={true} setTargetProduct={setTargetProduct}/>
+                            ? (
+                                (filteredList.length ? filteredList : listInventory)?.map((item, index) => (
+                                    <div
+                                        key={'productList' + index}
+                                        className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/5 xlg:w-1/6 snap-start shrink-0'
+                                    >
+                                        <div className='mx-2 my-2.5 h-[90%] w-auto'>
+                                            <CardUi
+                                                className
+                                                key={index}
+                                                item={item}
+                                                index={index}
+                                                isFromSales={true}
+                                                setTargetProduct={setTargetProduct}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            ))
-                            : null
-                    }
-
+                                ))
+                            )
+                            : null}
                 </section>
             </section>
             <WeighingScaleModal isOpen={isOpen} onClose={onClose} product={selectedProductWithKG}/>
