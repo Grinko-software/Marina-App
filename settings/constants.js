@@ -100,6 +100,8 @@ export const TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE = BASE_MARKET_API_URL + '/ta
 export const TASKS_PAYMENT_API_URL_URL = TASKS_API_URL_URL + '/payment/:employeeId' // lista de lo que se debe pagar
 export const CHANGE_STATE_PAID = TASKS_API_URL_URL + '/paid/:taskId'// change state from complete to paid
 export const TASK_VALUES = TASKS_API_URL_URL + '/value'
+
+export const MODULES_API_URL = BASE_MARKET_API_URL + '/module'
 /*
 // Start values ex: 1 start -> 500pesos receive GET
     PUT : body: {

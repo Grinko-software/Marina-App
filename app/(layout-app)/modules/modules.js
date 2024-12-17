@@ -8,10 +8,11 @@ import Supplier from './[module]/components/Supplier/Supplier'
 import Users from './[module]/components/Users/Users'
 import AccountingEvent from './[module]/components/AccountingEvents/AccountingEvents'
 import RootWorkPerformance from './[module]/components/WorkerPerformance'
+import { MODULES_KEYS } from '@/utils/modules'
 
 export const modules = [
     {
-        key: 'sales',
+        key: MODULES_KEYS.SALES,
         path: 'sales',
         name: 'Ventas',
         description: 'Detalle de las últimas ventas realizadas',
@@ -20,7 +21,7 @@ export const modules = [
         icon: <FaClipboardList />
     },
     {
-        key: 'reports',
+        key: MODULES_KEYS.REPORT,
         path: 'reports',
         name: 'Reportes',
         description: 'Indicadores de ventas por periodos',
@@ -29,7 +30,7 @@ export const modules = [
         icon: <FaChartLine />
     },
     {
-        key: 'accounting',
+        key: MODULES_KEYS.EVENTS,
         path: 'accounting',
         name: 'Eventos contables',
         description: 'Historial de todos los eventos contables',
@@ -38,7 +39,7 @@ export const modules = [
         icon: <MdAccountBalance />
     },
     {
-        key: 'users',
+        key: MODULES_KEYS.USERS,
         path: 'users',
         name: 'Usuarios',
         description: 'Administración de usuarios/trabajadores',
@@ -47,7 +48,7 @@ export const modules = [
         icon: <FaUsersCog />
     },
     {
-        key: 'supplier',
+        key: MODULES_KEYS.PROVIDERS,
         path: 'supplier',
         name: 'Proveedores',
         description: 'Administración de proveedores',
@@ -56,7 +57,7 @@ export const modules = [
         icon: <FaTruck />
     },
     {
-        key: 'performance',
+        key: MODULES_KEYS.PERFORFANCE,
         path: 'performance',
         name: 'Rendimiento',
         description: 'Rendimiento de trabajadores',
@@ -68,4 +69,12 @@ export const modules = [
 
 export const getModuleName = ({ path: pathSearch }) => {
     return modules?.find(({ path }) => { return path === pathSearch })?.name || undefined
+}
+
+export const getModuleKey = ({ path: pathSearch }) => {
+    return modules?.find(({ path }) => { return path === pathSearch })?.key || undefined
+}
+
+export const getModuleNameByKey = ({ key: moduleKey }) => {
+    return modules?.find(({ key }) => { return key === moduleKey })?.name || undefined
 }
