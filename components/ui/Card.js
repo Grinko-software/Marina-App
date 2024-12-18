@@ -27,7 +27,7 @@ export default function Card (props) {
                     </div>
                 </CardBody>
                 <CardFooter className="flex justify-between items-center">
-                    <b className="truncate max-w-[70%]">{item?.name}</b>
+                    <b className="max-w-[70%]">{item?.name}</b>
                     <p className="text-default-500">{item?.price}</p>
                 </CardFooter>
             </CardUI>
