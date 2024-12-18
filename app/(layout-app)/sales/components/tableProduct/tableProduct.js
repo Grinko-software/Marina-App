@@ -187,27 +187,27 @@ export default function tableProducts (props) {
                                 ))}
                             </div>
                         )
-                        : (filteredList.length ? filteredList : listInventory)?.length > 0
-                            ? (
-                                (filteredList.length ? filteredList : listInventory)?.map((item, index) => (
-                                    <div
-                                        key={'productList' + index}
-                                        className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/5 xlg:w-1/6 snap-start shrink-0'
-                                    >
-                                        <div className='mx-2 my-2.5 h-[90%] w-auto'>
-                                            <CardUi
-                                                className
-                                                key={index}
-                                                item={item}
-                                                index={index}
-                                                isFromSales={true}
-                                                setTargetProduct={setTargetProduct}
-                                            />
+                        : <section style={{ scrollbarGutter: 'stable' }} className='w-full flex flex-wrap h-[calc(100vh-20rem)]  no-select custom-scrollbar overflow-y-auto content-start snap-mandatory snap-y'>
+                            { (filteredList.length ? filteredList : listInventory)?.length > 0
+                                ? (
+                                    (filteredList.length ? filteredList : listInventory)?.map((item, index) => (
+                                        <div key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%]'>
+                                            <div className='h-full p-2'>
+                                                <CardUi
+                                                    className
+                                                    key={index}
+                                                    item={item}
+                                                    index={index}
+                                                    isFromSales={true}
+                                                    setTargetProduct={setTargetProduct}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                ))
-                            )
-                            : null}
+                                    ))
+                                )
+                                : null}
+
+                        </section>}
                 </section>
             </section>
             <WeighingScaleModal isOpen={isOpen} onClose={onClose} product={selectedProductWithKG}/>

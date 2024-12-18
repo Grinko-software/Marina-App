@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Badge, Card as CardUI, CardBody, CardFooter } from '@nextui-org/react'
-import { ConvertBytesToImage, DefaultImageMarinaMarket } from '@/utils/image'
+import { DefaultImageMarinaMarket } from '@/utils/image'
 import Image from 'next/image'
 import { roundValue } from '@/utils/number'
 
@@ -26,8 +26,8 @@ export default function Card (props) {
                         />
                     </div>
                 </CardBody>
-                <CardFooter className="text-small justify-between flex-1 space-x-2">
-                    <b>{item?.name}</b>
+                <CardFooter className="flex justify-between items-center">
+                    <b className="truncate max-w-[70%]">{item?.name}</b>
                     <p className="text-default-500">{item?.price}</p>
                 </CardFooter>
             </CardUI>
