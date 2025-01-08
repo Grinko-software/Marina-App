@@ -18,6 +18,7 @@ import useInvoiceStore from '../invoice/store'
 import useInventoryStore from '@/app/(layout-app)/inventory/store'
 import { MdPrint } from 'react-icons/md'
 import useSettingsStore from '@/stores/settings'
+import { TbDeviceMobileDollar } from 'react-icons/tb'
 export default function PayPage (props) {
     const {
         getData,
@@ -38,11 +39,11 @@ export default function PayPage (props) {
         setVoucherTarget
     } = props
     /* Use states */
+    const [listPayments, setListPayments] = useState([])
     const [openModal, setOpenModal] = useState(false)
     const { payment, getPaymentType } = usePaymentStore()
     const { voucher, getVoucherType } = useVocuherStore()
     const { customers, getCustomers } = useInvoiceStore()
-    const { printEnabled: isPrintActived, setPrintEnabled } = useSettingsStore()
     const [activeSale, setActiveSale] = useState(null)
     const {
         listSalesActives,
@@ -75,6 +76,16 @@ export default function PayPage (props) {
         setActiveSale(sale)
     }, [listSalesActives])
 
+    useEffect(() => {
+        if (voucherTarget && payment) {
+            if (voucherTarget === 3) {
+                setListPayments(payment)
+            } else {
+                const value = payment.filter(pay => pay.id !== 5)
+                setListPayments(value)
+            }
+        }
+    }, [voucherTarget, payment])
     return (
         <section className='animation-fade-in h-full w-full p-2'>
             {openModal ? <Discount openModal={openModal} setOpenModal={setOpenModal} handleButton={handleButton}/> : null}
@@ -155,14 +166,14 @@ export default function PayPage (props) {
                                     </Card>)
                                     }
                                 </section>
-                                : payment?.map((pay) =>
+                                : listPayments?.map((pay) =>
                                     <PaymentButton
                                         key={pay?.id}
                                         id={pay?.id}
                                         icon = {
                                             pay?.id === 1
                                                 ? <CashIcon/>
-                                                : <CreditIcon/>}
+                                                : pay?.id === 2 ? <CreditIcon/> : <TbDeviceMobileDollar size={80} />}
                                         title={pay?.name}
                                         paymentTarget={paymentTarget}
                                         setPaymentTarget={setPaymentTarget}

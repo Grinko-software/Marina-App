@@ -28,7 +28,7 @@ export default function PayDetailed ({ payment, setPayment, isOpen, onClose, tot
     useEffect(() => {
         if (paymentTarget === 1) {
             onOpen()
-        } else if (paymentTarget === 2) {
+        } else if (paymentTarget === 2 || paymentTarget === 5) {
             // nOpenLoadingSale()
             setSearchInput(null)
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)

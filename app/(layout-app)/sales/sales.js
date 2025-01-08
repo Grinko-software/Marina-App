@@ -21,7 +21,6 @@ const SalesMenu = () => {
     const [voucherTargetValue, setVoucherTargetValue] = useState(null)
     const [keyFocus, setKeyFocus] = useState(null)
     const [totalPrice, setTotalPrice] = useState(null)
-
     const {
         listSales,
         loadingSale,
