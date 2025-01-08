@@ -8,3 +8,8 @@ export const getCurrentYear = () => today().year()
 
 export const getMoment = (value, format = DEFAULT_FORMAT) =>
     moment(value, format)
+
+export const formatDateToISO = (date) => {
+    const isoDate = new Date(date).toISOString()
+    return isoDate.split('Z')[0] + 'Z'
+}

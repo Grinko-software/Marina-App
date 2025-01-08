@@ -1,5 +1,5 @@
-export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-693121331853.us-central1.run.app'
-// export const BASE_MARKET_API_URL = 'https://marina-market-api-dev-llhboxpn4q-uc.a.run.app'
+// export const BASE_MARKET_API_URL = 'https://marina-market-api-prod-693121331853.us-central1.run.app'
+export const BASE_MARKET_API_URL = 'https://marina-market-api-dev-llhboxpn4q-uc.a.run.app'
 
 // AUTH
 export const AUTH_LOGIN_API_URL = BASE_MARKET_API_URL + '/auth/login'
@@ -94,5 +94,20 @@ export const CREATE_TASK_TYPE_API_URL_URL = BASE_MARKET_API_URL + '/task-type/cr
 export const CREATE_TASK_API_URL_URL = BASE_MARKET_API_URL + '/task/create'
 export const TASKS_API_EMPLOYEE_URL_URL = BASE_MARKET_API_URL + '/task/:employeeID'
 export const TASKS_API_EMPLOYEE_COMPLETE_TASK = BASE_MARKET_API_URL + '/task/:taskID/:employeeID'
-export const TASKS_API_EMPLOYEE_START_TASK = BASE_MARKET_API_URL + '/task/start/:taskID'
+export const TASKS_API_EMPLOYEE_START_TASK = BASE_MARKET_API_URL + '/task/start/:taskID/:employeeID'
 export const TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE = BASE_MARKET_API_URL + '/task/image/:taskID'
+
+export const TASKS_PAYMENT_API_URL_URL = TASKS_API_URL_URL + '/payment/:employeeId' // lista de lo que se debe pagar
+export const CHANGE_STATE_PAID = TASKS_API_URL_URL + '/paid/:taskId'// change state from complete to paid
+export const TASK_VALUES = TASKS_API_URL_URL + '/value'
+
+export const MODULES_API_URL = BASE_MARKET_API_URL + '/module'
+/*
+// Start values ex: 1 start -> 500pesos receive GET
+    PUT : body: {
+        "price": 400
+    }
+*/
+
+export const TASK_STARS_LIMIT = 10
+export const TASK_STARS_DEFAULT_VALUE = 500

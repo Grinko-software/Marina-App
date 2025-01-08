@@ -1,6 +1,7 @@
-import { TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
+import { CHANGE_STATE_PAID, TASK_VALUES, TASKS_PAYMENT_API_URL_URL, TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
 import { PUT, GET, getData, POST } from './http'
 import { getToken } from './account'
+import { formatDateToISO } from '@/utils/date'
 
 export const TASK_STATES = {
     TODO: 'TODO',
@@ -108,7 +109,6 @@ export const fetchCreateTask = async ({
     name,
     description,
     taskType,
-    difficultType,
     userTask,
     dateTask
 }) => {
@@ -127,7 +127,6 @@ export const fetchCreateTask = async ({
                     task_type_id: taskType,
                     date_limit: dateTask,
                     user_id: userTask,
-                    task_difficulties_id: difficultType,
                     state_task_id: 1
                 })
             }).then(response => {
@@ -141,6 +140,62 @@ export const fetchCreateTask = async ({
         return null
     }
 }
+/*
+
+{
+    "from":"2024-10-29T00:00:00Z",
+    "to":"2024-11-29T00:00:00Z"
+}
+*/
+export const fetchGetPaymentList = async ({
+    userId,
+    fromDate,
+    toDate
+}) => {
+    const body = {
+        from: formatDateToISO(fromDate),
+        to: formatDateToISO(toDate)
+    }
+    try {
+        return await getData(TASKS_PAYMENT_API_URL_URL.replace(':employeeId', userId), POST, body, true)
+    } catch {
+        return null
+    }
+}
+export const fetchToChangeStateCompletedPaid = async (taskId) => {
+    try {
+        return await getData(CHANGE_STATE_PAID.replace(':taskId', taskId), PUT, null, true)
+    } catch {
+        return null
+    }
+}
+
+export const fetchToChangeStateFromCompleteToPaid = async (taskId) => {
+    try {
+        return await getData(CHANGE_STATE_PAID.replace(':taskId', taskId), PUT, null, true)
+    } catch {
+        return null
+    }
+}
+
+export const getValuesStar = async () => {
+    try {
+        return await getData(TASK_VALUES, GET, null, true)
+    } catch {
+        return null
+    }
+}
+export const setValueStar = async (price) => {
+    const body = {
+        price: Number(price)
+    }
+    try {
+        return await getData(TASK_VALUES, PUT, body, true)
+    } catch {
+        return null
+    }
+}
+
 export const fetchGetTaskByEmployee = async ({ employeeID }) => {
     try {
         return await getData(TASKS_API_EMPLOYEE_URL_URL.replace(':employeeID', employeeID), GET, null, true)
@@ -160,9 +215,12 @@ export const fetchCompleteTaskByEmployee = async ({ taskId, employeeId, descript
     }
 }
 
-export const fetchStartTaskByEmployee = async ({ taskId }) => {
+export const fetchStartTaskByEmployee = async ({ taskId, employeeId, description }) => {
+    const data = {
+        description
+    }
     try {
-        return await getData(TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId), PUT, null, true)
+        return await getData(TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId).replace(':employeeID', employeeId), POST, data, true)
     } catch {
         return null
     }
@@ -179,10 +237,11 @@ export const uploadImageTaskByEmployee = async ({ taskID, imageBase64, completat
     }
 }
 
-export const fetchRateTask = async ({ taskId, taskRate }) => {
+export const fetchRateTask = async ({ taskId, taskRate, feedbackRate }) => {
     try {
         return await getData(`${TASKS_RATE_API_URL_URL}/${taskId}`, POST, {
-            rating: taskRate
+            rating: taskRate,
+            feedback: feedbackRate
         }, true)
     } catch {
         return null

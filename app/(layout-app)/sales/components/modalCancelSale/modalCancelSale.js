@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Textarea } from '@nextui-org/react'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Textarea, Popover, PopoverTrigger, PopoverContent } from '@nextui-org/react'
 import { notify } from '@/services/notify'
 
 import useSalesStore from '../../store'
@@ -15,6 +15,13 @@ export default function ModalCancelSale ({ isOpen, onClose, onComplete }) {
     } = useSalesStore()
 
     const [detailCancel, setDetailCancel] = useState(null)
+    const [isButtonEnabled, setIsButtonEnabled] = useState(false)
+
+    const handleTextareaChange = (e) => {
+        const value = e.target.value
+        setDetailCancel(value)
+        setIsButtonEnabled(value.trim().length > 0)
+    }
 
     const handleCancelSale = async () => {
         cancelSale({
@@ -56,7 +63,7 @@ export default function ModalCancelSale ({ isOpen, onClose, onComplete }) {
                             className="w-[50rem]"
                             maxRows={10}
                             minRows={10}
-                            onChange={(e) => setDetailCancel(e.target.value)}
+                            onChange={handleTextareaChange}
                         />
                     </ModalBody>
                     <ModalFooter className='justify-center'>
@@ -69,14 +76,31 @@ export default function ModalCancelSale ({ isOpen, onClose, onComplete }) {
                             >
                             Volver
                             </Button>
-                            <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
-                                isDisabled={loadingSale}
-                                onClick={() => {
-                                    handleCancelSale()
-                                }}
-                            >
+                            {isButtonEnabled
+                                ? <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                    isDisabled={loadingSale}
+                                    onClick={() => {
+                                        handleCancelSale()
+                                    }}
+                                >
                             Notificar
-                            </Button>
+                                </Button>
+                                : <Popover placement="top" radius= "lg" showArrow={true} color='warning' size='lg'>
+                                    <PopoverTrigger>
+                                        <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                            isDisabled={loadingSale}
+                                        >
+                            Notificar
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <div className="flex flex-col px-1 py-2 items-center content-center ">
+                                            <div className=" text-primary-500 dark:text-primary-200  text-xl font-extrabold">ADVERTENCIA</div>
+                                            <div className="text-primary-500 dark:text-primary-200  text-lg font-normal">Para continuar, debe ingresar el motivo </div>
+                                            <div className="text-primary-500 dark:text-primary-200  text-lg font-normal">por el cual desea cancelar la venta.</div>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>}
                         </div>
                     </ModalFooter>
                 </ModalContent>

@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Card, CardHeader, CardBody } from '@nextui-org/react'
-import { DefaultImageMarinaMarket, ConvertBytesToImage } from '@/utils/image'
+import { DefaultImageMarinaMarket } from '@/utils/image'
 import useReportsStore from '../../app/(layout-app)/reports/components/store'
 import { isMobileDevice } from '@/utils/agent'
 import { roundValue } from '@/utils/number'

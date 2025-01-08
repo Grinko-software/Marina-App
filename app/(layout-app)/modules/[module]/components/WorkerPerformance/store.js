@@ -34,6 +34,18 @@ const useFilterStore = create((set) => ({
                                 }) || null
                             }
                             : null
+                        const taskInitation = item?.task_initation
+                            ? {
+                                id: item?.task_initation?.id,
+                                taskId: item?.task_initation?.task_id,
+                                employeeId: item?.task_initation?.employee_id,
+                                description: item?.task_initation?.description,
+                                initationDate: item?.task_initation?.CompletionDate,
+                                images: item?.task_initation?.img?.map((item) => {
+                                    return item?.url
+                                }) || null
+                            }
+                            : null
 
                         const taskStateId = item.state_task_id
 
@@ -51,7 +63,9 @@ const useFilterStore = create((set) => ({
                             dateLimit: item.date_limit,
 
                             // -
+                            taskInitationId: item.task_initation_id,
                             taskCompletionId: item.task_completion_id,
+                            taskInitation: taskInitation || null,
                             taskCompletion: taskCompletion || null,
 
                             // type
@@ -78,7 +92,8 @@ const useFilterStore = create((set) => ({
                                 name: item.state_task?.state_name
                             },
                             // rating
-                            rate: item.rating || null
+                            rate: item.rating || null,
+                            feedback: item.feedback || null
                         }
                     })
                     set({
@@ -92,7 +107,9 @@ const useFilterStore = create((set) => ({
         } catch (e) {
             set({ loading: false })
         }
-    }
+    },
+    isSectionPayment: false, // 'boolean'
+    setIsSectionPayment: (isSectionPayment) => set({ isSectionPayment })
 }))
 
 export default useFilterStore

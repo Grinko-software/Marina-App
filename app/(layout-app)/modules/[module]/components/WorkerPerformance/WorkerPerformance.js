@@ -1,17 +1,19 @@
 'use client'
 import { useEffect, useState } from 'react'
-import Filter from './Filter'
+import Filter from './components/Filters/Filter'
+import FilterEmployee from './components/Filters/FilterEmployee'
 import Widgets from './Widgets'
 import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
-
+import { isMobileDevice } from '@/utils/agent'
 import useFilterStore from './store'
 import useAuthStore from '@/stores/user'
 import EmployeePerformance from './EmployeePerformance/EmployeePerformance'
 import TasksBoard from './components/TasksBoard'
 import { TASK_STATES } from '@/services/task'
+import ListTask from './ListTask/ListTask'
 
 export default function WorkerPerformance () {
-    // const { requestData } = useAccountingEventsStore()
+    const [isMobile, setIsMobile] = useState(true)
     const { isAdmin, idUser } = useAuthStore()
     const [users, setUsers] = useState([])
     const [taskTypes, setTaskTypes] = useState([])
@@ -27,10 +29,9 @@ export default function WorkerPerformance () {
     const [filterData, setFilterData] = useState({})
 
     useEffect(() => {
-        if (tasks) {
-            // console.log(tasks)
-        }
-    }, [tasks])
+        const view = isMobileDevice()
+        setIsMobile(view)
+    }, [])
 
     useEffect(() => {
         const todoItems = []
@@ -105,33 +106,45 @@ export default function WorkerPerformance () {
         <section className='flex w-full h-full' >
             <div className='w-full h-full flex flex-col gap-3'>
                 { isAdmin
-                    ? <>
-                        <Filter users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
-                        <Widgets
-                            loading={loading}
-                            countTotalTasks={tasks?.length}
-                            countTodoTasks={todoTasks?.length}
-                            countInProgressTasks={inProgressTasks?.length}
-                            countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
-                            countUnassignedTasks={unassignedTasks?.length}
-                        />
-                        <div className='flex flex-1 items-center'>
-                            <TasksBoard
-                                filterData={filterData}
-                                todoTasks={todoTasks}
-                                inProgressTasks={inProgressTasks}
-                                readyToEvaluateTasks={readyToEvaluateTasks}
-                                unassignedTasks={unassignedTasks}
-                                completedTasks={completedTasks}
-                            ></TasksBoard>
-                        </div>
-                    </>
-                    : <EmployeePerformance
-                        taskStates={taskStates}
-                        idUser={idUser}
-                        taskDifficulties={taskDifficulties}/>
+                    ? <Filter isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
+                    : <FilterEmployee isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
                 }
-
+                { isAdmin
+                    ? <>
+                        {isMobile
+                            ? <ListTask
+                                taskDifficulties={taskDifficulties}
+                                taskStates={taskStates}
+                            />
+                            : <>
+                                <Widgets
+                                    loading={loading}
+                                    countTotalTasks={tasks?.length}
+                                    countTodoTasks={todoTasks?.length}
+                                    countInProgressTasks={inProgressTasks?.length}
+                                    countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
+                                    countUnassignedTasks={unassignedTasks?.length}
+                                />
+                                <div className='flex flex-1 items-center'>
+                                    <TasksBoard
+                                        filterData={filterData}
+                                        todoTasks={todoTasks}
+                                        inProgressTasks={inProgressTasks}
+                                        readyToEvaluateTasks={readyToEvaluateTasks}
+                                        unassignedTasks={unassignedTasks}
+                                        completedTasks={completedTasks}
+                                    ></TasksBoard>
+                                </div>
+                            </>
+                        }
+                    </>
+                    : <>
+                        <EmployeePerformance
+                            taskStates={taskStates}
+                            idUser={idUser}
+                            taskDifficulties={taskDifficulties}/>
+                    </>
+                }
             </div>
         </section>
     </section>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Navbar, NavbarContent, Button, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react'
 import { usePathname, useRouter } from 'next/navigation'
-
+import useAuthStore from '@/stores/user'
 export default function MobileNavBar () {
+    const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
     const [isMenuOpen, setIsMenuOpen] = React.useState(false)
     const pathname = usePathname()
     const moduleApplication = pathname.replace('/', '')
@@ -13,14 +14,13 @@ export default function MobileNavBar () {
             id: 'inventory',
             label: 'Inventario',
             route: '/inventory'
-        }
-        /*,
+        },
         {
-            id: 'modules',
-            label: 'Módulos',
-            route: '/modules'
+            id: 'login',
+            label: 'Cerrar sesión',
+            route: '/'
         }
-             {
+        /*    {
             id: 'admin',
             label: 'Administrar',
             route: '/modules'
@@ -28,6 +28,9 @@ export default function MobileNavBar () {
     ]
     useEffect(() => {
         if (selected && selected !== moduleApplication) {
+            if (selected === 'login') {
+                signOut()
+            }
             router.push('/' + selected)
         }
     }, [selected])

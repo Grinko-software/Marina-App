@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { Pagination, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner } from '@nextui-org/react'
+import { Pagination, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner, Tooltip } from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
 import moment from 'moment-timezone'
 export default function TableSales ({ setOpenModalToPrint, data, loading, setTarget, currentPage, setCurrentPage, totalpage, setLimitPage }) {
@@ -57,6 +57,10 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
         }, {
             key: 'isDone',
             label: 'Estado de venta'
+        },
+        {
+            key: 'detail',
+            label: 'Detalle'
         }
     ]
 
@@ -75,7 +79,8 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
                     paymentType: item?.name_payment,
                     userName: item?.user_name,
                     cachRegisterName: item?.cach_register_name,
-                    isDone: item?.is_done
+                    isDone: item?.is_done,
+                    detail: item?.detail ? item?.detail?.toUpperCase() : '-'
                 }
             })
             const limit = 10
@@ -188,6 +193,21 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
                     </Button>
                 </div>
             )
+        case 'detail':
+            return (
+                <div className="flex flex-col">
+                    <p
+                        className={`text-bold capitalize dark:text-white ${
+                            data.detail?.length > 20 ? 'text-xs' : 'text-sm'
+                        }`}
+                    >
+                        {data.detail?.length > 20
+                            ? <Tooltip color='danger' className='text-bold text-sm capitalize dark:text-white' content={data.detail}>
+                                <div>{`${data.detail.substring(0, 20)}...`}</div></Tooltip>
+                            : data.detail}
+                    </p>
+                </div>
+            )
         default:
             return cellValue ? cellValue?.toString()?.toUpperCase() : '-'
         }
@@ -233,7 +253,7 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
                 <TableBody items={dataModel || []}>
                     {(item) => (
                         <TableRow key={item.key}>
-                            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                            {(columnKey) => <TableCell className="w-[150px]" >{renderCell(item, columnKey)}</TableCell>}
                         </TableRow>
                     )}
                 </TableBody>

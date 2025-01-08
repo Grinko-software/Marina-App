@@ -1,26 +1,24 @@
 'use client'
 import { Button } from '@nextui-org/react'
-import ImageComponent from 'next/image'
 import { useEffect, useState } from 'react'
 import { isMobileDevice } from '@/utils/agent'
 import ModalCamera from '../ModalCamera/ModalCamera'
-
-export default function EvidenceImageTask ({ image, setImage }) {
-    const [selectedImage, setSelectedImage] = useState(null)
+import { notify } from '@/services/notify'
+export default function EvidenceImageTask ({ images, setImages }) {
+    const [selectedImages, setSelectedImages] = useState([])
     const [isMobile, setIsMobile] = useState(true)
 
     const imageChange = async (e) => {
         if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0]
-            const base64 = await convertToBase64(file)
-            setSelectedImage(base64)
-            setImage(base64)
+            const files = Array.from(e.target.files)
+            if (selectedImages?.length + files?.length > 3) {
+                notify('❌ No puedes subir más de 5 imágenes')
+                return
+            }
+            const base64Images = await Promise.all(files.map(file => convertToBase64(file)))
+            setSelectedImages([...selectedImages, ...base64Images])
+            setImages([...selectedImages, ...base64Images]) // Actualiza el estado en el componente padre
         }
-    }
-
-    const removeSelectedImage = () => {
-        setSelectedImage(null)
-        setImage(null)
     }
 
     const convertToBase64 = (file) => {
@@ -38,25 +36,39 @@ export default function EvidenceImageTask ({ image, setImage }) {
     }, [])
 
     return (
-        <section>
+        <div>
             {isMobile
-                ? <ModalCamera image={image} setImage={setImage} />
+                ? <ModalCamera images={images} setImages={setImages} />
                 : <div className="flex flex-col items-center justify-center min-w-[200px] lg:min-w-[800px]">
-                    { selectedImage
+                    { selectedImages?.length > 0
                         ? (
-                            <div className="rounded-lg flex items-center flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <label htmlFor="dropzone-file">
-                                    <ImageComponent
-                                        id='imageTaskEvidence'
-                                        src={selectedImage}
-                                        alt="Selected Evidence"
-                                        width={200}
-                                        height={200}
-                                    />
-                                </label>
-                                <Button color="danger" variant="faded" onClick={removeSelectedImage}>
-                                    {'Borrar imagen'}
-                                </Button>
+                            <div className="flex flex-col items-center w-full">
+                                <div className="flex flex-row flex-wrap gap-4 max-w-full">
+                                    {selectedImages?.map((img, index) => (
+                                        <div
+                                            key={index}
+                                            className="relative flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg overflow-hidden w-48 h-48 bg-gray-100"
+                                        >
+                                            <img
+                                                src={img}
+                                                alt={`Selected Image ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <Button
+                                                color="danger"
+                                                variant="faded"
+                                                className="absolute bottom-5"
+                                                onClick={() => {
+                                                    const updatedImages = selectedImages?.filter((_, i) => i !== index)
+                                                    setSelectedImages(updatedImages)
+                                                    setImages(updatedImages)
+                                                }}
+                                            >
+                                                {'Borrar'}
+                                            </Button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )
                         : (
@@ -76,9 +88,10 @@ export default function EvidenceImageTask ({ image, setImage }) {
                         type="file"
                         className="hidden"
                         accept="image/*"
+                        multiple
                         onChange={imageChange}
                     />
                 </div>}
-        </section>
+        </div>
     )
 }
