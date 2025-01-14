@@ -70,6 +70,7 @@ const useInventoryStore = create(
                 } catch (error) {
                     set({ loading: true, error })
                     console.debug(error)
+                    console.log(error)
                 }
             },
             handlCategoriesRequest: (notify) => {
