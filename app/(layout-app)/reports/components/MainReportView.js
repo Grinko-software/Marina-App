@@ -91,7 +91,8 @@ const ReportView = () => {
         if (dataSalesTypes) {
             const seriesCash = dataSalesTypes?.map((item) => { return item?.cash_sales_amount })
             const seriesCard = dataSalesTypes?.map((item) => { return item?.card_sales_amount })
-            const totalCard = dataSalesTypes?.map((item) => { return item?.card_sales_amount + item?.cash_sales_amount })
+            const transferCard = dataSalesTypes?.map((item) => { return item?.transfer_sales_amount })
+            const totalCard = dataSalesTypes?.map((item) => { return item?.card_sales_amount + item?.cash_sales_amount + item?.transfer_sales_amount })
             const seriesDate = dataSalesTypes?.map((item) => { return item?.start_time })
             const data = {
                 series: [{
@@ -100,6 +101,10 @@ const ReportView = () => {
                 }, {
                     name: 'Debito/Credito',
                     data: [...seriesCard]
+                },
+                {
+                    name: 'Transferencia',
+                    data: [...transferCard]
                 },
                 {
                     name: 'Total',
