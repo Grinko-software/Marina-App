@@ -13,7 +13,7 @@ export default function CardTask ({
             onClick={openDetail}
             className="cursor-pointer transform transition duration-300 hover:scale-[1.03] hover:shadow-2xl">
 
-            <Card className="p-4 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl border border-gray-300 dark:border-gray-700 bg-gradient-to-br from-white to-gray-100 dark:from-secondary-700 dark:to-secondary-900
+            <Card className="p-4 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl border border-gray-300 dark:border-black  dark:from-secondary-700 dark:to-secondary-900
                 min-h-[200px] max-h-[300px] flex flex-col justify-between">
 
                 <CardBody className="space-y-5 flex-1">
