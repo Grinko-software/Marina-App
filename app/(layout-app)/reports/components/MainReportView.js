@@ -145,7 +145,7 @@ const ReportView = () => {
 
     return (
         <>
-            <section className='grid grid-cols-1 w-full gap-3'>
+            <section className='grid grid-cols-1 w-full'>
                 <Filter/>
                 <Swiper
                     className=''
@@ -160,11 +160,11 @@ const ReportView = () => {
                     }}
                 >
                     <SwiperSlide>
-                        <section className='grid grid-cols-1 w-full gap-3 mt-3'>
+                        <section className='grid grid-cols-1 w-full gap-2 mt-3'>
                             <section className='grid grid-cols w-full gap-3 ' >
                                 <section className='grid grid-cols-1 md:grid-cols-3 md:gap-3' >
-                                    <section className="grid grid-cols-2 gap-3  h-full w-full col-span-1">
-                                        <div className='col-span-1 w-full h-full'>
+                                    <section className="grid grid-cols-2 gap-1  h-full w-full col-span-1">
+                                        <div className='col-span-1 w-full h-[8rem]'>
                                             <InfoCard
                                                 title = {'Ingresos'}
                                                 unit ={'$'}
@@ -175,7 +175,7 @@ const ReportView = () => {
                                                 isLoading ={dataModelIndicatorLoading}
                                             />
                                         </div>
-                                        <div className='col-span-1 w-full h-full'>
+                                        <div className='col-span-1 w-full h-[8rem]'>
                                             <InfoCard
                                                 title = {'Ventas'}
                                                 unit ={''}

@@ -8,14 +8,16 @@ export const TASK_STATES = {
     IN_PROGRESS: 'IN_PROGRESS',
     READY_TO_EVALUATE: 'READY_TO_EVALUATE',
     UNASSIGNED: 'UNASSIGNED',
-    COMPLETED: 'COMPLETED'
+    COMPLETED: 'COMPLETED',
+    PAID: 'PAID'
 }
 export const NAMES_TASK = {
     UNASSIGNED: 'Tarjetas sin asignar',
     TODO: 'Por hacer',
     IN_PROGRESS: 'En progreso',
     READY_TO_EVALUATE: 'Lista para evaluar',
-    COMPLETED: 'Completada'
+    COMPLETED: 'Completada',
+    PAID: 'Pagada'
 }
 
 export const getTaskStateById = (taskStateId) => {
@@ -33,6 +35,9 @@ export const getTaskStateById = (taskStateId) => {
         break
     case 4:
         stateKey = TASK_STATES.COMPLETED
+        break
+    case 5:
+        stateKey = TASK_STATES.PAID
         break
     default:
         //
