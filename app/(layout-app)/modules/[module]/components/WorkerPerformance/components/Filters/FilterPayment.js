@@ -15,7 +15,7 @@ export default function FilterPayment ({ isMobile, users }) {
                 <WidgetsPayment/>
             </div>
         </div>
-        : <div className="flex flex-col gap-5 md:flex-row md:gap-2">
+        : <div className="flex flex-col gap-5 mt-8 md:flex-row md:gap-2">
             <ContentFilterPayment users={users}/>
             <WidgetsPayment/>
             <PayButton/>

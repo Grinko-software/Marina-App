@@ -12,7 +12,7 @@ export default function LayoutApp (props) {
                 <Header module={module}/>
             </header>
             <div className="h-auto flex-1 max-h-full overflow-hidden flex justify-start items-start">
-                <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[3rem] flex justify-start items-start ">
+                <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[3rem] flex justify-start items-start">
                     {children}
                 </main>
             </div>
