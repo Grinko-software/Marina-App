@@ -78,12 +78,14 @@ export default function PayPage (props) {
 
     useEffect(() => {
         if (voucherTarget && payment) {
-            if (voucherTarget === 3) {
+            console.log(voucherTarget)
+            /*  if (voucherTarget === 3 || voucherTarget === 1) {
                 setListPayments(payment)
             } else {
                 const value = payment.filter(pay => pay.id !== 5)
                 setListPayments(value)
-            }
+            } */
+            setListPayments(payment)
         }
     }, [voucherTarget, payment])
     return (

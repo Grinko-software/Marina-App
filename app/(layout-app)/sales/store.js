@@ -196,7 +196,6 @@ const useSalesStore = create(
                     is_done: true,
                     total: totalPay
                 }
-                console.log(totalPay)
                 const device = getDeviceTuu()
                 if (isCardPayment && device) {
                     try {
