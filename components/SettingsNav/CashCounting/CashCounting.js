@@ -133,8 +133,8 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                             <ModalHeader className="flex flex-col gap-1 font-extrabold">
 								CIERRE DE CAJA
                             </ModalHeader>
-                            {!readQR ? (
-                                <section>
+                            {!readQR
+                                ? <section>
                                     <ModalBody>
                                         <div className=" space-y-12">
                                             <div className="flex flex-row w-full space-x-4">
@@ -305,39 +305,39 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
                                         </Button>
                                     </ModalFooter>
                                 </section>
-                            ) : (
-                                <section>
-                                    <ModalBody>
-                                        <ScannerCredential
-                                            onSuccess={onSuccess}
-                                            changeSession={false}
-                                            requireAdmin={false}
-                                            withoutDelay={true}
-                                        />
-                                    </ModalBody>
-                                    <ModalFooter className="justify-center">
-                                        <Button
-                                            variant="shadow"
-                                            className=" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
-                                            onClick={() => {
-                                                setReadQR(false)
-                                            }}
-                                        >
+                                : (
+                                    <section>
+                                        <ModalBody>
+                                            <ScannerCredential
+                                                onSuccess={onSuccess}
+                                                changeSession={false}
+                                                requireAdmin={false}
+                                                withoutDelay={true}
+                                            />
+                                        </ModalBody>
+                                        <ModalFooter className="justify-center">
+                                            <Button
+                                                variant="shadow"
+                                                className=" bg-gray-500 text-primary-50 w-[12rem] h-[4rem] text-2xl font-extrabold "
+                                                onClick={() => {
+                                                    setReadQR(false)
+                                                }}
+                                            >
 											Volver
-                                        </Button>
-                                        <Button
-                                            color="danger"
-                                            variant="shadow"
-                                            className="w-[12rem] h-[4rem] text-2xl font-extrabold"
-                                            onClick={() => {
-                                                closeModal()
-                                            }}
-                                        >
+                                            </Button>
+                                            <Button
+                                                color="danger"
+                                                variant="shadow"
+                                                className="w-[12rem] h-[4rem] text-2xl font-extrabold"
+                                                onClick={() => {
+                                                    closeModal()
+                                                }}
+                                            >
 											CANCELAR
-                                        </Button>
-                                    </ModalFooter>
-                                </section>
-                            )}
+                                            </Button>
+                                        </ModalFooter>
+                                    </section>
+                                )}
                         </>
                     )}
                 </ModalContent>

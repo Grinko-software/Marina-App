@@ -174,8 +174,8 @@ export default function tableProducts (props) {
                 style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }}
                 className="rounded-t-[12px] top-[0px] overflow-x-auto overflow-y-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full"
             >
-                {loadingCategories ? (
-                    <section className="pt-3 px-3  flex bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
+                {loadingCategories
+                    ? <section className="pt-3 px-3  flex bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
@@ -187,16 +187,16 @@ export default function tableProducts (props) {
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
                     </section>
-                ) : (
-                    <Tabs
-                        color="success"
-                        aria-label="Options"
-                        // items={listCategories?.length > 0 ? listCategories : []}
-                        items={
-                            listCategories?.length > 0
-                                ? listCategories?.filter(
-                                    (element) =>
-                                        element?.label === 'FRUTAS' ||
+                    : (
+                        <Tabs
+                            color="success"
+                            aria-label="Options"
+                            // items={listCategories?.length > 0 ? listCategories : []}
+                            items={
+                                listCategories?.length > 0
+                                    ? listCategories?.filter(
+                                        (element) =>
+                                            element?.label === 'FRUTAS' ||
 											element?.label === 'VERDURAS' ||
 											element?.label === 'CARNES' ||
 											element?.label === 'PAN' ||
@@ -207,30 +207,30 @@ export default function tableProducts (props) {
 											element?.label === 'PROMOS' ||
 											element?.label === 'REMEDIOS'
 								  )
-                                : []
-                        }
-                        selectedKey={categoryTabSelected}
-                        onSelectionChange={setCategoryTabSelected}
-                        variant={'solid'}
-                        className="pt-3 px-3 bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450"
-                        classNames={{
-                            cursor: 'w-full bg-green-400',
-                            tabContent:
+                                    : []
+                            }
+                            selectedKey={categoryTabSelected}
+                            onSelectionChange={setCategoryTabSelected}
+                            variant={'solid'}
+                            className="pt-3 px-3 bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450"
+                            classNames={{
+                                cursor: 'w-full bg-green-400',
+                                tabContent:
 								'group-data-[selected=true]:text-primary-50 font-extrabold'
-                        }}
-                        onClick={() => setSearchInput('')}
-                    >
-                        {(item) => (
-                            <Tab
-                                color="primary"
-                                variant="shadow"
-                                key={item.id}
-                                size="xl"
-                                title={item.label}
-                            ></Tab>
-                        )}
-                    </Tabs>
-                )}
+                            }}
+                            onClick={() => setSearchInput('')}
+                        >
+                            {(item) => (
+                                <Tab
+                                    color="primary"
+                                    variant="shadow"
+                                    key={item.id}
+                                    size="xl"
+                                    title={item.label}
+                                ></Tab>
+                            )}
+                        </Tabs>
+                    )}
             </div>
             <section className="flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450">
                 <section

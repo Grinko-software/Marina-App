@@ -255,8 +255,8 @@ export default function PayDetailed ({
                         </div>
                     </ModalBody>
                     <ModalFooter className="justify-center">
-                        {isSuccessCompleted ? (
-                            <div>
+                        {isSuccessCompleted
+                            ? <div>
                                 <Button
                                     color="danger"
                                     variant="shadow"
@@ -268,41 +268,41 @@ export default function PayDetailed ({
 									FINALIZAR
                                 </Button>
                             </div>
-                        ) : (
-                            <div className="space-x-3">
-                                <Button
-                                    variant="shadow"
-                                    className=" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
-                                    isDisabled={isDisableButtonPay}
-                                    onClick={() => {
-                                        generateSale()
-                                    }}
-                                    isLoading={loadingSale}
-                                >
-                                    {changeValue >= 0 || payDetailed === null
-                                        ? 'PAGAR'
-                                        : 'VERIFICANDO PAGO'}
-                                </Button>
-                                <Button
-                                    color="danger"
-                                    variant="shadow"
-                                    className="w-[18rem] h-[6rem] text-2xl font-extrabold"
-                                    // isDisabled={loadingSale}
-                                    onClick={() => {
-                                        if (loadingSale) {
-                                            notify(
-                                                '❌ Recuerda que, al cancelar, es necesario emitir la nota de crédito en Haulmer, ya que el proceso de finalización del pago aún está en curso en la plataforma (nota de crédito correspondiente a la boleta).'
-                                            )
-                                        }
-                                        setPaymentTarget(listSalesActives, saleIdActive, null)
-                                        setPayDetailed(null)
-                                        onClose()
-                                    }}
-                                >
+                            : (
+                                <div className="space-x-3">
+                                    <Button
+                                        variant="shadow"
+                                        className=" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
+                                        isDisabled={isDisableButtonPay}
+                                        onClick={() => {
+                                            generateSale()
+                                        }}
+                                        isLoading={loadingSale}
+                                    >
+                                        {changeValue >= 0 || payDetailed === null
+                                            ? 'PAGAR'
+                                            : 'VERIFICANDO PAGO'}
+                                    </Button>
+                                    <Button
+                                        color="danger"
+                                        variant="shadow"
+                                        className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                        // isDisabled={loadingSale}
+                                        onClick={() => {
+                                            if (loadingSale) {
+                                                notify(
+                                                    '❌ Recuerda que, al cancelar, es necesario emitir la nota de crédito en Haulmer, ya que el proceso de finalización del pago aún está en curso en la plataforma (nota de crédito correspondiente a la boleta).'
+                                                )
+                                            }
+                                            setPaymentTarget(listSalesActives, saleIdActive, null)
+                                            setPayDetailed(null)
+                                            onClose()
+                                        }}
+                                    >
 									CANCELAR
-                                </Button>
-                            </div>
-                        )}
+                                    </Button>
+                                </div>
+                            )}
                     </ModalFooter>
                 </ModalContent>
             </Modal>
