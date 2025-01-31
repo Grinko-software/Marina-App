@@ -271,8 +271,8 @@ export default function TableSales ({
                 isHeaderSticky
                 onSortChange={sortItems}
                 bottomContent={
-                    totalpage > 0 ? (
-                        <div className="flex w-full justify-center">
+                    totalpage > 0
+                        ? <div className="flex w-full justify-center">
                             <Pagination
                                 isCompact
                                 showControls
@@ -289,7 +289,7 @@ export default function TableSales ({
                                 }}
                             />
                         </div>
-                    ) : null
+                        : null
                 }
             >
                 <TableHeader columns={columns}>

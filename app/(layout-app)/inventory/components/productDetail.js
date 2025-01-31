@@ -184,8 +184,8 @@ export default function ProductDetail ({
                         <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
                             {showBarcode ? 'Imprimiendo etiqueta' : 'Detalles del producto'}
                         </ModalHeader>
-                        {showBarcode ? (
-                            <ModalBody>
+                        {showBarcode
+                            ? <ModalBody>
                                 <Barcode
                                     refBarcode={refBarcode}
                                     productName={productData?.name}
@@ -194,170 +194,170 @@ export default function ProductDetail ({
                                     showDetail={settingsBarCode}
                                 />
                             </ModalBody>
-                        ) : (
-                            <ModalBody>
-                                <section>
-                                    <SectionProduct title={null}>
-                                        <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
-                                            <div className="flex-3">
-                                                {edit
-                                                    ? (
-                                                        <ProductImage
-                                                            defaultImg={productData?.image}
-                                                            setImage={setImage}
-                                                        />
-                                                    )
-                                                    : (
-                                                        <div className="rounded-lg flex items-center m-auto w-[250px] flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                            <Image
-                                                                id="imageProduct"
-                                                                src={
-                                                                    productData?.image?.length
-                                                                        ? productData?.image
-                                                                        : DefaultImageMarinaMarket()
-                                                                }
-                                                                alt="Image name"
-                                                                width={200}
-                                                                height={200}
+                            : (
+                                <ModalBody>
+                                    <section>
+                                        <SectionProduct title={null}>
+                                            <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
+                                                <div className="flex-3">
+                                                    {edit
+                                                        ? (
+                                                            <ProductImage
+                                                                defaultImg={productData?.image}
+                                                                setImage={setImage}
                                                             />
-                                                        </div>
-                                                    )}
+                                                        )
+                                                        : (
+                                                            <div className="rounded-lg flex items-center m-auto w-[250px] flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                                <Image
+                                                                    id="imageProduct"
+                                                                    src={
+                                                                        productData?.image?.length
+                                                                            ? productData?.image
+                                                                            : DefaultImageMarinaMarket()
+                                                                    }
+                                                                    alt="Image name"
+                                                                    width={200}
+                                                                    height={200}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                </div>
+                                                <div className="flex flex-1 items-start flex-col w-full gap-4">
+                                                    <InputComponent
+                                                        isBarCode={true}
+                                                        type="text"
+                                                        title="Codigo de barra"
+                                                        defaultValue={productData?.code}
+                                                        disabled={!edit}
+                                                        onValueChange={(value) => {
+                                                            handleInputChange({
+                                                                field: 'code',
+                                                                value,
+                                                                isCode: true
+                                                            })
+                                                        }}
+                                                    />
+                                                    <InputComponent
+                                                        type="text"
+                                                        title="Nombre"
+                                                        defaultValue={productData?.name}
+                                                        onValueChange={(value) => {
+                                                            handleInputChange({ field: 'name', value })
+                                                        }}
+                                                        disabled={!edit}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="flex flex-1 items-start flex-col w-full gap-4">
-                                                <InputComponent
-                                                    isBarCode={true}
-                                                    type="text"
-                                                    title="Codigo de barra"
-                                                    defaultValue={productData?.code}
-                                                    disabled={!edit}
-                                                    onValueChange={(value) => {
+                                            <div className="my-4 flex items-center gap-4">
+                                                <SelectComponent
+                                                    isRequired
+                                                    title="Categoria"
+                                                    placeholder="Seleccione"
+                                                    defaultSelectedKeys={[
+                                                        productData?.category_id?.toString()
+                                                    ]}
+                                                    options={categoryOptions}
+                                                    // defaultValue={targeProduct?.}
+                                                    onSelectionChange={(value) => {
                                                         handleInputChange({
-                                                            field: 'code',
-                                                            value,
-                                                            isCode: true
+                                                            field: 'category_id',
+                                                            value: value?.currentKey
                                                         })
                                                     }}
+                                                    isDisabled={!edit}
+                                                />
+                                                <SelectComponent
+                                                    isRequired
+                                                    title="Tipo de stock"
+                                                    placeholder="Seleccione"
+                                                    defaultSelectedKeys={[
+                                                        productData?.stock_type_id?.toString()
+                                                    ]}
+                                                    options={stockTypeOptions}
+                                                    // defaultValue={targeProduct?.}
+                                                    onSelectionChange={(value) => {
+                                                        handleInputChange({
+                                                            field: 'stock_type_id',
+                                                            value: value?.currentKey
+                                                        })
+                                                    }}
+                                                    isDisabled={!edit}
+                                                />
+                                            </div>
+                                        </SectionProduct>
+                                        <SectionProduct title={'Precio'} showDivider>
+                                            <div className="my-4 flex items-center gap-4">
+                                                <InputComponent
+                                                    type="number"
+                                                    title="Precio costo"
+                                                    placeholder="0"
+                                                    isPrice
+                                                    defaultValue={productData?.cost_price}
+                                                    onValueChange={(value) => {
+                                                        handleInputChange({ field: 'cost_price', value })
+                                                    }}
+                                                    disabled={!edit}
                                                 />
                                                 <InputComponent
-                                                    type="text"
-                                                    title="Nombre"
-                                                    defaultValue={productData?.name}
+                                                    type="number"
+                                                    title="Precio venta"
+                                                    placeholder="0"
+                                                    isPrice
+                                                    defaultValue={productData?.price}
                                                     onValueChange={(value) => {
-                                                        handleInputChange({ field: 'name', value })
+                                                        handleInputChange({
+                                                            field: 'sale_price',
+                                                            value,
+                                                            isSalePrice: true
+                                                        })
                                                     }}
                                                     disabled={!edit}
                                                 />
                                             </div>
-                                        </div>
-                                        <div className="my-4 flex items-center gap-4">
-                                            <SelectComponent
-                                                isRequired
-                                                title="Categoria"
-                                                placeholder="Seleccione"
-                                                defaultSelectedKeys={[
-                                                    productData?.category_id?.toString()
-                                                ]}
-                                                options={categoryOptions}
-                                                // defaultValue={targeProduct?.}
-                                                onSelectionChange={(value) => {
-                                                    handleInputChange({
-                                                        field: 'category_id',
-                                                        value: value?.currentKey
-                                                    })
-                                                }}
+                                        </SectionProduct>
+                                        <SectionProduct title={'Stock'} showDivider>
+                                            <div className="my-4 flex items-center gap-4">
+                                                <InputComponent
+                                                    type="number"
+                                                    title="Stock mínimo"
+                                                    placeholder="0"
+                                                    defaultValue={productData?.stock_min}
+                                                    onValueChange={(value) => {
+                                                        handleInputChange({ field: 'stock_min', value })
+                                                    }}
+                                                    disabled={!edit}
+                                                />
+                                                <InputComponent
+                                                    type="number"
+                                                    title="Stock disponible"
+                                                    placeholder="0"
+                                                    defaultValue={productData?.stock}
+                                                    onValueChange={(value) => {
+                                                        handleInputChange({ field: 'stock', value })
+                                                    }}
+                                                    disabled={!edit}
+                                                />
+                                            </div>
+                                            <Checkbox
+                                                isSelected={isTaxFree}
+                                                color="danger"
                                                 isDisabled={!edit}
-                                            />
-                                            <SelectComponent
-                                                isRequired
-                                                title="Tipo de stock"
-                                                placeholder="Seleccione"
-                                                defaultSelectedKeys={[
-                                                    productData?.stock_type_id?.toString()
-                                                ]}
-                                                options={stockTypeOptions}
-                                                // defaultValue={targeProduct?.}
-                                                onSelectionChange={(value) => {
-                                                    handleInputChange({
-                                                        field: 'stock_type_id',
-                                                        value: value?.currentKey
-                                                    })
-                                                }}
-                                                isDisabled={!edit}
-                                            />
-                                        </div>
-                                    </SectionProduct>
-                                    <SectionProduct title={'Precio'} showDivider>
-                                        <div className="my-4 flex items-center gap-4">
-                                            <InputComponent
-                                                type="number"
-                                                title="Precio costo"
-                                                placeholder="0"
-                                                isPrice
-                                                defaultValue={productData?.cost_price}
                                                 onValueChange={(value) => {
-                                                    handleInputChange({ field: 'cost_price', value })
-                                                }}
-                                                disabled={!edit}
-                                            />
-                                            <InputComponent
-                                                type="number"
-                                                title="Precio venta"
-                                                placeholder="0"
-                                                isPrice
-                                                defaultValue={productData?.price}
-                                                onValueChange={(value) => {
+                                                    setIsTaxFree(value)
                                                     handleInputChange({
-                                                        field: 'sale_price',
+                                                        field: 'tax_free',
                                                         value,
-                                                        isSalePrice: true
+                                                        isCode: true
                                                     })
                                                 }}
-                                                disabled={!edit}
-                                            />
-                                        </div>
-                                    </SectionProduct>
-                                    <SectionProduct title={'Stock'} showDivider>
-                                        <div className="my-4 flex items-center gap-4">
-                                            <InputComponent
-                                                type="number"
-                                                title="Stock mínimo"
-                                                placeholder="0"
-                                                defaultValue={productData?.stock_min}
-                                                onValueChange={(value) => {
-                                                    handleInputChange({ field: 'stock_min', value })
-                                                }}
-                                                disabled={!edit}
-                                            />
-                                            <InputComponent
-                                                type="number"
-                                                title="Stock disponible"
-                                                placeholder="0"
-                                                defaultValue={productData?.stock}
-                                                onValueChange={(value) => {
-                                                    handleInputChange({ field: 'stock', value })
-                                                }}
-                                                disabled={!edit}
-                                            />
-                                        </div>
-                                        <Checkbox
-                                            isSelected={isTaxFree}
-                                            color="danger"
-                                            isDisabled={!edit}
-                                            onValueChange={(value) => {
-                                                setIsTaxFree(value)
-                                                handleInputChange({
-                                                    field: 'tax_free',
-                                                    value,
-                                                    isCode: true
-                                                })
-                                            }}
-                                        >
+                                            >
 											Producto exento de iva
-                                        </Checkbox>
-                                    </SectionProduct>
-                                </section>
-                            </ModalBody>
-                        )}
+                                            </Checkbox>
+                                        </SectionProduct>
+                                    </section>
+                                </ModalBody>
+                            )}
                         {edit
                             ? (
                                 <ModalFooter>

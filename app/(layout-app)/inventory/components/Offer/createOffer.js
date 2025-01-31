@@ -175,8 +175,8 @@ export default function CreateOffer () {
 
     return (
         <section>
-            {selectedProduct ? (
-                <div className="flex flex-col gap-5">
+            {selectedProduct
+                ? <div className="flex flex-col gap-5">
                     <ProductCard
                         item={selectedProduct}
                         closeButton
@@ -202,57 +202,57 @@ export default function CreateOffer () {
                         />
                     </div>
                 </div>
-            ) : (
-                <section>
-                    <div className="my-4 items-center gap-4 grid">
-                        <Input
-                            label="Busqueda"
-                            isClearable
-                            radius="lg"
-                            value={searchInput}
-                            onClear={() => setSearchInput('')}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                            onFocusChange={(value) =>
-                                value
-                                    ? useScannerStore.getState()?.disabledRedirectSales()
-                                    : useScannerStore.getState()?.enabledRedirectSales()
-                            }
-                            classNames={{
-                                label: 'text-black/50 dark:text-white/90',
-                                input: [
-                                    'bg-transparent',
-                                    'text-black/90 dark:text-white/90',
-                                    'placeholder:text-default-700/50 dark:placeholder:text-white/60'
-                                ],
-                                innerWrapper: 'bg-transparent'
-                            }}
-                            className="my-4 w-full"
-                            placeholder="Toca para buscar un producto..."
-                            startContent={
-                                <SearchIcon className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-                            }
-                        />
-                    </div>
+                : (
+                    <section>
+                        <div className="my-4 items-center gap-4 grid">
+                            <Input
+                                label="Busqueda"
+                                isClearable
+                                radius="lg"
+                                value={searchInput}
+                                onClear={() => setSearchInput('')}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                onFocusChange={(value) =>
+                                    value
+                                        ? useScannerStore.getState()?.disabledRedirectSales()
+                                        : useScannerStore.getState()?.enabledRedirectSales()
+                                }
+                                classNames={{
+                                    label: 'text-black/50 dark:text-white/90',
+                                    input: [
+                                        'bg-transparent',
+                                        'text-black/90 dark:text-white/90',
+                                        'placeholder:text-default-700/50 dark:placeholder:text-white/60'
+                                    ],
+                                    innerWrapper: 'bg-transparent'
+                                }}
+                                className="my-4 w-full"
+                                placeholder="Toca para buscar un producto..."
+                                startContent={
+                                    <SearchIcon className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+                                }
+                            />
+                        </div>
 
-                    {messageSearch ? <h1>{messageSearch}</h1> : null}
+                        {messageSearch ? <h1>{messageSearch}</h1> : null}
 
-                    <ScrollShadow
-                        isEnabled={false}
-                        className="w-full h-[30rem] flex flex-col items-center snap-y snap-mandatory "
-                    >
-                        {/* <section className='flex flex-col items-center justify-center gap-2'> */}
-                        {filteredList?.map((item, index) => (
-                            <div
-                                key={'productSearch' + index}
-                                onClick={() => setSelectedProduct(item)}
-                                className="m-2 self-center w-full sm:w-3/4 items-center justify-center snap-start shrink-0"
-                            >
-                                <ProductCard item={item} />
-                            </div>
-                        ))}
-                    </ScrollShadow>
-                </section>
-            )}
+                        <ScrollShadow
+                            isEnabled={false}
+                            className="w-full h-[30rem] flex flex-col items-center snap-y snap-mandatory "
+                        >
+                            {/* <section className='flex flex-col items-center justify-center gap-2'> */}
+                            {filteredList?.map((item, index) => (
+                                <div
+                                    key={'productSearch' + index}
+                                    onClick={() => setSelectedProduct(item)}
+                                    className="m-2 self-center w-full sm:w-3/4 items-center justify-center snap-start shrink-0"
+                                >
+                                    <ProductCard item={item} />
+                                </div>
+                            ))}
+                        </ScrollShadow>
+                    </section>
+                )}
         </section>
     )
 }

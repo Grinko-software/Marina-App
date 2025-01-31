@@ -237,8 +237,8 @@ export default function SaleList (props) {
                 </section>
             </section>
             <section className="w-full">
-                {listSales.length > 0 ? (
-                    <Button
+                {listSales.length > 0
+                    ? <Button
                         color="success"
                         variant="shadow"
                         className="text-white mt-2 mb-2 h-[4rem] w-full font-bold text-2xl"
@@ -299,9 +299,9 @@ export default function SaleList (props) {
                                 </div>
                             )}
                     </Button>
-                ) : (
-                    <></>
-                )}
+                    : (
+                        <></>
+                    )}
             </section>
             <ModalCancelSale
                 onComplete={() => {

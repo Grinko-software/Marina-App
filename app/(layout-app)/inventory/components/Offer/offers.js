@@ -261,8 +261,8 @@ export default function Offers () {
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
-                {!sectionCreateOffer ? (
-                    <ModalContent>
+                {!sectionCreateOffer
+                    ? <ModalContent>
                         <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
                             {'Ofertas'}
                         </ModalHeader>
@@ -291,10 +291,10 @@ export default function Offers () {
                                     }
                                 />
                             </div>
-                            {searchInput && listOffersWithProducts.length ? (
-                                <section className="flex flex-col gap-2">
-                                    {filteredList?.length ? (
-                                        filteredList.map((item) => {
+                            {searchInput && listOffersWithProducts.length
+                                ? <section className="flex flex-col gap-2">
+                                    {filteredList?.length
+                                        ? filteredList.map((item) => {
                                             // {id,quantity,unitPrice,productId }
                                             return (
                                                 <div key={item.id}>
@@ -302,26 +302,26 @@ export default function Offers () {
                                                 </div>
                                             )
                                         })
-                                    ) : (
-                                        <div>No se ha encontrado la oferta</div>
-                                    )}
+                                        : (
+                                            <div>No se ha encontrado la oferta</div>
+                                        )}
                                 </section>
-                            ) : (
-                                <section className="flex flex-col gap-2">
-                                    {listOffersWithProducts?.length ? (
-                                        listOffersWithProducts.map((item) => {
+                                : (
+                                    <section className="flex flex-col gap-2">
+                                        {listOffersWithProducts?.length
+                                            ? listOffersWithProducts.map((item) => {
                                             // {id,quantity,unitPrice,productId }
-                                            return (
-                                                <div key={item.id}>
-                                                    <OffertCard item={item} deleteAction={handleOffers} />
-                                                </div>
-                                            )
-                                        })
-                                    ) : (
-                                        <div>No hay ofertas</div>
-                                    )}
-                                </section>
-                            )}
+                                                return (
+                                                    <div key={item.id}>
+                                                        <OffertCard item={item} deleteAction={handleOffers} />
+                                                    </div>
+                                                )
+                                            })
+                                            : (
+                                                <div>No hay ofertas</div>
+                                            )}
+                                    </section>
+                                )}
                         </ModalBody>
                         <ModalFooter>
                             {error
@@ -351,46 +351,46 @@ export default function Offers () {
                             </Button>
                         </ModalFooter>
                     </ModalContent>
-                ) : (
-                    <ModalContent>
-                        <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-                            {'Crear nueva oferta'}
-                        </ModalHeader>
-                        <ModalBody>
-                            <section>
-                                <CreateOffer />
-                            </section>
-                        </ModalBody>
-                        <ModalFooter>
-                            {error
-                                ? (
-                                    <div className="flex mx-5 self-center">
-                                        <h1>{error}</h1>
-                                    </div>
-                                )
-                                : null}
-                            <Button
-                                className=" bg-green-500 text-primary-50"
-                                onClick={() => {
-                                    requestCreateOffer(data, notify)
-                                }}
-                                isLoading={!!loading}
-                            >
-                                {'Guardar'}
-                            </Button>
-                            <Button
-                                color="danger"
-                                variant="flat"
-                                onClick={() => {
-                                    setSectionCreateOffer(false)
-                                    clearStore()
-                                }}
-                            >
-                                {'Cancelar'}
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                )}
+                    : (
+                        <ModalContent>
+                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
+                                {'Crear nueva oferta'}
+                            </ModalHeader>
+                            <ModalBody>
+                                <section>
+                                    <CreateOffer />
+                                </section>
+                            </ModalBody>
+                            <ModalFooter>
+                                {error
+                                    ? (
+                                        <div className="flex mx-5 self-center">
+                                            <h1>{error}</h1>
+                                        </div>
+                                    )
+                                    : null}
+                                <Button
+                                    className=" bg-green-500 text-primary-50"
+                                    onClick={() => {
+                                        requestCreateOffer(data, notify)
+                                    }}
+                                    isLoading={!!loading}
+                                >
+                                    {'Guardar'}
+                                </Button>
+                                <Button
+                                    color="danger"
+                                    variant="flat"
+                                    onClick={() => {
+                                        setSectionCreateOffer(false)
+                                        clearStore()
+                                    }}
+                                >
+                                    {'Cancelar'}
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    )}
             </Modal>
         </section>
     )

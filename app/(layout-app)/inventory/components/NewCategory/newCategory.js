@@ -169,8 +169,8 @@ export default function CreateCategory () {
                 closeButton={<></>}
                 id="modal-category"
             >
-                {sectionCreateCategory ? (
-                    <ModalContent>
+                {sectionCreateCategory
+                    ? <ModalContent>
                         <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
 							Nueva categoría
                         </ModalHeader>
@@ -219,54 +219,54 @@ export default function CreateCategory () {
                             </Button>
                         </ModalFooter>
                     </ModalContent>
-                ) : (
-                    <ModalContent>
-                        <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
+                    : (
+                        <ModalContent>
+                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
 							Categorías
-                        </ModalHeader>
-                        <ModalBody>
-                            <section className="flex flex-col gap-2">
-                                {listCategories?.length
+                            </ModalHeader>
+                            <ModalBody>
+                                <section className="flex flex-col gap-2">
+                                    {listCategories?.length
+                                        ? (
+                                            listCategories.map((item) => {
+                                                return <DeleteCard key={item.id} item={item} />
+                                            })
+                                        )
+                                        : (
+                                            <div>No se encuentran categorías</div>
+                                        )}
+                                </section>
+                            </ModalBody>
+                            <ModalFooter>
+                                {error
                                     ? (
-                                        listCategories.map((item) => {
-                                            return <DeleteCard key={item.id} item={item} />
-                                        })
+                                        <div className="flex mx-5 self-center">
+                                            <h1>{error}</h1>
+                                        </div>
                                     )
-                                    : (
-                                        <div>No se encuentran categorías</div>
-                                    )}
-                            </section>
-                        </ModalBody>
-                        <ModalFooter>
-                            {error
-                                ? (
-                                    <div className="flex mx-5 self-center">
-                                        <h1>{error}</h1>
-                                    </div>
-                                )
-                                : null}
-                            <Button
-                                className=" bg-green-500 text-primary-50"
-                                onClick={() => {
-                                    setSectionCreateCategory(true)
+                                    : null}
+                                <Button
+                                    className=" bg-green-500 text-primary-50"
+                                    onClick={() => {
+                                        setSectionCreateCategory(true)
                                     // requestCreateCategory(name, notify)
-                                }}
-                            >
+                                    }}
+                                >
 								Crear
-                            </Button>
-                            <Button
-                                color="danger"
-                                variant="flat"
-                                onClick={() => {
-                                    onClose()
-                                    clearStore()
-                                }}
-                            >
+                                </Button>
+                                <Button
+                                    color="danger"
+                                    variant="flat"
+                                    onClick={() => {
+                                        onClose()
+                                        clearStore()
+                                    }}
+                                >
 								Cerrar
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                )}
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    )}
             </Modal>
             <Modal
                 backdrop="opaque"

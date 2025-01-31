@@ -96,44 +96,44 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
 
     return (
         <section className="w-full">
-            {loading ? (
-                <div>Cargando...</div>
-            ) : dataModel ? (
-                <section className="p-1 w-full gap-3">
-                    <Table
-                        isHeaderSticky
-                        // onSortChange={sortItems}
-                        bottomContent={
-                            loading
-                                ? (
-                                    <div className="flex w-full justify-center">
-                                        <Spinner>Cargando datos...</Spinner>
-                                    </div>
-                                )
-                                : null
-                        }
-                    >
-                        <TableHeader columns={columns}>
-                            {(column) => (
-                                <TableColumn key={column.key} allowsSorting>
-                                    {column.label}
-                                </TableColumn>
-                            )}
-                        </TableHeader>
-                        <TableBody items={dataModel || []}>
-                            {(item) => (
-                                <TableRow key={item.key}>
-                                    {(columnKey) => (
-                                        <TableCell>{renderCell(item, columnKey)}</TableCell>
-                                    )}
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </section>
-            ) : (
-                <section>No hay datos</section>
-            )}
+            {loading
+                ? <div>Cargando...</div>
+                : dataModel
+                    ? <section className="p-1 w-full gap-3">
+                        <Table
+                            isHeaderSticky
+                            // onSortChange={sortItems}
+                            bottomContent={
+                                loading
+                                    ? (
+                                        <div className="flex w-full justify-center">
+                                            <Spinner>Cargando datos...</Spinner>
+                                        </div>
+                                    )
+                                    : null
+                            }
+                        >
+                            <TableHeader columns={columns}>
+                                {(column) => (
+                                    <TableColumn key={column.key} allowsSorting>
+                                        {column.label}
+                                    </TableColumn>
+                                )}
+                            </TableHeader>
+                            <TableBody items={dataModel || []}>
+                                {(item) => (
+                                    <TableRow key={item.key}>
+                                        {(columnKey) => (
+                                            <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                        )}
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </section>
+                    : (
+                        <section>No hay datos</section>
+                    )}
         </section>
     )
 }

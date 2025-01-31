@@ -71,8 +71,8 @@ export default function ScannerProduct () {
             <section
                 className={`${productData ? '' : 'h-[15rem]'} flex overflow-hidden`}
             >
-                {completed && success && productData ? (
-                    <>
+                {completed && success && productData
+                    ? <>
                         <div className="flex flex-col min-w-[20rem] justify-center">
                             <div className="mx-auto mb-5">
                                 <Image
@@ -111,50 +111,50 @@ export default function ScannerProduct () {
                             })}
                         </div>
                     </>
-                ) : error
-                    ? (
-                        <>
-                            <Lottie
-                                className="mx-auto"
-                                animationData={ErrordGif}
-                                loop={false}
-                            />
-                        </>
-                    )
-                    : !isActivedInputQR
+                    : error
                         ? (
                             <>
                                 <Lottie
-                                    className="mx-auto scale-[2]"
-                                    animationData={Barcode}
-                                    loop={true}
+                                    className="mx-auto"
+                                    animationData={ErrordGif}
+                                    loop={false}
                                 />
                             </>
                         )
-                        : (
-                            <div className="flex items-center">
-                                <div className="flex items-end gap-2">
-                                    <Input
-                                        className="rounded-r-lg"
-                                        type="text"
-                                        value={inputCodeValue}
-                                        variant={'bordered'}
-                                        label={'Código del producto'}
-                                        labelPlacement="outside"
-                                        onValueChange={(value) => {
-                                            setInputCodeValue(value)
-                                        }}
+                        : !isActivedInputQR
+                            ? (
+                                <>
+                                    <Lottie
+                                        className="mx-auto scale-[2]"
+                                        animationData={Barcode}
+                                        loop={true}
                                     />
-                                    <Button
-                                        isIconOnly
-                                        isDisabled={!inputCodeValue}
-                                        onClick={searchProductWithInputCode}
-                                    >
-                                        <MagnifyingGlassIcon className="w-5 h-5" />
-                                    </Button>
+                                </>
+                            )
+                            : (
+                                <div className="flex items-center">
+                                    <div className="flex items-end gap-2">
+                                        <Input
+                                            className="rounded-r-lg"
+                                            type="text"
+                                            value={inputCodeValue}
+                                            variant={'bordered'}
+                                            label={'Código del producto'}
+                                            labelPlacement="outside"
+                                            onValueChange={(value) => {
+                                                setInputCodeValue(value)
+                                            }}
+                                        />
+                                        <Button
+                                            isIconOnly
+                                            isDisabled={!inputCodeValue}
+                                            onClick={searchProductWithInputCode}
+                                        >
+                                            <MagnifyingGlassIcon className="w-5 h-5" />
+                                        </Button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
             </section>
             <section className="max-w-[40rem]">
                 {loading
