@@ -33,7 +33,7 @@ export default function TasksBoard ({
     useEffect(() => {
         const dataItems = [
             { title: 'Tarjetas sin asignar', items: unassignedItems },
-            { title: 'Por hacer', items: todoItems },
+            { title: 'TODO', items: todoItems },
             { title: 'Realizando', items: inProgressItems },
             { title: 'Lista para evaluar', items: readyToEvaluateItems }
         ]
@@ -77,7 +77,7 @@ export default function TasksBoard ({
     }
 
     return (
-        <section className="flex flex-1 flex-grow w-full  h-[calc(100vh-27rem)] flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2">
+        <section className="flex flex-1 flex-grow w-full  h-[calc(100vh-27rem)] flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2 ">
             {itemsData.map((item) => {
                 return (
                     <div
@@ -88,7 +88,7 @@ export default function TasksBoard ({
                         <p className="text-gray-500 dark:text-white flex-shrink-0">{`${item.title} (${item?.items?.length || 0})`}</p>
 
                         {/* Contenido con scroll */}
-                        <div className="overflow-y-auto flex-grow">
+                        <div className="overflow-y-auto flex-grow space-y-2 scroll-smooth snap-y snap-mandatory">
                             {renderItems(item.items)}
                         </div>
                     </div>

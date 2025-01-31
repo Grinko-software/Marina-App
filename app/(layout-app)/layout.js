@@ -15,9 +15,9 @@ export default function LayoutApp ({ children }) {
     }, [])
 
     return (
-        <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500   overflow-hidden touch-none fixed">
+        <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500   overflow-hidden touch-none fixed sm:overflow-auto">
             <motion.div
-                className="h-full flex flex-col gap-y-4 "
+                className="h-full flex flex-col gap-y-6 "
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
@@ -33,17 +33,17 @@ export default function LayoutApp ({ children }) {
 
                 {/* Main Content */}
                 <div className="flex-1 flex w-full overflow-hidden">
-                    <main className="flex-grow max-h-full overflow-hidden mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem] border-large border-v500">
+                    <main className="flex-grow max-h-full overflow-hidden mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem]">
                         {children}
                     </main>
                 </div>
 
                 {/* Footer (Only Desktop) */}
-                {!isMobile && (
-                    <footer className="sticky bottom-0 z-20 bg-primary-200 dark:bg-secondary-500 h-[6rem]  flex-shrink-0">
+                <footer className="sticky bottom-0 z-20 bg-primary-200 dark:bg-secondary-500 h-[6rem]  flex-shrink-0">
+                    {!isMobile && (
                         <Navigation />
-                    </footer>
-                )}
+                    )}
+                </footer>
             </motion.div>
         </section>
     )

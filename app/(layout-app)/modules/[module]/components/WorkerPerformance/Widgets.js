@@ -4,10 +4,10 @@ import { Card, CardBody } from '@nextui-org/react'
 
 const Widget = ({ title, count }) => {
     return (
-        <Card className="w-full rounded-lg shadow-md p-4 ">
+        <Card className="w-full rounded-lg shadow-md p-1 ">
             <CardBody>
                 <div className="flex flex-col items-center text-center">
-                    <h4 className="text-lg font-semibold">{title}</h4>
+                    <h4 className="text-md font-semibold">{title}</h4>
                     <p className="text-2xl font-bold text-teal-600">{count}</p>
                 </div>
             </CardBody>
@@ -24,7 +24,7 @@ export default function Widgets ({
 }) {
     return (
         <section className="w-full flex">
-            <div className="flex flex-row w-full gap-2 justify-between">
+            <div className="flex flex-row w-full gap-2 justify-between space-x-4">
                 <Widget title="Total tareas" count={countTotalTasks} />
                 <Widget title="Tareas por hacer" count={countTodoTasks} />
                 <Widget title="Tareas en curso" count={countInProgressTasks} />

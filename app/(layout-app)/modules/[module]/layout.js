@@ -14,9 +14,10 @@ export default function LayoutApp (props) {
     }, [])
     return (
         isMobile
-            ? <div className='w-full h-full overflow-y-scroll'>
+            ? <div className="w-full">
                 {children}
             </div>
+
             : <>
                 {/* Header Section */}
                 <header className="sticky top-0 z-20 dark:bg-secondary-500 w-full h-[60px]">

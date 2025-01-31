@@ -108,80 +108,87 @@ export default function WorkerPerformance () {
     }, [])
 
     return (
-        <div className="flex flex-col overflow-hidden  gap-y-4">
-            {/* Filtro */}
-            <div className="flex-shrink-0">
-                {isAdmin
-                    ? (
-                        <Filter
-                            isMobile={isMobile}
-                            isAdmin={isAdmin}
-                            users={users}
-                            taskTypes={taskTypes}
-                            taskStates={taskStates}
-                            taskDifficulties={taskDifficulties}
-                            filterData={filterData}
-                            setFilterData={setFilterData}
-                        />
-                    )
-                    : (
-                        <FilterEmployee
-                            isMobile={isMobile}
-                            isAdmin={isAdmin}
-                            users={users}
-                            taskTypes={taskTypes}
-                            taskStates={taskStates}
-                            taskDifficulties={taskDifficulties}
-                            filterData={filterData}
-                            setFilterData={setFilterData}
-                        />
-                    )}
-            </div>
-
-            {/* Contenido Principal */}
-            <div className="flex-grow flex flex-col overflow-hidden">
-                {isAdmin
-                    ? (
-                        <>
-                            {isMobile
-                                ? (
-                                    <ListTask taskDifficulties={taskDifficulties} taskStates={taskStates} />
-                                )
-                                : (
-                                    <div className="h-full w-full">
-                                        <Widgets
-                                            loading={loading}
-                                            countTotalTasks={tasks?.length}
-                                            countTodoTasks={todoTasks?.length}
-                                            countInProgressTasks={inProgressTasks?.length}
-                                            countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
-                                            countUnassignedTasks={unassignedTasks?.length}
-                                            className="flex-shrink-0"
-                                        />
-                                        <TasksBoard
-                                            filterData={filterData}
-                                            todoTasks={todoTasks}
-                                            inProgressTasks={inProgressTasks}
-                                            readyToEvaluateTasks={readyToEvaluateTasks}
-                                            unassignedTasks={unassignedTasks}
-                                            completedTasks={completedTasks}
-                                            paidTasks={paidTasks}
-                                        />
-
-                                    </div>
-                                )}
-                        </>
-                    )
-                    : (
-                        <div className="flex-grow overflow-y-auto">
-                            <EmployeePerformance
+        <section className="w-full h-screen flex flex-col overflow-hidden">
+            <div className="flex flex-col flex-grow overflow-hidden h-full gap-y-4">
+                {/* Filtro */}
+                <div className="flex-shrink-0 ">
+                    {isAdmin
+                        ? (
+                            <Filter
+                                isMobile={isMobile}
+                                isAdmin={isAdmin}
+                                users={users}
+                                taskTypes={taskTypes}
                                 taskStates={taskStates}
-                                idUser={idUser}
                                 taskDifficulties={taskDifficulties}
+                                filterData={filterData}
+                                setFilterData={setFilterData}
                             />
-                        </div>
-                    )}
+                        )
+                        : (
+                            <FilterEmployee
+                                isMobile={isMobile}
+                                isAdmin={isAdmin}
+                                users={users}
+                                taskTypes={taskTypes}
+                                taskStates={taskStates}
+                                taskDifficulties={taskDifficulties}
+                                filterData={filterData}
+                                setFilterData={setFilterData}
+                            />
+                        )}
+                </div>
+
+                {/* Contenido Principal */}
+                <div className="flex-grow flex flex-col overflow-hidden rounded-lg">
+                    {isAdmin
+                        ? (
+                            <>
+                                {isMobile
+                                    ? (
+                                        <div className="" >
+                                            <ListTask taskDifficulties={taskDifficulties} taskStates={taskStates} />
+                                        </div>
+                                    )
+                                    : (
+                                        <div className="flex-grow flex flex-col overflow-hidden space-y-4">
+                                            <Widgets
+                                                loading={loading}
+                                                countTotalTasks={tasks?.length}
+                                                countTodoTasks={todoTasks?.length}
+                                                countInProgressTasks={inProgressTasks?.length}
+                                                countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
+                                                countUnassignedTasks={unassignedTasks?.length}
+                                                className="flex-shrink-0"
+                                            />
+
+                                            <div className="flex-grow overflow-y-auto">
+                                                <TasksBoard
+                                                    filterData={filterData}
+                                                    todoTasks={todoTasks}
+                                                    inProgressTasks={inProgressTasks}
+                                                    readyToEvaluateTasks={readyToEvaluateTasks}
+                                                    unassignedTasks={unassignedTasks}
+                                                    completedTasks={completedTasks}
+                                                    paidTasks={paidTasks}
+                                                    className="h-full"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                            </>
+                        )
+                        : (
+                            <div className="flex-grow overflow-y-auto">
+                                <EmployeePerformance
+                                    taskStates={taskStates}
+                                    idUser={idUser}
+                                    taskDifficulties={taskDifficulties}
+                                />
+                            </div>
+                        )}
+                </div>
             </div>
-        </div>
+        </section>
     )
 }
