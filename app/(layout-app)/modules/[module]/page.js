@@ -96,7 +96,7 @@ export default function Page ({ params }) {
     }, [moduleSelected, hasModule, isAdmin])
 
     return (
-        <section className="flex flex-1 h-full">
+        <section className="">
             {!hasModule && !isAdmin
                 ? (
                     <NoPermissions loading={loadingPermission} />

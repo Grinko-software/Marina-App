@@ -1,73 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
-	Navbar,
-	NavbarContent,
-	Button,
-	NavbarMenu,
-	NavbarMenuItem,
-	NavbarMenuToggle
-} from '@nextui-org/react';
-import { usePathname, useRouter } from 'next/navigation';
-import useAuthStore from '@/stores/user';
-export default function MobileNavBar() {
-	const { signOut } = useAuthStore(({ signOut }) => ({ signOut }));
-	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-	const pathname = usePathname();
-	const moduleApplication = pathname.replace('/', '');
-	const router = useRouter();
-	const [selected, setSelected] = useState(moduleApplication);
-	const menuItems = [
-		{
-			id: 'inventory',
-			label: 'Inventario',
-			route: '/inventory'
-		},
-		{
-			id: 'login',
-			label: 'Cerrar sesión',
-			route: '/'
-		}
-		/*    {
+    Navbar,
+    NavbarContent,
+    Button,
+    NavbarMenu,
+    NavbarMenuItem,
+    NavbarMenuToggle
+} from '@nextui-org/react'
+import { usePathname, useRouter } from 'next/navigation'
+import useAuthStore from '@/stores/user'
+export default function MobileNavBar () {
+    const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+    const pathname = usePathname()
+    const moduleApplication = pathname.replace('/', '')
+    const router = useRouter()
+    const [selected, setSelected] = useState(moduleApplication)
+    const menuItems = [
+        {
+            id: 'inventory',
+            label: 'Inventario',
+            route: '/inventory'
+        },
+        {
+            id: 'modules',
+            label: 'Módulos',
+            route: '/modules'
+        },
+        {
+            id: 'performance',
+            label: 'Rendimiento',
+            route: '/modules/performance'
+        },
+        {
+            id: 'login',
+            label: 'Cerrar sesión',
+            route: '/'
+        }
+        /*    {
             id: 'admin',
             label: 'Administrar',
             route: '/modules'
         } */
-	];
-	useEffect(() => {
-		if (selected && selected !== moduleApplication) {
-			if (selected === 'login') {
-				signOut();
-			}
-			router.push('/' + selected);
-		}
-	}, [selected]);
+    ]
+    useEffect(() => {
+        if (selected && selected !== moduleApplication) {
+            if (selected === 'login') {
+                signOut()
+            }
+            router.push(selected)
+        }
+    }, [selected])
 
-	return (
-		<Navbar
-			onMenuOpenChange={setIsMenuOpen}
-			className="bg-transparent dark:bg-secondary-500"
-		>
-			<NavbarContent>
-				<NavbarMenuToggle
-					aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-					className="sm:hidden"
-				/>
-			</NavbarContent>
-			<NavbarMenu className="items items-start">
-				{menuItems?.map((item, index) => (
-					<NavbarMenuItem key={item}>
-						<Button
-							className="w-full h-[2rem] bg-transparent font-bold text-2xl py-8"
-							href="#"
-							onClick={() => {
-								setSelected(item?.id);
-							}}
-						>
-							{item.label}
-						</Button>
-					</NavbarMenuItem>
-				))}
-			</NavbarMenu>
-		</Navbar>
-	);
+    return (
+        <Navbar
+            onMenuOpenChange={setIsMenuOpen}
+            className="bg-transparent dark:bg-secondary-500"
+        >
+            <NavbarContent>
+                <NavbarMenuToggle
+                    aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                    className="sm:hidden"
+                />
+            </NavbarContent>
+            <NavbarMenu className="items items-start">
+                {menuItems?.map((item, index) => (
+                    <NavbarMenuItem key={item}>
+                        <Button
+                            className="w-full h-[2rem] bg-transparent font-bold text-2xl py-8"
+                            href="#"
+                            onClick={() => {
+                                setSelected(item?.route)
+                            }}
+                        >
+                            {item.label}
+                        </Button>
+                    </NavbarMenuItem>
+                ))}
+            </NavbarMenu>
+        </Navbar>
+    )
 }

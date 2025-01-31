@@ -77,12 +77,12 @@ export default function TasksBoard ({
     }
 
     return (
-        <section className="flex flex-grow w-full h-full max-h-full flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2 overflow-hidden">
+        <section className="flex flex-1 flex-grow w-full  h-[calc(100vh-27rem)] flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2">
             {itemsData.map((item) => {
                 return (
                     <div
                         key={item.title}
-                        className="bg-grey-50 dark:bg-secondary-500 border border-gray-400 dark:border-gray-700 rounded-lg p-4 flex-grow  w-full flex flex-col space-y-2"
+                        className="bg-grey-50 dark:bg-secondary-500 border border-gray-400 dark:border-gray-700 rounded-lg p-4 flex-grow  w-full flex flex-col space-y-2 h-full"
                     >
                         {/* Título fijo (no se moverá con el scroll) */}
                         <p className="text-gray-500 dark:text-white flex-shrink-0">{`${item.title} (${item?.items?.length || 0})`}</p>
@@ -94,16 +94,19 @@ export default function TasksBoard ({
                     </div>
                 )
             })}
-            <div className="flex-shrink-0">
-                <TaskDetail
-                    data={targetTaskDetail}
-                    isOpen={isOpen}
-                    filterData={filterData}
-                    onClose={() => {
-                        setTargetTaskDetail(null)
-                    }}
-                />
-            </div>
+
+            <TaskDetail
+                data={targetTaskDetail}
+                isOpen={isOpen}
+                filterData={filterData}
+                onClose={() => {
+                    setTargetTaskDetail(null)
+                }}
+            />
+
         </section>
     )
 }
+/*
+flex flex-grow w-full flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2 overflow-hidden
+*/

@@ -15,7 +15,7 @@ export default function LayoutApp ({ children }) {
     }, [])
 
     return (
-        <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500 overflow-hidden touch-none fixed">
+        <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500   overflow-hidden touch-none fixed">
             <motion.div
                 className="h-full flex flex-col gap-y-4 "
                 initial={{ opacity: 0, scale: 0.5 }}
