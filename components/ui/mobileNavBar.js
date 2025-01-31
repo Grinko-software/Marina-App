@@ -45,6 +45,7 @@ export default function MobileNavBar () {
     ]
     useEffect(() => {
         if (selected && selected !== moduleApplication) {
+            setIsMenuOpen(false)
             if (selected === 'login') {
                 signOut()
             }
@@ -54,6 +55,7 @@ export default function MobileNavBar () {
 
     return (
         <Navbar
+            isMenuOpen={isMenuOpen}
             onMenuOpenChange={setIsMenuOpen}
             className="bg-transparent dark:bg-secondary-500"
         >
