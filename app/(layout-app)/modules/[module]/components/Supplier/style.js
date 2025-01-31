@@ -1,4 +1,4 @@
-import Styled from 'styled-components';
+import Styled from 'styled-components'
 
 export const StyleTransfer = Styled.div`
   .ant-btn-primary {
@@ -28,4 +28,4 @@ export const StyleTransfer = Styled.div`
   span.anticon.anticon-right {
     color:  ${({ isDark }) => (isDark ? '#fff' : '#282828')};
   }
-`;
+`

@@ -1,21 +1,21 @@
-import React from 'react';
+import React from 'react'
 
 const Image = ({
-	src,
-	alt,
-	width = '100%',
-	height = 'auto',
-	className = ''
+    src,
+    alt,
+    width = '100%',
+    height = 'auto',
+    className = ''
 }) => {
-	return (
-		<img
-			src={src}
-			alt={alt}
-			width={width}
-			height={height}
-			className={className}
-		/>
-	);
-};
+    return (
+        <img
+            src={src}
+            alt={alt}
+            width={width}
+            height={height}
+            className={className}
+        />
+    )
+}
 
-export default Image;
+export default Image

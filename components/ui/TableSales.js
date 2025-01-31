@@ -1,206 +1,210 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
-	Table,
-	TableHeader,
-	TableColumn,
-	TableBody,
-	TableRow,
-	TableCell,
-	Button,
-	Chip,
-	Spinner
-} from '@nextui-org/react';
-import { isMobileDevice } from '@/utils/agent';
-import { getMoment } from '@/utils/date';
-export default function TableSales({ data, loading, setTarget }) {
-	// eslint-disable-next-line no-unused-vars
-	const [isMobile, setIsMobile] = useState(true);
-	const [hasMore, setHasMore] = useState(false);
-	const [showAllData, setShowAllData] = useState(false);
-	const [dataModel, setDataModel] = useState([]);
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    Button,
+    Chip,
+    Spinner
+} from '@nextui-org/react'
+import { isMobileDevice } from '@/utils/agent'
+import { getMoment } from '@/utils/date'
+export default function TableSales ({ data, loading, setTarget }) {
+    // eslint-disable-next-line no-unused-vars
+    const [isMobile, setIsMobile] = useState(true)
+    const [hasMore, setHasMore] = useState(false)
+    const [showAllData, setShowAllData] = useState(false)
+    const [dataModel, setDataModel] = useState([])
 
-	const statusColorMap = {
-		BOLETA: 'success',
-		TICKET: 'warning',
-		FACTURA: 'danger'
-	};
+    const statusColorMap = {
+        BOLETA: 'success',
+        TICKET: 'warning',
+        FACTURA: 'danger'
+    }
 
-	const columns = [
-		{
-			key: 'id',
-			label: 'ID'
-		},
-		{
-			key: 'datetime',
-			label: 'FECHA'
-		},
-		{
-			key: 'total',
-			label: 'TOTAL'
-		},
-		{
-			key: 'iva',
-			label: 'IVA (19%)'
-		},
-		{
-			key: 'type',
-			label: 'TIPO'
-		},
-		{
-			key: 'showTicket',
-			label: 'Boleta'
-		}
-	];
-	useEffect(() => {
-		if (navigator) {
-			const isMobile = isMobileDevice();
-			setIsMobile(isMobile);
-		}
-	}, []);
+    const columns = [
+        {
+            key: 'id',
+            label: 'ID'
+        },
+        {
+            key: 'datetime',
+            label: 'FECHA'
+        },
+        {
+            key: 'total',
+            label: 'TOTAL'
+        },
+        {
+            key: 'iva',
+            label: 'IVA (19%)'
+        },
+        {
+            key: 'type',
+            label: 'TIPO'
+        },
+        {
+            key: 'showTicket',
+            label: 'Boleta'
+        }
+    ]
+    useEffect(() => {
+        if (navigator) {
+            const isMobile = isMobileDevice()
+            setIsMobile(isMobile)
+        }
+    }, [])
 
-	useEffect(() => {
-		if (data) {
-			let tableData = data.map((item) => {
-				return {
-					key: item.sale_id,
-					id: item.sale_id,
-					datetime: item?.date,
-					total: item?.total,
-					iva: item?.total - (item.total || 0) / 1.19,
-					type: item?.salesDetails?.name_voucher
-				};
-			});
-			const limit = 10;
-			const moreData = tableData?.length > limit;
-			setHasMore(moreData);
-			if (!showAllData) {
-				tableData = tableData.slice(0, limit);
-			} else {
-				setHasMore(false);
-			}
-			setDataModel(tableData);
-		}
-	}, [data, showAllData]);
+    useEffect(() => {
+        if (data) {
+            let tableData = data.map((item) => {
+                return {
+                    key: item.sale_id,
+                    id: item.sale_id,
+                    datetime: item?.date,
+                    total: item?.total,
+                    iva: item?.total - (item.total || 0) / 1.19,
+                    type: item?.salesDetails?.name_voucher
+                }
+            })
+            const limit = 10
+            const moreData = tableData?.length > limit
+            setHasMore(moreData)
+            if (!showAllData) {
+                tableData = tableData.slice(0, limit)
+            } else {
+                setHasMore(false)
+            }
+            setDataModel(tableData)
+        }
+    }, [data, showAllData])
 
-	const loadMoreData = () => {
-		setShowAllData(true);
-	};
+    const loadMoreData = () => {
+        setShowAllData(true)
+    }
 
-	const openTicket = (ticketId) => {
-		setTarget(ticketId);
-	};
+    const openTicket = (ticketId) => {
+        setTarget(ticketId)
+    }
 
-	const sortItems = (items, sortDescriptor) => {
-		return {
-			items: items.sort((a, b) => {
-				const first = a[sortDescriptor.column];
-				const second = b[sortDescriptor.column];
-				let cmp =
-					(parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+    const sortItems = (items, sortDescriptor) => {
+        return {
+            items: items.sort((a, b) => {
+                const first = a[sortDescriptor.column]
+                const second = b[sortDescriptor.column]
+                let cmp =
+					(parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1
 
-				if (sortDescriptor.direction === 'descending') {
-					cmp *= -1;
-				}
+                if (sortDescriptor.direction === 'descending') {
+                    cmp *= -1
+                }
 
-				return cmp;
-			})
-		};
-	};
+                return cmp
+            })
+        }
+    }
 
-	const renderCell = React.useCallback(
-		(data, columnKey) => {
-			const cellValue = data[columnKey];
-			switch (columnKey) {
-				case 'datetime':
-					return (
-						<div className="flex flex-col">
-							<p className="text-bold text-sm capitalize dark:text-white">
-								{getMoment(cellValue).format('DD-MM-YYYY HH:mm:ss')}
-							</p>
-						</div>
-					);
-				case 'total':
-					return (
-						<div className="flex flex-col">
-							<p className="text-bold text-sm capitalize dark:text-white">{`$${cellValue}`}</p>
-						</div>
-					);
-				case 'iva':
-					return (
-						<div className="flex flex-col">
-							<p className="text-bold text-sm capitalize dark:text-white">{`$${cellValue}`}</p>
-						</div>
-					);
-				case 'type':
-					return (
-						<div className="flex flex-col">
-							<p className="text-bold text-sm capitalize dark:text-white">
-								{
-									<Chip
-										color={statusColorMap[data.type?.toUpperCase()]}
-										size="sm"
-										variant="solid"
-										classNames={{
-											content: 'text-white'
-										}}
-									>
-										{data.type}
-									</Chip>
-								}
-							</p>
-						</div>
-					);
-				case 'showTicket':
-					return (
-						<div className="flex flex-col">
-							<Button variant="flat" onPress={() => openTicket(data.id)}>
+    const renderCell = React.useCallback(
+        (data, columnKey) => {
+            const cellValue = data[columnKey]
+            switch (columnKey) {
+            case 'datetime':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">
+                            {getMoment(cellValue).format('DD-MM-YYYY HH:mm:ss')}
+                        </p>
+                    </div>
+                )
+            case 'total':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`$${cellValue}`}</p>
+                    </div>
+                )
+            case 'iva':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`$${cellValue}`}</p>
+                    </div>
+                )
+            case 'type':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">
+                            {
+                                <Chip
+                                    color={statusColorMap[data.type?.toUpperCase()]}
+                                    size="sm"
+                                    variant="solid"
+                                    classNames={{
+                                        content: 'text-white'
+                                    }}
+                                >
+                                    {data.type}
+                                </Chip>
+                            }
+                        </p>
+                    </div>
+                )
+            case 'showTicket':
+                return (
+                    <div className="flex flex-col">
+                        <Button variant="flat" onPress={() => openTicket(data.id)}>
 								Generar ticket
-							</Button>
-						</div>
-					);
-				default:
-					return cellValue;
-			}
-		},
-		[dataModel]
-	);
+                        </Button>
+                    </div>
+                )
+            default:
+                return cellValue
+            }
+        },
+        [dataModel]
+    )
 
-	return (
-		<section>
-			<Table
-				isHeaderSticky
-				onSortChange={sortItems}
-				bottomContent={
-					loading ? (
-						<div className="flex w-full justify-center">
-							<Spinner>Cargando datos...</Spinner>
-						</div>
-					) : hasMore ? (
-						<div className="flex w-full justify-center">
-							<Button variant="flat" onPress={loadMoreData}>
+    return (
+        <section>
+            <Table
+                isHeaderSticky
+                onSortChange={sortItems}
+                bottomContent={
+                    loading
+                        ? (
+                            <div className="flex w-full justify-center">
+                                <Spinner>Cargando datos...</Spinner>
+                            </div>
+                        )
+                        : hasMore
+                            ? (
+                                <div className="flex w-full justify-center">
+                                    <Button variant="flat" onPress={loadMoreData}>
 								Ver más.
-							</Button>
-						</div>
-					) : null
-				}
-			>
-				<TableHeader columns={columns}>
-					{(column) => (
-						<TableColumn key={column.key} allowsSorting>
-							{column.label}
-						</TableColumn>
-					)}
-				</TableHeader>
-				<TableBody items={dataModel || []}>
-					{(item) => (
-						<TableRow key={item.key}>
-							{(columnKey) => (
-								<TableCell>{renderCell(item, columnKey)}</TableCell>
-							)}
-						</TableRow>
-					)}
-				</TableBody>
-			</Table>
-		</section>
-	);
+                                    </Button>
+                                </div>
+                            )
+                            : null
+                }
+            >
+                <TableHeader columns={columns}>
+                    {(column) => (
+                        <TableColumn key={column.key} allowsSorting>
+                            {column.label}
+                        </TableColumn>
+                    )}
+                </TableHeader>
+                <TableBody items={dataModel || []}>
+                    {(item) => (
+                        <TableRow key={item.key}>
+                            {(columnKey) => (
+                                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                            )}
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </section>
+    )
 }

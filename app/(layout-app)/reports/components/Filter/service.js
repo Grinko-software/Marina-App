@@ -1,78 +1,78 @@
 import {
-	fetchGetReportsSales,
-	fetchGetReportsByCategoty,
-	fetchGetReportsIndicators,
-	fetchGetReportsSalesTypes,
-	fetchGetReportsCriticalStock
-} from '@/services/reports';
-import { getMoment } from '@/utils/date';
+    fetchGetReportsSales,
+    fetchGetReportsByCategoty,
+    fetchGetReportsIndicators,
+    fetchGetReportsSalesTypes,
+    fetchGetReportsCriticalStock
+} from '@/services/reports'
+import { getMoment } from '@/utils/date'
 export const equivalentDateUnit = {
-	daily: 'day',
-	weekly: 'week',
-	monthly: 'month',
-	quarterly: 'quarter',
-	yearly: 'year'
-};
+    daily: 'day',
+    weekly: 'week',
+    monthly: 'month',
+    quarterly: 'quarter',
+    yearly: 'year'
+}
 
 export const equivalentBackendDateUnit = {
-	daily: 'Day',
-	weekly: 'Week',
-	monthly: 'Month',
-	quarterly: 'Trimester',
-	biyearly: 'Semester',
-	yearly: 'Year',
-	Day: 'daily',
-	Week: 'weekly',
-	Month: 'monthly',
-	Trimester: 'quarterly',
-	Semester: 'biyearly',
-	Year: 'yearly'
-};
+    daily: 'Day',
+    weekly: 'Week',
+    monthly: 'Month',
+    quarterly: 'Trimester',
+    biyearly: 'Semester',
+    yearly: 'Year',
+    Day: 'daily',
+    Week: 'weekly',
+    Month: 'monthly',
+    Trimester: 'quarterly',
+    Semester: 'biyearly',
+    Year: 'yearly'
+}
 
 export const formatDateUnit = {
-	daily: 'DD/MMM',
-	weekly: 'W° [semana] Y',
-	monthly: 'MMM/Y',
-	quarterly: 'Q° [trimestre] Y',
-	// biyearly: '', // not supported by momentjs
-	yearly: 'YYYY'
-};
+    daily: 'DD/MMM',
+    weekly: 'W° [semana] Y',
+    monthly: 'MMM/Y',
+    quarterly: 'Q° [trimestre] Y',
+    // biyearly: '', // not supported by momentjs
+    yearly: 'YYYY'
+}
 
 export const translationDateUnit = {
-	daily: 'día',
-	weekly: 'semana',
-	monthly: 'mes'
-};
+    daily: 'día',
+    weekly: 'semana',
+    monthly: 'mes'
+}
 
 export const dataRangeTypes = [
-	{
-		label: 'Diario',
-		value: 'daily'
-	},
-	{
-		label: 'Semanal',
-		value: 'week'
-	},
-	{
-		label: 'Mensual',
-		value: 'month'
-	}
-];
+    {
+        label: 'Diario',
+        value: 'daily'
+    },
+    {
+        label: 'Semanal',
+        value: 'week'
+    },
+    {
+        label: 'Mensual',
+        value: 'month'
+    }
+]
 
 export const getTranslationDateUnit = (unit) => {
-	return translationDateUnit[unit];
-};
+    return translationDateUnit[unit]
+}
 
 export const getFormatDateUnit = (date, format, unit) => {
-	const formatUnit = formatDateUnit[unit];
-	return getMoment(date, format).format(formatUnit);
-};
+    const formatUnit = formatDateUnit[unit]
+    return getMoment(date, format).format(formatUnit)
+}
 
 export const getEquivalentDateUnit = (rangeType) =>
-	equivalentDateUnit[rangeType];
+    equivalentDateUnit[rangeType]
 
 export const getEquivalentBackendDateUnit = (type) =>
-	equivalentBackendDateUnit[type];
+    equivalentBackendDateUnit[type]
 
 /**
  *
@@ -85,83 +85,83 @@ export const getEquivalentBackendDateUnit = (type) =>
 
 // Range types
 export const getDateTypes = async () => {
-	return Promise.resolve(dataRangeTypes);
-};
+    return Promise.resolve(dataRangeTypes)
+}
 
 export const mapDateQuantityProperties = (x) => {
-	return {
-		value: x,
-		label: `${x}`
-	};
-};
+    return {
+        value: x,
+        label: `${x}`
+    }
+}
 
 export const requestDataSales = async (from, rangeType, periodQuantity) => {
-	try {
-		return fetchGetReportsSales({
-			periodStart: from,
-			periodType: rangeType,
-			periodQuantity
-		});
-	} catch (error) {
-		console.log(error);
-	}
-};
+    try {
+        return fetchGetReportsSales({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 export const requestDataByCategory = async (
-	from,
-	rangeType,
-	periodQuantity
+    from,
+    rangeType,
+    periodQuantity
 ) => {
-	try {
-		return fetchGetReportsByCategoty({
-			periodStart: from,
-			periodType: rangeType,
-			periodQuantity
-		});
-	} catch (error) {
-		console.log(error);
-	}
-};
+    try {
+        return fetchGetReportsByCategoty({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 export const requestDataIndicators = async (
-	from,
-	rangeType,
-	periodQuantity
+    from,
+    rangeType,
+    periodQuantity
 ) => {
-	try {
-		return fetchGetReportsIndicators({
-			periodStart: from,
-			periodType: rangeType,
-			periodQuantity
-		});
-	} catch (error) {
-		console.log(error);
-	}
-};
+    try {
+        return fetchGetReportsIndicators({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 export const requestDatSalesTypes = async (from, rangeType, periodQuantity) => {
-	try {
-		return fetchGetReportsSalesTypes({
-			periodStart: from,
-			periodType: rangeType,
-			periodQuantity
-		});
-	} catch (error) {
-		console.log(error);
-	}
-};
+    try {
+        return fetchGetReportsSalesTypes({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 export const requestDataCriticalStore = async (
-	from,
-	rangeType,
-	periodQuantity
+    from,
+    rangeType,
+    periodQuantity
 ) => {
-	try {
-		return fetchGetReportsCriticalStock({
-			periodStart: from,
-			periodType: rangeType,
-			periodQuantity
-		});
-	} catch (error) {
-		console.log(error);
-	}
-};
+    try {
+        return fetchGetReportsCriticalStock({
+            periodStart: from,
+            periodType: rangeType,
+            periodQuantity
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
