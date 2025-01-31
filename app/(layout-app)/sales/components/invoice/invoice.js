@@ -88,12 +88,10 @@ export default function InvoiceDetailed({
 			// console.log('Clave:', keys, 'Valor:', defaultForm[keys])
 			const value = defaultForm[keys]?.value;
 			if (!value) {
-				useInventoryStore
-					.getState()
-					.setFormData({
-						...useInventoryStore.getState().defaultForm,
-						[keys]: { value: null, error: 'Este campo es obligatorio' }
-					});
+				useInventoryStore.getState().setFormData({
+					...useInventoryStore.getState().defaultForm,
+					[keys]: { value: null, error: 'Este campo es obligatorio' }
+				});
 			}
 		}
 	};
