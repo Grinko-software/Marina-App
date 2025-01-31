@@ -7,39 +7,43 @@ import { isMobileDevice } from '@/utils/agent'
 
 export default function LayoutApp ({ children }) {
     const [isMobile, setIsMobile] = useState(true)
+
     useEffect(() => {
-        if (navigator) {
-            const view = isMobileDevice()
-            setIsMobile(view)
-            /*  */
+        if (typeof navigator !== 'undefined') {
+            setIsMobile(isMobileDevice())
         }
     }, [])
-    return (
 
-        <section className="w-screen h-full bg-primary-200 dark:bg-secondary-500 overflow-x-hidden touch-none fixed">
+    return (
+        <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500 overflow-hidden touch-none fixed">
             <motion.div
-                className='min-h-full flex flex-col'
+                className="h-full flex flex-col gap-y-4 "
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
                     duration: 0.6,
                     delay: 0.2,
                     ease: [0, 0.71, 0.2, 1.01]
-                }}>
-
-                <header className="sticky z-20 bg-primary-200 dark:bg-secondary-500 top-0">
-                    <Header/>
+                }}
+            >
+                {/* Header */}
+                <header className="sticky top-0 z-20 bg-primary-200 dark:bg-secondary-500 h-[60px] flex-shrink-0">
+                    <Header />
                 </header>
-                <div className="h-auto flex-1 max-h-full overflow-hidden flex">
-                    <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem] overflow-hidden">
+
+                {/* Main Content */}
+                <div className="flex-1 flex w-full overflow-hidden">
+                    <main className="flex-grow max-h-full overflow-hidden mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem] border-large border-v500">
                         {children}
                     </main>
                 </div>
-                {isMobile
-                    ? <></>
-                    : <footer className="sticky z-20 bg-primary-200 dark:bg-secondary-500 bottom-0 h-[6rem] pt-[1rem]">
-                        {<Navigation/>}
-                    </footer>}
+
+                {/* Footer (Only Desktop) */}
+                {!isMobile && (
+                    <footer className="sticky bottom-0 z-20 bg-primary-200 dark:bg-secondary-500 h-[6rem]  flex-shrink-0">
+                        <Navigation />
+                    </footer>
+                )}
             </motion.div>
         </section>
     )

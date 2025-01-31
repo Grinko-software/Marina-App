@@ -1,8 +1,8 @@
 export const MODULES_KEYS = {
-    SALES: 'sales',
-    REPORT: 'reports',
-    EVENTS: 'accounting_events',
-    USERS: 'users',
-    PROVIDERS: 'providers',
-    PERFORFANCE: 'performance'
-}
+	SALES: 'sales',
+	REPORT: 'reports',
+	EVENTS: 'accounting_events',
+	USERS: 'users',
+	PROVIDERS: 'providers',
+	PERFORFANCE: 'performance'
+};

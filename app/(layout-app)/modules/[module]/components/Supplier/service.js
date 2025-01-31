@@ -1,20 +1,30 @@
-import { fetchGetSupplier, fetchCreateSupplier, fetchGetAssociationSupplier, fetchUpdatedAssociationSupplier } from '@/services/supplier'
+import {
+	fetchGetSupplier,
+	fetchCreateSupplier,
+	fetchGetAssociationSupplier,
+	fetchUpdatedAssociationSupplier
+} from '@/services/supplier';
 
 export const requestSupplierList = async () => {
-    try {
-        return fetchGetSupplier()
-    } catch (error) {
-        console.log(error)
-    }
-}
+	try {
+		return fetchGetSupplier();
+	} catch (error) {
+		console.log(error);
+	}
+};
 
-export const requestCreateSupplier = async ({ name, rut, companyName, companyRut }) => {
-    try {
-        return fetchCreateSupplier({ name, rut, companyName, companyRut })
-    } catch (error) {
-        console.log(error)
-    }
-}
+export const requestCreateSupplier = async ({
+	name,
+	rut,
+	companyName,
+	companyRut
+}) => {
+	try {
+		return fetchCreateSupplier({ name, rut, companyName, companyRut });
+	} catch (error) {
+		console.log(error);
+	}
+};
 
 /* export const requestUpdateSupplier = async () => {
     try {
@@ -25,17 +35,17 @@ export const requestCreateSupplier = async ({ name, rut, companyName, companyRut
 } */
 
 export const requestGetAssociationSupplier = async ({ supplierId }) => {
-    try {
-        return fetchGetAssociationSupplier({ id: supplierId })
-    } catch (error) {
-        console.log(error)
-    }
-}
+	try {
+		return fetchGetAssociationSupplier({ id: supplierId });
+	} catch (error) {
+		console.log(error);
+	}
+};
 
 export const requestUpdateAssociationSupplier = async ({ supplierId, ids }) => {
-    try {
-        return fetchUpdatedAssociationSupplier({ supplierId, ids })
-    } catch (error) {
-        console.log(error)
-    }
-}
+	try {
+		return fetchUpdatedAssociationSupplier({ supplierId, ids });
+	} catch (error) {
+		console.log(error);
+	}
+};

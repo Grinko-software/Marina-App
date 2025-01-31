@@ -1,7 +1,7 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 const useAdminStore = create((set) => ({
-    isAuthenticated: undefined
-}))
+	isAuthenticated: undefined
+}));
 
-export default useAdminStore
+export default useAdminStore;

@@ -1,26 +1,26 @@
-import useAuthStore from '@/stores/user'
+import useAuthStore from '@/stores/user';
 export const getToken = () => {
-    // const { token } = useAuthStore.getState()
-    const tokenLs = localStorage.getItem('token')
-    return tokenLs
-    // if (typeof window !== 'undefined') {
-    // const tokenLs = localStorage.getItem('token')
-    // return tokenLs
-    // }  else if (token) {
-    //    return token
-    // }
-}
+	// const { token } = useAuthStore.getState()
+	const tokenLs = localStorage.getItem('token');
+	return tokenLs;
+	// if (typeof window !== 'undefined') {
+	// const tokenLs = localStorage.getItem('token')
+	// return tokenLs
+	// }  else if (token) {
+	//    return token
+	// }
+};
 export const getIdUser = () => {
-    const { idUser } = useAuthStore.getState()
-    return idUser
-}
+	const { idUser } = useAuthStore.getState();
+	return idUser;
+};
 export const getFullNameUser = () => {
-    const { fullName } = useAuthStore.getState()
-    return fullName
-}
+	const { fullName } = useAuthStore.getState();
+	return fullName;
+};
 export const setToken = (token) => {
-    const { setToken } = useAuthStore.getState()
-    localStorage.setItem('token', token)
-    window.postMessage({ type: 'refreshToken', token }, '*')
-    setToken(token)
-}
+	const { setToken } = useAuthStore.getState();
+	localStorage.setItem('token', token);
+	window.postMessage({ type: 'refreshToken', token }, '*');
+	setToken(token);
+};

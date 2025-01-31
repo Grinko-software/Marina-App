@@ -19,12 +19,9 @@ export default function Inventory () {
     }, [])
 
     return (
-        <section >
-            <Auth/>
-            {!isMobile
-                ? <TableProducs />
-                : <MobileTableProducs/>
-            }
+        <section>
+            <Auth />
+            {!isMobile ? <TableProducs /> : <MobileTableProducs />}
         </section>
     )
 }

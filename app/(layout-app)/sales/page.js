@@ -23,10 +23,10 @@ export default function Sales () {
     }, [])
 
     return (
-        <section className='h-full'>
-            <Auth/>
-            <section className='h-full'>
-                <SalesMenu/>
+        <section className="h-full">
+            <Auth />
+            <section className="h-full">
+                <SalesMenu />
             </section>
         </section>
     )

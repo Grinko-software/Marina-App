@@ -1,7 +1,7 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 export const useStoreModal = create((set) => ({
-    isOpen: false,
-    onOpen: () => set({ isOpen: true }),
-    onClose: () => set({ isOpen: false })
-}))
+	isOpen: false,
+	onOpen: () => set({ isOpen: true }),
+	onClose: () => set({ isOpen: false })
+}));

@@ -1,19 +1,19 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 /* import { requestCreateTaskType } from '../service' */
 
 const useStoreEvidenceStore = create((set) => ({
-    data: {
-        comment: null,
-        image: null
-    },
-    error: null,
-    loading: false,
-    complete: false,
-    setFormData: (newData) => set({ data: { ...newData } }),
-    setComment: (newComment) => set({ comment: newComment }),
-    setLoading: (value) => set({ loading: value }),
-    setError: (value) => set({ error: value }),
-    /*   requestCreate: async (name, notify) => {
+	data: {
+		comment: null,
+		image: null
+	},
+	error: null,
+	loading: false,
+	complete: false,
+	setFormData: (newData) => set({ data: { ...newData } }),
+	setComment: (newComment) => set({ comment: newComment }),
+	setLoading: (value) => set({ loading: value }),
+	setError: (value) => set({ error: value }),
+	/*   requestCreate: async (name, notify) => {
         set({ loading: true, error: null, complete: false })
         // has requered values
         const missingRequeredValues = !name
@@ -33,12 +33,13 @@ const useStoreEvidenceStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     }, */
-    clearStore: () => set({
-        name: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
-}))
+	clearStore: () =>
+		set({
+			name: null,
+			loading: false,
+			error: false,
+			complete: false
+		})
+}));
 
-export default useStoreEvidenceStore
+export default useStoreEvidenceStore;

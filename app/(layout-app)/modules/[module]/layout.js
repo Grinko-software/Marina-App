@@ -7,12 +7,15 @@ export default function LayoutApp (props) {
     const { module } = params
 
     return (
-        <section className="w-screen h-full bg-primary-200 dark:bg-secondary-500 overflow-x-hidden touch-none fixed min-h-full flex flex-col gap-2">
-            <header className="sticky z-20 bg-primary-200 dark:bg-secondary-500">
-                <Header module={module}/>
+        <section className="w-full h-full flex flex-col overflow-hidden">
+            {/* Header Section */}
+            <header className="sticky top-0 z-20 dark:bg-secondary-500 w-full h-[60px]">
+                <Header module={module} />
             </header>
-            <div className="h-auto flex-1 max-h-full overflow-hidden flex justify-start items-start">
-                <main className="h-auto flex-1 mx-[1rem] xl:mx-[2rem] xlg:mx-[3rem] flex justify-start items-start">
+
+            {/* Main Content Section */}
+            <div className="flex-grow flex flex-col md:flex-row w-full overflow-hidden">
+                <main className="w-full flex-grow overflow-hidden">
                     {children}
                 </main>
             </div>
