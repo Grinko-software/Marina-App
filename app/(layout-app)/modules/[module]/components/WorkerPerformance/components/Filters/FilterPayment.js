@@ -7,7 +7,7 @@ import WidgetsPayment from '../WidgetsPayment/WidgetsPayment'
 export default function FilterPayment ({ isMobile, users }) {
     return isMobile
         ? <div className='bg-primary-200 dark:bg-secondary-500 h-[10rem] fixed top-[10rem] ml-[-1rem] z-50 flex flex-col justify-center items-center w-full'>
-            <div className='w-full flex flex-col px-[1rem] gap-2'>
+            <div className='w-full flex flex-col px-[1rem] gap-1'>
                 <PayButton/>
                 <FilterMobilePayment
                     users={users}
