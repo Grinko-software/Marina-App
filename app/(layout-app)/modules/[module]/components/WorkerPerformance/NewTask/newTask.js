@@ -20,7 +20,7 @@ import { notify } from '@/services/notify'
 import useAuthStore from '@/stores/user'
 import CustomDatePicker from '@/components/DatePicker/DatePicker'
 
-export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
+export default function CreateTask ({ isAdmin = true, users, taskTypes, requestTaskList }) {
     const { idUser } = useAuthStore()
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isMobile, setIsMobile] = useState(true)
@@ -212,7 +212,8 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
                                     dateTask,
                                     notify,
                                     idUser,
-                                    isAdmin
+                                    isAdmin,
+                                    requestTaskList
                                 )
                             }}
                         >

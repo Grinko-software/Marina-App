@@ -26,7 +26,8 @@ const useSupplierFormStore = create((set) => ({
         dateTask,
         notify,
         idUser,
-        isAdmin
+        isAdmin,
+        requestTaskList
     ) => {
         set({ loading: true, error: null, complete: false })
         // has requered values
@@ -54,6 +55,9 @@ const useSupplierFormStore = create((set) => ({
             set({ loading: false, error: null, complete: true })
             if (data?.code === 200) {
                 notify('✅ Tarea creada con éxito!')
+                if (requestTaskList) {
+                    requestTaskList() // Update task list to reflect the new task
+                }
             } else {
                 notify('❌ La tarea no fue creada con éxito, intenta otra vez!')
             }

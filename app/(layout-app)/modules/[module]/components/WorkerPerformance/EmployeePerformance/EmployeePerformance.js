@@ -44,7 +44,7 @@ export default function EmployeePerformance ({
                     taskDifficulties,
                     taskStates
                 })
-                setTasksToDo(tasks.filter((t) => t.userId === null))
+                setTasksToDo(tasks.filter((t) => t?.userId === null || t?.userId === undefined))
                 setLoading(false)
             })
         }

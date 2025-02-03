@@ -138,6 +138,7 @@ export default function Filter ({
                                 users={users}
                                 taskTypes={taskTypes}
                                 difficultTypes={taskDifficulties}
+                                requestTaskList={requestTaskList}
                             />
                         </div>
                     </div>
