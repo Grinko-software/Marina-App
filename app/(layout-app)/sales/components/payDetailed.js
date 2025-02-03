@@ -121,8 +121,7 @@ export default function PayDetailed ({
 
     const generateSale = () => {
         setIsDisableButtonPay(true)
-        const isCardPay = paymentTarget === 1
-
+        const isCardPay = paymentTarget === 2
         if (voucherTarget === 3) {
             createSaleTicket({
                 sales: listSalesActives,
