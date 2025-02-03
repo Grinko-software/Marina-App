@@ -27,6 +27,7 @@ import useAuthStore from '@/stores/user'
 import { today } from '@/utils/date'
 import ScannerCredential from '@/components/ScannerCredential/ScannerCredential'
 import useScannerStore from '@/stores/scanner'
+
 const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const notify = (text) => toast(text)
     const [isSelected, setIsSelected] = useState()
@@ -39,17 +40,11 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const [diffMoney, setDiffMoney] = useState(0)
     const [totalEndingCard, setTotalEndingCard] = useState(null)
     const [detail, setDetail] = useState(null)
+    const { fullName, signOut } = useAuthStore()
     const { setDisabled } = useSettingsStore(({ setDisabled }) => ({
         setDisabled
     }))
-    const { getIndicatorsBalanceEnding, createBalanceEndings, openDrawer } =
-		useCashBalanceStore(
-		    ({ getIndicatorsBalanceEnding, createBalanceEndings, openDrawer }) => ({
-		        getIndicatorsBalanceEnding,
-		        createBalanceEndings,
-		        openDrawer
-		    })
-		)
+    const { getIndicatorsBalanceEnding, createBalanceEndings, openDrawer } = useCashBalanceStore()
     const { /* enabledScanner, disabledScanner, */ disabledAuthMode } =
 		useScannerStore()
     const onhandlerAcctions = () => {
@@ -57,13 +52,13 @@ const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
         setDisabled(true)
         setReadQR(false)
         onClose()
+        signOut()
     }
     /* handler permission with qr */
     const onHandlerAuth = () => {
         setReadQR(true)
     }
     const handlerOpenDrawer = () => {
-        const { fullName } = useAuthStore.getState()
         const body = {
             event_type: 'Retiro de caja',
             date: today().format('DD-MM-YYYY HH:mm:ss'),
