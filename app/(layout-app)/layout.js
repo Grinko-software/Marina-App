@@ -39,9 +39,10 @@ export default function LayoutApp ({ children }) {
                 </div>
 
                 {/* Footer (Only Desktop) */}
+                {!isMobile &&
                 <footer className="sticky bottom-0 z-20 bg-primary-200 dark:bg-secondary-500 h-[6rem]  flex-shrink-0">
-                    {!isMobile && <Navigation />}
-                </footer>
+                    <Navigation />
+                </footer>}
             </motion.div>
         </section>
     )

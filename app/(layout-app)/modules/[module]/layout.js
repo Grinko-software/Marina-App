@@ -13,7 +13,7 @@ export default function LayoutApp (props) {
         }
     }, [])
     return isMobile
-        ? <div className="w-full">{children}</div>
+        ? <div className="sticky top-0 z-20 rounded-lg w-full min-h-[77vh] max-h-[77vh]" >{children}</div>
         : (
             <>
                 {/* Header Section */}

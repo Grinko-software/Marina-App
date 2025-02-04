@@ -19,10 +19,10 @@ import { getToken } from './account'
 import { formatDateToISO } from '@/utils/date'
 
 export const TASK_STATES = {
+    UNASSIGNED: 'UNASSIGNED',
     TODO: 'TODO',
     IN_PROGRESS: 'IN_PROGRESS',
     READY_TO_EVALUATE: 'READY_TO_EVALUATE',
-    UNASSIGNED: 'UNASSIGNED',
     COMPLETED: 'COMPLETED',
     PAID: 'PAID'
 }
@@ -33,6 +33,20 @@ export const NAMES_TASK = {
     READY_TO_EVALUATE: 'Lista para evaluar',
     COMPLETED: 'Completadas',
     PAID: 'Pagada'
+}
+
+export const TAB_TITLES = {
+    UNASSIGNED: 'Sin Asig.',
+    TODO: 'Pend.',
+    IN_PROGRESS: 'En curso',
+    READY_TO_EVALUATE: 'Revisión',
+    COMPLETED: 'Done',
+    PAID: 'Pagada'
+}
+
+export const TAB_TITLES_IMG = {
+    BEFORE: 'Antes',
+    AFTER: 'Despues'
 }
 
 export const getTaskStateById = (taskStateId) => {

@@ -118,7 +118,7 @@ export default function WorkerPerformance () {
 
     return (
         <section className="w-full h-screen flex flex-col overflow-hidden">
-            <div className="flex flex-col flex-grow overflow-hidden h-full gap-y-4">
+            <div className="flex flex-col flex-grow overflow-hidden h-full space-y-1">
                 {/* Filtro */}
                 <div className="flex-shrink-0 ">
                     {isAdmin
@@ -155,12 +155,21 @@ export default function WorkerPerformance () {
                             <>
                                 {isMobile
                                     ? (
-                                        <div className="">
-                                            <ListTask
-                                                taskDifficulties={taskDifficulties}
-                                                taskStates={taskStates}
-                                            />
-                                        </div>
+                                        <ListTask
+                                            loading={loading}
+                                            taskDifficulties={taskDifficulties}
+                                            taskStates={taskStates}
+                                            isAdmin={true}
+                                            idUser ={idUser}
+                                            //
+                                            filters={filterData}
+                                            unassigned={unassignedTasks}
+                                            pending={todoTasks}
+                                            inProgress={inProgressTasks}
+                                            review={readyToEvaluateTasks}
+                                            finished={completedTasks}
+                                            paid={paidTasks}
+                                        />
                                     )
                                     : (
                                         <div className="flex-grow flex flex-col overflow-hidden space-y-4">
@@ -190,15 +199,34 @@ export default function WorkerPerformance () {
                                     )}
                             </>
                         )
-                        : (
-                            <div className="flex-grow overflow-y-auto">
-                                <EmployeePerformance
-                                    taskStates={taskStates}
-                                    idUser={idUser}
+                        : (<>
+                            {isMobile
+                                ? <ListTask
+                                    loading={loading}
                                     taskDifficulties={taskDifficulties}
+                                    taskStates={taskStates}
+                                    isAdmin={false}
+                                    idUser ={idUser}
+                                    //
+                                    filters={filterData}
+                                    unassigned={unassignedTasks}
+                                    pending={todoTasks}
+                                    inProgress={inProgressTasks}
+                                    review={readyToEvaluateTasks}
+                                    finished={completedTasks}
+                                    paid={paidTasks}
                                 />
-                            </div>
-                        )}
+                                : <div className="flex-grow overflow-y-auto">
+                                    <EmployeePerformance
+                                        taskStates={taskStates}
+                                        idUser={idUser}
+                                        taskDifficulties={taskDifficulties}
+                                    />
+                                </div>
+                            }
+                        </>)
+
+                    }
                 </div>
             </div>
         </section>

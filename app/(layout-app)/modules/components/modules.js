@@ -39,7 +39,7 @@ const ModuleView = ({ key, path, name, description, icon }) => {
 export function Modules () {
     useEffect(() => {}, [])
     return (
-        <Card className="w-full h-full">
+        <Card className="w-full h-full  pb-20 sm:pb-0">
             <CardHeader className="flex gap-3">
                 <p className="text-md font-bold">{'MÓDULOS'}</p>
             </CardHeader>
