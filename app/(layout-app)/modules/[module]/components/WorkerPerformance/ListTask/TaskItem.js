@@ -1,104 +1,114 @@
 import { TASK_STATES, TAB_TITLES_IMG } from '@/services/task'
 import { Tabs, Tab } from '@nextui-org/react'
-import Image from '@/components/ui/Image'
+import { Image } from 'antd'
 import { TaskScoreInputMobile } from '../components/TaskDetailScore'
 import { useEffect, useState } from 'react'
 import EvidenceTask from '../EmployeePerformance/components/EvidenceTask/evidenceTask'
+import { motion } from 'framer-motion'
 
-const CONTAINER_CLASSES = 'bg-white dark:bg-gray-800 text-black dark:text-white shadow-md border border-gray-200 dark:border-gray-700 rounded-lg p-4'
+const CONTAINER_CLASSES = 'bg-white dark:bg-gray-900 text-black dark:text-white shadow-md border border-gray-300 dark:border-gray-700 rounded-xl p-4 sm:p-5 transition-all duration-300'
 
-export default function TaskItem ({ id, user, description, dateLimit, state, taskInitation, taskCompletion, tabSelected, images, isAdmin, taskState, idUser, handleRequestGetTask }) {
-    const [selected, setSelected] = useState('before')
+export default function TaskItem ({ id, user, description, dateLimit, state, taskInitation, taskCompletion, tabSelected, images, isAdmin, taskState, idUser, handleRequestGetTask, feedback }) {
+    const [selected, setSelected] = useState(TAB_TITLES_IMG.BEFORE)
     const [selectedImgs, setSelectedImgs] = useState([])
-    const [selectedImgsTab, setSelectedImgsTab] = useState([])
 
     useEffect(() => {
-        console.log(images)
-        if (selected === TAB_TITLES_IMG.BEFORE) {
-            setSelectedImgs(taskInitation.images)
-            setSelectedImgsTab(TAB_TITLES_IMG.BEFORE)
-        }
-        if (selected === TAB_TITLES_IMG.AFTER) {
-            setSelectedImgs(taskCompletion.images)
-            setSelectedImgsTab(TAB_TITLES_IMG.AFTER)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (selected === TAB_TITLES_IMG.BEFORE) {
-            setSelectedImgs(taskInitation?.images ?? []) // ✅ Ensure it's always an array
-            setSelectedImgsTab(TAB_TITLES_IMG.BEFORE)
-        }
-        if (selected === TAB_TITLES_IMG.AFTER) {
-            setSelectedImgs(taskCompletion?.images ?? []) // ✅ Ensure it's always an array
-            setSelectedImgsTab(TAB_TITLES_IMG.AFTER)
-        }
-        console.log('TASKCOMPLETION: ', selectedImgs)
-    }, [selected, taskInitation, taskCompletion]) // ✅ Added dependencies
+        setSelectedImgs(
+            selected === TAB_TITLES_IMG.BEFORE ? taskInitation?.images ?? [] : taskCompletion?.images ?? []
+        )
+    }, [selected, taskInitation, taskCompletion])
 
     return (
-        <div className={`${CONTAINER_CLASSES} flex flex-col gap-2`}>
-            {/* Header de la Tarea */}
-            <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Tarea Asignada</h3>
-                {isAdmin &&
-                <span className="px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-full">
-                    {user?.name ?? 'No asignado'}
-                </span>}
+        <div
+            className={`${CONTAINER_CLASSES} flex flex-col gap-4`}
+        >
+            {/* 🏷️ Header - Título + Nombre del Usuario */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">📌 Tarea Asignada</h3>
+                {isAdmin && (
+                    <span className="px-3 py-1 text-md sm:text-sm font-medium flex capitalize justify-center items-center text-white bg-blue-600 rounded-full shadow-md">
+                        {user?.name ?? 'Sin asignar'}
+                    </span>
+                )}
+                {(tabSelected === TASK_STATES.UNASSIGNED && !isAdmin) && (
+                    <span className="px-3 py-1 text-md sm:text-sm font-medium flex capitalize justify-center items-center text-white bg-yellow-400 rounded-full shadow-md">
+                        {'Sin asignar'}
+                    </span>
+                )}
             </div>
 
-            {/* Descripción */}
-            <p className="text-gray-700 dark:text-gray-300">
-                <strong>Descripción:</strong> {description}
+            {/* 📋 Descripción de la tarea */}
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
+                <strong>📝 Descripción:</strong> {description}
             </p>
-            {tabSelected === TASK_STATES.TODO
-                ? (<>
-                    <EvidenceTask taskState={taskState} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask} />
-                </>)
-                : (<></>)
+            { (tabSelected === TASK_STATES.PAID && feedback !== null) &&
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
+                    <strong>✅  Feedback:</strong> {feedback}
+                </p>
             }
-            { tabSelected === TASK_STATES.READY_TO_EVALUATE
-                ? (
-                    <div className='flex flex-col space-y-2'>
-                        <div className='justify-center items-center flex flex-row gap-2'>
-                            <Tabs
-                                className="justify-center items-center" aria-label="Options"
-                                selectedKey={selectedImgsTab} onSelectionChange={setSelected}
-                            >
-                                <Tab key={TAB_TITLES_IMG.BEFORE} title={TAB_TITLES_IMG.BEFORE} / >
-                                <Tab key={TAB_TITLES_IMG.AFTER} title={TAB_TITLES_IMG.AFTER} />
-                            </Tabs>
 
-                            {/* Input para Calificación en Mobile */}
-                            <TaskScoreInputMobile taskId={id} />
-                        </div>
-                        <div className="flex flex-row flex-wrap justify-center gap-5  h-full">
-                            <div className="flex flex-row flex-wrap justify-center gap-5 h-full">
-                                {selectedImgs?.length > 0
-                                    ? (
-                                        <>
-                                            {selectedImgs?.map((url, index) => ( // ✅ Fixed parameter order
-                                                <Image
-                                                    key={index} // ✅ Use index instead of id
-                                                    shadow="none"
-                                                    radius="lg"
-                                                    width="50"
-                                                    height="50"
-                                                    alt={`image-${index}`} // ✅ Ensures meaningful alt text
-                                                    className="object-cover max-h-[10rem] border w-full min-w-[10rem] rounded-lg bg-slate-100 dark:bg-white"
-                                                    src={url} // ✅ Using correct property
-                                                />
-                                            ))}
-                                        </>
-                                    )
-                                    : (
-                                        <p className="text-gray-500 text-sm">No images available</p> // ✅ Better fallback UI
-                                    )}
-                            </div>
-                        </div>
+            {/* ✅ Mostrar Evidencia de la Tarea */}
+            {(tabSelected === TASK_STATES.TODO || tabSelected === TASK_STATES.IN_PROGRESS || tabSelected === TASK_STATES.UNASSIGNED) && !isAdmin && (
+                <EvidenceTask taskState={state} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask} />
+            )}
+
+            {/* 📸 Evaluación con imágenes */}
+            {(tabSelected === TASK_STATES.READY_TO_EVALUATE || tabSelected === TASK_STATES.PAID) && (
+                <motion.div
+                    className="flex flex-col space-y-3 items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    {/* 🔹 Tabs para imágenes antes/después */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <Tabs
+                            className="w-full border-b border-gray-300 dark:border-gray-600 pb-1"
+                            aria-label="Options"
+                            selectedKey={selected}
+                            onSelectionChange={setSelected}
+                        >
+                            <Tab key={TAB_TITLES_IMG.BEFORE} title="📷 Antes" />
+                            <Tab key={TAB_TITLES_IMG.AFTER} title="✅ Después" />
+                        </Tabs>
+
+                        {(tabSelected === TASK_STATES.READY_TO_EVALUATE) &&
+                            (<TaskScoreInputMobile taskId={id} />)
+                        }
                     </div>
-                )
-                : <></>}
+
+                    {/* 📷 Imágenes antes/después con scroll horizontal para móviles */}
+                    <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-2">
+                        {selectedImgs.length > 0
+                            ? (
+                                selectedImgs.map((url, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                                        className="snap-center"
+                                    >
+                                        <Image
+                                            shadow="none"
+                                            radius="lg"
+                                            width="80"
+                                            height="80"
+                                            alt={`Imagen ${index + 1}`}
+                                            className="object-cover max-h-[8rem] w-[7rem] sm:w-[9rem] rounded-lg border border-gray-300 dark:border-gray-700 transition-transform duration-300 hover:scale-105"
+                                            src={url}
+                                        />
+                                    </motion.div>
+                                ))
+                            )
+                            : (
+                                <p className="text-gray-500 text-xs sm:text-sm text-center w-full">
+                                🚫 No hay imágenes disponibles
+                                </p>
+                            )}
+                    </div>
+                </motion.div>
+            )}
         </div>
     )
 }

@@ -30,11 +30,11 @@ export const uploadImageTaskEmployee = ({
     return uploadImageTaskByEmployee({ taskId, employeeId, description })
 }
 export const parseTaskByEmployee = ({ data }) => {
-    // console.log(data)
     return data?.map((item) => {
         return {
             id: item.id,
             name: item.name,
+            user: item?.user,
             description: item?.description,
             taskTypeId: item?.task_type_id,
             dateLimit: item?.date_limit,

@@ -94,7 +94,6 @@ const useAuthStore = create(
                 return ok
             },
             getUserDataWithCode: async ({ authCode, requireAdmin }) => {
-                console.log(authCode)
                 let resultData = null
                 try {
                     await authenticateByAuthCode({

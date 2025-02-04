@@ -16,6 +16,7 @@ const useFilterStore = create((set) => ({
                         let stateKey = null
                         const taskUser = item?.user
                             ? {
+                                createdAt: item?.createdAt,
                                 id: item?.user?.ID,
                                 name: item?.user?.name,
                                 last_name: item?.user?.last_name,
@@ -55,7 +56,11 @@ const useFilterStore = create((set) => ({
                             // unassignedItems
                             stateKey = TASK_STATES.UNASSIGNED
                         } else {
-                            stateKey = getTaskStateById(taskStateId)
+                            if (item?.rating !== null) {
+                                stateKey = TASK_STATES.PAID
+                            } else {
+                                stateKey = getTaskStateById(taskStateId)
+                            }
                         }
 
                         return {
@@ -63,6 +68,7 @@ const useFilterStore = create((set) => ({
                             name: item.name,
                             description: item.description,
                             dateLimit: item.date_limit,
+                            createdAt: item?.createdAt,
 
                             // -
                             taskInitationId: item.task_initation_id,

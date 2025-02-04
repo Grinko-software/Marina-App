@@ -1,26 +1,37 @@
 /* eslint-disable no-unused-vars */
 'use client'
+import { motion } from 'framer-motion'
 import { useEffect, useState, useCallback } from 'react'
 import ListTaskViewer from './ListTaskViewer'
-import { Spinner, Tabs, Tab, Accordion, AccordionItem } from '@nextui-org/react'
-import { completeTask, getTasksByEmployee, getGeneralTasks, parseTaskByEmployee, getIdTask } from './service'
+import { Spinner, Tabs, Tab } from '@nextui-org/react'
+import { getTasksByEmployee, getGeneralTasks, parseTaskByEmployee, getIdTask } from './service'
 import { TAB_TITLES, TASK_STATES, NAMES_TASK } from '@/services/task'
-import { getMoment } from '@/utils/date'
-import EvidenceTask from '../EmployeePerformance/components/EvidenceTask/evidenceTask'
-import { TaskScore } from '../components/TaskDetailScore'
 
-export default function ListTask ({ unassigned, pending, inProgress, review, finished, paid, loading, isAdmin, idUser, taskDifficulties, taskStates }) {
+export default function ListTask (
+    {
+        unassigned,
+        pending,
+        inProgress,
+        review,
+        finished,
+        paid,
+        loading,
+        isAdmin,
+        idUser,
+        taskDifficulties,
+        taskStates
+    }) {
     const [selected, setSelected] = useState(TASK_STATES.UNASSIGNED)
     const [selectedTab, setSelectedTab] = useState(TASK_STATES.UNASSIGNED)
     const [selectedItems, setSelectedItems] = useState([])
     const [tabList, setTabList] = useState([])
     const [tasksUser, setTasksUser] = useState([])
-    const [tasksToDo, setTasksToDo] = useState([])
+
+    const [unassignedTasks, setUnassignedTasks] = useState([])
+    const [tasksTodoUser, setTasksTodoUser] = useState([])
+    const [tasksInProgressUser, setInProgressTasksUser] = useState([])
+
     const [fetching, setFetching] = useState(false)
-
-    console.log('🔍 isAdmin:', isAdmin)
-    console.log('🔍 idUser:', idUser)
-
     /** Fetch tasks for employees (Non-Admin) */
     const handleRequestGetTask = useCallback(() => {
         if (taskStates?.length > 0) {
@@ -34,7 +45,13 @@ export default function ListTask ({ unassigned, pending, inProgress, review, fin
                     taskStates
                 })
                 setTasksUser(tasks)
-                console.log('USER EMPLOYEE TASK: ', tasks)
+
+                const todoFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.TODO)
+                setTasksTodoUser(todoFilteredTask)
+
+                const inProgessFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.IN_PROGRESS)
+                setInProgressTasksUser(inProgessFilteredTask)
+
                 setFetching(false)
             })
 
@@ -45,14 +62,8 @@ export default function ListTask ({ unassigned, pending, inProgress, review, fin
                     taskStates
                 })
 
-                console.log('🔍 Raw tasks before filtering:', tasks) // ✅ Debugging the full task list
-
-                // ✅ Correct filter: Only keep tasks where userId === 0
                 const filteredTasks = tasks.filter((t) => t.userId === undefined)
-
-                console.log('✅ Filtered tasks (Unassigned userId === 0):', filteredTasks) // ✅ Debug filtered tasks
-
-                setTasksToDo([...filteredTasks]) // ✅ Ensure React updates state correctly
+                setUnassignedTasks(filteredTasks)
                 setFetching(false)
             })
         }
@@ -60,16 +71,15 @@ export default function ListTask ({ unassigned, pending, inProgress, review, fin
 
     useEffect(() => {
         if (isAdmin) {
-            setTabList([TAB_TITLES.TODO, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.PAID])
+            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.PAID])
         } else {
-            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO])
-            handleRequestGetTask() // Fetch tasks for employees
+            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.IN_PROGRESS])
+            handleRequestGetTask()
         }
     }, [handleRequestGetTask])
 
-    /** Select Tab Logic */
     useEffect(() => {
-        console.log('🛠 Changing Selected Tab to:', selected)
+        const finishTask = []
         if (isAdmin) {
             switch (selected) {
             case TAB_TITLES.UNASSIGNED:
@@ -103,14 +113,16 @@ export default function ListTask ({ unassigned, pending, inProgress, review, fin
         } else {
             switch (selected) {
             case TAB_TITLES.UNASSIGNED:
-                setSelectedItems(tasksToDo.length > 0 ? tasksToDo : [])
+                setSelectedItems(unassignedTasks.length > 0 ? unassignedTasks : [])
                 setSelectedTab(TASK_STATES.UNASSIGNED)
-                console.log('EMPLOYEE UNASSIGNE TASK: ', tasksToDo)
                 break
             case TAB_TITLES.TODO:
-                setSelectedItems(tasksUser.length > 0 ? tasksUser : [])
+                setSelectedItems(tasksTodoUser.length > 0 ? tasksTodoUser : [])
                 setSelectedTab(TASK_STATES.TODO)
-                console.log('EMPLOYEE TODO TASK: ', tasksUser)
+                break
+            case TAB_TITLES.IN_PROGRESS:
+                setSelectedItems(tasksInProgressUser.length > 0 ? tasksInProgressUser : [])
+                setSelectedTab(TASK_STATES.IN_PROGRESS)
                 break
             }
         }
@@ -125,7 +137,7 @@ export default function ListTask ({ unassigned, pending, inProgress, review, fin
                     </div>
                 )
                 : (
-                    <div className="flex flex-col gap-y-1">
+                    <div className="flex flex-col gap-y-2">
 
                         <Tabs
                             className="justify-center items-center"
@@ -137,67 +149,23 @@ export default function ListTask ({ unassigned, pending, inProgress, review, fin
                                 <Tab key={tab} title={tab} />
                             ))}
                         </Tabs>
-                        <ListTaskViewer
-                            items={selectedItems}
-                            tabSelected={selectedTab}
-                            isAdmin={isAdmin}
-                            taskState ={taskStates}
-                            idUser ={idUser}
-                            handleRequestGetTask={handleRequestGetTask} />
+                        <motion.div
+                            key={selectedTab} // 🔄 Clave única para animar al cambiar de pestaña
+                            initial={{ opacity: 0, y: 10 }} // Estado inicial (transparente y desplazado)
+                            animate={{ opacity: 1, y: 0 }} // Animación cuando cambia de tab
+                            exit={{ opacity: 0, y: -10 }} // Animación al salir
+                            transition={{ duration: 0.3, ease: 'easeOut' }} // Duración y efecto
+                        >
+                            <ListTaskViewer
+                                items={selectedItems}
+                                tabSelected={selectedTab}
+                                isAdmin={isAdmin}
+                                taskState={taskStates}
+                                idUser={idUser}
+                                handleRequestGetTask={handleRequestGetTask}
+                            />
+                        </motion.div>
                     </div>
                 )}
         </div>)
 }
-/* <div className="w-full flex flex-col gap-6 sm:gap-10">
-                                    {tasksToDo.length > 0 && (
-                                        <div className="w-full">
-                                            <h2 className="text-lg sm:text-xl font-bold mb-3 text-center">
-                                        Actividades por hacer
-                                            </h2>
-                                            <Accordion className="w-full bg-white rounded-lg shadow-md">
-                                                {tasksToDo.map(({ id, name, taskState, description, dateLimit }) => (
-                                                    <AccordionItem
-                                                        key={id}
-                                                        title={
-                                                            <div className="flex flex-wrap justify-between items-center w-full p-2">
-                                                                <span className="uppercase font-bold text-sm sm:text-base text-gray-800">
-                                                                    {name}
-                                                                </span>
-                                                                <span className={`text-xs sm:text-sm font-semibold ${taskState === 'COMPLETED' ? 'text-green-500' : 'text-yellow-500'}`}>
-                                                                    {NAMES_TASK[taskState]}
-                                                                </span>
-                                                            </div>
-                                                        }
-                                                    >
-                                                        <div className="text-gray-600 px-2 flex flex-col gap-2">
-                                                            <p><strong>Descripción:</strong> {description}</p>
-                                                            <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
-                                                            {taskState !== 'COMPLETED' && (
-                                                                <EvidenceTask taskState={taskState} employeeId={idUser} taskId={id} handleRequestGetTask={handleRequestGetTask} />
-                                                            )}
-                                                        </div>
-                                                    </AccordionItem>
-                                                ))}
-                                            </Accordion>
-                                        </div>
-                                    )}
-
-                                    {tasksUser.length > 0 && (
-                                        <div className="w-full">
-                                            <h2 className="text-lg sm:text-xl font-bold mb-3 text-center">
-                                        Actividades asignadas
-                                            </h2>
-                                            <Accordion className="w-full bg-white rounded-lg shadow-md">
-                                                {tasksUser.map(({ id, name, taskState, description, dateLimit }) => (
-                                                    <AccordionItem key={id} title={<span className="uppercase font-bold">{name}</span>}>
-                                                        <div className="text-gray-600 px-2 flex flex-col gap-2">
-                                                            <p><strong>Descripción:</strong> {description}</p>
-                                                            <p><strong>Fecha límite:</strong> {getMoment(dateLimit).calendar() || '-'}</p>
-                                                        </div>
-                                                    </AccordionItem>
-                                                ))}
-                                            </Accordion>
-                                        </div>
-                                    )}
-                                </div>
-                    </div> */

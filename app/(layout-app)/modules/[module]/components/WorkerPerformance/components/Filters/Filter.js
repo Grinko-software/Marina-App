@@ -44,7 +44,7 @@ export default function Filter ({
 
     return isMobile
         ? (
-            <section className="w-full flex items-end space-x-2 justify-end">
+            <section className="w-full flex items-center space-x-2 justify-center">
                 <PayButton />
                 <CreateTask
                     isAdmin={isAdmin}

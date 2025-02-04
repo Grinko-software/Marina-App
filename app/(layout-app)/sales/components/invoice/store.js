@@ -24,7 +24,6 @@ const useInvoiceStore = create(
         complete: false,
         setTargetCustomer: (value) => set({ targetCustomer: value }),
         setFormData: (newData) => {
-            // console.log(newData)
             set({ defaultForm: { ...newData } })
         },
         setLoadingCustomer: (value) => set({ loadingCustomer: value }),

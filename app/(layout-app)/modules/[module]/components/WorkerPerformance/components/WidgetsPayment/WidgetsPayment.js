@@ -13,12 +13,14 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
+    Spinner,
     useDisclosure
 } from '@nextui-org/react'
 export default function WidgetsPayment () {
     const [isEditPrice, setIsEditPrice] = useState(false)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const {
+        loading,
         totalPayment,
         totalStar,
         data,
@@ -40,13 +42,11 @@ export default function WidgetsPayment () {
 
     const handlePay = async () => {
         const response = await sendToPay({ listPayments: data })
-        console.log(response)
         requestData({ userId: selectionUser, fromDate, toDate })
         onClose()
     }
     const handleEditPrice = async () => {
         const response = await updatePriceStar(newPriceStar)
-        console.log(response)
         getPriceForStar()
         if (selectionUser && fromDate && toDate) {
             requestData({ userId: selectionUser, fromDate, toDate })
@@ -58,7 +58,7 @@ export default function WidgetsPayment () {
     }, [])
     return (
         <div className="flex flex-col gap-2">
-            <Button
+            {!loading ? <Button
                 className="bg-yellow-600 dark:bg-yellow-600 font-semibold uppercase"
                 color="primary"
                 onClick={() => {
@@ -70,6 +70,12 @@ export default function WidgetsPayment () {
             >
                 {priceStar + ' Editar precio por estrella'}
             </Button>
+                : <>
+                    <Spinner className="bg-yellow-600 dark:bg-yellow-600 rounded-lg font-white " >
+                    </Spinner>
+                </>
+            }
+
             {totalPayment && totalStar && (
                 <>
                     <Button

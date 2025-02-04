@@ -42,8 +42,9 @@ const ViewPayment = () => {
                 )
             case 'rating':
                 return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                    <div className="flex flex-row">
+                        <p className="text-yellow-400">{'★'}</p>
+                        <p className="text-bold text-sm capitalize dark:text-white">{` ${cellValue}`}</p>
                     </div>
                 )
             default:
@@ -70,7 +71,7 @@ const ViewPayment = () => {
     return (
         <div className="h-full w-full mt-0 md:mt-2">
             <FilterPayment isMobile={isMobile} users={users} />
-            <div className="mt-[10rem] md:mt-7">
+            <div className="mt-[11rem] md:mt-7">
                 <Table isHeaderSticky>
                     <TableHeader columns={columns}>
                         {(column) => (

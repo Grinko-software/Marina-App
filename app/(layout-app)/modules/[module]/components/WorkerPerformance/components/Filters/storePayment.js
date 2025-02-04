@@ -80,15 +80,17 @@ const useFilterStorePayment = create((set) => ({
     },
     getPriceForStar: async () => {
         try {
+            set({ loading: true })
             const response = await getValueByStar()
             set({ priceStar: response?.data?.cash_bonus })
+            set({ loading: false })
         } catch (e) {
             console.error('Error getting price for SAR:', e)
+            set({ loading: false })
         }
         return null
     },
     updatePriceStar: async (newPriceStar) => {
-        console.log(newPriceStar)
         try {
             set({ loading: true })
             const response = await changePriceStar(newPriceStar)

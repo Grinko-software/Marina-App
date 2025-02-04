@@ -78,7 +78,6 @@ export default function ScannerDetection () {
         )
         if (!ms || ms > msRangeScan) {
             setDatetimeLastScan()
-            console.log(`Auth code: ${barcode}`)
             if (useScannerStore.getState().authModeFunction) { useScannerStore.getState().authModeFunction(barcode) }
         }
     }
@@ -105,25 +104,13 @@ export default function ScannerDetection () {
     }
 
     useEffect(() => {
-        console.log(
-            'redirect: ',
-            enabledRedirect,
-            ' scanner: ',
-            scannerEnabled,
-            ' authMode: ',
-            authModeEnabled
-        )
-
         // disabled scanner
         if (scanner !== null) {
             scanner?.stopScanning()
             setScanner(null)
-            console.log('Stop scanner')
         }
 
         if (scannerEnabled || enabledRedirect || authModeEnabled) {
-            console.log('New scanner')
-
             const options = {
                 onComplete: onCompleteScanner,
                 onError

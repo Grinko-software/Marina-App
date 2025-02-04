@@ -108,6 +108,3 @@ export default function TasksBoard ({
         </section>
     )
 }
-/*
-flex flex-grow w-full flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2 overflow-hidden
-*/

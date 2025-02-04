@@ -26,6 +26,7 @@ export const TASK_STATES = {
     COMPLETED: 'COMPLETED',
     PAID: 'PAID'
 }
+
 export const NAMES_TASK = {
     UNASSIGNED: 'Tarjetas sin asignar',
     TODO: 'Por hacer',
@@ -172,13 +173,7 @@ export const fetchCreateTask = async ({
         return null
     }
 }
-/*
 
-{
-    "from":"2024-10-29T00:00:00Z",
-    "to":"2024-11-29T00:00:00Z"
-}
-*/
 export const fetchGetPaymentList = async ({ userId, fromDate, toDate }) => {
     const body = {
         from: formatDateToISO(fromDate),

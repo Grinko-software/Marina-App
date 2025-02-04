@@ -105,7 +105,6 @@ export default function EvidenceTask ({
 
     useEffect(() => {
         if (taskState === 'TODO') {
-            // handleRequestGetTask()
             setInitTask(true)
         } else {
             setInitTask(false)
@@ -114,7 +113,7 @@ export default function EvidenceTask ({
     const disableSendButton = comment === '' || images.length === 0
     return (
         <div>
-            <div className="flex justify-end">
+            <div className="flex justify-center">
                 {taskState === 'TODO'
                     ? (
                         <Button

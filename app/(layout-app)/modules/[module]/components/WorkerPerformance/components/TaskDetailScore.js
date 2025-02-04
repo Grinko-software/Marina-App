@@ -155,7 +155,7 @@ export function TaskScoreInputMobile ({
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-						Nueva tarea
+						Calificar tarea
                     </ModalHeader>
                     <ModalBody>
                         <section className="w-full">

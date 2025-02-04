@@ -16,7 +16,6 @@ import {
 import { isMobileDevice } from '@/utils/agent'
 import useFilterStore from './store'
 import useAuthStore from '@/stores/user'
-import EmployeePerformance from './EmployeePerformance/EmployeePerformance'
 import TasksBoard from './components/TasksBoard'
 import { TASK_STATES } from '@/services/task'
 import ListTask from './ListTask/ListTask'
@@ -118,7 +117,7 @@ export default function WorkerPerformance () {
 
     return (
         <section className="w-full h-screen flex flex-col overflow-hidden">
-            <div className="flex flex-col flex-grow overflow-hidden h-full space-y-1">
+            <div className="flex flex-col flex-grow overflow-hidden h-full space-y-2">
                 {/* Filtro */}
                 <div className="flex-shrink-0 ">
                     {isAdmin
@@ -216,13 +215,20 @@ export default function WorkerPerformance () {
                                     finished={completedTasks}
                                     paid={paidTasks}
                                 />
-                                : <div className="flex-grow overflow-y-auto">
-                                    <EmployeePerformance
-                                        taskStates={taskStates}
-                                        idUser={idUser}
-                                        taskDifficulties={taskDifficulties}
-                                    />
-                                </div>
+                                : (
+
+                                    <div className="min-h-[62vh] max-h-[62vh] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-fadeIn rounded-2xl">
+                                        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm text-center">
+                                            <span className="text-4xl">📱</span>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mt-2">
+                                                    Accede desde tu celular
+                                            </h2>
+                                            <p className="text-gray-600 dark:text-gray-300 mt-2">
+                                                    Este módulo solo está disponible en dispositivos móviles.
+                                            </p>
+                                        </div>
+                                    </div>
+                                )
                             }
                         </>)
 
