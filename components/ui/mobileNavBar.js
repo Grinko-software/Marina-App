@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Navbar,
     NavbarContent,
@@ -9,6 +9,7 @@ import {
 } from '@nextui-org/react'
 import { usePathname, useRouter } from 'next/navigation'
 import useAuthStore from '@/stores/user'
+import { MODULES_KEYS } from '@/utils/modules'
 
 export default function MobileNavBar () {
     const { signOut } = useAuthStore(({ signOut }) => ({ signOut }))
@@ -19,29 +20,22 @@ export default function MobileNavBar () {
     const moduleApplication = pathname.replace('/', '')
     const [selected, setSelected] = useState(moduleApplication)
 
-    // Menú de navegación
-    const menuItems = useMemo(() => [
+    const menuItems = [
         { id: 'inventory', label: '📦 Inventario', route: '/inventory' },
         { id: 'modules', label: '🛠️ Módulos', route: '/modules' },
-        { id: 'performance', label: '📊 Rendimiento', route: '/modules/performance' },
+        { id: MODULES_KEYS.PERFORFANCE, label: '📊 Rendimiento', route: '/modules/performance' },
         { id: 'login', label: '🚪 Cerrar sesión', route: '/' }
-    ], [])
-
-    // Manejo de navegación
-    const handleNavigation = useCallback((route) => {
-        setSelected(route)
-        if (route === 'login') {
-            signOut()
-        }
-        router.push(route)
-        setIsMenuOpen(false)
-    }, [router, signOut])
+    ]
 
     useEffect(() => {
         if (selected && selected !== moduleApplication) {
-            handleNavigation(selected)
+            if (selected === 'login') {
+                signOut()
+            }
+            router.push(selected)
+            setIsMenuOpen(false)
         }
-    }, [selected, moduleApplication, handleNavigation])
+    }, [selected])
 
     return (
         <Navbar
@@ -59,21 +53,19 @@ export default function MobileNavBar () {
 
             {/* Menú desplegable */}
             <NavbarMenu className="flex flex-col gap-3 p-4 items-start bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg transition-all duration-300">
-                {menuItems.map(({ id, label, route }) => (
-                    <NavbarMenuItem key={id} className="w-full">
+                {menuItems?.map((item, index) => (
+                    <NavbarMenuItem key={item.id} className="w-full">
                         <Button
                             className={`
                                 w-full h-12 flex items-center justify-start px-4 font-semibold text-lg rounded-lg 
                                 transition-colors duration-200 text-gray-900 dark:text-white
-                                ${
-                    selected === route
-                        ? 'bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white'
-                        : 'hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white'
-                    }
+                                bg-gray-300 dark:bg-gray-700
                             `}
-                            onClick={() => handleNavigation(route)}
+                            onClick={() => {
+                                setSelected(item?.route)
+                            }}
                         >
-                            {label}
+                            {item.label}
                         </Button>
                     </NavbarMenuItem>
                 ))}
