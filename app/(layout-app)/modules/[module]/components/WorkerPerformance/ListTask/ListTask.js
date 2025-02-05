@@ -30,7 +30,8 @@ export default function ListTask (
     const [unassignedTasks, setUnassignedTasks] = useState([])
     const [tasksTodoUser, setTasksTodoUser] = useState([])
     const [tasksInProgressUser, setInProgressTasksUser] = useState([])
-
+    const [tasksReadyToEvaluateUser, setTasksReadyToEvaluateUser] = useState([])
+    const [tasksPaidUser, setTasksPaidUser] = useState([])
     const [fetching, setFetching] = useState(false)
     /** Fetch tasks for employees (Non-Admin) */
     const handleRequestGetTask = useCallback(() => {
@@ -51,6 +52,12 @@ export default function ListTask (
 
                 const inProgessFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.IN_PROGRESS)
                 setInProgressTasksUser(inProgessFilteredTask)
+
+                const readyToEvaluateTask = tasks.filter((t) => t.taskState === TASK_STATES.READY_TO_EVALUATE)
+                setTasksReadyToEvaluateUser(readyToEvaluateTask)
+
+                const paidTask = tasks.filter((t) => t.taskState === TASK_STATES.PAID)
+                setTasksPaidUser(paidTask)
 
                 setFetching(false)
             })
@@ -73,7 +80,7 @@ export default function ListTask (
         if (isAdmin) {
             setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.PAID])
         } else {
-            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.IN_PROGRESS])
+            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.IN_PROGRESS, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.PAID])
             handleRequestGetTask()
         }
     }, [handleRequestGetTask])
@@ -123,6 +130,14 @@ export default function ListTask (
             case TAB_TITLES.IN_PROGRESS:
                 setSelectedItems(tasksInProgressUser.length > 0 ? tasksInProgressUser : [])
                 setSelectedTab(TASK_STATES.IN_PROGRESS)
+                break
+            case TAB_TITLES.READY_TO_EVALUATE:
+                setSelectedItems(tasksReadyToEvaluateUser.length > 0 ? tasksReadyToEvaluateUser : [])
+                setSelectedTab(TASK_STATES.READY_TO_EVALUATE)
+                break
+            case TAB_TITLES.PAID:
+                setSelectedItems(tasksPaidUser.length > 0 ? tasksPaidUser : [])
+                setSelectedTab(TASK_STATES.PAID)
                 break
             }
         }
