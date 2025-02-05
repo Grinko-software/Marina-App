@@ -72,7 +72,7 @@ export default function TaskItem ({ id, user, description, dateLimit, state, tas
                             <Tab key={TAB_TITLES_IMG.AFTER} title="✅ Después" />
                         </Tabs>
 
-                        {(tabSelected === TASK_STATES.READY_TO_EVALUATE) &&
+                        {(isAdmin && tabSelected === TASK_STATES.READY_TO_EVALUATE) &&
                             (<TaskScoreInputMobile taskId={id} />)
                         }
                     </div>
