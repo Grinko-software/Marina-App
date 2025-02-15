@@ -5,18 +5,28 @@ import { TaskScoreInputMobile } from '../components/TaskDetailScore'
 import { useEffect, useState } from 'react'
 import EvidenceTask from '../EmployeePerformance/components/EvidenceTask/evidenceTask'
 import { motion } from 'framer-motion'
+import useFilterStorePayment from '../components/Filters/storePayment'
+import { formatNumberWithPoints } from '@/utils/number'
 
 const CONTAINER_CLASSES = 'bg-white dark:bg-gray-900 text-black dark:text-white shadow-md border border-gray-300 dark:border-gray-700 rounded-xl p-4 sm:p-5 transition-all duration-300'
 
 export default function TaskItem ({ id, user, description, dateLimit, state, taskInitation, taskCompletion, tabSelected, images, isAdmin, taskState, idUser, handleRequestGetTask, feedback, rate }) {
     const [selected, setSelected] = useState(TAB_TITLES_IMG.BEFORE)
     const [selectedImgs, setSelectedImgs] = useState([])
+    const {
+        priceStar,
+        getPriceForStar
+    } = useFilterStorePayment()
 
     useEffect(() => {
         setSelectedImgs(
             selected === TAB_TITLES_IMG.BEFORE ? taskInitation?.images ?? [] : taskCompletion?.images ?? []
         )
     }, [selected, taskInitation, taskCompletion])
+
+    useEffect(() => {
+        getPriceForStar()
+    }, [])
 
     return (
         <div
@@ -41,16 +51,21 @@ export default function TaskItem ({ id, user, description, dateLimit, state, tas
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
                 <strong>📝 Descripción:</strong> {description}
             </p>
-            {(tabSelected === TASK_STATES.COMPLETED || tabSelected === TASK_STATES.PAID) && (
-                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
-                    <strong>⭐ Calificación:</strong> {rate + '/10'}
-                </p>
-            )}
             { (tabSelected === TASK_STATES.PAID && feedback !== null) &&
                 <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
                     <strong>✅  Feedback:</strong> {feedback}
                 </p>
             }
+            {(tabSelected === TASK_STATES.COMPLETED || tabSelected === TASK_STATES.PAID) && (
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
+                    <strong>⭐ Calificación:</strong> {rate + '/10'}
+                </p>
+            )}
+            {(tabSelected === TASK_STATES.PAID) && (
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
+                    <strong>💸 Pago:</strong> ${formatNumberWithPoints(priceStar * rate)}
+                </p>
+            )}
 
             {/* ✅ Mostrar Evidencia de la Tarea */}
             {(tabSelected === TASK_STATES.TODO || tabSelected === TASK_STATES.IN_PROGRESS || tabSelected === TASK_STATES.UNASSIGNED) && !isAdmin && (
