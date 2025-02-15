@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 
 const CONTAINER_CLASSES = 'bg-white dark:bg-gray-900 text-black dark:text-white shadow-md border border-gray-300 dark:border-gray-700 rounded-xl p-4 sm:p-5 transition-all duration-300'
 
-export default function TaskItem ({ id, user, description, dateLimit, state, taskInitation, taskCompletion, tabSelected, images, isAdmin, taskState, idUser, handleRequestGetTask, feedback }) {
+export default function TaskItem ({ id, user, description, dateLimit, state, taskInitation, taskCompletion, tabSelected, images, isAdmin, taskState, idUser, handleRequestGetTask, feedback, rate }) {
     const [selected, setSelected] = useState(TAB_TITLES_IMG.BEFORE)
     const [selectedImgs, setSelectedImgs] = useState([])
 
@@ -41,6 +41,11 @@ export default function TaskItem ({ id, user, description, dateLimit, state, tas
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
                 <strong>📝 Descripción:</strong> {description}
             </p>
+            {(tabSelected === TASK_STATES.COMPLETED || tabSelected === TASK_STATES.PAID) && (
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
+                    <strong>⭐ Calificación:</strong> {rate + '/10'}
+                </p>
+            )}
             { (tabSelected === TASK_STATES.PAID && feedback !== null) &&
                 <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-snug capitalize">
                     <strong>✅  Feedback:</strong> {feedback}

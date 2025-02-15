@@ -56,11 +56,7 @@ const useFilterStore = create((set) => ({
                             // unassignedItems
                             stateKey = TASK_STATES.UNASSIGNED
                         } else {
-                            if (item?.rating !== null) {
-                                stateKey = TASK_STATES.PAID
-                            } else {
-                                stateKey = getTaskStateById(taskStateId)
-                            }
+                            stateKey = getTaskStateById(taskStateId)
                         }
 
                         return {

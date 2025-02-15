@@ -166,7 +166,7 @@ export default function WorkerPerformance () {
                                             pending={todoTasks}
                                             inProgress={inProgressTasks}
                                             review={readyToEvaluateTasks}
-                                            finished={completedTasks}
+                                            completed={completedTasks}
                                             paid={paidTasks}
                                         />
                                     )

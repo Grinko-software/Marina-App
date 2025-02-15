@@ -13,7 +13,7 @@ export default function ListTask (
         pending,
         inProgress,
         review,
-        finished,
+        completed,
         paid,
         loading,
         isAdmin,
@@ -31,6 +31,7 @@ export default function ListTask (
     const [tasksTodoUser, setTasksTodoUser] = useState([])
     const [tasksInProgressUser, setInProgressTasksUser] = useState([])
     const [tasksReadyToEvaluateUser, setTasksReadyToEvaluateUser] = useState([])
+    const [tasksCompletedUser, setTasksCompletedUser] = useState([])
     const [tasksPaidUser, setTasksPaidUser] = useState([])
     const [fetching, setFetching] = useState(false)
     /** Fetch tasks for employees (Non-Admin) */
@@ -56,6 +57,9 @@ export default function ListTask (
                 const readyToEvaluateTask = tasks.filter((t) => t.taskState === TASK_STATES.READY_TO_EVALUATE)
                 setTasksReadyToEvaluateUser(readyToEvaluateTask)
 
+                const tasksCompletedUser = tasks.filter((t) => t.taskState === TASK_STATES.COMPLETED)
+                setTasksCompletedUser(tasksCompletedUser)
+
                 const paidTask = tasks.filter((t) => t.taskState === TASK_STATES.PAID)
                 setTasksPaidUser(paidTask)
 
@@ -78,15 +82,14 @@ export default function ListTask (
 
     useEffect(() => {
         if (isAdmin) {
-            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.PAID])
+            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.COMPLETED, TAB_TITLES.PAID])
         } else {
-            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.IN_PROGRESS, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.PAID])
+            setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.IN_PROGRESS, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.COMPLETED, TAB_TITLES.PAID])
             handleRequestGetTask()
         }
     }, [handleRequestGetTask])
 
     useEffect(() => {
-        const finishTask = []
         if (isAdmin) {
             switch (selected) {
             case TAB_TITLES.UNASSIGNED:
@@ -106,7 +109,7 @@ export default function ListTask (
                 setSelectedTab(TASK_STATES.READY_TO_EVALUATE)
                 break
             case TAB_TITLES.COMPLETED:
-                setSelectedItems(finished.length > 0 ? finished : [])
+                setSelectedItems(completed.length > 0 ? completed : [])
                 setSelectedTab(TASK_STATES.COMPLETED)
                 break
             case TAB_TITLES.PAID:
@@ -135,6 +138,10 @@ export default function ListTask (
                 setSelectedItems(tasksReadyToEvaluateUser.length > 0 ? tasksReadyToEvaluateUser : [])
                 setSelectedTab(TASK_STATES.READY_TO_EVALUATE)
                 break
+            case TAB_TITLES.COMPLETED:
+                setSelectedItems(tasksCompletedUser.length > 0 ? tasksCompletedUser : [])
+                setSelectedTab(TASK_STATES.COMPLETED)
+                break
             case TAB_TITLES.PAID:
                 setSelectedItems(tasksPaidUser.length > 0 ? tasksPaidUser : [])
                 setSelectedTab(TASK_STATES.PAID)
@@ -155,9 +162,10 @@ export default function ListTask (
                     <div className="flex flex-col gap-y-2">
 
                         <Tabs
-                            className="justify-center items-center"
-                            aria-label="Options"
+                            className="justify-center items-center w-full"
+                            aria-label="Tabs colors"
                             selectedKey={selected}
+                            color={'default'}
                             onSelectionChange={setSelected}
                         >
                             {tabList.map((tab) => (

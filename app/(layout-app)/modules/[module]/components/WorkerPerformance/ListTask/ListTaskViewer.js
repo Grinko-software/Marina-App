@@ -29,7 +29,6 @@ export default function ListTaskViewer ({ items = [], tabSelected, isAdmin, task
 
                                                 {/* Divider entre el nombre y la fecha */}
                                                 <Divider orientation="vertical" className="h-8 mx-2 bg-gray-400 dark:bg-gray-500" />
-
                                                 {/* Contenedor de la Fecha */}
                                                 <div className='flex justify-between items-start flex-col'>
                                                     <span className="flex items-center space-x-2">
@@ -60,6 +59,7 @@ export default function ListTaskViewer ({ items = [], tabSelected, isAdmin, task
                                             handleRequestGetTask={handleRequestGetTask}
                                             id={task?.id}
                                             feedback={task?.feedback}
+                                            rate={task?.rate}
                                         />
                                     </AccordionItem>
                                 )

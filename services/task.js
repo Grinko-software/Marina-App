@@ -41,8 +41,8 @@ export const TAB_TITLES = {
     TODO: 'Pend.',
     IN_PROGRESS: 'En curso',
     READY_TO_EVALUATE: 'Revisión',
-    COMPLETED: 'Done',
-    PAID: 'Pagada'
+    COMPLETED: 'Por Pag.',
+    PAID: 'Pag.'
 }
 
 export const TAB_TITLES_IMG = {
@@ -190,6 +190,7 @@ export const fetchGetPaymentList = async ({ userId, fromDate, toDate }) => {
         return null
     }
 }
+
 export const fetchToChangeStateCompletedPaid = async (taskId) => {
     try {
         return await getData(
@@ -223,6 +224,7 @@ export const getValuesStar = async () => {
         return null
     }
 }
+
 export const setValueStar = async (price) => {
     const body = {
         price: Number(price)
