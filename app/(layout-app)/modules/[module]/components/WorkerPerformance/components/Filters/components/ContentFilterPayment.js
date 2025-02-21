@@ -75,7 +75,7 @@ export default function ContentFilterPayment ({
                 isDisabled={isDisabled}
                 onClick={requestPaymentList}
                 isLoading={loading}
-                className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase "
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase h-auto "
                 color="primary"
             >
 				Buscar

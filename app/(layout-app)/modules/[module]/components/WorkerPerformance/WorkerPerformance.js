@@ -28,7 +28,10 @@ export default function WorkerPerformance () {
     const [taskStates, setTaskStates] = useState([])
     const [taskDifficulties, setTaskDifficulties] = useState([])
     const { data: tasks = [], loading } = useFilterStore()
-
+    /* Add Date time */
+    const [fromDate, setFromDate] = useState(null)
+    const [toDate, setToDate] = useState(null)
+    /*  */
     const [todoTasks, setTodoTasks] = useState([])
     const [inProgressTasks, setInProgressTasks] = useState([])
     const [readyToEvaluateTasks, setReadyToEvaluateTasks] = useState([])
@@ -131,6 +134,10 @@ export default function WorkerPerformance () {
                                 taskDifficulties={taskDifficulties}
                                 filterData={filterData}
                                 setFilterData={setFilterData}
+                                fromDate={fromDate}
+                                setFromDate={setFromDate}
+                                toDate={toDate}
+                                setToDate={setToDate}
                             />
                         )
                         : (

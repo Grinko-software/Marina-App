@@ -100,13 +100,15 @@ export const fetchGetTaskDifficult = async () => {
     }
 }
 
-export const fetchGetTasks = async ({ userId, taskTypeId, taskStateId }) => {
+export const fetchGetTasks = async ({ userId, taskTypeId, taskStateId, fromDate, toDate }) => {
     try {
         const params = new URLSearchParams()
 
         if (userId) params.append('user_id', userId)
         if (taskTypeId) params.append('type_id', taskTypeId)
         if (taskStateId) params.append('state_id', taskStateId)
+        if (fromDate) params.append('from', formatDateToISO(fromDate))
+        if (toDate) params.append('to', formatDateToISO(toDate))
 
         const url = `${TASKS_API_URL_URL}?${params.toString()}`
         return await getData(url, GET, null, true)

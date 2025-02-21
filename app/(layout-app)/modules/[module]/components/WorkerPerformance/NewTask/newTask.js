@@ -59,17 +59,15 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes, requestT
     }, [])
 
     return (
-        <section>
-            <header className="flex justify-end">
-                <Button
-                    className="bg-emerald-600 dark:bg-emerald-600 font-semibold shadow-lg hover:scale-105 transition-transform"
-                    color="primary"
-                    onClick={onOpen}
-                    startContent={<TbShoppingCartPlus size={25} />}
-                >
-                    {isMobile ? '' : 'CREAR TAREA'}
-                </Button>
-            </header>
+        <>
+            <Button
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold shadow-lg hover:scale-105 transition-transform w-full"
+                color="primary"
+                onClick={onOpen}
+                startContent={<TbShoppingCartPlus size={25} />}
+            >
+                {isMobile ? '' : 'CREAR TAREA'}
+            </Button>
 
             {/* Modal con animación */}
             <Modal
@@ -209,6 +207,6 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes, requestT
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-        </section>
+        </>
     )
 }

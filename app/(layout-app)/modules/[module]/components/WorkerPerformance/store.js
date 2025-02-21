@@ -7,10 +7,13 @@ const useFilterStore = create((set) => ({
     loading: false,
     totalpage: undefined,
     setLoading: (value) => set({ loading: value }),
-    requestData: ({ taskTypeId, taskStateId, userId }) => {
+    requestData: ({
+        taskTypeId, taskStateId, userId, fromDate,
+        toDate
+    }) => {
         try {
             set({ loading: true })
-            requestTaskList({ taskTypeId, taskStateId, userId })
+            requestTaskList({ taskTypeId, taskStateId, userId, fromDate, toDate })
                 .then((data) => {
                     const itemsData = data?.data?.map((item) => {
                         let stateKey = null

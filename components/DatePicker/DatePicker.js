@@ -4,21 +4,16 @@ export default function CustomDatePicker ({
     label,
     placeholder,
     value,
-    onChange
+    onChange,
+    height = 'h-[56px]'
 }) {
     const dateInputRef = useRef(null)
     const [isFocused, setIsFocused] = useState(false)
-    /*
-   {label && (
-                <label className="pl-[15px] pt-[-200px]  text-sm font-medium text-gray-700 dark:text-white">
-                    {label}
-                </label>
-            )}
-*/
+
     return (
-        <div className="flex flex-col w-full bg-[#f4f4f4] rounded-[12px] h-[56px] relative shadow">
+        <div className={`flex flex-col w-full bg-[#f4f4f4] rounded-[12px] ${height}  relative shadow`}>
             {label && (
-                <label className="pl-[15px] pt-[8px]  text-xs font-medium text-gray-700 dark:text-white">
+                <label className="pl-[15px] pt-[6px]  text-xs font-medium text-gray-700 dark:text-white">
                     {label}
                 </label>
             )}

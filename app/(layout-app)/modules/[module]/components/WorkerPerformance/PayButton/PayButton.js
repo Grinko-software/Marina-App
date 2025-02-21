@@ -14,7 +14,7 @@ export default function PayButton () {
 
     return (
         <Button
-            className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase"
+            className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase w-full"
             color="primary"
             onClick={() => {
                 // add section

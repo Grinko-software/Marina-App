@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import CardTask from './Card'
 import TaskDetail from './TaskDetail'
 import { useDisclosure } from '@nextui-org/react'
-
+import useFilterStorePayment from './Filters/storePayment'
 export default function TasksBoard ({
     todoTasks = [],
     inProgressTasks = [],
@@ -22,7 +22,15 @@ export default function TasksBoard ({
     const [inProgressItems, setInProgressItems] = useState([])
     const [readyToEvaluateItems, setReadyToEvaluateItems] = useState([])
     const [unassignedItems, setUnassignedItems] = useState([])
+    const { setTotalPay } = useFilterStorePayment()
+    const getTotalToPay = (paidTasks) => {
+        let total = 0
+        paidTasks.forEach(task => {
+            total += task.taskDifficult.cash_bonus * task.rate
+        })
 
+        setTotalPay(total)
+    }
     useEffect(() => {
         setTodoItems(todoTasks)
         setInProgressItems(inProgressTasks)
@@ -42,6 +50,7 @@ export default function TasksBoard ({
         }
         if (paidTasks?.length) {
             dataItems.push({ title: 'Pagadas', items: paidTasks })
+            getTotalToPay(paidTasks)
         }
         setItemsData(dataItems)
     }, [unassignedItems, todoItems, inProgressItems, readyToEvaluateItems])
@@ -96,7 +105,6 @@ export default function TasksBoard ({
                     </div>
                 )
             })}
-
             <TaskDetail
                 data={targetTaskDetail}
                 isOpen={isOpen}

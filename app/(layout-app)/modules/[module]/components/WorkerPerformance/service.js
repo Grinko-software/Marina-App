@@ -22,12 +22,14 @@ export const requestUserList = async () => {
     }
 }
 
-export const requestTaskList = async ({ userId, taskTypeId, taskStateId }) => {
+export const requestTaskList = async ({ userId, taskTypeId, taskStateId, fromDate, toDate }) => {
     try {
         return fetchGetTasks({
             userId,
             taskTypeId,
-            taskStateId
+            taskStateId,
+            fromDate,
+            toDate
         })
     } catch (error) {
         console.log(error)

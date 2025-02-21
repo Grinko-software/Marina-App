@@ -9,6 +9,8 @@ import {
 import { formatterNumber } from '@/utils/number'
 
 const useFilterStorePayment = create((set) => ({
+    totalPay: null,
+    setTotalPay: (value) => set({ totalPay: value }),
     data: null,
     totalPayment: null,
     totalStar: null,

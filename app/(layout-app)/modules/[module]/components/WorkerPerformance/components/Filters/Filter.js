@@ -1,11 +1,12 @@
 'use client'
-
-import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
+import { useDisclosure, Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import CreateTaskType from '../../NewTaskType/newTaskType'
 import CreateTask from '../../NewTask/newTask'
 import useFilterStore from '../../store'
 import PayButton from '../../PayButton/PayButton'
+import CustomDatePicker from '@/components/DatePicker/DatePicker'
+import FilterMobileDashboard from './FilterMobileDashboard'
 
 export default function Filter ({
     isMobile,
@@ -15,13 +16,17 @@ export default function Filter ({
     taskStates,
     taskDifficulties,
     filterData,
-    setFilterData
+    setFilterData,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate
 }) {
     const [selectionTaskType, setSelectionTaskType] = useState(null)
     const [selectionTaskState, setSelectionTaskState] = useState(null)
     const [selectionUser, setSelectionUser] = useState(null)
     const { loading, requestData } = useFilterStore()
-
+    const { isOpen, onClose, onOpen } = useDisclosure()
     useEffect(() => {
         //
     }, [selectionTaskType])
@@ -34,25 +39,79 @@ export default function Filter ({
         setFilterData({
             taskTypeId: selectionTaskType || undefined,
             taskStateId: selectionTaskState || undefined,
-            userId: selectionUser || undefined
+            userId: selectionUser || undefined,
+            fromDate,
+            toDate
         })
-    }, [selectionTaskType, selectionTaskState, selectionUser])
+    }, [selectionTaskType, selectionTaskState, selectionUser, fromDate, toDate])
 
     const requestTaskList = () => {
+        onClose()
         return requestData(filterData)
     }
 
     return isMobile
         ? (
-            <section className="w-full flex items-center space-x-2 justify-center">
-                <PayButton />
-                <CreateTask
-                    isAdmin={isAdmin}
-                    users={users}
-                    taskTypes={taskTypes}
-                    difficultTypes={taskDifficulties}
+            <div className="w-full flex flex-col flex-1 items-center justify-center gap-[10px]">
+                <FilterMobileDashboard
+                    content={
+                        <div className='flex flex-col gap-[20px] h-full'>
+                            <Autocomplete
+                                label="Empleados"
+                                placeholder="Busca un empleado"
+                                defaultItems={users}
+                                selectedKey={selectionUser}
+                                onSelectionChange={(value) => setSelectionUser(value)}
+                                allowsEmptyCollection={false}
+                                isClearable={true}
+                                size="sm"
+                                className="max-w-xs"
+                            >
+                                {(item) => (
+                                    <AutocompleteItem key={item.value}>
+                                        {`${item.label}`}
+                                    </AutocompleteItem>
+                                )}
+                            </Autocomplete>
+                            {/* Calendarios */}
+                            <div className="w-full md:max-w-xs">
+                                <CustomDatePicker
+                                    label="Desde"
+                                    value={fromDate}
+                                    onChange={setFromDate}
+                                    height={'max-h-[86px] h-full'}
+                                />
+                            </div>
+                            <div className="w-full md:max-w-xs">
+                                <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} height={'max-h-[86px] h-full'} />
+                            </div>
+
+                            <Button
+
+                                className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase w-full h-[48px]"
+                                color="primary"
+                                onClick={requestTaskList}
+                                isLoading={loading}
+                            >
+                                {'Buscar'}
+                            </Button>
+
+                        </div>
+                    }
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    onOpen={onOpen}
                 />
-            </section>
+                <div className="w-full flex items-center justify-center gap-[10px]">
+                    <PayButton />
+                    <CreateTask
+                        isAdmin={isAdmin}
+                        users={users}
+                        taskTypes={taskTypes}
+                        difficultTypes={taskDifficulties}
+                    />
+                </div>
+            </div>
         )
         : (
             <section className="w-full flex">
@@ -114,6 +173,18 @@ export default function Filter ({
                                     </AutocompleteItem>
                                 )}
                             </Autocomplete>
+                        </div>
+                        {/* Calendarios */}
+                        <div className="w-full md:max-w-[157px]">
+                            <CustomDatePicker
+                                label="Desde"
+                                value={fromDate}
+                                onChange={setFromDate}
+                                height={'max-h-[86px] h-full'}
+                            />
+                        </div>
+                        <div className="w-full  md:max-w-[157px]">
+                            <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} height={'max-h-[86px] h-full'} />
                         </div>
                     </div>
                     <div className="flex flex-row gap-5">
