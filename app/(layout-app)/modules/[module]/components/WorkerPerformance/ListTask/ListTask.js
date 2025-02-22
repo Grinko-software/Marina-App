@@ -6,6 +6,8 @@ import ListTaskViewer from './ListTaskViewer'
 import { Spinner, Tabs, Tab } from '@nextui-org/react'
 import { getTasksByEmployee, getGeneralTasks, parseTaskByEmployee, getIdTask } from './service'
 import { TAB_TITLES, TASK_STATES, NAMES_TASK } from '@/services/task'
+import useFilterStore from '@/app/(layout-app)/reports/components/Filter/store'
+import useFilterStorePayment from '../components/Filters/storePayment'
 
 export default function ListTask (
     {
@@ -21,8 +23,13 @@ export default function ListTask (
         taskDifficulties,
         taskStates
     }) {
-    const [selected, setSelected] = useState(TASK_STATES.UNASSIGNED)
-    const [selectedTab, setSelectedTab] = useState(TASK_STATES.UNASSIGNED)
+    const {
+        focusTab,
+        setFocusTab
+    } = useFilterStorePayment()
+
+    const [selected, setSelected] = useState([])
+    const [selectedTab, setSelectedTab] = useState([])
     const [selectedItems, setSelectedItems] = useState([])
     const [tabList, setTabList] = useState([])
     const [tasksUser, setTasksUser] = useState([])
@@ -148,7 +155,12 @@ export default function ListTask (
                 break
             }
         }
+        setFocusTab(selected)
     }, [selected, fetching])
+
+    useEffect(() => {
+        setSelected(focusTab)
+    }, [])
 
     return (
         <div className="flex-1 dark:bg-secondary-500 text-black dark:text-white rounded-lg h-full">

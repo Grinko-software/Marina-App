@@ -19,6 +19,7 @@ import useAuthStore from '@/stores/user'
 import TasksBoard from './components/TasksBoard'
 import { TASK_STATES } from '@/services/task'
 import ListTask from './ListTask/ListTask'
+import useFilterStorePayment from './components/Filters/storePayment'
 
 export default function WorkerPerformance () {
     const [isMobile, setIsMobile] = useState(true)
@@ -27,7 +28,7 @@ export default function WorkerPerformance () {
     const [taskTypes, setTaskTypes] = useState([])
     const [taskStates, setTaskStates] = useState([])
     const [taskDifficulties, setTaskDifficulties] = useState([])
-    const { data: tasks = [], loading } = useFilterStore()
+    const { data: tasks, loading } = useFilterStore()
     /* Add Date time */
     const [fromDate, setFromDate] = useState(null)
     const [toDate, setToDate] = useState(null)
@@ -38,11 +39,19 @@ export default function WorkerPerformance () {
     const [unassignedTasks, setUnassignedTasks] = useState([])
     const [completedTasks, setCompletedTasks] = useState([])
     const [paidTasks, setPaidTasks] = useState([])
+    const [totalPaidCash, setTotalPaidCash] = useState([])
     const [filterData, setFilterData] = useState({})
+    const {
+        focusTab,
+        setFocusTab,
+        priceStar,
+        getPriceForStar
+    } = useFilterStorePayment()
 
     useEffect(() => {
         const view = isMobileDevice()
         setIsMobile(view)
+        getPriceForStar()
     }, [])
 
     useEffect(() => {
@@ -86,6 +95,7 @@ export default function WorkerPerformance () {
         setUnassignedTasks(unassignedItems)
         setCompletedTasks(completedItems)
         setPaidTasks(paidTasks)
+        setTotalPaidCash(paidTasks.reduce((total, task) => total + Number(task.rate) * Number(priceStar), 0))
     }, [tasks])
 
     useEffect(() => {
@@ -138,6 +148,7 @@ export default function WorkerPerformance () {
                                 setFromDate={setFromDate}
                                 toDate={toDate}
                                 setToDate={setToDate}
+                                totalPaidCash={totalPaidCash}
                             />
                         )
                         : (
@@ -167,7 +178,7 @@ export default function WorkerPerformance () {
                                             taskStates={taskStates}
                                             isAdmin={true}
                                             idUser ={idUser}
-                                            //
+                                            key={tasks?.length}
                                             filters={filterData}
                                             unassigned={unassignedTasks}
                                             pending={todoTasks}
@@ -175,6 +186,9 @@ export default function WorkerPerformance () {
                                             review={readyToEvaluateTasks}
                                             completed={completedTasks}
                                             paid={paidTasks}
+                                            totalPaidCash={totalPaidCash}
+                                            focusTab={focusTab}
+                                            setFocusTab={setFocusTab}
                                         />
                                     )
                                     : (

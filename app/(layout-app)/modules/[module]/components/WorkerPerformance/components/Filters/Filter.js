@@ -7,6 +7,8 @@ import useFilterStore from '../../store'
 import PayButton from '../../PayButton/PayButton'
 import CustomDatePicker from '@/components/DatePicker/DatePicker'
 import FilterMobileDashboard from './FilterMobileDashboard'
+import { TAB_TITLES } from '@/services/task'
+import useFilterStorePayment from './storePayment'
 
 export default function Filter ({
     isMobile,
@@ -20,7 +22,8 @@ export default function Filter ({
     fromDate,
     setFromDate,
     toDate,
-    setToDate
+    setToDate,
+    totalPaidCash
 }) {
     const [selectionTaskType, setSelectionTaskType] = useState(null)
     const [selectionTaskState, setSelectionTaskState] = useState(null)
@@ -49,6 +52,9 @@ export default function Filter ({
         onClose()
         return requestData(filterData)
     }
+    const {
+        focusTab
+    } = useFilterStorePayment()
 
     return isMobile
         ? (
@@ -110,6 +116,17 @@ export default function Filter ({
                         taskTypes={taskTypes}
                         difficultTypes={taskDifficulties}
                     />
+                    {(totalPaidCash > 0 && focusTab === TAB_TITLES.PAID) && (
+                        <Button
+                            className="bg-green-700 hover:bg-green-800 dark:bg-green-700 dark:hover:bg-green-800
+               font-semibold uppercase w-full text-white flex items-center justify-center gap-2 py-3 px-5 rounded-lg"
+                            color="primary"
+                        >
+        💰 {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' })
+                                .format(totalPaidCash)
+                            }
+                        </Button>
+                    )}
                 </div>
             </div>
         )
