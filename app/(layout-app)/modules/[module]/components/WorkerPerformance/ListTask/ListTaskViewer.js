@@ -8,7 +8,7 @@ import { FaRegClock } from 'react-icons/fa'
 const CONTAINER_CLASSES = 'bg-gray-100 dark:bg-secondary-500 text-black dark:text-white'
 const WRAPPER_CLASSES = 'rounded-lg w-full min-h-[67vh] max-h-[67vh]'
 
-export default function ListTaskViewer ({ items = [], tabSelected, isAdmin, taskState, idUser, handleRequestGetTask, feedback }) {
+export default function ListTaskViewer ({ items = [], tabSelected, isAdmin, taskState, idUser, handleRequestGetTask }) {
     return (
         <section>
             <div className={`${CONTAINER_CLASSES} ${WRAPPER_CLASSES} p-2 overflow-auto`}>

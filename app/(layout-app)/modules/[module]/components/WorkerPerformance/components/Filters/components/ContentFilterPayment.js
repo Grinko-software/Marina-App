@@ -65,7 +65,7 @@ export default function ContentFilterPayment ({
                     />
                 </div>
                 <div className="w-full md:max-w-xs">
-                    <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} />
+                    <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} minDate={fromDate} />
                 </div>
             </div>
 

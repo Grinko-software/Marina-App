@@ -21,7 +21,8 @@ export default function ListTask (
         isAdmin,
         idUser,
         taskDifficulties,
-        taskStates
+        taskStates,
+        tasks
     }) {
     const {
         focusTab,
@@ -42,7 +43,7 @@ export default function ListTask (
     const [tasksPaidUser, setTasksPaidUser] = useState([])
     const [fetching, setFetching] = useState(false)
     /** Fetch tasks for employees (Non-Admin) */
-    const handleRequestGetTask = useCallback(() => {
+    const handleRequestGetTask = () => {
         if (taskStates?.length > 0) {
             setFetching(true)
             const idStateToDo = getIdTask({ tasks: taskStates, stateNames: 'POR HACER' })
@@ -85,16 +86,17 @@ export default function ListTask (
                 setFetching(false)
             })
         }
-    }, [taskStates, idUser])
+    }
 
     useEffect(() => {
         if (isAdmin) {
             setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.COMPLETED, TAB_TITLES.PAID])
+            handleRequestGetTask()
         } else {
             setTabList([TAB_TITLES.UNASSIGNED, TAB_TITLES.TODO, TAB_TITLES.IN_PROGRESS, TAB_TITLES.READY_TO_EVALUATE, TAB_TITLES.COMPLETED, TAB_TITLES.PAID])
             handleRequestGetTask()
         }
-    }, [handleRequestGetTask])
+    }, [tasks])
 
     useEffect(() => {
         if (isAdmin) {
@@ -156,7 +158,7 @@ export default function ListTask (
             }
         }
         setFocusTab(selected)
-    }, [selected, fetching])
+    }, [tasks, selected, fetching])
 
     useEffect(() => {
         setSelected(focusTab)

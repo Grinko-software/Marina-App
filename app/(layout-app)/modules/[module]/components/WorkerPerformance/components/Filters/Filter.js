@@ -89,14 +89,18 @@ export default function Filter ({
                                 />
                             </div>
                             <div className="w-full md:max-w-xs">
-                                <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} height={'max-h-[86px] h-full'} />
+                                <CustomDatePicker
+                                    label="Hasta"
+                                    value={toDate}
+                                    onChange={setToDate}
+                                    height={'max-h-[86px] h-full'}
+                                    minDate={fromDate}
+                                />
                             </div>
-
                             <Button
-
                                 className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase w-full h-[48px]"
                                 color="primary"
-                                onClick={requestTaskList}
+                                onPress={requestTaskList}
                                 isLoading={loading}
                             >
                                 {'Buscar'}
@@ -201,7 +205,9 @@ export default function Filter ({
                             />
                         </div>
                         <div className="w-full  md:max-w-[157px]">
-                            <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} height={'max-h-[86px] h-full'} />
+                            <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} height={'max-h-[86px] h-full'}
+                                minDate={fromDate}
+                            />
                         </div>
                     </div>
                     <div className="flex flex-row gap-5">

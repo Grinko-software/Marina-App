@@ -174,11 +174,11 @@ export default function WorkerPerformance () {
                                     ? (
                                         <ListTask
                                             loading={loading}
+                                            tasks={tasks} // renderiza todas las taks, sin necesidad de desmontar todo el componente
                                             taskDifficulties={taskDifficulties}
                                             taskStates={taskStates}
                                             isAdmin={true}
-                                            idUser ={idUser}
-                                            key={tasks?.length}
+                                            idUser={idUser}
                                             filters={filterData}
                                             unassigned={unassignedTasks}
                                             pending={todoTasks}
