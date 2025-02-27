@@ -44,48 +44,46 @@ export default function ListTask (
     const [fetching, setFetching] = useState(false)
     /** Fetch tasks for employees (Non-Admin) */
     const handleRequestGetTask = () => {
-        if (taskStates?.length > 0) {
-            setFetching(true)
-            const idStateToDo = getIdTask({ tasks: taskStates, stateNames: 'POR HACER' })
+        setFetching(true)
+        const idStateToDo = getIdTask({ tasks: taskStates, stateNames: 'POR HACER' })
 
-            getTasksByEmployee({ employeeID: idUser }).then((result) => {
-                const tasks = parseTaskByEmployee({
-                    data: result.data,
-                    taskDifficulties,
-                    taskStates
-                })
-                setTasksUser(tasks)
+        getTasksByEmployee({ employeeID: idUser }).then((result) => {
+            const tasks = parseTaskByEmployee({
+                data: result.data,
+                taskDifficulties,
+                taskStates
+            })
+            setTasksUser(tasks)
 
-                const todoFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.TODO)
-                setTasksTodoUser(todoFilteredTask)
+            const todoFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.TODO)
+            setTasksTodoUser(todoFilteredTask)
 
-                const inProgessFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.IN_PROGRESS)
-                setInProgressTasksUser(inProgessFilteredTask)
+            const inProgessFilteredTask = tasks.filter((t) => t.taskState === TASK_STATES.IN_PROGRESS)
+            setInProgressTasksUser(inProgessFilteredTask)
 
-                const readyToEvaluateTask = tasks.filter((t) => t.taskState === TASK_STATES.READY_TO_EVALUATE)
-                setTasksReadyToEvaluateUser(readyToEvaluateTask)
+            const readyToEvaluateTask = tasks.filter((t) => t.taskState === TASK_STATES.READY_TO_EVALUATE)
+            setTasksReadyToEvaluateUser(readyToEvaluateTask)
 
-                const tasksCompletedUser = tasks.filter((t) => t.taskState === TASK_STATES.COMPLETED)
-                setTasksCompletedUser(tasksCompletedUser)
+            const tasksCompletedUser = tasks.filter((t) => t.taskState === TASK_STATES.COMPLETED)
+            setTasksCompletedUser(tasksCompletedUser)
 
-                const paidTask = tasks.filter((t) => t.taskState === TASK_STATES.PAID)
-                setTasksPaidUser(paidTask)
+            const paidTask = tasks.filter((t) => t.taskState === TASK_STATES.PAID)
+            setTasksPaidUser(paidTask)
 
-                setFetching(false)
+            setFetching(false)
+        })
+
+        getGeneralTasks({ stateId: idStateToDo }).then((result) => {
+            const tasks = parseTaskByEmployee({
+                data: result.data,
+                taskDifficulties,
+                taskStates
             })
 
-            getGeneralTasks({ stateId: idStateToDo }).then((result) => {
-                const tasks = parseTaskByEmployee({
-                    data: result.data,
-                    taskDifficulties,
-                    taskStates
-                })
-
-                const filteredTasks = tasks.filter((t) => t.userId === undefined)
-                setUnassignedTasks(filteredTasks)
-                setFetching(false)
-            })
-        }
+            const filteredTasks = tasks.filter((t) => t.userId === undefined)
+            setUnassignedTasks(filteredTasks)
+            setFetching(false)
+        })
     }
 
     useEffect(() => {
