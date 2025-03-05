@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { Card, CardHeader, CardFooter } from '@nextui-org/react'
-import Image from 'next/image'
+import Image from './Image'
 
 export default function CashReconciliationCard (props) {
     const { title, total, detail, bgTitle, img } = props

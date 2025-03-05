@@ -30,7 +30,6 @@ import useInventoryStore from '../../store'
 import useOfferFormStore from './store'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 import CardUi from '@/components/ui/Card'
-import Image from 'next/image'
 import { ConvertBytesToImage, DefaultImageMarinaMarket } from '@/utils/image'
 import useOffersStore from '@/stores/offers'
 import CreateOffer from './createOffer'
@@ -41,6 +40,7 @@ import { BiSolidOffer } from 'react-icons/bi'
 import { FaCamera } from 'react-icons/fa'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
+import Image from '@/components/ui/Image'
 export const InputComponent = ({
     title,
     type,

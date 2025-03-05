@@ -15,7 +15,6 @@ import {
 } from './NewProduct/createProduct'
 import ProductImage from './NewProduct/productImage'
 import useInventoryStore from '../store'
-import Image from 'next/image'
 import { DefaultImageMarinaMarket } from '@/utils/image'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
 import ConfirmModal from '@/components/ui/ConfirmModal'
@@ -23,6 +22,7 @@ import { printBarCode } from './services'
 import Barcode from '@/components/barcode'
 import Loading from '../loading'
 import { notify } from '@/services/notify'
+import Image from '@/components/ui/Image'
 export default function ProductDetail ({
     targeProduct,
     isOpen,

@@ -3,8 +3,8 @@
 import React from 'react'
 import { Badge, Card as CardUI, CardBody, CardFooter } from '@nextui-org/react'
 import { DefaultImageMarinaMarket } from '@/utils/image'
-import Image from 'next/image'
 import { roundValue } from '@/utils/number'
+import Image from './Image'
 
 export default function Card (props) {
     const { item, index, setTargetProduct, isFromSales } = props
