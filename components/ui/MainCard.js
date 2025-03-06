@@ -30,9 +30,15 @@ export default function MainTittleCard (props) {
         >
             <CardHeader className="absolute z-10 top-1 flex-col drop-shadow-6xl !items-start ">
                 {/* <p className="text-tiny text-white/60 uppercase font-bold ">MÓDULO</p> */}
-                <h4 className="text-white/80 font-medium text-4xl sm:text-8xl">{title}</h4>
+                <h4 className="text-white/80 font-medium text-4xl sm:text-8xl">
+                    {title}
+                </h4>
             </CardHeader>
-            <Image alt="Card background" className="z-0 w-full h-full object-cover" src={imgSrc} />
+            <Image
+                alt="Card background"
+                className="z-0 w-full h-full object-cover"
+                src={imgSrc}
+            />
             <CardFooter className="border-white/20 absolute border rounded-xl bottom-1 h-20 sm:h-40 ">
                 <p className="text-l sm:text-3xl text-white/80">{footerMessage}</p>
             </CardFooter>

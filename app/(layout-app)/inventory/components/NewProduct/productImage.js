@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import { Button } from '@nextui-org/react'
-import ImageComponent from 'next/image'
 import { useEffect, useState } from 'react'
 import useProductFormStore from './store'
 import html2canvas from 'html2canvas'
+import Image from '@/components/ui/Image'
 
 export default function ProductImage ({ defaultImg, setImage }) {
     const [selectedImage, setSelectedImage] = useState(null)
@@ -88,7 +88,7 @@ export default function ProductImage ({ defaultImg, setImage }) {
                     ? (
                         <div className="rounded-lg flex items-center flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                             <label htmlFor={selectedImage ? 'dropzone-file' : ''}>
-                                <ImageComponent
+                                <Image
                                     id='imageProduct'
                                     src={URL.createObjectURL(selectedImage)}
                                     alt="Image name"
