@@ -9,8 +9,8 @@ import { Button, Input, Spinner } from '@nextui-org/react'
 import AlertMessage from '../ui/AlertMessage'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { roundValueWithMath } from '@/utils/number'
-import Image from 'next/image'
 import { DefaultImageMarinaMarket } from '@/utils/image'
+import Image from '../ui/Image'
 
 export default function ScannerProduct () {
     const [loading, setLoading] = useState(false)
