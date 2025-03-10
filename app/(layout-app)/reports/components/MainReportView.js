@@ -15,9 +15,11 @@ import StockTable from '@/components/ui/StockTable'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/scrollbar'
+import useFilterStore from './Filter/store'
 
 const ReportView = () => {
-    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore, table: dataSalesTable } = useReportsStore()
+    const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore, table: dataSalesTable, loading } = useReportsStore()
+    const { fromDate, setFromDate, toDate, setToDate } = useFilterStore()
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelPieChartLoading, setDataModelPieChartLoading] = useState(true)
     const [dataModelIndicator, setDataModelIndicator] = useState(null)
@@ -172,7 +174,7 @@ const ReportView = () => {
                                                 subUnit = {totalMoneyIndicator?.unit}
                                                 pct = {dataModelIndicator?.total_money_percent_indicator}
                                                 color={'green-400'}
-                                                isLoading ={dataModelIndicatorLoading}
+                                                isLoading ={loading}
                                             />
                                         </div>
                                         <div className='col-span-1 w-full h-full'>
@@ -183,16 +185,16 @@ const ReportView = () => {
                                                 subUnit = {''}
                                                 pct = {dataModelIndicator?.total_sales_percent_indicator}
                                                 color={'yellow-400'}
-                                                isLoading ={dataModelIndicatorLoading}
+                                                isLoading ={loading}
                                             />
                                         </div>
 
                                         <div className='col-span-2 w-full h-full'>
-                                            <PieChart data = {dataModelPieChart} isLoading={dataModelPieChartLoading} />
+                                            <PieChart data = {dataModelPieChart} isLoading={loading} />
                                         </div>
                                     </section>
                                     <section className="col-span-2 mt-3 md:mt-0">
-                                        <AreaChart data = {dataModelSalesTypes} isLoading={dataModelSalesTypesLoading} />
+                                        <AreaChart data = {dataModelSalesTypes} isLoading={loading} />
                                     </section>
                                 </section>
                             </section>
