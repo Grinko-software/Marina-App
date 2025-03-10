@@ -48,10 +48,10 @@ export default function PayDetailed ({ payment, setPayment, isOpen, onClose, tot
     }, [])
 
     useEffect(() => {
-        if (totalPay) {
+        if (isOpen && totalPay && !totalValue) {
             setTotalValue(totalPay)
         }
-    }, [openModal, totalPay])
+    }, [isOpen, totalPay, totalValue])
 
     useEffect(() => {
         if (totalValue >= 0 && payDetailed >= 0) {
@@ -195,6 +195,7 @@ export default function PayDetailed ({ payment, setPayment, isOpen, onClose, tot
                                     <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
                                         onClick={() => {
                                             finishSale()
+                                            setTotalValue(null)
                                         }}
                                     >
                                         FINALIZAR
@@ -217,6 +218,7 @@ export default function PayDetailed ({ payment, setPayment, isOpen, onClose, tot
                                             setPaymentTarget(listSalesActives, saleIdActive, null)
                                             setPayDetailed(null)
                                             onClose()
+                                            setTotalValue(null)
                                         }}
                                     >
                             CANCELAR
