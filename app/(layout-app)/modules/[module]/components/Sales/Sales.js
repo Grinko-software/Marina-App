@@ -16,13 +16,15 @@ export default function Sales ({ params }) {
     }, [currentPage])
 
     return (
-        <section className='w-full'>
-            <section className='grid grid-cols w-full gap-3'>
-                <div className='sm:hidden'>
+        <section className="w-full">
+            <section className="grid grid-cols w-full gap-3">
+                <div className="sm:hidden">
                     <SaleDetail
                         openModalToPrint={openModalToPrint}
                         setOpenModalToPrint={setOpenModalToPrint}
-                        target={target} setTarget={setTarget} />
+                        target={target}
+                        setTarget={setTarget}
+                    />
                 </div>
                 <TableSales
                     data={data}

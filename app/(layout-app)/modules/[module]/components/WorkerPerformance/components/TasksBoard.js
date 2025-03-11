@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react'
 import CardTask from './Card'
 import TaskDetail from './TaskDetail'
 import { useDisclosure } from '@nextui-org/react'
-
+import useFilterStorePayment from './Filters/storePayment'
 export default function TasksBoard ({
     todoTasks = [],
     inProgressTasks = [],
     readyToEvaluateTasks = [],
     unassignedTasks = [],
     completedTasks = [],
+    paidTasks = [],
     filterData = {}
 }) {
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -21,7 +22,15 @@ export default function TasksBoard ({
     const [inProgressItems, setInProgressItems] = useState([])
     const [readyToEvaluateItems, setReadyToEvaluateItems] = useState([])
     const [unassignedItems, setUnassignedItems] = useState([])
+    const { setTotalPay } = useFilterStorePayment()
+    const getTotalToPay = (paidTasks) => {
+        let total = 0
+        paidTasks.forEach(task => {
+            total += task.taskDifficult.cash_bonus * task.rate
+        })
 
+        setTotalPay(total)
+    }
     useEffect(() => {
         setTodoItems(todoTasks)
         setInProgressItems(inProgressTasks)
@@ -32,18 +41,18 @@ export default function TasksBoard ({
     useEffect(() => {
         const dataItems = [
             { title: 'Tarjetas sin asignar', items: unassignedItems },
-            { title: 'Por hacer', items: todoItems },
+            { title: 'TODO', items: todoItems },
             { title: 'Realizando', items: inProgressItems },
             { title: 'Lista para evaluar', items: readyToEvaluateItems }
         ]
         if (completedTasks?.length) {
-            dataItems.push(
-                { title: 'Completadas', items: completedTasks }
-            )
+            dataItems.push({ title: 'Completadas', items: completedTasks })
         }
-        setItemsData(
-            dataItems
-        )
+        if (paidTasks?.length) {
+            dataItems.push({ title: 'Pagadas', items: paidTasks })
+            getTotalToPay(paidTasks)
+        }
+        setItemsData(dataItems)
     }, [unassignedItems, todoItems, inProgressItems, readyToEvaluateItems])
 
     useEffect(() => {
@@ -66,11 +75,10 @@ export default function TasksBoard ({
                     id={item.id}
                     title={`${item.name}`}
                     dateLimit={item.dateLimit}
-                    description={`Tarea ${item.id}: ${item.description}`}
+                    description={item.description}
                     user={item.user?.name}
                     userId={item.user?.id}
                     openDetail={() => openTaskDetail(item)}
-
                     imageUrl="https://empleosurgentes.com/wp-content/uploads/2021/05/empleo-de-limpieza-personal-de-limpieza-cleaning-staff-trabajador-de-limpieza-cleaning-employee-cleaning-operators-industrial-cleaning-auxiliar-de-bodega.jpg"
                 />
             )
@@ -78,12 +86,22 @@ export default function TasksBoard ({
     }
 
     return (
-        <section className='flex flex-1 flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white m-auto gap-2'>
+        <section className="flex flex-1 flex-grow w-full  h-[calc(100vh-27rem)] flex-row justify-around p-4 rounded-xl bg-gray-100 dark:bg-secondary-500 text-black dark:text-white gap-2 ">
             {itemsData.map((item) => {
                 return (
-                    <div key={item.title} className="bg-gray-50 dark:bg-secondary-500 border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex-1 min-h-[42rem] max-h-[42rem] overflow-y-auto flex flex-col space-y-2">
-                        <p className="text-gray-500 dark:text-white">{`${item.title} (${item?.items?.length || 0})`}</p>
-                        {renderItems(item.items)}
+                    <div
+                        key={item.title}
+                        className="bg-grey-50 dark:bg-secondary-500 border border-gray-400 dark:border-gray-700 rounded-lg p-4 flex-grow  w-full flex flex-col space-y-2 h-full"
+                    >
+                        {/* Título fijo (no se moverá con el scroll) */}
+                        <p className="text-gray-500 dark:text-white flex-shrink-0">{`${
+                            item.title
+                        } (${item?.items?.length || 0})`}</p>
+
+                        {/* Contenido con scroll */}
+                        <div className="overflow-y-auto flex-grow space-y-2 scroll-smooth snap-y snap-mandatory">
+                            {renderItems(item.items)}
+                        </div>
                     </div>
                 )
             })}

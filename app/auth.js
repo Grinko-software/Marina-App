@@ -15,6 +15,8 @@ export default function Auth ({ pathname }) {
             router.push('/home')
         }
     }, [token])
-    useEffect(() => { updateTokenSystem() }, [])
-    return (<></>)
+    useEffect(() => {
+        updateTokenSystem()
+    }, [])
+    return <></>
 }

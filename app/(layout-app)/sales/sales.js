@@ -52,23 +52,29 @@ const SalesMenu = () => {
         }
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
     return (
-        <section className='h-full w-full flex md:flex-col'>
+        <section className="h-full w-full flex md:flex-col">
             <div className="flex h-full w-full space-x-2">
                 <section className="w-full flex-1 h-full">
                     {payment
-                        ? <PayPage setPayment={setPayment}
-                            paymentTarget={paymentTargetValue}
-                            setPaymentTarget={setPaymentTarget}
-                            voucherTarget={voucherTargetValue}
-                            setVoucherTarget={setVoucherTarget}
-                        />
-                        : <TableInventory setSearchInput={setSearchInput} searchInput={searchInput}/>
-                    }
+                        ? (
+                            <PayPage
+                                setPayment={setPayment}
+                                paymentTarget={paymentTargetValue}
+                                setPaymentTarget={setPaymentTarget}
+                                voucherTarget={voucherTargetValue}
+                                setVoucherTarget={setVoucherTarget}
+                            />
+                        )
+                        : (
+                            <TableInventory
+                                setSearchInput={setSearchInput}
+                                searchInput={searchInput}
+                            />
+                        )}
                 </section>
                 <section className="flex flex-col w-[30%]">
-                    <section className='w-full flex justify-end'>
-                        <section className='flex px-2 space-x-2 items-center bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450'>
-
+                    <section className="w-full flex justify-end">
+                        <section className="flex px-2 space-x-2 items-center bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                             <Tabs
                                 aria-label="Options"
                                 items={listSalesActives}
@@ -81,17 +87,20 @@ const SalesMenu = () => {
                                 }}
                             >
                                 {listSalesActives
-                                    ? listSalesActives.map(
-                                        (item, index) => (
-                                            <Tab key={item.id} size={'lg'} title={`Venta ${index + 1}`}/>
-                                        )
-                                    )
+                                    ? listSalesActives.map((item, index) => (
+                                        <Tab
+                                            key={item.id}
+                                            size={'lg'}
+                                            title={`Venta ${index + 1}`}
+                                        />
+									  ))
                                     : null}
-
                             </Tabs>
                             <Button isDisabled={listSalesActives?.length > 2} isIconOnly>
-                                <PlusIcon className='w-5 h-5'
-                                    onClick={() => addNewSaleActive(listSalesActives)}/>
+                                <PlusIcon
+                                    className="w-5 h-5"
+                                    onClick={() => addNewSaleActive(listSalesActives)}
+                                />
                             </Button>
                         </section>
                     </section>
@@ -106,7 +115,6 @@ const SalesMenu = () => {
                         voucherTarget={voucherTargetValue}
                         keyFocus={keyFocus}
                     />
-
                 </section>
                 <PayDetailed
                     payment={payment}
@@ -146,7 +154,7 @@ const SalesMenu = () => {
                     setPaymentTargetValue={setPaymentTargetValue}
                     setVoucherTargetValue={setVoucherTargetValue}
                 />
-                <SalePrinterModal/>
+                <SalePrinterModal />
             </div>
         </section>
     )

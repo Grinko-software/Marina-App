@@ -1,4 +1,7 @@
-import { fetchGetReportsLastSales, fetchGetSaleDatailById } from '@/services/reports'
+import {
+    fetchGetReportsLastSales,
+    fetchGetSaleDatailById
+} from '@/services/reports'
 
 export const requestDataSales = async () => {
     try {

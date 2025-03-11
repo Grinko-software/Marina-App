@@ -1,21 +1,53 @@
-import { CHANGE_STATE_PAID, TASK_VALUES, TASKS_PAYMENT_API_URL_URL, TASKS_API_EMPLOYEE_START_TASK, TASKS_RATE_API_URL_URL, CREATE_TASK_TYPE_API_URL_URL, CREATE_TASK_API_URL_URL, TASK_STATE_API_URL, TASK_TYPE_API_URL, TASK_DIFFUCULT_API_URL, TASKS_API_URL_URL, TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE, TASKS_API_EMPLOYEE_COMPLETE_TASK, TASKS_API_EMPLOYEE_URL_URL } from '@/settings/constants'
+import {
+    CHANGE_STATE_PAID,
+    TASK_VALUES,
+    TASKS_PAYMENT_API_URL_URL,
+    TASKS_API_EMPLOYEE_START_TASK,
+    TASKS_RATE_API_URL_URL,
+    CREATE_TASK_TYPE_API_URL_URL,
+    CREATE_TASK_API_URL_URL,
+    TASK_STATE_API_URL,
+    TASK_TYPE_API_URL,
+    TASK_DIFFUCULT_API_URL,
+    TASKS_API_URL_URL,
+    TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE,
+    TASKS_API_EMPLOYEE_COMPLETE_TASK,
+    TASKS_API_EMPLOYEE_URL_URL
+} from '@/settings/constants'
 import { PUT, GET, getData, POST } from './http'
 import { getToken } from './account'
 import { formatDateToISO } from '@/utils/date'
 
 export const TASK_STATES = {
+    UNASSIGNED: 'UNASSIGNED',
     TODO: 'TODO',
     IN_PROGRESS: 'IN_PROGRESS',
     READY_TO_EVALUATE: 'READY_TO_EVALUATE',
-    UNASSIGNED: 'UNASSIGNED',
-    COMPLETED: 'COMPLETED'
+    COMPLETED: 'COMPLETED',
+    PAID: 'PAID'
 }
+
 export const NAMES_TASK = {
     UNASSIGNED: 'Tarjetas sin asignar',
     TODO: 'Por hacer',
     IN_PROGRESS: 'En progreso',
     READY_TO_EVALUATE: 'Lista para evaluar',
-    COMPLETED: 'Completada'
+    COMPLETED: 'Completadas',
+    PAID: 'Pagada'
+}
+
+export const TAB_TITLES = {
+    UNASSIGNED: 'Sin Asig.',
+    TODO: 'Pend.',
+    IN_PROGRESS: 'En curso',
+    READY_TO_EVALUATE: 'Revisión',
+    COMPLETED: 'Por Pag.',
+    PAID: 'Pag.'
+}
+
+export const TAB_TITLES_IMG = {
+    BEFORE: 'Antes',
+    AFTER: 'Despues'
 }
 
 export const getTaskStateById = (taskStateId) => {
@@ -34,8 +66,11 @@ export const getTaskStateById = (taskStateId) => {
     case 4:
         stateKey = TASK_STATES.COMPLETED
         break
+    case 5:
+        stateKey = TASK_STATES.PAID
+        break
     default:
-        //
+		//
     }
 
     return stateKey
@@ -65,13 +100,15 @@ export const fetchGetTaskDifficult = async () => {
     }
 }
 
-export const fetchGetTasks = async ({ userId, taskTypeId, taskStateId }) => {
+export const fetchGetTasks = async ({ userId, taskTypeId, taskStateId, fromDate, toDate }) => {
     try {
         const params = new URLSearchParams()
 
         if (userId) params.append('user_id', userId)
         if (taskTypeId) params.append('type_id', taskTypeId)
         if (taskStateId) params.append('state_id', taskStateId)
+        if (fromDate) params.append('from', formatDateToISO(fromDate))
+        if (toDate) params.append('to', formatDateToISO(toDate))
 
         const url = `${TASKS_API_URL_URL}?${params.toString()}`
         return await getData(url, GET, null, true)
@@ -82,18 +119,17 @@ export const fetchGetTasks = async ({ userId, taskTypeId, taskStateId }) => {
 
 export const fetchCreateTaskType = async ({ name }) => {
     try {
-        return await fetch(`${CREATE_TASK_TYPE_API_URL_URL}`,
-            {
-                method: 'POST',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken()
-                }),
-                cache: 'no-store',
-                mode: 'cors',
-                body: JSON.stringify({
-                    type_name: name
-                })
-            }).then(response => {
+        return await fetch(`${CREATE_TASK_TYPE_API_URL_URL}`, {
+            method: 'POST',
+            headers: new Headers({
+                Authorization: 'Bearer ' + getToken()
+            }),
+            cache: 'no-store',
+            mode: 'cors',
+            body: JSON.stringify({
+                type_name: name
+            })
+        }).then((response) => {
             try {
                 return response.json()
             } catch {
@@ -113,23 +149,22 @@ export const fetchCreateTask = async ({
     dateTask
 }) => {
     try {
-        return await fetch(`${CREATE_TASK_API_URL_URL}`,
-            {
-                method: 'POST',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken()
-                }),
-                cache: 'no-store',
-                mode: 'cors',
-                body: JSON.stringify({
-                    name,
-                    description,
-                    task_type_id: taskType,
-                    date_limit: dateTask,
-                    user_id: userTask,
-                    state_task_id: 1
-                })
-            }).then(response => {
+        return await fetch(`${CREATE_TASK_API_URL_URL}`, {
+            method: 'POST',
+            headers: new Headers({
+                Authorization: 'Bearer ' + getToken()
+            }),
+            cache: 'no-store',
+            mode: 'cors',
+            body: JSON.stringify({
+                name,
+                description,
+                task_type_id: taskType,
+                date_limit: dateTask,
+                user_id: userTask,
+                state_task_id: 1
+            })
+        }).then((response) => {
             try {
                 return response.json()
             } catch {
@@ -140,31 +175,32 @@ export const fetchCreateTask = async ({
         return null
     }
 }
-/*
 
-{
-    "from":"2024-10-29T00:00:00Z",
-    "to":"2024-11-29T00:00:00Z"
-}
-*/
-export const fetchGetPaymentList = async ({
-    userId,
-    fromDate,
-    toDate
-}) => {
+export const fetchGetPaymentList = async ({ userId, fromDate, toDate }) => {
     const body = {
         from: formatDateToISO(fromDate),
         to: formatDateToISO(toDate)
     }
     try {
-        return await getData(TASKS_PAYMENT_API_URL_URL.replace(':employeeId', userId), POST, body, true)
+        return await getData(
+            TASKS_PAYMENT_API_URL_URL.replace(':employeeId', userId),
+            POST,
+            body,
+            true
+        )
     } catch {
         return null
     }
 }
+
 export const fetchToChangeStateCompletedPaid = async (taskId) => {
     try {
-        return await getData(CHANGE_STATE_PAID.replace(':taskId', taskId), PUT, null, true)
+        return await getData(
+            CHANGE_STATE_PAID.replace(':taskId', taskId),
+            PUT,
+            null,
+            true
+        )
     } catch {
         return null
     }
@@ -172,7 +208,12 @@ export const fetchToChangeStateCompletedPaid = async (taskId) => {
 
 export const fetchToChangeStateFromCompleteToPaid = async (taskId) => {
     try {
-        return await getData(CHANGE_STATE_PAID.replace(':taskId', taskId), PUT, null, true)
+        return await getData(
+            CHANGE_STATE_PAID.replace(':taskId', taskId),
+            PUT,
+            null,
+            true
+        )
     } catch {
         return null
     }
@@ -185,6 +226,7 @@ export const getValuesStar = async () => {
         return null
     }
 }
+
 export const setValueStar = async (price) => {
     const body = {
         price: Number(price)
@@ -198,40 +240,81 @@ export const setValueStar = async (price) => {
 
 export const fetchGetTaskByEmployee = async ({ employeeID }) => {
     try {
-        return await getData(TASKS_API_EMPLOYEE_URL_URL.replace(':employeeID', employeeID), GET, null, true)
+        return await getData(
+            TASKS_API_EMPLOYEE_URL_URL.replace(':employeeID', employeeID),
+            GET,
+            null,
+            true
+        )
     } catch {
         return null
     }
 }
 
-export const fetchCompleteTaskByEmployee = async ({ taskId, employeeId, description }) => {
+export const fetchCompleteTaskByEmployee = async ({
+    taskId,
+    employeeId,
+    description
+}) => {
     const data = {
         description
     }
     try {
-        return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK.replace(':taskID', taskId).replace(':employeeID', employeeId), POST, data, true)
+        return await getData(
+            TASKS_API_EMPLOYEE_COMPLETE_TASK.replace(':taskID', taskId).replace(
+                ':employeeID',
+                employeeId
+            ),
+            POST,
+            data,
+            true
+        )
     } catch {
         return null
     }
 }
 
-export const fetchStartTaskByEmployee = async ({ taskId, employeeId, description }) => {
+export const fetchStartTaskByEmployee = async ({
+    taskId,
+    employeeId,
+    description
+}) => {
     const data = {
         description
     }
     try {
-        return await getData(TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId).replace(':employeeID', employeeId), POST, data, true)
+        return await getData(
+            TASKS_API_EMPLOYEE_START_TASK.replace(':taskID', taskId).replace(
+                ':employeeID',
+                employeeId
+            ),
+            POST,
+            data,
+            true
+        )
     } catch {
         return null
     }
 }
 
-export const uploadImageTaskByEmployee = async ({ taskID, imageBase64, completationTaskId }) => {
+export const uploadImageTaskByEmployee = async ({
+    taskID,
+    imageBase64,
+    completationTaskId
+}) => {
     const data = {
         base_64_string: imageBase64
     }
     try {
-        return await getData(TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE.replace(':taskID', completationTaskId), POST, data, true)
+        return await getData(
+            TASKS_API_EMPLOYEE_COMPLETE_TASK_IMAGE.replace(
+                ':taskID',
+                completationTaskId
+            ),
+            POST,
+            data,
+            true
+        )
     } catch {
         return null
     }
@@ -239,10 +322,15 @@ export const uploadImageTaskByEmployee = async ({ taskID, imageBase64, completat
 
 export const fetchRateTask = async ({ taskId, taskRate, feedbackRate }) => {
     try {
-        return await getData(`${TASKS_RATE_API_URL_URL}/${taskId}`, POST, {
-            rating: taskRate,
-            feedback: feedbackRate
-        }, true)
+        return await getData(
+            `${TASKS_RATE_API_URL_URL}/${taskId}`,
+            POST,
+            {
+                rating: taskRate,
+                feedback: feedbackRate
+            },
+            true
+        )
     } catch {
         return null
     }

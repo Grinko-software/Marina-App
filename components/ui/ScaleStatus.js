@@ -1,6 +1,11 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Badge, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
+import {
+    Badge,
+    Popover,
+    PopoverContent,
+    PopoverTrigger
+} from '@nextui-org/react'
 import { IoScale } from 'react-icons/io5'
 
 export default function ScaleStatus ({ scaleStatus }) {
@@ -9,9 +14,7 @@ export default function ScaleStatus ({ scaleStatus }) {
 
     useEffect(() => {
         if (isOpen && scaleStatus) {
-            setTimeout(
-                () => setIsOpen(false), 5000
-            )
+            setTimeout(() => setIsOpen(false), 5000)
         }
     }, [isOpen, scaleStatus])
 
@@ -29,35 +32,52 @@ export default function ScaleStatus ({ scaleStatus }) {
 
     const Message = ({ enabled }) => {
         return enabled
-            ? <div className="">
-                <div className="text-small text-white font-bold">Pesa conectada</div>
-            </div>
-            : <div className="">
-                <div className="text-small font-bold">Pesa desconectada</div>
-                <div className="text-tiny">Por favor abrir el archivo scale-connector en escritorio.</div>
-                <div className="text-tiny">Si el error persiste, contactar a soporte@grinko.cl</div>
-            </div>
+            ? (
+                <div className="">
+                    <div className="text-small text-white font-bold">Pesa conectada</div>
+                </div>
+            )
+            : (
+                <div className="">
+                    <div className="text-small font-bold">Pesa desconectada</div>
+                    <div className="text-tiny">
+					Por favor abrir el archivo scale-connector en escritorio.
+                    </div>
+                    <div className="text-tiny">
+					Si el error persiste, contactar a soporte@grinko.cl
+                    </div>
+                </div>
+            )
     }
 
     return (
-        <div className="flex items-center gap-4 animation-fade-in" onClick={() => setIsOpen(!isOpen)}>
+        <div
+            className="flex items-center gap-4 animation-fade-in"
+            onClick={() => setIsOpen(!isOpen)}
+        >
             <div className="flex items-center gap-3">
-                <Popover placement="top-end" offset={30} color={color} showArrow={true} onClose={() => setIsOpen(false)} isOpen={isOpen}>
+                <Popover
+                    placement="top-end"
+                    offset={30}
+                    color={color}
+                    showArrow={true}
+                    onClose={() => setIsOpen(false)}
+                    isOpen={isOpen}
+                >
                     <PopoverTrigger>
-                        <Badge color={color} content={''} size = "lg" shape="circle">
+                        <Badge color={color} content={''} size="lg" shape="circle">
                             <button
-                                aria-label='Toggle Dark Mode'
-                                type='button'
-                                className='flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700'
+                                aria-label="Toggle Dark Mode"
+                                type="button"
+                                className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700"
                             >
-                                <IoScale className="w-6 h-6 sm:w-9 sm:h-9 cursor-pointer fill-primary-500 dark:fill-primary-300"/>
+                                <IoScale className="w-6 h-6 sm:w-9 sm:h-9 cursor-pointer fill-primary-500 dark:fill-primary-300" />
                             </button>
                         </Badge>
                     </PopoverTrigger>
-                    <PopoverContent className='mt-1' color={color}>
-                        <Message enabled={scaleStatus}/>
+                    <PopoverContent className="mt-1" color={color}>
+                        <Message enabled={scaleStatus} />
                     </PopoverContent>
-
                 </Popover>
             </div>
         </div>

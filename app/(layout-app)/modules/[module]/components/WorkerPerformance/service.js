@@ -1,9 +1,18 @@
-import { getValuesStar, setValueStar, fetchToChangeStateFromCompleteToPaid, fetchGetPaymentList, fetchCreateTaskType, fetchCreateTask, fetchGetTaskDifficult, fetchGetTaskStates, fetchGetTaskTypes, fetchGetTasks } from '@/services/task'
+import {
+    getValuesStar,
+    setValueStar,
+    fetchToChangeStateFromCompleteToPaid,
+    fetchGetPaymentList,
+    fetchCreateTaskType,
+    fetchCreateTask,
+    fetchGetTaskDifficult,
+    fetchGetTaskStates,
+    fetchGetTaskTypes,
+    fetchGetTasks
+} from '@/services/task'
 import { fetchGetUsers } from '@/services/users'
 
-export const getListTaskToPay = () => {
-
-}
+export const getListTaskToPay = () => {}
 
 export const requestUserList = async () => {
     try {
@@ -13,12 +22,14 @@ export const requestUserList = async () => {
     }
 }
 
-export const requestTaskList = async ({ userId, taskTypeId, taskStateId }) => {
+export const requestTaskList = async ({ userId, taskTypeId, taskStateId, fromDate, toDate }) => {
     try {
         return fetchGetTasks({
             userId,
             taskTypeId,
-            taskStateId
+            taskStateId,
+            fromDate,
+            toDate
         })
     } catch (error) {
         console.log(error)
@@ -144,11 +155,7 @@ export const getDataModelTaskDifficulties = ({ data }) => {
     return items
 }
 
-export const getPaymentList = async ({
-    userId,
-    fromDate,
-    toDate
-}) => {
+export const getPaymentList = async ({ userId, fromDate, toDate }) => {
     try {
         return fetchGetPaymentList({
             userId,

@@ -17,17 +17,17 @@ const ThemeButton = () => {
 
     return (
         <button
-            aria-label='Toggle Dark Mode'
-            type='button'
-            className='flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700 animation-fade-in'
+            aria-label="Toggle Dark Mode"
+            type="button"
+            className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700 animation-fade-in"
             onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         >
             {resolvedTheme === 'dark'
                 ? (
-                    <SunIcon className='w-6 h-6 sm:w-10 sm:h-10 text-orange-300' />
+                    <SunIcon className="w-6 h-6 sm:w-10 sm:h-10 text-orange-300" />
                 )
                 : (
-                    <MoonIcon className='w-6 h-6 sm:w-10 sm:h-10 text-indigo-950' />
+                    <MoonIcon className="w-6 h-6 sm:w-10 sm:h-10 text-indigo-950" />
                 )}
         </button>
     )

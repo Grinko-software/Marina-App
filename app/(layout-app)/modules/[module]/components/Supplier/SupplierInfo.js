@@ -1,5 +1,14 @@
 'use client'
-import { Spinner, TableBody, TableCell, Table, TableColumn, TableHeader, TableRow, Button } from '@nextui-org/react'
+import {
+    Spinner,
+    TableBody,
+    TableCell,
+    Table,
+    TableColumn,
+    TableHeader,
+    TableRow,
+    Button
+} from '@nextui-org/react'
 import { useCallback, useEffect, useState } from 'react'
 
 export default function SupplierInfo ({ data, loading, setTarget }) {
@@ -50,58 +59,63 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
         setTarget(taget)
     }
 
-    const renderCell = useCallback((data, columnKey) => {
-        const cellValue = data[columnKey]
-        switch (columnKey) {
-        case 'name':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
-                </div>
-            )
-        case 'rut':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
-                </div>
-            )
-        case 'actions':
-            return (
-                <div className="flex flex-col">
-                    <Button variant="flat" onPress={() => openTarget(data)}>
-                        Detalles
-                    </Button>
-                </div>
-            )
-        default:
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
-                </div>
-            )
-        }
-    }, [dataModel])
+    const renderCell = useCallback(
+        (data, columnKey) => {
+            const cellValue = data[columnKey]
+            switch (columnKey) {
+            case 'name':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                    </div>
+                )
+            case 'rut':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                    </div>
+                )
+            case 'actions':
+                return (
+                    <div className="flex flex-col">
+                        <Button variant="flat" onPress={() => openTarget(data)}>
+								Detalles
+                        </Button>
+                    </div>
+                )
+            default:
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                    </div>
+                )
+            }
+        },
+        [dataModel]
+    )
 
-    return <section className='w-full'>
-        {
-            loading
-                ? <div>
-                    Cargando...
-                </div>
+    return (
+        <section className="w-full">
+            {loading
+                ? <div>Cargando...</div>
                 : dataModel
-                    ? <section className='p-1 w-full gap-3' >
-                        <Table isHeaderSticky
+                    ? <section className="p-1 w-full gap-3">
+                        <Table
+                            isHeaderSticky
                             // onSortChange={sortItems}
                             bottomContent={
                                 loading
-                                    ? <div className="flex w-full justify-center">
-                                        <Spinner>Cargando datos...</Spinner>
-                                    </div>
+                                    ? (
+                                        <div className="flex w-full justify-center">
+                                            <Spinner>Cargando datos...</Spinner>
+                                        </div>
+                                    )
                                     : null
-                            }>
+                            }
+                        >
                             <TableHeader columns={columns}>
                                 {(column) => (
-                                    <TableColumn key={column.key} allowsSorting >
+                                    <TableColumn key={column.key} allowsSorting>
                                         {column.label}
                                     </TableColumn>
                                 )}
@@ -109,16 +123,17 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
                             <TableBody items={dataModel || []}>
                                 {(item) => (
                                     <TableRow key={item.key}>
-                                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                        {(columnKey) => (
+                                            <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                        )}
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
-
                     </section>
-                    : <section>
-                    No hay datos
-                    </section>
-        }
-    </section>
+                    : (
+                        <section>No hay datos</section>
+                    )}
+        </section>
+    )
 }

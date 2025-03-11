@@ -1,7 +1,16 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Modal, Checkbox, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react'
+import {
+    Modal,
+    Checkbox,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Divider
+} from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
 
 export default function SettingModal ({ isOpen, onClose }) {
@@ -15,26 +24,31 @@ export default function SettingModal ({ isOpen, onClose }) {
         cashRegister,
         selectedCashRegister,
         setSelectedCashRegister,
-        getCashRegister, setDisabled
-    } = useSettingsStore(({
-        selectedPostMachine,
-        postMachines,
-        setSelectedPostMachine,
-        getPostMachines, cashRegister,
-        selectedCashRegister,
-        setSelectedCashRegister,
-        getCashRegister, setDisabled
-    }) => ({
-        selectedPostMachine,
-        postMachines,
-        setSelectedPostMachine,
-        getPostMachines,
-        cashRegister,
-        selectedCashRegister,
-        setSelectedCashRegister,
         getCashRegister,
         setDisabled
-    }))
+    } = useSettingsStore(
+        ({
+            selectedPostMachine,
+            postMachines,
+            setSelectedPostMachine,
+            getPostMachines,
+            cashRegister,
+            selectedCashRegister,
+            setSelectedCashRegister,
+            getCashRegister,
+            setDisabled
+        }) => ({
+            selectedPostMachine,
+            postMachines,
+            setSelectedPostMachine,
+            getPostMachines,
+            cashRegister,
+            selectedCashRegister,
+            setSelectedCashRegister,
+            getCashRegister,
+            setDisabled
+        })
+    )
 
     useEffect(() => {
         if (postMachines) {
@@ -59,42 +73,50 @@ export default function SettingModal ({ isOpen, onClose }) {
     }, [])
     return (
         <>
-            <div className="flex flex-wrap gap-3 w-max h-max">
-            </div>
-            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} >
+            <div className="flex flex-wrap gap-3 w-max h-max"></div>
+            <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 font-extrabold">CONFIGURACIÓN</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 font-extrabold">
+								CONFIGURACIÓN
+                            </ModalHeader>
                             <ModalBody>
-                                <p className="text-primary-500 dark:text-primary-200 font-bold">Seleccionar TUU principal</p>
+                                <p className="text-primary-500 dark:text-primary-200 font-bold">
+									Seleccionar TUU principal
+                                </p>
                                 {postMachinesData?.map((item, index) => {
                                     const isSelected = selectedPostMachine?.ID === item.ID
                                     return (
                                         <Checkbox
                                             key={index}
                                             isSelected={isSelected}
-                                            onClick={() => { setSelectedPostMachine(item) }}
-                                            color="danger">
+                                            onClick={() => {
+                                                setSelectedPostMachine(item)
+                                            }}
+                                            color="danger"
+                                        >
                                             {item?.serial_number || item?.label}
                                         </Checkbox>
                                     )
-                                }
-                                )
-                                }
+                                })}
                                 <Divider />
                                 <div className="flex flex-col gap-2">
                                     <p className="text-primary-500 dark:text-primary-200 font-bold">
-                                        Seleccionar Caja principal
+										Seleccionar Caja principal
                                     </p>
                                     {cashRegisterData?.map((cashRegister, index2) => {
-                                        const isCashRegistrySelected = selectedCashRegister?.ID === cashRegister.ID
+                                        const isCashRegistrySelected =
+											selectedCashRegister?.ID === cashRegister.ID
                                         return (
                                             <Checkbox
                                                 key={index2}
                                                 isSelected={isCashRegistrySelected}
-                                                onClick={() => { setSelectedCashRegister(cashRegister) }}
-                                                color="danger">
+                                                onClick={() => {
+                                                    setSelectedCashRegister(cashRegister)
+                                                }}
+                                                color="danger"
+                                            >
                                                 {cashRegister?.name || cashRegister?.label}
                                             </Checkbox>
                                         )
@@ -102,11 +124,11 @@ export default function SettingModal ({ isOpen, onClose }) {
                                 </div>
                             </ModalBody>
                             <ModalFooter>
-                                <Button className ="dark" onClick={onClose}>
-                                    Aceptar
+                                <Button className="dark" onClick={onClose}>
+									Aceptar
                                 </Button>
                                 <Button color="danger" variant="light" onClick={onClose}>
-                                    Cerrar
+									Cerrar
                                 </Button>
                                 <div>
                                     {/* <BarcodeImg elementRef = { elementRef }></BarcodeImg> */}

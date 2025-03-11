@@ -1,5 +1,8 @@
 import { DELETE, POST, getData } from '@/services/http'
-import { CREATE_CATEGORIES_API_URL, DELETE_CATEGORIES } from '@/settings/constants'
+import {
+    CREATE_CATEGORIES_API_URL,
+    DELETE_CATEGORIES
+} from '@/settings/constants'
 import { create } from 'zustand'
 
 const useProductFormStore = create((set) => ({
@@ -20,7 +23,7 @@ const useProductFormStore = create((set) => ({
         try {
             getData(CREATE_CATEGORIES_API_URL, POST, {
                 name: data?.toString()
-            }).then(response => {
+            }).then((response) => {
                 set({ loading: false, complete: true })
                 if (response?.code === 200) {
                     notify('✅ Categoría creado con éxito!')
@@ -36,25 +39,28 @@ const useProductFormStore = create((set) => ({
         set({ loading: true, error: null, complete: false })
         // has requered values
         try {
-            getData(DELETE_CATEGORIES.replace(':id', id), DELETE).then(response => {
+            getData(DELETE_CATEGORIES.replace(':id', id), DELETE).then((response) => {
                 set({ loading: false, complete: true })
                 if (response?.code === 200) {
                     notify('✅ Categoría eliminada con éxito!')
                     deleteAction()
                 } else {
-                    notify('❌ La categoría no fue eliminada con éxito, intenta otra vez!')
+                    notify(
+                        '❌ La categoría no fue eliminada con éxito, intenta otra vez!'
+                    )
                 }
             })
         } catch (err) {
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        data: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            data: null,
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useProductFormStore

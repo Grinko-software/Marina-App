@@ -1,22 +1,27 @@
 'use client'
 import React from 'react'
 import { Card, CardHeader, CardFooter } from '@nextui-org/react'
-import Image from 'next/image'
+import Image from './Image'
 
 export default function InitCashReconciliationCard (props) {
     const { title, total, detail, bgTitle, img } = props
 
     return (
         <>
-
             <Card className="col-span-12 sm:col-span-4 h-[400px] w-full bg-yellow-400 ">
-                <CardHeader className={`${bgTitle} bottom-0 border-1 rounded-md border-zinc-100/50 z-10 !items-start h-[80px]`}>
+                <CardHeader
+                    className={`${bgTitle} bottom-0 border-1 rounded-md border-zinc-100/50 z-10 !items-start h-[80px]`}
+                >
                     <div className="grid grid-rows-2 content-between h-[120px]">
-                        <p className=" text-white/80 uppercase font-bold text-3xl">{title}</p>
+                        <p className=" text-white/80 uppercase font-bold text-3xl">
+                            {title}
+                        </p>
                     </div>
                 </CardHeader>
-                <h4 className="z-10 text-white/90 text-6xl font-bold px-2 my-2 items-start justify-start">{total}</h4>
-                <div className='flex flex-col items items-center'>
+                <h4 className="z-10 text-white/90 text-6xl font-bold px-2 my-2 items-start justify-start">
+                    {total}
+                </h4>
+                <div className="flex flex-col items items-center">
                     <Image
                         width={200}
                         removeWrapper
@@ -31,5 +36,6 @@ export default function InitCashReconciliationCard (props) {
                     </div>
                 </CardFooter>
             </Card>
-        </>)
+        </>
+    )
 }

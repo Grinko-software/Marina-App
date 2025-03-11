@@ -14,22 +14,26 @@ const useSettingsStore = create(
             disabled: false,
             printEnabled: true,
             setDisabled: (disabled) => set({ disabled }),
-            setStatusCashRegister: (statusCashRegister) => set({ statusCashRegister }),
+            setStatusCashRegister: (statusCashRegister) =>
+                set({ statusCashRegister }),
             setPostMachines: (value) => set({ postMachines: value }),
             setSelectedPostMachine: (value) => set({ selectedPostMachine: value }),
             getPostMachines: () => {
                 set({ loading: true, error: null })
                 try {
-                    getData(GET_POST_MACHINE, GET).then((result) => {
-                        if (result?.data?.length > 0) {
-                            set({ postMachines: result?.data })
-                        }
-                    }
-                    ).catch((error) => {
-                        console.debug(error)
-                        set({ loading: false })
-                    })
-                } catch (error) { console.error(error) }
+                    getData(GET_POST_MACHINE, GET)
+                        .then((result) => {
+                            if (result?.data?.length > 0) {
+                                set({ postMachines: result?.data })
+                            }
+                        })
+                        .catch((error) => {
+                            console.debug(error)
+                            set({ loading: false })
+                        })
+                } catch (error) {
+                    console.error(error)
+                }
             },
             selectedCashRegister: DEFAULT_SELECTED,
             cashRegister: null,
@@ -39,18 +43,22 @@ const useSettingsStore = create(
             getCashRegister: () => {
                 set({ loading: true, error: null })
                 try {
-                    getData(GET_CASH_REGISTER, GET).then((result) => {
-                        if (result?.data?.length > 0) {
-                            set({ cashRegister: result?.data })
-                        }
-                    }
-                    ).catch((error) => {
-                        console.debug(error)
-                        set({ loading: false })
-                    })
-                } catch (error) { console.error(error) }
+                    getData(GET_CASH_REGISTER, GET)
+                        .then((result) => {
+                            if (result?.data?.length > 0) {
+                                set({ cashRegister: result?.data })
+                            }
+                        })
+                        .catch((error) => {
+                            console.debug(error)
+                            set({ loading: false })
+                        })
+                } catch (error) {
+                    console.error(error)
+                }
             }
-        }), {
+        }),
+        {
             name: 'settings'
         }
     )

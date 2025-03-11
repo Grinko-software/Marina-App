@@ -1,5 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { FaChartLine, FaClipboardList, FaTruck, FaUsersCog } from 'react-icons/fa'
+import {
+    FaChartLine,
+    FaClipboardList,
+    FaTruck,
+    FaUsersCog
+} from 'react-icons/fa'
 import { GiPodium } from 'react-icons/gi'
 import { MdAccountBalance } from 'react-icons/md'
 import ReportView from '../reports/components/MainReportView'
@@ -17,7 +22,7 @@ export const modules = [
         name: 'Ventas',
         description: 'Detalle de las últimas ventas realizadas',
         requireAdmin: false,
-        content: <Sales/>,
+        content: <Sales />,
         icon: <FaClipboardList />
     },
     {
@@ -26,7 +31,7 @@ export const modules = [
         name: 'Reportes',
         description: 'Indicadores de ventas por periodos',
         requireAdmin: true,
-        content: <ReportView/>,
+        content: <ReportView />,
         icon: <FaChartLine />
     },
     {
@@ -35,7 +40,7 @@ export const modules = [
         name: 'Eventos contables',
         description: 'Historial de todos los eventos contables',
         requireAdmin: true,
-        content: <AccountingEvent/>,
+        content: <AccountingEvent />,
         icon: <MdAccountBalance />
     },
     {
@@ -44,7 +49,7 @@ export const modules = [
         name: 'Usuarios',
         description: 'Administración de usuarios/trabajadores',
         requireAdmin: true,
-        content: <Users/>,
+        content: <Users />,
         icon: <FaUsersCog />
     },
     {
@@ -53,7 +58,7 @@ export const modules = [
         name: 'Proveedores',
         description: 'Administración de proveedores',
         requireAdmin: false,
-        content: <Supplier/>,
+        content: <Supplier />,
         icon: <FaTruck />
     },
     {
@@ -62,19 +67,31 @@ export const modules = [
         name: 'Rendimiento',
         description: 'Rendimiento de trabajadores',
         requireAdmin: false,
-        content: <RootWorkPerformance/>,
+        content: <RootWorkPerformance />,
         icon: <GiPodium />
     }
 ]
 
 export const getModuleName = ({ path: pathSearch }) => {
-    return modules?.find(({ path }) => { return path === pathSearch })?.name || undefined
+    return (
+        modules?.find(({ path }) => {
+            return path === pathSearch
+        })?.name || undefined
+    )
 }
 
 export const getModuleKey = ({ path: pathSearch }) => {
-    return modules?.find(({ path }) => { return path === pathSearch })?.key || undefined
+    return (
+        modules?.find(({ path }) => {
+            return path === pathSearch
+        })?.key || undefined
+    )
 }
 
 export const getModuleNameByKey = ({ key: moduleKey }) => {
-    return modules?.find(({ key }) => { return key === moduleKey })?.name || undefined
+    return (
+        modules?.find(({ key }) => {
+            return key === moduleKey
+        })?.name || undefined
+    )
 }

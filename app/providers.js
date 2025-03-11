@@ -5,13 +5,12 @@ import ScannerDetection from '@/components/ScannerDetection/ScannerDetection'
 import Toast from '@/components/Toast/Toast'
 export function Providers ({ children }) {
     return (
-        <ThemeProvider attribute='class'>
+        <ThemeProvider attribute="class">
             <NextUIProvider>
-                <ScannerDetection/>
-                <Toast/>
+                <ScannerDetection />
+                <Toast />
                 {children}
             </NextUIProvider>
         </ThemeProvider>
-
     )
 }

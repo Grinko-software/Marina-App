@@ -1,5 +1,8 @@
 import { create } from 'zustand'
-import { requestCredentialAssociationList, requestCredentialList } from './service'
+import {
+    requestCredentialAssociationList,
+    requestCredentialList
+} from './service'
 
 const useCredentialStore = create((set) => ({
     data: undefined,

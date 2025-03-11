@@ -19,8 +19,7 @@ export const manageStoreConfig = (requestData, reMapData) => (set, get) => {
             try {
                 requestData().then((results) => {
                     set({ data: reMapData(results), loading: false })
-                }
-                )
+                })
             } catch (error) {
                 set({ error, loading: false })
             }
@@ -36,8 +35,7 @@ export const manageStoreConfig = (requestData, reMapData) => (set, get) => {
             try {
                 requestData().then((results) => {
                     set({ data: reMapData(results), loading: false })
-                }
-                )
+                })
             } catch (error) {
                 set({ error, loading: false })
             }

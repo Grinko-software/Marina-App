@@ -11,7 +11,8 @@ const useVocuherStore = create(
                 if (result?.code === 200) {
                     set({
                         voucher: result?.data?.reduce((acc, { ID, name }) => {
-                            return [...acc,
+                            return [
+                                ...acc,
                                 {
                                     id: ID,
                                     name

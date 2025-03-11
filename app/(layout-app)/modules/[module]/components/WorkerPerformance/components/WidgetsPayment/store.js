@@ -23,18 +23,21 @@ const useSupplierFormStore = create((set) => ({
             if (data?.code === 200) {
                 notify('✅ Tipo de tarea creada con éxito!')
             } else {
-                notify('❌ El tipo de tarea no fue creado con éxito, intenta otra vez!')
+                notify(
+                    '❌ El tipo de tarea no fue creado con éxito, intenta otra vez!'
+                )
             }
         } catch (err) {
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        name: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            name: null,
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useSupplierFormStore

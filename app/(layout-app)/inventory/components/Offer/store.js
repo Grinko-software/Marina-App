@@ -17,19 +17,19 @@ const useOfferFormStore = create((set) => ({
         set({ loading: true, error: null, complete: false })
 
         // has requered values
-        const missingRequeredValues = !data || !data.product_id || !data.quantity || !data.unit_price
+        const missingRequeredValues =
+			!data || !data.product_id || !data.quantity || !data.unit_price
         if (missingRequeredValues) {
             set({ loading: false, error: 'Rellena todos los campos necesarios' })
             return
         }
 
         try {
-            getData(CREATE_OFFER_API_URL, POST,
-                {
-                    product_id: data.product_id,
-                    quantity: data.quantity,
-                    unit_price: data.unit_price
-                }).then(response => {
+            getData(CREATE_OFFER_API_URL, POST, {
+                product_id: data.product_id,
+                quantity: data.quantity,
+                unit_price: data.unit_price
+            }).then((response) => {
                 set({ loading: false, complete: true })
                 if (response?.code === 200) {
                     notify('🔥 Oferta creada con exito!')
@@ -41,16 +41,17 @@ const useOfferFormStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        data: {
-            product_id: null,
-            quantity: null,
-            unit_price: null
-        },
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            data: {
+                product_id: null,
+                quantity: null,
+                unit_price: null
+            },
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useOfferFormStore

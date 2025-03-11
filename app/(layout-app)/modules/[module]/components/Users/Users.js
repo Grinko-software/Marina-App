@@ -18,12 +18,23 @@ export default function Users ({ params }) {
         })
     }, [])
 
-    return <section className='w-full'>
-
-        <CreateUser handleRefresh={requestData}/>
-        <section className='flex flex-row' >
-            <TableUsers data={data} loading={loading} setTarget={setTarget} handleRefresh={requestData}/>
-            <UserInfo target={target} setTarget={setTarget} handleRefresh={requestData} allModules={allModules}/>
+    return (
+        <section className="w-full">
+            <CreateUser handleRefresh={requestData} />
+            <section className="flex flex-row">
+                <TableUsers
+                    data={data}
+                    loading={loading}
+                    setTarget={setTarget}
+                    handleRefresh={requestData}
+                />
+                <UserInfo
+                    target={target}
+                    setTarget={setTarget}
+                    handleRefresh={requestData}
+                    allModules={allModules}
+                />
+            </section>
         </section>
-    </section>
+    )
 }

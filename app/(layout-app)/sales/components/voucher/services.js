@@ -5,38 +5,54 @@ import { Voucher } from './voucher'
 import { Bill } from './bill'
 import { getMoment, today } from '@/utils/date'
 export const generatePdfDocument = async ({ data }) => {
-    const { customerDetail, cardDetail, datetime, discountTotal, discountExtra, iva, productList, stamp, total, totalNet, totalTaxFree, userName, voucherNumber } = data
+    const {
+        customerDetail,
+        cardDetail,
+        datetime,
+        discountTotal,
+        discountExtra,
+        iva,
+        productList,
+        stamp,
+        total,
+        totalNet,
+        totalTaxFree,
+        userName,
+        voucherNumber
+    } = data
     // const { listSales, totalPay, discount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg, targetCustomer } = data
     // const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
 
-    const blob = await pdff(customerDetail
-        ? <Bill
-            listSales={productList}
-            totalPay={total}
-            date={datetime}
-            totalDiscount={discountTotal}
-            stamp={stamp}
-            totalTaxFree={totalTaxFree}
-            netTotal={totalNet}
-            iva = {iva}
-            dataCard={cardDetail}
-            targetCustomer={customerDetail}
-
-        />
-        : <Voucher
-            listSales={productList}
-            totalPay={total}
-            date={datetime}
-            totalDiscount={discountTotal}
-            stamp={stamp}
-            totalTaxFree={totalTaxFree}
-            netTotal={totalNet}
-            iva = {iva}
-            dataCard={cardDetail}
-            discountPctg={discountExtra}
-
-        />
-
+    const blob = await pdff(
+        customerDetail
+            ? (
+                <Bill
+                    listSales={productList}
+                    totalPay={total}
+                    date={datetime}
+                    totalDiscount={discountTotal}
+                    stamp={stamp}
+                    totalTaxFree={totalTaxFree}
+                    netTotal={totalNet}
+                    iva={iva}
+                    dataCard={cardDetail}
+                    targetCustomer={customerDetail}
+                />
+            )
+            : (
+                <Voucher
+                    listSales={productList}
+                    totalPay={total}
+                    date={datetime}
+                    totalDiscount={discountTotal}
+                    stamp={stamp}
+                    totalTaxFree={totalTaxFree}
+                    netTotal={totalNet}
+                    iva={iva}
+                    dataCard={cardDetail}
+                    discountPctg={discountExtra}
+                />
+            )
     ).toBlob()
 
     /*

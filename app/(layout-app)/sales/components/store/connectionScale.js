@@ -10,7 +10,6 @@ const hubScale = create(
     {
         name: 'hub'
     }
-
 )
 
 export default hubScale

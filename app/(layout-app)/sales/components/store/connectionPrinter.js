@@ -9,8 +9,8 @@ const hubPrint = create(
         setIsConnectedPrint: (value) => set({ isConnectedPrint: value }),
         handleHealthCheck: () => {
             try {
-                return getData(`${PRINTER_HEALTH_URL}`, GET, null, true)
-                    .then(response => {
+                return getData(`${PRINTER_HEALTH_URL}`, GET, null, true).then(
+                    (response) => {
                         try {
                             if (response?.code === 200) {
                                 set({ isConnectedPrint: true })
@@ -20,17 +20,16 @@ const hubPrint = create(
                         } catch {
                             set({ isConnectedPrint: false })
                         }
-                    })
+                    }
+                )
             } catch {
                 return null
             }
         }
-
     }),
     {
         name: 'hub printer'
     }
-
 )
 
 export default hubPrint

@@ -26,7 +26,12 @@ export const getAllModules = async () => {
 export const getUserPermission = async ({ id }) => {
     try {
         const queryParams = new URLSearchParams({ user_id: id })
-        const response = await getData(`${USERS_API_URL}/permission?${queryParams}`, GET, undefined, true)
+        const response = await getData(
+            `${USERS_API_URL}/permission?${queryParams}`,
+            GET,
+            undefined,
+            true
+        )
 
         if (response?.data?.length) {
             // Usamos map para transformar la data
@@ -57,14 +62,21 @@ export const getUserPermissionByModuleKey = async ({ id, moduleKey }) => {
 }
 
 export const addUserPermission = async ({ userId, moduleId, moduleName }) => {
-    const queryParams = new URLSearchParams({ user_id: userId, module_id: moduleId })
-    await getData(`${USERS_API_URL}/modules?${queryParams}`, POST, {
-        create_permission: true,
-        read_permission: true,
-        update_permission: true,
-        delete_permission: true
-
-    }, true).then(result => {
+    const queryParams = new URLSearchParams({
+        user_id: userId,
+        module_id: moduleId
+    })
+    await getData(
+        `${USERS_API_URL}/modules?${queryParams}`,
+        POST,
+        {
+            create_permission: true,
+            read_permission: true,
+            update_permission: true,
+            delete_permission: true
+        },
+        true
+    ).then((result) => {
         if (result?.code === 200) {
             notify(`ℹ️ Permiso añadido con éxito: ${moduleName}`)
         } else {
@@ -72,9 +84,21 @@ export const addUserPermission = async ({ userId, moduleId, moduleName }) => {
         }
     })
 }
-export const deleteUserPermission = async ({ userId, moduleId, moduleName }) => {
-    const queryParams = new URLSearchParams({ user_id: userId, module_id: moduleId })
-    await getData(`${USERS_API_URL}/modules?${queryParams}`, DELETE, undefined, true).then(result => {
+export const deleteUserPermission = async ({
+    userId,
+    moduleId,
+    moduleName
+}) => {
+    const queryParams = new URLSearchParams({
+        user_id: userId,
+        module_id: moduleId
+    })
+    await getData(
+        `${USERS_API_URL}/modules?${queryParams}`,
+        DELETE,
+        undefined,
+        true
+    ).then((result) => {
         if (result?.code === 200) {
             notify(`ℹ️ Permiso eliminado con éxito: ${moduleName}`)
         } else {

@@ -23,14 +23,13 @@ const useAuthStore = create(
             signIn: ({ email, password, onSuccess }) => {
                 set({ loading: true, error: null })
                 try {
-                    authenticate(
-                        {
-                            email,
-                            password
-                        }
-                    ).then(({ user, statusCode, statusText, error, message }) => {
+                    authenticate({
+                        email,
+                        password
+                    }).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
-                            const { name, lastName, userType, token, idUser, password } = user
+                            const { name, lastName, userType, token, idUser, password } =
+								user
                             // set global ls
                             setToken(token)
                             set({
@@ -46,7 +45,9 @@ const useAuthStore = create(
                             if (userType === 'admin') set({ isAdmin: true })
                             if (onSuccess) onSuccess()
                         } else {
-                            set({ error: statusCode + ' ' + (error || message || statusText) })
+                            set({
+                                error: statusCode + ' ' + (error || message || statusText)
+                            })
                         }
                         set({ loading: false })
                     })
@@ -58,11 +59,9 @@ const useAuthStore = create(
                 let ok = false
                 set({ loading: true, error: null, errorAuthCode: null })
                 try {
-                    await authenticateByAuthCode(
-                        {
-                            authCode
-                        }
-                    ).then(({ user, statusCode, statusText, error, message }) => {
+                    await authenticateByAuthCode({
+                        authCode
+                    }).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
                             const { name, lastName, token, userType, idUser, email } = user
                             setToken(token)
@@ -79,7 +78,9 @@ const useAuthStore = create(
                             if (userType === 'admin') set({ isAdmin: true })
                             ok = true
                         } else {
-                            set({ error: statusCode + ' ' + (error || message || statusText) })
+                            set({
+                                error: statusCode + ' ' + (error || message || statusText)
+                            })
                             if (statusCode === 401) {
                                 set({ errorAuthCode: 'Credencial no autorizada' })
                             }
@@ -93,14 +94,11 @@ const useAuthStore = create(
                 return ok
             },
             getUserDataWithCode: async ({ authCode, requireAdmin }) => {
-                console.log(authCode)
                 let resultData = null
                 try {
-                    await authenticateByAuthCode(
-                        {
-                            authCode
-                        }
-                    ).then(({ user, statusCode, statusText, error, message }) => {
+                    await authenticateByAuthCode({
+                        authCode
+                    }).then(({ user, statusCode, statusText, error, message }) => {
                         if (user.token) {
                             const { name, lastName, userType, idUser } = user
                             const isAdmin = userType === 'admin'

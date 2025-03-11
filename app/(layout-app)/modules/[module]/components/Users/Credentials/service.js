@@ -1,4 +1,8 @@
-import { fetchGetCredentials, fetchCreateCredential, fetchGetCredentialsAssociations } from '@/services/credential'
+import {
+    fetchGetCredentials,
+    fetchCreateCredential,
+    fetchGetCredentialsAssociations
+} from '@/services/credential'
 
 export const requestCredentialList = async () => {
     try {
@@ -16,7 +20,12 @@ export const requestCredentialAssociationList = async () => {
     }
 }
 
-export const requestCreateCredential = async ({ name, lastName, email, password }) => {
+export const requestCreateCredential = async ({
+    name,
+    lastName,
+    email,
+    password
+}) => {
     try {
         return fetchCreateCredential({ name, lastName, email, password })
     } catch (error) {

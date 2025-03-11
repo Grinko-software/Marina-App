@@ -7,10 +7,11 @@ export const getMultiDataRequest = async () => {
         { url: PRODUCT_OFFER, method: GET }
     ])
 }
-export const getMultiDataRequestWithImage = async () => getDataMultiple([
-    { url: CATEGORIES_API_URL, method: GET },
-    { url: PRODUCT_OFFER, method: GET }
-])
+export const getMultiDataRequestWithImage = async () =>
+    getDataMultiple([
+        { url: CATEGORIES_API_URL, method: GET },
+        { url: PRODUCT_OFFER, method: GET }
+    ])
 
 export const reMapData = (data) => {
     if (data?.length > 0) {

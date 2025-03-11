@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 'use client'
-import { Accordion, AccordionItem, Button, Card, CardBody } from '@nextui-org/react'
+import {
+    Accordion,
+    AccordionItem,
+    Button,
+    Card,
+    CardBody
+} from '@nextui-org/react'
 import { ConfigProvider, DatePicker, Radio } from 'antd'
 import React, { useEffect, useState } from 'react'
 
@@ -19,23 +25,32 @@ const DateTypeSelector = (props) => {
         fetchData()
     }, [requestData])
 
-    return <div>
-        <Radio.Group
-            className='flex'
-            value={value}
-            onChange={({ target: { value } }) => { setSelection(value) }}
-        >
-            {options?.map((item) => {
-                // const selected = rangeType === item
-                return <Radio.Button key={item.value} value={item.value}
-                    onClick={() => setSelection(item.value)}
-                    type=''
-                    className='flex-1 text-center' >
-                    {item.label}
-                </Radio.Button>
-            })}
-        </Radio.Group>
-    </div>
+    return (
+        <div>
+            <Radio.Group
+                className="flex"
+                value={value}
+                onChange={({ target: { value } }) => {
+                    setSelection(value)
+                }}
+            >
+                {options?.map((item) => {
+                    // const selected = rangeType === item
+                    return (
+                        <Radio.Button
+                            key={item.value}
+                            value={item.value}
+                            onClick={() => setSelection(item.value)}
+                            type=""
+                            className="flex-1 text-center"
+                        >
+                            {item.label}
+                        </Radio.Button>
+                    )
+                })}
+            </Radio.Group>
+        </div>
+    )
 }
 
 export default DateTypeSelector

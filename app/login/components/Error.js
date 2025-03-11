@@ -28,11 +28,15 @@ export function ErrorLogin ({ error }) {
         setErrorText(error)
     }, [error])
 
-    return (<div>
-        {error
-            ? <div className=''>
-                <AlertMessage message={errorText}/>
-            </div>
-            : null}
-    </div>)
+    return (
+        <div>
+            {error
+                ? (
+                    <div className="">
+                        <AlertMessage message={errorText} />
+                    </div>
+                )
+                : null}
+        </div>
+    )
 }

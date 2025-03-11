@@ -12,15 +12,17 @@ export default function Sales () {
     }, [currentPage])
     /* useEffect(() => { console.debug(loading) }, [loading]) */
 
-    return <section className='w-full'>
-        <section className='grid grid-cols w-full gap-3' >
-            <TableAccounting
-                data={ data }
-                loading={loading}
-                totalpage={totalpage}
-                setCurrentPage={setCurrentPage}
-                setLimitPage={setLimitPage}
-            />
+    return (
+        <section className="w-full">
+            <section className="grid grid-cols w-full gap-3">
+                <TableAccounting
+                    data={data}
+                    loading={loading}
+                    totalpage={totalpage}
+                    setCurrentPage={setCurrentPage}
+                    setLimitPage={setLimitPage}
+                />
+            </section>
         </section>
-    </section>
+    )
 }

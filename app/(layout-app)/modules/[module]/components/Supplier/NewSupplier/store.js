@@ -24,7 +24,14 @@ const useSupplierFormStore = create((set) => ({
             return
         }
         try {
-            const [data] = await Promise.all([requestCreateSupplier({ name, rut, companyName: nameCompany, companyRut: rutCompany })])
+            const [data] = await Promise.all([
+                requestCreateSupplier({
+                    name,
+                    rut,
+                    companyName: nameCompany,
+                    companyRut: rutCompany
+                })
+            ])
             set({ loading: false, error: null, complete: true })
             if (data?.code === 200) {
                 notify('✅ Proveedor creado con éxito!')
@@ -35,15 +42,16 @@ const useSupplierFormStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        name: null,
-        rut: null,
-        nameCompany: null,
-        rutCompany: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            name: null,
+            rut: null,
+            nameCompany: null,
+            rutCompany: null,
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useSupplierFormStore

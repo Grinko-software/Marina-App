@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 'use client'
-import { Accordion, AccordionItem, Button, Card, CardBody } from '@nextui-org/react'
+import {
+    Accordion,
+    AccordionItem,
+    Button,
+    Card,
+    CardBody
+} from '@nextui-org/react'
 import { ConfigProvider, DatePicker, Radio } from 'antd'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
@@ -17,23 +23,19 @@ const { RangePicker } = DatePicker
 const RangeDatePicker = (props) => {
     const { value: rangeType, valueFrom, valueTo, onChange } = props
 
-    return <div>
-        <RangePicker
-            locale={locale}
-            className='flex-1'
-            picker={rangeType}
-            value={[
-                dayjs(valueFrom),
-                dayjs(valueTo)
-            ]}
-            onChange={(value) => {
-                onChange(
-                    moment(value?.[0].format()),
-                    moment(value?.[1].format())
-                )
-            }}
-        />
-    </div>
+    return (
+        <div>
+            <RangePicker
+                locale={locale}
+                className="flex-1"
+                picker={rangeType}
+                value={[dayjs(valueFrom), dayjs(valueTo)]}
+                onChange={(value) => {
+                    onChange(moment(value?.[0].format()), moment(value?.[1].format()))
+                }}
+            />
+        </div>
+    )
 }
 
 export default RangeDatePicker

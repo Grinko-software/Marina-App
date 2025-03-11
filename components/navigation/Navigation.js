@@ -60,8 +60,12 @@ export function Navigation () {
                 // disabledKeys={['reports']}
             >
                 {(item) => (
-                    <Tab key={item.id} size={'lg'} title={item.label} className="w-full md:w-[10rem] xl:w-[24rem]">
-                    </Tab>
+                    <Tab
+                        key={item.id}
+                        size={'lg'}
+                        title={item.label}
+                        className="w-full md:w-[10rem] xl:w-[24rem]"
+                    ></Tab>
                 )}
             </Tabs>
         </footer>

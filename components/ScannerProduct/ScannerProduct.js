@@ -33,10 +33,9 @@ export default function ScannerProduct () {
         setCompleted(false)
         setErrorMessage(null)
 
-        const product = useInventoryStore.getState().getProductByCode(
-            useInventoryStore.getState().listInventory,
-            codeValue
-        )
+        const product = useInventoryStore
+            .getState()
+            .getProductByCode(useInventoryStore.getState().listInventory, codeValue)
 
         if (product) {
             setError(false)
@@ -68,91 +67,114 @@ export default function ScannerProduct () {
     }, [error, completed])
 
     return (
-        <section className='h-full flex flex-col items-center py-[3rem]'>
-            <section className={`${productData ? '' : 'h-[15rem]'} flex overflow-hidden`}>
-                {
-                    completed && success && productData
-                        ? <>
-                            <div className='flex flex-col min-w-[20rem] justify-center'>
-                                <div className='mx-auto mb-5'>
-                                    <Image id='imageProduct'
-                                        src={productData?.image?.length ? productData?.image : DefaultImageMarinaMarket()}
-                                        alt={productData?.name}
-                                        width={200}
-                                        height={200}
-                                    />
-                                </div>
-                                {
-                                    [
-                                        { title: 'Nombre', value: productData?.name },
-                                        { title: 'Código', value: productData?.code },
-                                        { title: 'Precio', value: `$ ${roundValueWithMath(productData?.price, 0, 0)} ` }
-                                        // { title: 'Precio costo', value: productData?.costPrice },
-                                        // { title: 'Precio neto', value: productData?.netPrice },
-                                        // { title: 'Stock disponible', value: productData?.stock },
-                                        // { title: 'Excento de IVA', value: productData?.taxFree ? 'SI' : 'NO' }
-                                    ].map(({ title, value }) => {
-                                        return (
-                                            <div key={title} className='flex flex-row w-full justify-between gap-5 text-xl'>
-                                                <p className='font-bold'>{`${title}:`}</p>
-                                                <p className='text-2xl'>{value}</p>
-                                            </div>
-                                        )
-                                    })
-                                }
+        <section className="h-full flex flex-col items-center py-[3rem]">
+            <section
+                className={`${productData ? '' : 'h-[15rem]'} flex overflow-hidden`}
+            >
+                {completed && success && productData
+                    ? <>
+                        <div className="flex flex-col min-w-[20rem] justify-center">
+                            <div className="mx-auto mb-5">
+                                <Image
+                                    id="imageProduct"
+                                    src={
+                                        productData?.image?.length
+                                            ? productData?.image
+                                            : DefaultImageMarinaMarket()
+                                    }
+                                    alt={productData?.name}
+                                    width={200}
+                                    height={200}
+                                />
                             </div>
-                        </>
-                        : error
-                            ? <>
-                                <Lottie className="mx-auto" animationData={ErrordGif} loop={false} />
-
+                            {[
+                                { title: 'Nombre', value: productData?.name },
+                                { title: 'Código', value: productData?.code },
+                                {
+                                    title: 'Precio',
+                                    value: `$ ${roundValueWithMath(productData?.price, 0, 0)} `
+                                }
+                                // { title: 'Precio costo', value: productData?.costPrice },
+                                // { title: 'Precio neto', value: productData?.netPrice },
+                                // { title: 'Stock disponible', value: productData?.stock },
+                                // { title: 'Excento de IVA', value: productData?.taxFree ? 'SI' : 'NO' }
+                            ].map(({ title, value }) => {
+                                return (
+                                    <div
+                                        key={title}
+                                        className="flex flex-row w-full justify-between gap-5 text-xl"
+                                    >
+                                        <p className="font-bold">{`${title}:`}</p>
+                                        <p className="text-2xl">{value}</p>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </>
+                    : error
+                        ? (
+                            <>
+                                <Lottie
+                                    className="mx-auto"
+                                    animationData={ErrordGif}
+                                    loop={false}
+                                />
                             </>
-                            : !isActivedInputQR
-                                ? <>
-                                    <Lottie className="mx-auto scale-[2]" animationData={Barcode} loop={true} />
+                        )
+                        : !isActivedInputQR
+                            ? (
+                                <>
+                                    <Lottie
+                                        className="mx-auto scale-[2]"
+                                        animationData={Barcode}
+                                        loop={true}
+                                    />
                                 </>
-                                : <div className='flex items-center'>
-                                    <div className='flex items-end gap-2'>
+                            )
+                            : (
+                                <div className="flex items-center">
+                                    <div className="flex items-end gap-2">
                                         <Input
-                                            className='rounded-r-lg'
+                                            className="rounded-r-lg"
                                             type="text"
                                             value={inputCodeValue}
                                             variant={'bordered'}
                                             label={'Código del producto'}
-                                            labelPlacement='outside'
-                                            onValueChange={(value) => { setInputCodeValue(value) }}
+                                            labelPlacement="outside"
+                                            onValueChange={(value) => {
+                                                setInputCodeValue(value)
+                                            }}
                                         />
-                                        <Button isIconOnly
+                                        <Button
+                                            isIconOnly
                                             isDisabled={!inputCodeValue}
-                                            onClick={searchProductWithInputCode}>
-                                            <MagnifyingGlassIcon className='w-5 h-5'/>
+                                            onClick={searchProductWithInputCode}
+                                        >
+                                            <MagnifyingGlassIcon className="w-5 h-5" />
                                         </Button>
                                     </div>
                                 </div>
-                }
+                            )}
             </section>
-            <section className='max-w-[40rem]'>
-
+            <section className="max-w-[40rem]">
                 {loading
-                    ? <Spinner className='text-md m-auto my-1'>
-                        {'Verificando...'}
-                    </Spinner>
+                    ? (
+                        <Spinner className="text-md m-auto my-1">{'Verificando...'}</Spinner>
+                    )
                     : error
-                        ? <AlertMessage message= {errorMessage}/>
+                        ? (
+                            <AlertMessage message={errorMessage} />
+                        )
                         : null}
             </section>
 
-            {!completed &&
-            <section className='p-5'>
-                <Button
-                    onClick={ () => setIsActivedInputQR(!isActivedInputQR)}
-                >
-                    {
-                        isActivedInputQR ? 'Escanear producto' : 'Ingresar código'
-                    }
-                </Button>
-            </section>
-            }
+            {!completed && (
+                <section className="p-5">
+                    <Button onClick={() => setIsActivedInputQR(!isActivedInputQR)}>
+                        {isActivedInputQR ? 'Escanear producto' : 'Ingresar código'}
+                    </Button>
+                </section>
+            )}
         </section>
     )
 }

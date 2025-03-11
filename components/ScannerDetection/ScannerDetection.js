@@ -11,11 +11,7 @@ export default function ScannerDetection () {
     const [detected, setDetected] = useState(true)
     const [scanner, setScanner] = useState(null)
     const router = useRouter()
-    const {
-        addFromNewSales,
-        units,
-        setUnits
-    } = useSalesStore()
+    const { addFromNewSales, units, setUnits } = useSalesStore()
     const {
         scannerEnabled,
         enabledRedirect,
@@ -26,8 +22,7 @@ export default function ScannerDetection () {
         getMillisecondsSinceLastScan
     } = useScannerStore()
 
-    useEffect(() => {
-    }, [units])
+    useEffect(() => {}, [units])
 
     const addProduct = ({ code }) => {
         const currentListSales = useSalesStore.getState().listSales
@@ -37,10 +32,9 @@ export default function ScannerDetection () {
         const listSalesActives = useSalesStore.getState().listSalesActives
         const saleIdActive = useSalesStore.getState().saleIdActive
 
-        const product = useInventoryStore.getState().getProductByCode(
-            useInventoryStore.getState().listInventory,
-            code
-        )
+        const product = useInventoryStore
+            .getState()
+            .getProductByCode(useInventoryStore.getState().listInventory, code)
 
         if (product) {
             if (enabledRedirectSales) {
@@ -54,7 +48,9 @@ export default function ScannerDetection () {
 
     const onCompleteScanMode = (barcode) => {
         // check avaible scan
-        const ms = getMillisecondsSinceLastScan(useScannerStore.getState().datetimeLastScan)
+        const ms = getMillisecondsSinceLastScan(
+            useScannerStore.getState().datetimeLastScan
+        )
         useScannerStore.getState().disableSetUnits()
 
         if (!ms || ms > msRangeScan) {
@@ -77,11 +73,12 @@ export default function ScannerDetection () {
     }
 
     const onCompleteAuthMode = (barcode) => {
-        const ms = getMillisecondsSinceLastScan(useScannerStore.getState().datetimeLastScan)
+        const ms = getMillisecondsSinceLastScan(
+            useScannerStore.getState().datetimeLastScan
+        )
         if (!ms || ms > msRangeScan) {
             setDatetimeLastScan()
-            console.log(`Auth code: ${barcode}`)
-            if (useScannerStore.getState().authModeFunction) useScannerStore.getState().authModeFunction(barcode)
+            if (useScannerStore.getState().authModeFunction) { useScannerStore.getState().authModeFunction(barcode) }
         }
     }
 
@@ -107,20 +104,13 @@ export default function ScannerDetection () {
     }
 
     useEffect(() => {
-        console.log('redirect: ', enabledRedirect,
-            ' scanner: ', scannerEnabled,
-            ' authMode: ', authModeEnabled)
-
         // disabled scanner
         if (scanner !== null) {
             scanner?.stopScanning()
             setScanner(null)
-            console.log('Stop scanner')
         }
 
         if (scannerEnabled || enabledRedirect || authModeEnabled) {
-            console.log('New scanner')
-
             const options = {
                 onComplete: onCompleteScanner,
                 onError
@@ -142,5 +132,7 @@ export default function ScannerDetection () {
     return (
         <section>
             {/*             <Button onClick={() => { detected ? setDetected(false) : setDetected(true) }} >{'Detectar scanner: ' + (detected ? 'ACTIVADO' : 'DESACTIVADO')}</Button>
- */}        </section>)
+			 */}{' '}
+        </section>
+    )
 }

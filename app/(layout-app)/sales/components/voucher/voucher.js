@@ -1,5 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { Document, Page, Text, View, Svg, G, Line, Image } from '@react-pdf/renderer'
+import {
+    Document,
+    Page,
+    Text,
+    View,
+    Svg,
+    G,
+    Line,
+    Image
+} from '@react-pdf/renderer'
 // Create StylePdf
 import { StylePdf } from './StylePdf'
 import { DefaultImageMarinaMarket } from '@/utils/image'
@@ -9,16 +18,24 @@ import { Detail } from './components/detail/detail'
 import { TableCardDetail } from './components/table/cardDetail'
 
 // Create Document Component
-export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, totalTaxFree, netTotal, iva, dataCard, discountPctg }) => {
+export const Voucher = ({
+    listSales,
+    totalPay,
+    date,
+    totalDiscount,
+    stamp,
+    totalTaxFree,
+    netTotal,
+    iva,
+    dataCard,
+    discountPctg
+}) => {
     return (
         <Document>
             <Page size={[180]} style={StylePdf.page}>
                 <View style={StylePdf.containerLogo}>
                     <View style={StylePdf.logo}>
-                        <Image
-                            width="100"
-                            height="100"
-                            src={DefaultImageMarinaMarket()}/>
+                        <Image width="100" height="100" src={DefaultImageMarinaMarket()} />
                     </View>
                 </View>
                 <View style={StylePdf.container}>
@@ -35,41 +52,51 @@ export const Voucher = ({ listSales, totalPay, date, totalDiscount, stamp, total
                 </View>
                 {/* Table products */}
                 <View style={StylePdf.containerFlexCol1}>
-                    <TableProductVoucher listSales={listSales}/>
+                    <TableProductVoucher listSales={listSales} />
                 </View>
                 {/* Data Card */}
                 {dataCard
-                    ? <View style={StylePdf.containerFlexCol1}>
-                        <TableCardDetail dataCard={dataCard}/>
-                    </View>
+                    ? (
+                        <View style={StylePdf.containerFlexCol1}>
+                            <TableCardDetail dataCard={dataCard} />
+                        </View>
+                    )
                     : null}
-                <View style={totalTaxFree ? StylePdf.containerFlexCol : StylePdf.containerFlexCol4}>
+                <View
+                    style={
+                        totalTaxFree
+                            ? StylePdf.containerFlexCol
+                            : StylePdf.containerFlexCol4
+                    }
+                >
                     <ViewTotal
                         totalPay={totalPay}
                         totalDiscount={totalDiscount}
                         totalTaxFree={totalTaxFree}
                         netTotal={netTotal}
-                        iva ={iva}
+                        iva={iva}
                         discountPctg={discountPctg}
                     />
                 </View>
                 {stamp
-                    ? <>
-                        <View style={StylePdf.containerFlexCol2}>
-                            <View style={StylePdf.containerAbsoulte}>
-                                <View style={StylePdf.stampContainer}>
-                                    <Image
-                                        fixed={true}
-                                        src={'data:image/png;base64,' + stamp}
-                                        style={StylePdf.stamp}
-                                    />
+                    ? (
+                        <>
+                            <View style={StylePdf.containerFlexCol2}>
+                                <View style={StylePdf.containerAbsoulte}>
+                                    <View style={StylePdf.stampContainer}>
+                                        <Image
+                                            fixed={true}
+                                            src={'data:image/png;base64,' + stamp}
+                                            style={StylePdf.stamp}
+                                        />
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                        <View style={StylePdf.containerFlexCol3}>
-                            <Detail/>
-                        </View>
-                    </>
+                            <View style={StylePdf.containerFlexCol3}>
+                                <Detail />
+                            </View>
+                        </>
+                    )
                     : null}
             </Page>
         </Document>

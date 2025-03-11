@@ -1,8 +1,16 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import {
-    Autocomplete, AutocompleteItem, Button, Input, Modal, ModalBody,
-    ModalContent, ModalFooter, ModalHeader, useDisclosure
+    Autocomplete,
+    AutocompleteItem,
+    Button,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    useDisclosure
 } from '@nextui-org/react'
 import { DatePicker } from '@nextui-org/date-picker'
 import useStore from './store'
@@ -11,8 +19,9 @@ import { TbShoppingCartPlus } from 'react-icons/tb'
 import { notify } from '@/services/notify'
 import useAuthStore from '@/stores/user'
 import CustomDatePicker from '@/components/DatePicker/DatePicker'
+import { motion } from 'framer-motion'
 
-export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
+export default function CreateTask ({ isAdmin = true, users, taskTypes, requestTaskList }) {
     const { idUser } = useAuthStore()
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isMobile, setIsMobile] = useState(true)
@@ -28,8 +37,7 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
 
     useEffect(() => {
         if (navigator) {
-            const view = isMobileDevice()
-            setIsMobile(view)
+            setIsMobile(isMobileDevice())
         }
     }, [])
 
@@ -39,175 +47,166 @@ export default function CreateTask ({ isAdmin = true, users, taskTypes }) {
             onClose()
         }
     }, [complete, error])
+
     useEffect(() => {
         const adjustScrollOnFocus = (e) => {
-            const target = e.target
-            if (target.tagName === 'INPUT') {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            if (e.target.tagName === 'INPUT') {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
             }
         }
-
         document.addEventListener('focusin', adjustScrollOnFocus)
         return () => document.removeEventListener('focusin', adjustScrollOnFocus)
     }, [])
 
     return (
-        <section>
-            <header className="flex justify-end">
-                <Button
-                    className='bg-emerald-600 dark:bg-emerald-600 font-semibold'
-                    color='primary'
-                    onClick={onOpen}
-                    startContent={<TbShoppingCartPlus size={25} />}
-                >
-                    {isMobile ? '' : 'CREAR TAREA'}
-                </Button>
-            </header>
+        <>
+            <Button
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold shadow-lg hover:scale-105 transition-transform w-full"
+                color="primary"
+                onClick={onOpen}
+                startContent={<TbShoppingCartPlus size={25} />}
+            >
+                {isMobile ? '' : 'CREAR TAREA'}
+            </Button>
+
+            {/* Modal con animación */}
             <Modal
                 backdrop="blur"
                 isOpen={isOpen}
-                placement={'top'}
-                size={isMobile ? '' : '4xl'}
+                placement="top"
+                size={isMobile ? 'md' : '4xl'}
                 radius="lg"
-                id='modal-supplier'
-                classNames={{
-                    body: 'py-6 w-full h-full',
-                    closeButton: 'hidden'
-                }}
+                classNames={{ body: 'py-6', closeButton: 'hidden' }}
             >
-                <ModalContent>
-                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-                        Nueva tarea
+                <ModalContent as={motion.div}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    {/* Header */}
+                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 text-lg font-bold">
+                        📝 Nueva Tarea
                     </ModalHeader>
+
+                    {/* Body */}
                     <ModalBody>
-                        <section className=" mt-3 grid gap-4 grid-cols-1 md:grid-cols-2 items-start">
-                            <div className="p-4">
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+                            {/* Tipo de tarea */}
+                            <div>
                                 <Autocomplete
                                     label="Tipo de tarea"
-                                    placeholder="Busca un tipo"
+                                    placeholder="Selecciona un tipo"
                                     defaultItems={taskTypes}
                                     selectedKey={taskType}
-                                    onSelectionChange={(value) => {
-                                        setTaskType(value)
-                                        // document.activeElement.blur()
-                                    }}
+                                    onSelectionChange={setTaskType}
                                     allowsEmptyCollection={false}
-                                    isClearable={true}
-                                    variant={'underlined'}
-                                    labelPlacement={'outside'}
-                                    classNames={{
-                                        listbox: 'z-50'
-                                    }}
+                                    isClearable
+                                    variant="underlined"
+                                    labelPlacement="outside"
                                     portal
                                 >
-                                    {(item) => (
-                                        <AutocompleteItem key={item.value}>
-                                            {`${item.label}`}
-                                        </AutocompleteItem>
-                                    )}
+                                    {item => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                                 </Autocomplete>
                             </div>
+
+                            {/* Responsable (solo Admin) */}
                             {isAdmin && (
-                                <div className="p-4">
+                                <div>
                                     <Autocomplete
                                         label="Responsable"
-                                        placeholder="Busca un usuario"
+                                        placeholder="Selecciona un usuario"
                                         defaultItems={users}
                                         selectedKey={userTask}
-                                        onSelectionChange={(value) => setUserTask(value)}
+                                        onSelectionChange={setUserTask}
                                         allowsEmptyCollection={false}
                                         isClearable={false}
-                                        variant={'underlined'}
-                                        labelPlacement={'outside'}
+                                        variant="underlined"
+                                        labelPlacement="outside"
                                     >
-                                        {(item) => (
-                                            <AutocompleteItem key={item.value}>
-                                                {`${item.label}`}
-                                            </AutocompleteItem>
-                                        )}
+                                        {item => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                                     </Autocomplete>
                                 </div>
                             )}
-                            <div className="p-4">
+
+                            {/* Nombre de la tarea */}
+                            <div>
                                 <Input
                                     type="text"
                                     value={name}
-                                    variant={'underlined'}
-                                    label={'Nombre Tarea'}
-                                    labelPlacement={'outside'}
-                                    placeholder={'Ingrese el nombre de la tarea'}
-                                    onValueChange={(value) => { setName(value) }}
+                                    variant="underlined"
+                                    label="Nombre de la tarea"
+                                    labelPlacement="outside"
+                                    placeholder="Ej: Organizar estantería del pasillo 2"
+                                    onValueChange={setName}
                                 />
                             </div>
-                            <div className="p-4">
+
+                            {/* Descripción de la tarea */}
+                            <div>
                                 <Input
                                     type="text"
                                     value={description}
-                                    variant={'underlined'}
-                                    label={'Descripción Tarea'}
-                                    labelPlacement={'outside'}
-                                    placeholder={'Ingrese la descripción de la tarea'}
-                                    onValueChange={(value) => { setDescription(value) }}
+                                    variant="underlined"
+                                    label="Descripción"
+                                    labelPlacement="outside"
+                                    placeholder="Ej: Acomodar y clasificar productos en la bodega"
+                                    onValueChange={setDescription}
                                 />
                             </div>
-                            {isMobile
-                                ? <div className="p-4 flex w-full items-end justify-end">
-                                    <CustomDatePicker
-                                        label="Fecha límite"
-                                        placeholder={'Selecciona la fecha de la tarea'}
-                                        value={dateTask}
-                                        onChange={setDateTask}
-                                    />
-                                </div>
-                                : <div className="p-4">
-                                    <DatePicker
-                                        variant={'underlined'}
-                                        labelPlacement={'outside'}
-                                        label="Fecha límite"
-                                        placeholder={'Selecciona la fecha de la tarea'}
-                                        value={dateTask}
-                                        onChange={setDateTask}
-                                    />
-                                </div>
-                            }
-                        </section>
+
+                            {/* Fecha límite */}
+                            <div className="col-span-1 sm:col-span-2">
+                                {isMobile
+                                    ? (
+                                        <CustomDatePicker
+                                            label="Fecha límite"
+                                            value={dateTask}
+                                            onChange={setDateTask}
+                                        />
+                                    )
+                                    : (
+                                        <DatePicker
+                                            variant="underlined"
+                                            label="Fecha límite"
+                                            placeholder="Selecciona la fecha"
+                                            value={dateTask}
+                                            onChange={setDateTask}
+                                        />
+                                    )}
+                            </div>
+                        </div>
                     </ModalBody>
-                    <ModalFooter>
+
+                    {/* Footer con botones de acción */}
+                    <ModalFooter className="flex justify-between items-center">
+                        {/* Mostrar error si existe */}
                         {error && (
-                            <div className='flex mx-5 self-center'>
-                                <h1>{error}</h1>
+                            <div className="text-red-500 text-sm font-medium">
+                                ⚠️ {error}
                             </div>
                         )}
-                        <Button
-                            className="bg-green-500 text-primary-50"
-                            onClick={() => {
-                                requestCreate(
-                                    name,
-                                    description,
-                                    taskType,
-                                    userTask,
-                                    dateTask,
-                                    notify,
-                                    idUser,
-                                    isAdmin
-                                )
-                            }}
-                        >
-                            Crear
-                        </Button>
-                        <Button
-                            color="danger"
-                            variant="flat"
-                            onClick={() => {
-                                onClose()
-                                clearStore()
-                            }}
-                        >
-                            Cerrar
-                        </Button>
+
+                        {/* Botones */}
+                        <div className="flex gap-2">
+                            <Button
+                                className="bg-green-500 text-white shadow-md hover:scale-105 transition-transform"
+                                onClick={() => requestCreate(name, description, taskType, userTask, dateTask, notify, idUser, isAdmin, requestTaskList)}
+                            >
+                                Crear
+                            </Button>
+                            <Button
+                                color="danger"
+                                variant="flat"
+                                className="hover:scale-105 transition-transform"
+                                onClick={() => { onClose(); clearStore() }}
+                            >
+                                Cancelar
+                            </Button>
+                        </div>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-        </section>
+        </>
     )
 }

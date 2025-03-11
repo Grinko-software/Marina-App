@@ -24,7 +24,6 @@ const useInvoiceStore = create(
         complete: false,
         setTargetCustomer: (value) => set({ targetCustomer: value }),
         setFormData: (newData) => {
-            // console.log(newData)
             set({ defaultForm: { ...newData } })
         },
         setLoadingCustomer: (value) => set({ loadingCustomer: value }),
@@ -48,44 +47,53 @@ const useInvoiceStore = create(
             }
 
             try {
-                getData(CREATE_CUSTOMER, POST, dataBody).then((result) => {
-                    // Get result from DTEMITE
-                    if (result?.data === 'registry created successfully') {
-                        notify('✅ Cliente creado exitosamente')
-                        setTargetCustomer(dataBody)
-                        getCustomers()
-                    } else if (result?.error || result?.data === null) {
-                        notify('❌ El cliente no fue creado con éxito, intenta otra vez!')
-                    }
-                    set({ loadingCustomer: false })
-                }
-                ).catch((error) => {
-                    console.debug(error)
-                    set({ loadingCustomer: false })
-                })
-            } catch (error) { console.error(error) }
+                getData(CREATE_CUSTOMER, POST, dataBody)
+                    .then((result) => {
+                        // Get result from DTEMITE
+                        if (result?.data === 'registry created successfully') {
+                            notify('✅ Cliente creado exitosamente')
+                            setTargetCustomer(dataBody)
+                            getCustomers()
+                        } else if (result?.error || result?.data === null) {
+                            notify(
+                                '❌ El cliente no fue creado con éxito, intenta otra vez!'
+                            )
+                        }
+                        set({ loadingCustomer: false })
+                    })
+                    .catch((error) => {
+                        console.debug(error)
+                        set({ loadingCustomer: false })
+                    })
+            } catch (error) {
+                console.error(error)
+            }
         },
         triggetgetCustomers: () => {
             set({ loading: true, error: null })
             try {
-                getData(CUSTOMER_API_URL, GET).then((result) => {
-                    set({ loadingCustomer: true })
-                    if (result?.data) {
-                        set({
-                            customers: result?.data?.map((e) => {
-                                return {
-                                    meta: e?.business_name + ' ' + e?.rut, ...e
-                                }
+                getData(CUSTOMER_API_URL, GET)
+                    .then((result) => {
+                        set({ loadingCustomer: true })
+                        if (result?.data) {
+                            set({
+                                customers: result?.data?.map((e) => {
+                                    return {
+                                        meta: e?.business_name + ' ' + e?.rut,
+                                        ...e
+                                    }
+                                })
                             })
-                        })
-                    }
-                    set({ loadingCustomer: false })
-                }
-                ).catch((error) => {
-                    console.debug(error)
-                    set({ loadingCustomer: false })
-                })
-            } catch (error) { console.error(error) }
+                        }
+                        set({ loadingCustomer: false })
+                    })
+                    .catch((error) => {
+                        console.debug(error)
+                        set({ loadingCustomer: false })
+                    })
+            } catch (error) {
+                console.error(error)
+            }
         },
         getCustomers: (result) => {
             set({ loadingCustomer: true })
@@ -93,19 +101,18 @@ const useInvoiceStore = create(
                 set({
                     customers: result?.data?.map((e) => {
                         return {
-                            meta: e?.business_name + ' ' + e?.rut, ...e
+                            meta: e?.business_name + ' ' + e?.rut,
+                            ...e
                         }
                     })
                 })
             }
             set({ loadingCustomer: false })
         }
-
     }),
     {
         name: 'invoice'
     }
-
 )
 
 export default useInvoiceStore

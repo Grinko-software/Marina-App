@@ -7,12 +7,16 @@ const useLastSalesStore = create((set) => ({
     totalpage: undefined,
     requestData: (limitPage, currentPage) => {
         set({ loading: true })
-        fetchGetReportsLastSales(limitPage, currentPage).then((data) => {
-            set({
-                data: data?.data?.last_sales_response,
-                totalpage: data?.data?.total_page > 100 ? 100 : data?.data?.total_page
+        fetchGetReportsLastSales(limitPage, currentPage)
+            .then((data) => {
+                set({
+                    data: data?.data?.last_sales_response,
+                    totalpage: data?.data?.total_page > 100 ? 100 : data?.data?.total_page
+                })
             })
-        }).catch((error) => { console.debug(error) })
+            .catch((error) => {
+                console.debug(error)
+            })
         set({ loading: false })
     },
     requestSaleDetail: async ({ saleId }) => {

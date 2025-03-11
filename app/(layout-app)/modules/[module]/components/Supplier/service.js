@@ -1,4 +1,9 @@
-import { fetchGetSupplier, fetchCreateSupplier, fetchGetAssociationSupplier, fetchUpdatedAssociationSupplier } from '@/services/supplier'
+import {
+    fetchGetSupplier,
+    fetchCreateSupplier,
+    fetchGetAssociationSupplier,
+    fetchUpdatedAssociationSupplier
+} from '@/services/supplier'
 
 export const requestSupplierList = async () => {
     try {
@@ -8,7 +13,12 @@ export const requestSupplierList = async () => {
     }
 }
 
-export const requestCreateSupplier = async ({ name, rut, companyName, companyRut }) => {
+export const requestCreateSupplier = async ({
+    name,
+    rut,
+    companyName,
+    companyRut
+}) => {
     try {
         return fetchCreateSupplier({ name, rut, companyName, companyRut })
     } catch (error) {

@@ -1,11 +1,19 @@
 /* eslint-disable no-unused-vars */
 import { create } from 'zustand'
-import { changePriceStar, getValueByStar, getPaymentList, putStateTaskPaid } from '../../service'
+import {
+    changePriceStar,
+    getValueByStar,
+    getPaymentList,
+    putStateTaskPaid
+} from '../../service'
 import { formatterNumber } from '@/utils/number'
 
 const useFilterStorePayment = create((set) => ({
+    totalPay: null,
+    setTotalPay: (value) => set({ totalPay: value }),
     data: null,
     totalPayment: null,
+    focusTab: null,
     totalStar: null,
     loading: false,
     totalpage: undefined,
@@ -15,6 +23,7 @@ const useFilterStorePayment = create((set) => ({
     priceStar: null,
     newPriceStar: null,
     setNewPriceStar: (value) => set({ newPriceStar: value }),
+    setFocusTab: (value) => set({ focusTab: value }),
     setSelectionUser: (value) => set({ selectionUser: value }),
     setFromDate: (value) => set({ fromDate: value }),
     setToDate: (value) => set({ toDate: value }),
@@ -43,9 +52,11 @@ const useFilterStorePayment = create((set) => ({
                             totalStar: null
                         })
                     }
-                }).catch((error) => {
+                })
+                .catch((error) => {
                     console.debug(error)
-                }).finally(() => {
+                })
+                .finally(() => {
                     set({ loading: false })
                 })
         } catch (e) {
@@ -73,15 +84,17 @@ const useFilterStorePayment = create((set) => ({
     },
     getPriceForStar: async () => {
         try {
+            set({ loading: true })
             const response = await getValueByStar()
             set({ priceStar: response?.data?.cash_bonus })
+            set({ loading: false })
         } catch (e) {
             console.error('Error getting price for SAR:', e)
+            set({ loading: false })
         }
         return null
     },
     updatePriceStar: async (newPriceStar) => {
-        console.log(newPriceStar)
         try {
             set({ loading: true })
             const response = await changePriceStar(newPriceStar)

@@ -12,21 +12,39 @@ import useSyncStore from '@/stores/common/sync'
 import { upgradeVersion } from '@/services/sync'
 import useStore from './store'
 export default function tableProducts (props) {
-    const {
-        getData,
-        error,
-        loading,
-        setLoading,
-        data,
-        triggerAction
-    } = useStore((state) => state)
+    const { getData, error, loading, setLoading, data, triggerAction } = useStore(
+        (state) => state
+    )
     const { searchInput, setSearchInput } = props
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
     const [selectedProductWithKG, setSelectedProductWithKG] = useState(null)
     const [categoryTabSelected, setCategoryTabSelected] = useState()
     const [listInventory, setListInventory] = useState([])
-    const { listCategories, listInventory: list, getCategories, getListInventory, loadingCategories, handleProductRequest } = useInventoryStore(({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories, handleProductRequest }) => ({ listCategories, listInventory: list, getCategories, getListInventory, loadingCategories, handleProductRequest }))
+    const {
+        listCategories,
+        listInventory: list,
+        getCategories,
+        getListInventory,
+        loadingCategories,
+        handleProductRequest
+    } = useInventoryStore(
+        ({
+            listCategories,
+            listInventory: list,
+            getCategories,
+            getListInventory,
+            loadingCategories,
+            handleProductRequest
+        }) => ({
+            listCategories,
+            listInventory: list,
+            getCategories,
+            getListInventory,
+            loadingCategories,
+            handleProductRequest
+        })
+    )
     const [filteredList, setFilteredList] = useState([])
     const {
         addFromNewSales,
@@ -48,7 +66,11 @@ export default function tableProducts (props) {
     useEffect(() => {
         if (categoryTabSelected) {
             setSearchInput(null)
-            setListInventory(list?.filter((item) => item.productCategoryId === parseInt(categoryTabSelected)))
+            setListInventory(
+                list?.filter(
+                    (item) => item.productCategoryId === parseInt(categoryTabSelected)
+                )
+            )
         }
     }, [categoryTabSelected, list])
 
@@ -63,7 +85,14 @@ export default function tableProducts (props) {
             if (targeProduct?.stockTypeId === 1) {
                 setSelectedProductWithKG(targeProduct)
             } else {
-                addFromNewSales(listSalesActives, saleIdActive, targeProduct, units, offers, onCompleteFunction)
+                addFromNewSales(
+                    listSalesActives,
+                    saleIdActive,
+                    targeProduct,
+                    units,
+                    offers,
+                    onCompleteFunction
+                )
             }
         }
     }, [targeProduct])
@@ -91,7 +120,12 @@ export default function tableProducts (props) {
                 }
                 currentTotal += item?.total - (item?.discount || 0)
             })
-            setTotalPrice(listSalesActives, saleIdActive, Math.round(currentTotal / 10) * 10, Math.round(currentTotalTaxFree / 10) * 10)
+            setTotalPrice(
+                listSalesActives,
+                saleIdActive,
+                Math.round(currentTotal / 10) * 10,
+                Math.round(currentTotalTaxFree / 10) * 10
+            )
         }
     }, [listSales])
     useEffect(() => {
@@ -135,8 +169,11 @@ export default function tableProducts (props) {
     }, [])
 
     return (
-        <section className='animation-fade-in  w-full flex flex-col'>
-            <div style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }} className='rounded-t-[12px] top-[0px] overflow-x-auto overflow-y-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full'>
+        <section className="animation-fade-in  w-full flex flex-col">
+            <div
+                style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }}
+                className="rounded-t-[12px] top-[0px] overflow-x-auto overflow-y-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full"
+            >
                 {loadingCategories
                     ? <section className="pt-3 px-3  flex bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
@@ -150,34 +187,55 @@ export default function tableProducts (props) {
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
                         <Skeleton className="w-[6rem] m-1 h-8 rounded-lg"></Skeleton>
                     </section>
-
-                    : <Tabs
-                        color="success"
-                        aria-label="Options"
-                        // items={listCategories?.length > 0 ? listCategories : []}
-                        items={listCategories?.length > 0 ? listCategories?.filter((element) => element?.label === 'FRUTAS' || element?.label === 'VERDURAS' || element?.label === 'CARNES' || element?.label === 'PAN' || element?.label === 'MASCOTAS' || element?.label === 'CAFETERÍA' || element?.label === 'BAZAR' || element?.label === 'OTROS' || element?.label === 'PROMOS' || element?.label === 'REMEDIOS') : [] }
-                        selectedKey={categoryTabSelected}
-                        onSelectionChange={setCategoryTabSelected}
-                        variant={'solid'}
-                        className="pt-3 px-3 bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450"
-                        classNames={{
-                            cursor: 'w-full bg-green-400',
-                            tabContent: 'group-data-[selected=true]:text-primary-50 font-extrabold'
-                        }}
-                        onClick={() => setSearchInput('')}
-                    >
-
-                        {(item) => (
-                            <Tab color="primary" variant="shadow" key={item.id} size="xl" title={item.label}>
-                            </Tab>
-                        )}
-                    </Tabs>
-                }
+                    : (
+                        <Tabs
+                            color="success"
+                            aria-label="Options"
+                            // items={listCategories?.length > 0 ? listCategories : []}
+                            items={
+                                listCategories?.length > 0
+                                    ? listCategories?.filter(
+                                        (element) =>
+                                            element?.label === 'FRUTAS' ||
+											element?.label === 'VERDURAS' ||
+											element?.label === 'CARNES' ||
+											element?.label === 'PAN' ||
+											element?.label === 'MASCOTAS' ||
+											element?.label === 'CAFETERÍA' ||
+											element?.label === 'BAZAR' ||
+											element?.label === 'OTROS' ||
+											element?.label === 'PROMOS' ||
+											element?.label === 'REMEDIOS'
+								  )
+                                    : []
+                            }
+                            selectedKey={categoryTabSelected}
+                            onSelectionChange={setCategoryTabSelected}
+                            variant={'solid'}
+                            className="pt-3 px-3 bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450"
+                            classNames={{
+                                cursor: 'w-full bg-green-400',
+                                tabContent:
+								'group-data-[selected=true]:text-primary-50 font-extrabold'
+                            }}
+                            onClick={() => setSearchInput('')}
+                        >
+                            {(item) => (
+                                <Tab
+                                    color="primary"
+                                    variant="shadow"
+                                    key={item.id}
+                                    size="xl"
+                                    title={item.label}
+                                ></Tab>
+                            )}
+                        </Tabs>
+                    )}
             </div>
-            <section className='flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450'>
+            <section className="flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450">
                 <section
                     style={{ scrollbarGutter: 'stable' }}
-                    className='w-full flex flex-wrap no-select custom-scrollbar h-[calc(100vh-20rem)] overflow-y-auto'
+                    className="w-full flex flex-wrap no-select custom-scrollbar h-[calc(100vh-17.5rem)] overflow-y-auto"
                 >
                     {loading && listInventory?.length < 0
                         ? (
@@ -187,30 +245,41 @@ export default function tableProducts (props) {
                                 ))}
                             </div>
                         )
-                        : <section style={{ scrollbarGutter: 'stable' }} className='w-full flex flex-wrap h-[calc(100vh-20rem)]  no-select custom-scrollbar overflow-y-auto content-start snap-mandatory snap-y'>
-                            { (filteredList.length ? filteredList : listInventory)?.length > 0
-                                ? (
-                                    (filteredList.length ? filteredList : listInventory)?.map((item, index) => (
-                                        <div key={'productList' + index} className='w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6'>
-                                            <div className='h-full p-2'>
-                                                <CardUi
-                                                    className
-                                                    key={index}
-                                                    item={item}
-                                                    index={index}
-                                                    isFromSales={true}
-                                                    setTargetProduct={setTargetProduct}
-                                                />
+                        : (
+                            <section
+                                style={{ scrollbarGutter: 'stable' }}
+                                className="w-full flex flex-wrap h-[calc(100vh-20rem)]  no-select custom-scrollbar overflow-y-auto content-start snap-mandatory snap-y"
+                            >
+                                {(filteredList.length ? filteredList : listInventory)?.length > 0
+                                    ? (filteredList.length ? filteredList : listInventory)?.map(
+                                        (item, index) => (
+                                            <div
+                                                key={'productList' + index}
+                                                className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6"
+                                            >
+                                                <div className="h-full p-2">
+                                                    <CardUi
+                                                        className
+                                                        key={index}
+                                                        item={item}
+                                                        index={index}
+                                                        isFromSales={true}
+                                                        setTargetProduct={setTargetProduct}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))
-                                )
-                                : null}
-
-                        </section>}
+                                        )
+								  )
+                                    : null}
+                            </section>
+                        )}
                 </section>
             </section>
-            <WeighingScaleModal isOpen={isOpen} onClose={onClose} product={selectedProductWithKG}/>
+            <WeighingScaleModal
+                isOpen={isOpen}
+                onClose={onClose}
+                product={selectedProductWithKG}
+            />
         </section>
     )
 }

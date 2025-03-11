@@ -1,5 +1,18 @@
-import { TASK_STARS_DEFAULT_VALUE, TASK_STARS_LIMIT } from '@/settings/constants'
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Slider, Textarea, useDisclosure } from '@nextui-org/react'
+import {
+    TASK_STARS_DEFAULT_VALUE,
+    TASK_STARS_LIMIT
+} from '@/settings/constants'
+import {
+    Button,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Slider,
+    Textarea,
+    useDisclosure
+} from '@nextui-org/react'
 import { FaStar } from 'react-icons/fa'
 import { BsCashCoin } from 'react-icons/bs'
 import { formatNumberWithPoints } from '@/utils/number'
@@ -48,7 +61,6 @@ export default function TaskScoreInput ({
                 ]}
                 defaultValue={1}
                 className="max-w-xl"
-
                 value={rate}
                 onChange={onRateChange}
                 startContent={
@@ -56,7 +68,7 @@ export default function TaskScoreInput ({
                         isIconOnly
                         variant="light"
                         radius="full"
-                        onPress={() => onRateChange((prev) => prev > 1 ? prev - 1 : 1)}
+                        onPress={() => onRateChange((prev) => (prev > 1 ? prev - 1 : 1))}
                     >
                         <FaStar className="text-xl" />
                     </Button>
@@ -66,33 +78,37 @@ export default function TaskScoreInput ({
                         isIconOnly
                         variant="light"
                         radius="full"
-                        onPress={() => onRateChange((prev) => prev <= 9 ? prev + 1 : 10)}
+                        onPress={() => onRateChange((prev) => (prev <= 9 ? prev + 1 : 10))}
                     >
                         <FaStar className="text-3xl" />
                     </Button>
                 }
             />
             <div className="w-full mx-auto p-4 flex items-center">
-                <div className='mx-auto w-full max-w-xl'>
+                <div className="mx-auto w-full max-w-xl">
                     <Textarea
                         type="text"
                         value={feedbackRate}
                         variant={'underlined'}
                         labelPlacement={'outside'}
                         label={'Descripción de la evaluación'}
-                        placeholder={ 'Ingrese la descripción de la evaluación'}
-                        onValueChange={(value) => { setFeedbackRate(value) }}
+                        placeholder={'Ingrese la descripción de la evaluación'}
+                        onValueChange={(value) => {
+                            setFeedbackRate(value)
+                        }}
                     />
                 </div>
             </div>
-            <div className='flex flex-row items-center gap-10 py-2'>
-                <div className='flex flex-row gap-2 items-center'>
-                    <FaStar className="text-3xl"/>
+            <div className="flex flex-row items-center gap-10 py-2">
+                <div className="flex flex-row gap-2 items-center">
+                    <FaStar className="text-3xl" />
                     <span className="text-2xl">{rate}</span>
                 </div>
-                <div className='flex flex-row gap-2 items-center'>
-                    <BsCashCoin className="text-3xl"/>
-                    <span className="text-2xl">$ {formatNumberWithPoints(rate * starValue)}</span>
+                <div className="flex flex-row gap-2 items-center">
+                    <BsCashCoin className="text-3xl" />
+                    <span className="text-2xl">
+						$ {formatNumberWithPoints(rate * starValue)}
+                    </span>
                 </div>
             </div>
         </div>
@@ -118,12 +134,12 @@ export function TaskScoreInputMobile ({
     return (
         <div>
             <Button
-                className='bg-emerald-600 dark:bg-emerald-600 font-semibold'
-                color='primary'
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold"
+                color="primary"
                 onClick={onOpen}
                 // startContent={<TbShoppingCartPlus size={25} />}
             >
-                Calificar
+				Calificar
             </Button>
             <Modal
                 backdrop="blur"
@@ -131,7 +147,7 @@ export function TaskScoreInputMobile ({
                 placement={'bottom'}
                 size={''}
                 radius="lg"
-                id='modal-supplier'
+                id="modal-supplier"
                 classNames={{
                     body: 'py-6 w-full h-full',
                     closeButton: 'hidden'
@@ -139,7 +155,7 @@ export function TaskScoreInputMobile ({
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-                        Nueva tarea
+						Calificar tarea
                     </ModalHeader>
                     <ModalBody>
                         <section className="w-full">
@@ -148,7 +164,6 @@ export function TaskScoreInputMobile ({
                                 onRateChange={setRate}
                                 feedbackRate={feedbackRate}
                                 setFeedbackRate={setFeedbackRate}
-
                                 score={score}
                                 starValue={starValue}
                             />
@@ -160,9 +175,8 @@ export function TaskScoreInputMobile ({
                             onClick={() => {
                                 onRateTask(rate, feedbackRate)
                             }}
-
                         >
-                            Enviar
+							Enviar
                         </Button>
                         <Button
                             color="danger"
@@ -171,7 +185,7 @@ export function TaskScoreInputMobile ({
                                 onClose()
                             }}
                         >
-                            Cerrar
+							Cerrar
                         </Button>
                     </ModalFooter>
                 </ModalContent>
@@ -185,9 +199,11 @@ export function TaskScore ({ score = 0 }) {
         return `${'★'.repeat(Math.abs(score))}`
     }
     return (
-        <div className='text-xl flex flex-row'>
-            <p className='text-yellow-400'>{generateStars(score)}</p>
-            <p className='text-default-300'>{generateStars(TASK_STARS_LIMIT - score)}</p>
+        <div className="text-xl flex flex-row">
+            <p className="text-yellow-400">{generateStars(score)}</p>
+            <p className="text-default-300">
+                {generateStars(TASK_STARS_LIMIT - score)}
+            </p>
         </div>
     )
 }

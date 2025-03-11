@@ -11,7 +11,8 @@ const usePaymentStore = create(
                 if (result?.code === 200) {
                     set({
                         payment: result?.data?.reduce((acc, { ID, name }) => {
-                            return [...acc,
+                            return [
+                                ...acc,
                                 {
                                     id: ID,
                                     name

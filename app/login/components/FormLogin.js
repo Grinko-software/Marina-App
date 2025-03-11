@@ -33,7 +33,10 @@ export default function LoginForm ({ onSuccess }) {
     }, [email])
 
     useEffect(() => {
-        if (validateValues && (!email || !password || emailError || passwordError)) {
+        if (
+            validateValues &&
+			(!email || !password || emailError || passwordError)
+        ) {
             setSendDisabled(true)
         } else {
             setSendDisabled(false)
@@ -50,13 +53,11 @@ export default function LoginForm ({ onSuccess }) {
 
     const onSubmitHandler = () => {
         if (!emailError && !passwordError) {
-            signIn(
-                {
-                    email,
-                    password,
-                    onSuccess
-                }
-            )
+            signIn({
+                email,
+                password,
+                onSuccess
+            })
         }
     }
     useEffect(() => {
@@ -86,9 +87,7 @@ export default function LoginForm ({ onSuccess }) {
                 <Input
                     autoFocus
                     radius="full"
-                    endContent={
-                        <div></div>
-                    }
+                    endContent={<div></div>}
                     label="Usuario"
                     variant="bordered"
                     value={email}
@@ -102,10 +101,8 @@ export default function LoginForm ({ onSuccess }) {
                 />
                 <Input
                     radius="full"
-                    endContent={
-                        <div></div>
-                    }
-                    autoComplete=''
+                    endContent={<div></div>}
+                    autoComplete=""
                     label="Contraseña"
                     type="password"
                     variant="bordered"
@@ -125,15 +122,16 @@ export default function LoginForm ({ onSuccess }) {
                     className="flex w-full justify-center"
                     isLoading={loading}
                     isDisabled={sendDisabled}
-                    onClick = {() => onSubmitHandler()}>
-            Ingresar
+                    onClick={() => onSubmitHandler()}
+                >
+					Ingresar
                 </Button>
             </div>
-            {
-                error && <div className='w-full p-2'>
-                    <ErrorLogin error={error}/>
+            {error && (
+                <div className="w-full p-2">
+                    <ErrorLogin error={error} />
                 </div>
-            }
+            )}
         </section>
     )
 }

@@ -13,7 +13,13 @@ import { FaUnlockAlt } from 'react-icons/fa'
 const TIMEOUT = 1500
 const TIMEOUT_SCAN = 500
 
-export default function ScannerCredential ({ onGetUserData, onSuccess, changeSession, requireAdmin, withoutDelay }) {
+export default function ScannerCredential ({
+    onGetUserData,
+    onSuccess,
+    changeSession,
+    requireAdmin,
+    withoutDelay
+}) {
     const [loading, setLoading] = useState(false)
     const [completed, setCompleted] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -28,11 +34,7 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
         // authModeEnabled,
         // datetimeLastUpdate
     } = useScannerStore()
-    const {
-        signInWithCode,
-        getUserDataWithCode,
-        errorAuthCode
-    } = useAuthStore()
+    const { signInWithCode, getUserDataWithCode, errorAuthCode } = useAuthStore()
 
     const getUserData = async (qrValue) => {
         setLoading(true)
@@ -106,78 +108,102 @@ export default function ScannerCredential ({ onGetUserData, onSuccess, changeSes
 
     useEffect(() => {
         if (completed && success) {
-            setTimeout(() => {
-                onCompleteAuth()
-            }, withoutDelay ? 0 : TIMEOUT)
-            setTimeout(() => {
-                disabledAuthMode()
-            }, withoutDelay ? TIMEOUT_SCAN : (TIMEOUT + TIMEOUT_SCAN))
+            setTimeout(
+                () => {
+                    onCompleteAuth()
+                },
+                withoutDelay ? 0 : TIMEOUT
+            )
+            setTimeout(
+                () => {
+                    disabledAuthMode()
+                },
+                withoutDelay ? TIMEOUT_SCAN : TIMEOUT + TIMEOUT_SCAN
+            )
         }
     }, [completed, success, withoutDelay])
 
     return (
-        <section className='h-full flex flex-col items-center py-[3rem]'>
-            <section className='h-[15rem] flex overflow-hidden'>
-                {
-                    completed && success
-                        ? <>
-                            <Lottie className="mx-auto" animationData={CompletedGif} loop={false} />
+        <section className="h-full flex flex-col items-center py-[3rem]">
+            <section className="h-[15rem] flex overflow-hidden">
+                {completed && success
+                    ? (
+                        <>
+                            <Lottie
+                                className="mx-auto"
+                                animationData={CompletedGif}
+                                loop={false}
+                            />
                         </>
-                        : error
-                            ? <>
-                                <Lottie className="mx-auto" animationData={ErrordGif} loop={false} />
-
+                    )
+                    : error
+                        ? (
+                            <>
+                                <Lottie
+                                    className="mx-auto"
+                                    animationData={ErrordGif}
+                                    loop={false}
+                                />
                             </>
-                            : !isActivedInputQR
-                                ? <>
-                                    <Lottie className="mx-auto scale-[2]" animationData={QR} loop={true} />
+                        )
+                        : !isActivedInputQR
+                            ? (
+                                <>
+                                    <Lottie
+                                        className="mx-auto scale-[2]"
+                                        animationData={QR}
+                                        loop={true}
+                                    />
                                 </>
-                                : <div className='flex items-center'>
-                                    <div className='flex items-end gap-2'>
+                            )
+                            : (
+                                <div className="flex items-center">
+                                    <div className="flex items-end gap-2">
                                         <Input
-                                            className='rounded-r-lg'
+                                            className="rounded-r-lg"
                                             type="text"
                                             value={inputCodeQR}
                                             variant={'bordered'}
                                             label={'Código de credencial'}
-                                            labelPlacement='outside'
-                                            onValueChange={(value) => { setInputCodeQR(value) }}
+                                            labelPlacement="outside"
+                                            onValueChange={(value) => {
+                                                setInputCodeQR(value)
+                                            }}
                                         />
-                                        <Button isIconOnly
+                                        <Button
+                                            isIconOnly
                                             isDisabled={!inputCodeQR}
-                                            onClick={authenticateWithInputCode}>
+                                            onClick={authenticateWithInputCode}
+                                        >
                                             <FaUnlockAlt />
                                         </Button>
                                     </div>
                                 </div>
-                }
+                            )}
             </section>
             {/*  {`| completed:${completed}\n`}
             {`| loading:${loading}`}
             {`| success:${success}`}
             {`| error:${error}`} */}
-            <section className='max-w-[40rem]'>
-
+            <section className="max-w-[40rem]">
                 {loading
-                    ? <Spinner className='text-md m-auto my-1'>
-                        {'Verificando...'}
-                    </Spinner>
+                    ? (
+                        <Spinner className="text-md m-auto my-1">{'Verificando...'}</Spinner>
+                    )
                     : error
-                        ? <AlertMessage message= {errorAuthCode || errorMessage}/>
+                        ? (
+                            <AlertMessage message={errorAuthCode || errorMessage} />
+                        )
                         : null}
             </section>
 
-            {!completed &&
-            <section className='p-5'>
-                <Button
-                    onClick={ () => setIsActivedInputQR(!isActivedInputQR)}
-                >
-                    {
-                        isActivedInputQR ? 'Escanear credencial' : 'Ingresar código'
-                    }
-                </Button>
-            </section>
-            }
+            {!completed && (
+                <section className="p-5">
+                    <Button onClick={() => setIsActivedInputQR(!isActivedInputQR)}>
+                        {isActivedInputQR ? 'Escanear credencial' : 'Ingresar código'}
+                    </Button>
+                </section>
+            )}
         </section>
     )
 }

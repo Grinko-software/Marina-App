@@ -4,16 +4,11 @@ import { pdf as pdff } from '@react-pdf/renderer'
 import { TicketSupplier } from './TicketSupplier'
 import { today } from '@/utils/date'
 
-export const generateTickectSupplier = async (
-    { datetime, listProducts }
-) => {
+export const generateTickectSupplier = async ({ datetime, listProducts }) => {
     const date = (datetime || today()).format('DD-MM-YYYY HH:mm:ss')
 
     const blob = await pdff(
-        <TicketSupplier
-            listProducts={listProducts}
-            date={date}
-        />
+        <TicketSupplier listProducts={listProducts} date={date} />
     ).toBlob()
     const fileURL = URL.createObjectURL(blob)
     const iframe = document.createElement('iframe') // load content in an iframe to print later

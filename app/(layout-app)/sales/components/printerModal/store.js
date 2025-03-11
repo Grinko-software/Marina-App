@@ -9,7 +9,7 @@ const salePrintStore = create(
         setPrintBodyLastSale: (value) => set({ printBodyLastSale: value }),
         requestPrintSale: ({ printBodyLastSale = null }) => {
             try {
-                if (printBodyLastSale) fetchPrinterSaleTicket({ data: printBodyLastSale })
+                if (printBodyLastSale) { fetchPrinterSaleTicket({ data: printBodyLastSale }) }
                 set({ printBodyLastSale: null })
             } catch {
                 return null
@@ -28,7 +28,6 @@ const salePrintStore = create(
     {
         name: 'salePrint'
     }
-
 )
 
 export default salePrintStore

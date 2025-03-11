@@ -17,9 +17,11 @@ export function PaymentOfMoney ({ disabled }) {
     return (
         <>
             <button
-                aria-label='Toggle Dark Mode'
-                type='button'
-                className={`${show ? ' cursor-not-allowed' : 'cursor-pointer'} flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700 animation-fade-in`}
+                aria-label="Toggle Dark Mode"
+                type="button"
+                className={`${
+                    show ? ' cursor-not-allowed' : 'cursor-pointer'
+                } flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-700 animation-fade-in`}
                 onClick={() => {
                     if (!disabled) {
                         onOpen()
@@ -27,13 +29,19 @@ export function PaymentOfMoney ({ disabled }) {
                 }}
             >
                 <FaMoneyBillTransfer
-
-                    className={`${show ? 'fill-gray-500 dark:fill-gray-500' : 'fill-primary-500 dark:fill-primary-300'} w-6 h-6 sm:w-10 sm:h-10 cursor-pointer `}
+                    className={`${
+                        show
+                            ? 'fill-gray-500 dark:fill-gray-500'
+                            : 'fill-primary-500 dark:fill-primary-300'
+                    } w-6 h-6 sm:w-10 sm:h-10 cursor-pointer `}
                 />
             </button>
-            <DrawalsCashBalance isOpen={isOpen} onClose={onClose} disabled={disabled}/>
+            <DrawalsCashBalance
+                isOpen={isOpen}
+                onClose={onClose}
+                disabled={disabled}
+            />
         </>
-
     )
 }
 export default PaymentOfMoney

@@ -24,7 +24,9 @@ const useSupplierFormStore = create((set) => ({
             return
         }
         try {
-            const [data] = await Promise.all([requestCreateUser({ name, lastName, email, password })])
+            const [data] = await Promise.all([
+                requestCreateUser({ name, lastName, email, password })
+            ])
             set({ loading: false, error: null, complete: true })
             if (data?.code === 200) {
                 notify('✅ Usuario creado con éxito!')
@@ -35,15 +37,16 @@ const useSupplierFormStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        name: null,
-        lastName: null,
-        email: null,
-        password: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            name: null,
+            lastName: null,
+            email: null,
+            password: null,
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useSupplierFormStore

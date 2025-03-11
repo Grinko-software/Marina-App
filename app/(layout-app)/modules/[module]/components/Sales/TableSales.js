@@ -1,9 +1,30 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { Pagination, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip, Spinner, Tooltip } from '@nextui-org/react'
+import {
+    Pagination,
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    Button,
+    Chip,
+    Spinner,
+    Tooltip
+} from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
 import moment from 'moment-timezone'
-export default function TableSales ({ setOpenModalToPrint, data, loading, setTarget, currentPage, setCurrentPage, totalpage, setLimitPage }) {
+export default function TableSales ({
+    setOpenModalToPrint,
+    data,
+    loading,
+    setTarget,
+    currentPage,
+    setCurrentPage,
+    totalpage,
+    setLimitPage
+}) {
     const [hasMore, setHasMore] = useState(false)
     const [showAllData, setShowAllData] = useState(false)
     const [dataModel, setDataModel] = useState([])
@@ -54,7 +75,8 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
         {
             key: 'showTicket',
             label: 'Boleta'
-        }, {
+        },
+        {
             key: 'isDone',
             label: 'Estado de venta'
         },
@@ -74,7 +96,7 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
                     datetime: moment(item?.date),
                     total: item?.total,
                     discount: item?.total_discount,
-                    iva: item?.total - ((item.total || 0) / 1.19),
+                    iva: item?.total - (item.total || 0) / 1.19,
                     type: item?.name_voucher,
                     paymentType: item?.name_payment,
                     userName: item?.user_name,
@@ -109,7 +131,8 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
             items: items.sort((a, b) => {
                 const first = a[sortDescriptor.column]
                 const second = b[sortDescriptor.column]
-                let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1
+                let cmp =
+					(parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1
 
                 if (sortDescriptor.direction === 'descending') {
                     cmp *= -1
@@ -120,132 +143,158 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
         }
     }
 
-    const renderCell = React.useCallback((data, columnKey) => {
-        const cellValue = data[columnKey]
-        switch (columnKey) {
-        case 'datetime':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{(cellValue).format('DD-MM-YYYY HH:mm:ss')}</p>
-                </div>
-            )
-        case 'total':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(cellValue)}`}</p>
-                </div>
-            )
-        case 'discount':
-            return (
-                cellValue
-                    ? <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(cellValue)}`}</p>
+    const renderCell = React.useCallback(
+        (data, columnKey) => {
+            const cellValue = data[columnKey]
+            switch (columnKey) {
+            case 'datetime':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">
+                            {cellValue.format('DD-MM-YYYY HH:mm:ss')}
+                        </p>
                     </div>
-                    : '-'
-            )
-        case 'iva':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(cellValue)}`}</p>
-                </div>
-            )
-        case 'type':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{
-                        <Chip
-                            color={statusColorMap[data.type?.toUpperCase()]}
-                            size="sm"
-                            variant="solid"
-                            classNames={{
-                                content: 'text-white'
+                )
+            case 'total':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(
+                            cellValue
+                        )}`}</p>
+                    </div>
+                )
+            case 'discount':
+                return cellValue
+                    ? (
+                        <div className="flex flex-col">
+                            <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(
+                                cellValue
+                            )}`}</p>
+                        </div>
+                    )
+                    : (
+                        '-'
+                    )
+            case 'iva':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`$${formatNumberWithPoints(
+                            cellValue
+                        )}`}</p>
+                    </div>
+                )
+            case 'type':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">
+                            {
+                                <Chip
+                                    color={statusColorMap[data.type?.toUpperCase()]}
+                                    size="sm"
+                                    variant="solid"
+                                    classNames={{
+                                        content: 'text-white'
+                                    }}
+                                >
+                                    {data.type}
+                                </Chip>
+                            }
+                        </p>
+                    </div>
+                )
+            case 'isDone':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">
+                            {
+                                <Chip
+                                    color={data.isDone ? 'success' : 'danger'}
+                                    size="sm"
+                                    variant="solid"
+                                    classNames={{
+                                        content: 'text-white'
+                                    }}
+                                >
+                                    {data.isDone ? 'COMPLETED' : 'Cancelada'}
+                                </Chip>
+                            }
+                        </p>
+                    </div>
+                )
+            case 'showTicket':
+                return (
+                    <div className="flex flex-col">
+                        <Button
+                            variant="flat"
+                            onPress={() => {
+                                openTicket(data)
                             }}
                         >
-                            {data.type}
-                        </Chip>
-                    }</p>
-                </div>
-            )
-        case 'isDone':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{
-                        <Chip
-                            color={data.isDone ? 'success' : 'danger'}
-                            size="sm"
-                            variant="solid"
-                            classNames={{
-                                content: 'text-white'
-                            }}
+								Generar ticket
+                        </Button>
+                    </div>
+                )
+            case 'detail':
+                return (
+                    <div className="flex flex-col">
+                        <p
+                            className={`text-bold capitalize dark:text-white ${
+                                data.detail?.length > 20 ? 'text-xs' : 'text-sm'
+                            }`}
                         >
-                            {data.isDone ? 'Completada' : 'Cancelada'}
-                        </Chip>
-                    }</p>
-                </div>
-            )
-        case 'showTicket':
-            return (
-                <div className="flex flex-col">
-                    <Button variant="flat" onPress={() => {
-                        openTicket(data)
-                    }}>
-                                Generar ticket
-                    </Button>
-                </div>
-            )
-        case 'detail':
-            return (
-                <div className="flex flex-col">
-                    <p
-                        className={`text-bold capitalize dark:text-white ${
-                            data.detail?.length > 20 ? 'text-xs' : 'text-sm'
-                        }`}
-                    >
-                        {data.detail?.length > 20
-                            ? <Tooltip color='danger' className='text-bold text-sm capitalize dark:text-white' content={data.detail}>
-                                <div>{`${data.detail.substring(0, 20)}...`}</div></Tooltip>
-                            : data.detail}
-                    </p>
-                </div>
-            )
-        default:
-            return cellValue ? cellValue?.toString()?.toUpperCase() : '-'
-        }
-    }, [dataModel])
+                            {data.detail?.length > 20
+                                ? (
+                                    <Tooltip
+                                        color="danger"
+                                        className="text-bold text-sm capitalize dark:text-white"
+                                        content={data.detail}
+                                    >
+                                        <div>{`${data.detail.substring(0, 20)}...`}</div>
+                                    </Tooltip>
+                                )
+                                : (
+                                    data.detail
+                                )}
+                        </p>
+                    </div>
+                )
+            default:
+                return cellValue ? cellValue?.toString()?.toUpperCase() : '-'
+            }
+        },
+        [dataModel]
+    )
 
     return (
         <section>
-            <Table isHeaderSticky
+            <Table
+                isHeaderSticky
                 onSortChange={sortItems}
-
                 bottomContent={
                     totalpage > 0
-                        ? (
-                            <div className="flex w-full justify-center">
-                                <Pagination
-                                    isCompact
-                                    showControls
-                                    showShadow
-                                    color="default"
-                                    page={currentPage}
-                                    total={totalpage}
-                                    onChange={(page) => {
-                                        // paginas 1,2,3,4
-                                        // limit 10,20,30,40,
-                                        // offset 0,10,20,30
-                                        // setLimitPage(page * 10)
-                                        setCurrentPage((page * 10) - 10)
-                                    }}
-                                />
-                            </div>
-                        )
+                        ? <div className="flex w-full justify-center">
+                            <Pagination
+                                isCompact
+                                showControls
+                                showShadow
+                                color="default"
+                                page={currentPage}
+                                total={totalpage}
+                                onChange={(page) => {
+                                    // paginas 1,2,3,4
+                                    // limit 10,20,30,40,
+                                    // offset 0,10,20,30
+                                    // setLimitPage(page * 10)
+                                    setCurrentPage(page * 10 - 10)
+                                }}
+                            />
+                        </div>
                         : null
                 }
-
             >
                 <TableHeader columns={columns}>
                     {(column) => (
-                        <TableColumn key={column.key} allowsSorting >
+                        <TableColumn key={column.key} allowsSorting>
                             {column.label}
                         </TableColumn>
                     )}
@@ -253,7 +302,11 @@ export default function TableSales ({ setOpenModalToPrint, data, loading, setTar
                 <TableBody items={dataModel || []}>
                     {(item) => (
                         <TableRow key={item.key}>
-                            {(columnKey) => <TableCell className="w-[150px]" >{renderCell(item, columnKey)}</TableCell>}
+                            {(columnKey) => (
+                                <TableCell className="w-[150px]">
+                                    {renderCell(item, columnKey)}
+                                </TableCell>
+                            )}
                         </TableRow>
                     )}
                 </TableBody>

@@ -27,5 +27,4 @@ app.post('/imprimir', (req, res) => {
     }
 })
 
-app.listen(port, () => {
-})
+app.listen(port, () => {})

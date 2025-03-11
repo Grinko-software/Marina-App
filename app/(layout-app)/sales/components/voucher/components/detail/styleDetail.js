@@ -1,7 +1,6 @@
 import { StyleSheet /* , Font */ } from '@react-pdf/renderer'
 
 export const StyleDetail = StyleSheet.create({
-
     page: {
         fontFamily: 'Helvetica',
         fontSize: 11,
@@ -104,5 +103,4 @@ export const StyleDetail = StyleSheet.create({
         fontSize: 5,
         fontFamily: 'Helvetica-Bold'
     }
-
 })

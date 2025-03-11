@@ -9,7 +9,6 @@ const useHttpStore = create(
     {
         name: 'scanner'
     }
-
 )
 
 export default useHttpStore

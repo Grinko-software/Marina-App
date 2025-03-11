@@ -1,10 +1,28 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useCallback } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Spinner, Pagination, getKeyValue } from '@nextui-org/react'
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    Button,
+    Spinner,
+    Pagination,
+    getKeyValue
+} from '@nextui-org/react'
 import { formatNumberWithPoints } from '@/utils/number'
 import moment from 'moment-timezone'
 
-export default function TableAccounting ({ data, loading, currentPage, setCurrentPage, totalpage, setLimitPage }) {
+export default function TableAccounting ({
+    data,
+    loading,
+    currentPage,
+    setCurrentPage,
+    totalpage,
+    setLimitPage
+}) {
     const [dataModel, setDataModel] = useState([])
     const columns = [
         {
@@ -47,7 +65,9 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                     date: moment(item?.date).format('DD-MM-YYYY HH:mm:ss'),
                     total: `$${formatNumberWithPoints(item?.total)}`,
                     cashRegisterId: item?.cash_register_id,
-                    cashRegisterName: item?.cash_register_name ? item?.cash_register_name?.toUpperCase() : null,
+                    cashRegisterName: item?.cash_register_name
+                        ? item?.cash_register_name?.toUpperCase()
+                        : null,
                     eventType: item?.event_type,
                     userId: item?.user_id,
                     userName: item?.user_name ? item?.user_name?.toUpperCase() : null,
@@ -64,7 +84,8 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
             items: items.sort((a, b) => {
                 const first = a[sortDescriptor.column]
                 const second = b[sortDescriptor.column]
-                let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1
+                let cmp =
+					(parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1
 
                 if (sortDescriptor.direction === 'descending') {
                     cmp *= -1
@@ -94,7 +115,7 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                                 // limit 10,20,30,40,
                                 // offset 0,10,20,30
                                 // setLimitPage(page * 10)
-                                setCurrentPage((page * 10) - 10)
+                                setCurrentPage(page * 10 - 10)
                             }}
                         />
                     </div>
@@ -102,21 +123,31 @@ export default function TableAccounting ({ data, loading, currentPage, setCurren
                 classNames={{
                     wrapper: 'min-h-[20rem]'
                 }}
-
             >
                 <TableHeader columns={columns}>
                     {(column) => (
-                        <TableColumn key={column.key} allowsSorting >
+                        <TableColumn key={column.key} allowsSorting>
                             {column.label}
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody items={dataModel} isLoading={loading} loadingContent={<Spinner label="Cargando..."/>}
-                    emptyContent={loading === false && dataModel?.length <= 0 ? 'No se encuentras eventos contables' : null}
+                <TableBody
+                    items={dataModel}
+                    isLoading={loading}
+                    loadingContent={<Spinner label="Cargando..." />}
+                    emptyContent={
+                        loading === false && dataModel?.length <= 0
+                            ? 'No se encuentras eventos contables'
+                            : null
+                    }
                 >
                     {(item) => (
                         <TableRow key={item.key}>
-                            {(columnKey) => <TableCell className="w-[150px]" >{getKeyValue(item, columnKey)}</TableCell>}
+                            {(columnKey) => (
+                                <TableCell className="w-[150px]">
+                                    {getKeyValue(item, columnKey)}
+                                </TableCell>
+                            )}
                         </TableRow>
                     )}
                 </TableBody>

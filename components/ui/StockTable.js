@@ -1,6 +1,18 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Card, CardHeader, CardBody } from '@nextui-org/react'
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    User,
+    Chip,
+    Card,
+    CardHeader,
+    CardBody
+} from '@nextui-org/react'
 import { DefaultImageMarinaMarket } from '@/utils/image'
 import useReportsStore from '../../app/(layout-app)/reports/components/store'
 import { isMobileDevice } from '@/utils/agent'
@@ -23,96 +35,110 @@ const StockTable = () => {
     }, [])
     useEffect(() => {
         if (criticalStore) {
-            const data = criticalStore?.map(
-                (item) => {
-                    let image
-                    if (item?.image.length > 0) {
-                        image = item?.image
-                    } else {
-                        image = DefaultImageMarinaMarket()
-                    }
-                    return {
-                        id: item?.id_product,
-                        product: item?.name_product,
-                        category: item?.name_category,
-                        state: item?.stock_classification,
-                        stock: roundValue(item?.stock, 1, 0),
-                        base_stock: item?.stock_min,
-                        avatar: image
-                    }
+            const data = criticalStore?.map((item) => {
+                let image
+                if (item?.image.length > 0) {
+                    image = item?.image
+                } else {
+                    image = DefaultImageMarinaMarket()
                 }
-            )
+                return {
+                    id: item?.id_product,
+                    product: item?.name_product,
+                    category: item?.name_category,
+                    state: item?.stock_classification,
+                    stock: roundValue(item?.stock, 1, 0),
+                    base_stock: item?.stock_min,
+                    avatar: image
+                }
+            })
             setDataModelCriticalStore(data?.slice(0, 8))
         }
     }, [criticalStore])
 
-    const renderCell = React.useCallback((user, columnKey) => {
-        const cellValue = user[columnKey]
-        switch (columnKey) {
-        case 'product':
-            return (
-                <>
-                    {mobile
-                        ? <User
-                            avatarProps={{ radius: 'xl', src: user.avatar }}
-                            description={user.email}
-                            name={cellValue.slice(0, 12)}
-                        >
-                            {user.email}
-                        </User>
-                        : <User
-                            avatarProps={{ radius: 'lg', src: user.avatar }}
-                            description={user.email}
-                            name={cellValue}
-                        >
-                            {user.email}
-                        </User>}
-                </>
-            )
-        case 'category':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{cellValue}</p>
-                    <p className="text-bold text-sm capitalize text-default-400">{user.un}</p>
-                </div>
-            )
-        case 'state':
-            return (
-                <Chip className="capitalize" color={statusColorMap[user.state] === '' ? 'danger' : statusColorMap[user.state]} size="sm" variant="flat">
-                    {cellValue}
-                </Chip>
-            )
-        case 'stock':
-            return (
-                <div className="relative flex items-center gap-2 text-white">
+    const renderCell = React.useCallback(
+        (user, columnKey) => {
+            const cellValue = user[columnKey]
+            switch (columnKey) {
+            case 'product':
+                return (
+                    <>
+                        {mobile
+                            ? (
+                                <User
+                                    avatarProps={{ radius: 'xl', src: user.avatar }}
+                                    description={user.email}
+                                    name={cellValue.slice(0, 12)}
+                                >
+                                    {user.email}
+                                </User>
+                            )
+                            : (
+                                <User
+                                    avatarProps={{ radius: 'lg', src: user.avatar }}
+                                    description={user.email}
+                                    name={cellValue}
+                                >
+                                    {user.email}
+                                </User>
+                            )}
+                    </>
+                )
+            case 'category':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">
+                            {cellValue}
+                        </p>
+                        <p className="text-bold text-sm capitalize text-default-400">
+                            {user.un}
+                        </p>
+                    </div>
+                )
+            case 'state':
+                return (
                     <Chip
-                        color={statusColorMap[user.state]}
+                        className="capitalize"
+                        color={
+                            statusColorMap[user.state] === ''
+                                ? 'danger'
+                                : statusColorMap[user.state]
+                        }
                         size="sm"
-                        variant="solid"
-                        classNames={{
-                            content: 'text-white'
-                        }}
-                    >
-                        {cellValue}
-                    </Chip>
-                </div>
-            )
-        case 'base_stock':
-            return (
-                <div className="relative flex items-center text-white">
-                    <Chip
                         variant="flat"
-                        color="success"
-                        size="sm"
                     >
                         {cellValue}
                     </Chip>
-                </div>
-            )
-        default:
-            return cellValue
-        }
-    }, [dataModelCriticalStore])
+                )
+            case 'stock':
+                return (
+                    <div className="relative flex items-center gap-2 text-white">
+                        <Chip
+                            color={statusColorMap[user.state]}
+                            size="sm"
+                            variant="solid"
+                            classNames={{
+                                content: 'text-white'
+                            }}
+                        >
+                            {cellValue}
+                        </Chip>
+                    </div>
+                )
+            case 'base_stock':
+                return (
+                    <div className="relative flex items-center text-white">
+                        <Chip variant="flat" color="success" size="sm">
+                            {cellValue}
+                        </Chip>
+                    </div>
+                )
+            default:
+                return cellValue
+            }
+        },
+        [dataModelCriticalStore]
+    )
 
     const columns = [
         { name: 'PRODUCTO', uid: 'product' },
@@ -127,49 +153,57 @@ const StockTable = () => {
     ]
 
     const WidgetReport = ({ children, className, title }) => {
-        return <Card className={'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  ' + className}>
-            <CardHeader >
-                <h4 className="text-primary-500 dark:text-white font-semibold text-xl">{title}</h4>
-            </CardHeader>
-            <CardBody>
-                {children}
-            </CardBody>
-        </Card>
+        return (
+            <Card
+                className={
+                    'w-auto flex-1 transition duration-1000 ease-in-out text-opacity-50 hover:text-opacity-100 dark:bg-secondary-400 bg-primary-50/80 hover:bg-primary-50 transform  ' +
+					className
+                }
+            >
+                <CardHeader>
+                    <h4 className="text-primary-500 dark:text-white font-semibold text-xl">
+                        {title}
+                    </h4>
+                </CardHeader>
+                <CardBody>{children}</CardBody>
+            </Card>
+        )
     }
 
     return (
         <div>
             <WidgetReport title={'Productos con stock critico'}>
-                <Table
-                    isStriped
-                    isHeaderSticky
-                >
+                <Table isStriped isHeaderSticky>
                     {mobile
-                        ? <TableHeader columns={mobileColumns}>
-                            {(column) => (
-                                <TableColumn key={column.uid} >
-                                    {column.name}
-                                </TableColumn>
-                            )}
-                        </TableHeader>
-                        : <TableHeader columns={columns}>
-                            {(column) => (
-                                <TableColumn key={column.uid} >
-                                    {column.name}
-                                </TableColumn>
-                            )}
-                        </TableHeader>}
+                        ? (
+                            <TableHeader columns={mobileColumns}>
+                                {(column) => (
+                                    <TableColumn key={column.uid}>{column.name}</TableColumn>
+                                )}
+                            </TableHeader>
+                        )
+                        : (
+                            <TableHeader columns={columns}>
+                                {(column) => (
+                                    <TableColumn key={column.uid}>{column.name}</TableColumn>
+                                )}
+                            </TableHeader>
+                        )}
                     {dataModelCriticalStore
-                        ? <TableBody items={dataModelCriticalStore}>
-                            {(item) => (
-
-                                <TableRow key={item.id}>
-                                    {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                                </TableRow>
-
-                            )}
-                        </TableBody>
-                        : <TableBody ></TableBody>}
+                        ? (
+                            <TableBody items={dataModelCriticalStore}>
+                                {(item) => (
+                                    <TableRow key={item.id}>
+                                        {(columnKey) => (
+                                            <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                        )}
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        )
+                        : (
+                            <TableBody></TableBody>
+                        )}
                 </Table>
             </WidgetReport>
         </div>

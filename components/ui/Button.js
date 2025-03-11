@@ -6,7 +6,10 @@ export default function Button (props) {
     return (
         <ButtonUi
             className={`${className || 'w-16 text-white h-full bg-gray-600'}`}
-            onClick={() => { onClick() }}>
+            onClick={() => {
+                onClick()
+            }}
+        >
             {title}
         </ButtonUi>
     )

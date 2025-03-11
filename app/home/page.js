@@ -32,8 +32,8 @@ export default function Home () {
     }, [disabled])
 
     return (
-        <section className="bg-primary-300 dark:bg-secondary-500 sm:mx-10" >
-            <Auth/>
+        <section className="bg-primary-300 dark:bg-secondary-500 sm:mx-10">
+            <Auth />
             <div>
                 <main>
                     <div className="sm:mt-36 sm:mr-0 sm:ml-0 mt-4">
@@ -48,8 +48,8 @@ export default function Home () {
                             className="h-full gap-4 sm:gap-10 grid grid-cols-3 grid-rows-[auto_minmax(auto,_1fr)_auto] sm:mx-5 touch-none place-items-center"
                         >
                             <MainTittleCard
-                                disabled={ salesDisabled}
-                                route ="/sales"
+                                disabled={salesDisabled}
+                                route="/sales"
                                 title="Ventas"
                                 imgSrc={sales}
                                 footerMessage="Gestión eficiente para tu minimarket."
@@ -62,7 +62,7 @@ export default function Home () {
                                 // disabled={disabled}
                             />
                             <MainTittleCard
-                                route ="/modules"
+                                route="/modules"
                                 title="Módulos"
                                 imgSrc={reports}
                                 footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
@@ -79,12 +79,11 @@ export default function Home () {
                             }}
                             className="flex sm:flex-col-reverse sm:m-0 m-4  items-center sm:items-end sm:x-5"
                         >
-                            <SettingsNav isMobile={salesDisabled}/>
+                            <SettingsNav isMobile={salesDisabled} />
                         </motion.div>
                     </div>
                 </main>
             </div>
         </section>
-
     )
 }

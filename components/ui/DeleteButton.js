@@ -13,8 +13,14 @@ export default function DeleteButton ({ productId }) {
 
     return (
         <div className="flex flex-col items-center">
-            <Button className="flex flex-col items-center" isIconOnly color="danger" variant="faded" aria-label=""
-                onClick={handleButton}>
+            <Button
+                className="flex flex-col items-center"
+                isIconOnly
+                color="danger"
+                variant="faded"
+                aria-label=""
+                onClick={handleButton}
+            >
                 <DeleteIcon />
             </Button>
         </div>

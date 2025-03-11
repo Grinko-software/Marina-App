@@ -1,13 +1,27 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react'
+import {
+    Button,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    useDisclosure
+} from '@nextui-org/react'
 import { BiCheckCircle, BiTask } from 'react-icons/bi'
 import { notify } from '@/services/notify'
 import EvidenceImageTask from './evidenceImageTask'
 import { completeTask, startTask as startTaskService } from '../../service'
 import { uploadImageTaskByEmployee } from '@/services/task'
-export default function EvidenceTask ({ taskState, taskId, employeeId, handleRequestGetTask }) {
+export default function EvidenceTask ({
+    taskState,
+    taskId,
+    employeeId,
+    handleRequestGetTask
+}) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [initTask, setInitTask] = useState(null)
     const [completationTaskId, setCompletationTaskId] = useState(null)
@@ -37,7 +51,11 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
     }
     const finishTask = async () => {
         try {
-            const result = await completeTask({ taskId, employeeId, description: comment })
+            const result = await completeTask({
+                taskId,
+                employeeId,
+                description: comment
+            })
             if (!result.data) notify('❌ Hubo un error al enviar la tarea')
 
             notify('✅ Tarea enviada correctamente')
@@ -50,7 +68,11 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
     }
     const startTask = async () => {
         try {
-            const result = await startTaskService({ taskId, employeeId, description: comment })
+            const result = await startTaskService({
+                taskId,
+                employeeId,
+                description: comment
+            })
             if (!result.data) notify('❌ Hubo un error al enviar la tarea')
 
             notify('✅ Tarea enviada correctamente')
@@ -83,7 +105,6 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
 
     useEffect(() => {
         if (taskState === 'TODO') {
-            // handleRequestGetTask()
             setInitTask(true)
         } else {
             setInitTask(false)
@@ -92,40 +113,51 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
     const disableSendButton = comment === '' || images.length === 0
     return (
         <div>
-            <div className="flex justify-end">
-                { taskState === 'TODO'
-                    ? <Button
-                        className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
-                        onClick={onOpen}
-                        startContent={<BiTask size={25}/>}>
-                        {'Iniciar tarea'}
-                    </Button>
-                    : taskState !== 'READY_TO_EVALUATE'
-                        ? <Button
-                            className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
+            <div className="flex justify-center">
+                {taskState === 'TODO'
+                    ? (
+                        <Button
+                            className="bg-emerald-600 dark:bg-emerald-600 font-semibold"
+                            color="primary"
                             onClick={onOpen}
-                            startContent={<BiCheckCircle size={25}/>}>
-                            {'Finalizar'}
+                            startContent={<BiTask size={25} />}
+                        >
+                            {'Iniciar tarea'}
                         </Button>
-                        : null
-                }
+                    )
+                    : taskState !== 'READY_TO_EVALUATE'
+                        ? (
+                            <Button
+                                className="bg-emerald-600 dark:bg-emerald-600 font-semibold"
+                                color="primary"
+                                onClick={onOpen}
+                                startContent={<BiCheckCircle size={25} />}
+                            >
+                                {'Finalizar'}
+                            </Button>
+                        )
+                        : null}
             </div>
             <Modal
                 isOpen={isOpen}
-                backdrop='opaque'
-                placement={'top'}
+                backdrop="opaque"
+                placement={'center'}
                 onClose={() => onClose}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
-                id='modal-task-evidence'
-                className='h-full '
+                id="modal-task-evidence"
+                className="h-full items-center justify-center "
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
                         {initTask ? 'Iniciar tarea' : 'Terminar tarea'}
                     </ModalHeader>
-                    <div className='max-h-[calc(100vh-16rem)] overflow-y-scroll flex flex-col items-center justify-center w-full px-6 gap-10'>
-                        <EvidenceImageTask images={images} setImages={setImages} defaultImg={null} />
+                    <div className="max-h-[calc(100vh-16rem)] overflow-y-scroll flex flex-col items-center justify-center w-full px-6 gap-2">
+                        <EvidenceImageTask
+                            images={images}
+                            setImages={setImages}
+                            defaultImg={null}
+                        />
                         <Input
                             autoFocus={true}
                             type="text"
@@ -133,39 +165,49 @@ export default function EvidenceTask ({ taskState, taskId, employeeId, handleReq
                             variant={'underlined'}
                             label={'Comentarios'}
                             labelPlacement={'outside'}
-                            placeholder={ 'Ingrese comentario'}
-                            onValueChange={(value) => { setComment(value) }}
+                            placeholder={'Ingrese comentario'}
+                            onValueChange={(value) => {
+                                setComment(value)
+                            }}
                         />
                     </div>
                     <ModalFooter>
                         {error
-                            ? <div className='flex mx-5 self-center'>
-                                <h1>{error}</h1>
-                            </div>
+                            ? (
+                                <div className="flex mx-5 self-center">
+                                    <h1>{error}</h1>
+                                </div>
+                            )
                             : null}
                         {completationTaskId
-                            ? <Button className =" bg-green-500 text-primary-50"
-                                onClick={() => {
-                                    handleUploadImageTaskByEmployee({ completationTaskId })
-                                }}
-                            >
-                            Re subir Imagen
-                            </Button>
-                            : <Button
-                                className="bg-green-500 text-primary-50"
-                                isDisabled={disableSendButton}
-                                onClick={() => handleSubmit(comment, notify)}
-                            >
-    Enviar
-                            </Button>
-                        }
-                        <Button color="danger" variant="flat"
+                            ? (
+                                <Button
+                                    className=" bg-green-500 text-primary-50"
+                                    onClick={() => {
+                                        handleUploadImageTaskByEmployee({ completationTaskId })
+                                    }}
+                                >
+								Re subir Imagen
+                                </Button>
+                            )
+                            : (
+                                <Button
+                                    className="bg-green-500 text-primary-50"
+                                    isDisabled={disableSendButton}
+                                    onClick={() => handleSubmit(comment, notify)}
+                                >
+								Enviar
+                                </Button>
+                            )}
+                        <Button
+                            color="danger"
+                            variant="flat"
                             onClick={() => {
                                 onClose()
                                 handleClear()
                             }}
                         >
-                            Cancelar
+							Cancelar
                         </Button>
                     </ModalFooter>
                 </ModalContent>

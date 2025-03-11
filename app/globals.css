@@ -3,125 +3,126 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+	:root {
+		--foreground-rgb: 255, 255, 255;
+		--background-start-rgb: 0, 0, 0;
+		--background-end-rgb: 0, 0, 0;
+	}
 }
 
 /* trunk-ignore(git-diff-check/error) */
-body { 
-  @apply bg-primary-300 dark:bg-secondary-500
+body {
+	@apply bg-primary-300 dark:bg-secondary-500;
 }
-input, textarea, select {
-  font-size: 16px !important;
+input,
+textarea,
+select {
+	font-size: 16px !important;
 }
 .date-picker input {
-  font-size: 16px !important;
+	font-size: 16px !important;
 }
 
 .date-picker label {
-  font-size: 16px !important;
+	font-size: 16px !important;
 }
 @layer components {
-  .no-select {
-    user-select: none; 
-    -webkit-user-select: none; 
-    -ms-user-select: none; 
-    touch-action: pan-y; 
-  }
-  
-  .touch-auto {
-    -webkit-overflow-scrolling: touch;
-    touch-action: auto;
-  }
+	.no-select {
+		user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+		touch-action: pan-y;
+	}
 
-  .scrollbar-hide {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
-  }
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 30px; 
-    height: 12px;
-  }
+	.touch-auto {
+		-webkit-overflow-scrolling: touch;
+		touch-action: auto;
+	}
 
-  /* Color del fondo del scrollbar */
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #44ab1436;
-    border-radius: 10px;
-  }
+	.scrollbar-hide {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge */
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none; /* Chrome, Safari */
+	}
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 30px;
+		height: 12px;
+	}
 
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #44ab14;
-    border-radius: 10px; 
-  }
+	/* Color del fondo del scrollbar */
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: #44ab1436;
+		border-radius: 10px;
+	}
 
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #44ab14;
-  }
-  
-  .animation-fade-in {
-    animation: fadeIn 1s;
-    animation: fadeIn 1s;
-    -webkit-animation: fadeIn 1s;
-    -moz-animation: fadeIn 1s;
-    -o-animation: fadeIn 1s;
-    -ms-animation: fadeIn 1s;
-  }
-  
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  @-moz-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  @-webkit-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  @-o-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  @-ms-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: #44ab14;
+		border-radius: 10px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: #44ab14;
+	}
+
+	.animation-fade-in {
+		animation: fadeIn 1s;
+		animation: fadeIn 1s;
+		-webkit-animation: fadeIn 1s;
+		-moz-animation: fadeIn 1s;
+		-o-animation: fadeIn 1s;
+		-ms-animation: fadeIn 1s;
+	}
+
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@-moz-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@-o-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@-ms-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
 }

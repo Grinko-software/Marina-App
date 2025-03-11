@@ -21,11 +21,25 @@ const useProductFormStore = create((set) => ({
     setFormData: (newData) => set({ data: { ...newData } }),
     setLoading: (value) => set({ loading: value }),
     setError: (value) => set({ error: value }),
-    requestCreateProduct: async (data, notify, handleProductRequest, withImage, listInventory) => {
+    requestCreateProduct: async (
+        data,
+        notify,
+        handleProductRequest,
+        withImage,
+        listInventory
+    ) => {
         set({ loading: true, error: null, complete: false })
 
         // has requered values
-        const missingRequeredValues = !data || !data.name || !data.barcode || !data.category_id || !data.stock_type_id || !data.stock || !data.net_price || !data.cost_price
+        const missingRequeredValues =
+			!data ||
+			!data.name ||
+			!data.barcode ||
+			!data.category_id ||
+			!data.stock_type_id ||
+			!data.stock ||
+			!data.net_price ||
+			!data.cost_price
         if (missingRequeredValues) {
             set({ loading: false, error: 'Rellena todos los campos necesarios' })
             return
@@ -46,7 +60,7 @@ const useProductFormStore = create((set) => ({
                     stock: data.stock,
                     stock_min: data.stock_min
                 }
-            }).then(response => {
+            }).then((response) => {
                 set({ loading: false, complete: true })
                 if (response?.code === 200) {
                     notify('✅ Producto creado con exito!')
@@ -59,23 +73,24 @@ const useProductFormStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        data: {
-            name: null,
-            barcode: null,
-            image: null,
-            cost_price: null,
-            net_price: null,
-            category_id: null,
-            stock_type_id: null,
-            stock: null,
-            stock_min: null,
-            tax_free: null
-        },
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            data: {
+                name: null,
+                barcode: null,
+                image: null,
+                cost_price: null,
+                net_price: null,
+                category_id: null,
+                stock_type_id: null,
+                stock: null,
+                stock_min: null,
+                tax_free: null
+            },
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useProductFormStore

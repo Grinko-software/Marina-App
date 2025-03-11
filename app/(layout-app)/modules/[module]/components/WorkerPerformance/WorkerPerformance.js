@@ -3,14 +3,23 @@ import { useEffect, useState } from 'react'
 import Filter from './components/Filters/Filter'
 import FilterEmployee from './components/Filters/FilterEmployee'
 import Widgets from './Widgets'
-import { getDataModelTaskDifficulties, getDataModelTaskStates, getDataModelTaskTypes, getDataModelUsers, requestTaskDifficultList, requestTaskStatesList, requestTaskTypesList, requestUserList } from './service'
+import {
+    getDataModelTaskDifficulties,
+    getDataModelTaskStates,
+    getDataModelTaskTypes,
+    getDataModelUsers,
+    requestTaskDifficultList,
+    requestTaskStatesList,
+    requestTaskTypesList,
+    requestUserList
+} from './service'
 import { isMobileDevice } from '@/utils/agent'
 import useFilterStore from './store'
 import useAuthStore from '@/stores/user'
-import EmployeePerformance from './EmployeePerformance/EmployeePerformance'
 import TasksBoard from './components/TasksBoard'
 import { TASK_STATES } from '@/services/task'
 import ListTask from './ListTask/ListTask'
+import useFilterStorePayment from './components/Filters/storePayment'
 
 export default function WorkerPerformance () {
     const [isMobile, setIsMobile] = useState(true)
@@ -19,18 +28,30 @@ export default function WorkerPerformance () {
     const [taskTypes, setTaskTypes] = useState([])
     const [taskStates, setTaskStates] = useState([])
     const [taskDifficulties, setTaskDifficulties] = useState([])
-    const { data: tasks = [], loading } = useFilterStore()
-
+    const { data: tasks, loading } = useFilterStore()
+    /* Add Date time */
+    const [fromDate, setFromDate] = useState(null)
+    const [toDate, setToDate] = useState(null)
+    /*  */
     const [todoTasks, setTodoTasks] = useState([])
     const [inProgressTasks, setInProgressTasks] = useState([])
     const [readyToEvaluateTasks, setReadyToEvaluateTasks] = useState([])
     const [unassignedTasks, setUnassignedTasks] = useState([])
     const [completedTasks, setCompletedTasks] = useState([])
+    const [paidTasks, setPaidTasks] = useState([])
+    const [totalPaidCash, setTotalPaidCash] = useState([])
     const [filterData, setFilterData] = useState({})
+    const {
+        focusTab,
+        setFocusTab,
+        priceStar,
+        getPriceForStar
+    } = useFilterStorePayment()
 
     useEffect(() => {
         const view = isMobileDevice()
         setIsMobile(view)
+        getPriceForStar()
     }, [])
 
     useEffect(() => {
@@ -39,7 +60,7 @@ export default function WorkerPerformance () {
         const readyToEvaluateItems = []
         const unassignedItems = []
         const completedItems = []
-
+        const paidTasks = []
         if (tasks?.length) {
             for (const task of tasks) {
                 const taskState = task.stateKey
@@ -59,8 +80,11 @@ export default function WorkerPerformance () {
                 case TASK_STATES.COMPLETED:
                     completedItems.push(task)
                     break
+                case TASK_STATES.PAID:
+                    paidTasks.push(task)
+                    break
                 default:
-                    // code block
+					// code block
                 }
             }
         }
@@ -70,6 +94,8 @@ export default function WorkerPerformance () {
         setReadyToEvaluateTasks(readyToEvaluateItems)
         setUnassignedTasks(unassignedItems)
         setCompletedTasks(completedItems)
+        setPaidTasks(paidTasks)
+        setTotalPaidCash(paidTasks.reduce((total, task) => total + Number(task.rate) * Number(priceStar), 0))
     }, [tasks])
 
     useEffect(() => {
@@ -102,50 +128,134 @@ export default function WorkerPerformance () {
         })
     }, [])
 
-    return <section className='w-full h-full'>
-        <section className='flex w-full h-full' >
-            <div className='w-full h-full flex flex-col gap-3'>
-                { isAdmin
-                    ? <Filter isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
-                    : <FilterEmployee isMobile={isMobile} isAdmin={isAdmin} users={users} taskTypes={taskTypes} taskStates={taskStates} taskDifficulties={taskDifficulties} filterData={filterData} setFilterData={setFilterData}/>
-                }
-                { isAdmin
-                    ? <>
-                        {isMobile
-                            ? <ListTask
-                                taskDifficulties={taskDifficulties}
+    return (
+        <section className="w-full h-screen flex flex-col overflow-hidden">
+            <div className="flex flex-col flex-grow overflow-hidden h-full space-y-2">
+                {/* Filtro */}
+                <div className="flex-shrink-0 ">
+                    {isAdmin
+                        ? (
+                            <Filter
+                                isMobile={isMobile}
+                                isAdmin={isAdmin}
+                                users={users}
+                                taskTypes={taskTypes}
                                 taskStates={taskStates}
+                                taskDifficulties={taskDifficulties}
+                                filterData={filterData}
+                                setFilterData={setFilterData}
+                                fromDate={fromDate}
+                                setFromDate={setFromDate}
+                                toDate={toDate}
+                                setToDate={setToDate}
+                                totalPaidCash={totalPaidCash}
                             />
-                            : <>
-                                <Widgets
-                                    loading={loading}
-                                    countTotalTasks={tasks?.length}
-                                    countTodoTasks={todoTasks?.length}
-                                    countInProgressTasks={inProgressTasks?.length}
-                                    countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
-                                    countUnassignedTasks={unassignedTasks?.length}
-                                />
-                                <div className='flex flex-1 items-center'>
-                                    <TasksBoard
-                                        filterData={filterData}
-                                        todoTasks={todoTasks}
-                                        inProgressTasks={inProgressTasks}
-                                        readyToEvaluateTasks={readyToEvaluateTasks}
-                                        unassignedTasks={unassignedTasks}
-                                        completedTasks={completedTasks}
-                                    ></TasksBoard>
-                                </div>
+                        )
+                        : (
+                            <FilterEmployee
+                                isMobile={isMobile}
+                                isAdmin={isAdmin}
+                                users={users}
+                                taskTypes={taskTypes}
+                                taskStates={taskStates}
+                                taskDifficulties={taskDifficulties}
+                                filterData={filterData}
+                                setFilterData={setFilterData}
+                            />
+                        )}
+                </div>
+
+                {/* Contenido Principal */}
+                <div className="flex-grow flex flex-col overflow-hidden rounded-lg">
+                    {isAdmin
+                        ? (
+                            <>
+                                {isMobile
+                                    ? (
+                                        <ListTask
+                                            loading={loading}
+                                            tasks={tasks} // renderiza todas las taks, sin necesidad de desmontar todo el componente
+                                            taskDifficulties={taskDifficulties}
+                                            taskStates={taskStates}
+                                            isAdmin={true}
+                                            idUser={idUser}
+                                            filters={filterData}
+                                            unassigned={unassignedTasks}
+                                            pending={todoTasks}
+                                            inProgress={inProgressTasks}
+                                            review={readyToEvaluateTasks}
+                                            completed={completedTasks}
+                                            paid={paidTasks}
+                                            totalPaidCash={totalPaidCash}
+                                            focusTab={focusTab}
+                                            setFocusTab={setFocusTab}
+                                        />
+                                    )
+                                    : (
+                                        <div className="flex-grow flex flex-col overflow-hidden space-y-4">
+                                            <Widgets
+                                                loading={loading}
+                                                countTotalTasks={tasks?.length}
+                                                countTodoTasks={todoTasks?.length}
+                                                countInProgressTasks={inProgressTasks?.length}
+                                                countReadyToEvaluateTasks={readyToEvaluateTasks?.length}
+                                                countUnassignedTasks={unassignedTasks?.length}
+                                                className="flex-shrink-0"
+                                            />
+
+                                            <div className="flex-grow overflow-y-auto">
+                                                <TasksBoard
+                                                    filterData={filterData}
+                                                    todoTasks={todoTasks}
+                                                    inProgressTasks={inProgressTasks}
+                                                    readyToEvaluateTasks={readyToEvaluateTasks}
+                                                    unassignedTasks={unassignedTasks}
+                                                    completedTasks={completedTasks}
+                                                    paidTasks={paidTasks}
+                                                    className="h-full"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                             </>
-                        }
-                    </>
-                    : <>
-                        <EmployeePerformance
-                            taskStates={taskStates}
-                            idUser={idUser}
-                            taskDifficulties={taskDifficulties}/>
-                    </>
-                }
+                        )
+                        : (<>
+                            {isMobile
+                                ? <ListTask
+                                    loading={loading}
+                                    taskDifficulties={taskDifficulties}
+                                    taskStates={taskStates}
+                                    isAdmin={false}
+                                    idUser ={idUser}
+                                    //
+                                    filters={filterData}
+                                    unassigned={unassignedTasks}
+                                    pending={todoTasks}
+                                    inProgress={inProgressTasks}
+                                    review={readyToEvaluateTasks}
+                                    finished={completedTasks}
+                                    paid={paidTasks}
+                                />
+                                : (
+
+                                    <div className="min-h-[62vh] max-h-[62vh] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-fadeIn rounded-2xl">
+                                        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm text-center">
+                                            <span className="text-4xl">📱</span>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mt-2">
+                                                    Accede desde tu celular
+                                            </h2>
+                                            <p className="text-gray-600 dark:text-gray-300 mt-2">
+                                                    Este módulo solo está disponible en dispositivos móviles.
+                                            </p>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </>)
+
+                    }
+                </div>
             </div>
         </section>
-    </section>
+    )
 }

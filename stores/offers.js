@@ -12,7 +12,15 @@ const useOffersStore = create(
                 if (result?.code === 200 || result?.code === 204) {
                     set({
                         offers: result?.data?.reduce((acc, value) => {
-                            return [...acc, { id: value?.ID, quantity: value?.quantity, unitPrice: value?.unit_price, productId: value?.product_id }]
+                            return [
+                                ...acc,
+                                {
+                                    id: value?.ID,
+                                    quantity: value?.quantity,
+                                    unitPrice: value?.unit_price,
+                                    productId: value?.product_id
+                                }
+                            ]
                         }, [])
                     })
                 } else {
@@ -25,7 +33,15 @@ const useOffersStore = create(
                         if (result?.code === 200 || result?.code === 204) {
                             set({
                                 offers: result?.data?.reduce((acc, value) => {
-                                    return [...acc, { id: value?.ID, quantity: value?.quantity, unitPrice: value?.unit_price, productId: value?.product_id }]
+                                    return [
+                                        ...acc,
+                                        {
+                                            id: value?.ID,
+                                            quantity: value?.quantity,
+                                            unitPrice: value?.unit_price,
+                                            productId: value?.product_id
+                                        }
+                                    ]
                                 }, [])
                             })
                         } else {

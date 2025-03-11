@@ -1,7 +1,6 @@
 import { StyleSheet /* , Font */ } from '@react-pdf/renderer'
 
 export const StylePdf = StyleSheet.create({
-
     page: {
         fontFamily: 'Helvetica',
         fontSize: 11,
@@ -12,8 +11,7 @@ export const StylePdf = StyleSheet.create({
         display: 'flex',
         width: '100%',
         align: 'justify',
-     	border: '1px black'
-
+        border: '1px black'
     },
     container: {
         alignContent: 'center',
@@ -50,8 +48,8 @@ export const StylePdf = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#000',
         borderTopColor: '#000',
-       	alignContent: 'center',
-      	paddingHorizontal: 2
+        alignContent: 'center',
+        paddingHorizontal: 2
     },
     rowTableMandatory: {
         margin: 'auto',
@@ -66,7 +64,7 @@ export const StylePdf = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'start'
     },
-  	columnsName: {
+    columnsName: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -76,7 +74,7 @@ export const StylePdf = StyleSheet.create({
         width: '100%',
         paddingRight: 15
     },
-   	column2: {
+    column2: {
         width: 'auto',
         borderLeftWidth: 0,
         borderTopWidth: 0
@@ -90,5 +88,4 @@ export const StylePdf = StyleSheet.create({
         lineHeight: 1,
         marginVertical: 3
     }
-
 })

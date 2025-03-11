@@ -1,5 +1,8 @@
 import { getData, POST } from '@/services/http'
-import { PRINTER_SUPPLIER_TICKET_API_URL, PRINTER_TICKET_API_URL } from '@/settings/constants'
+import {
+    PRINTER_SUPPLIER_TICKET_API_URL,
+    PRINTER_TICKET_API_URL
+} from '@/settings/constants'
 import { today } from '@/utils/date'
 import { formatNumberWithPoints } from '@/utils/number'
 import { notify } from './notify'
@@ -33,7 +36,11 @@ export const generateDataToPrinterSaleTicket = ({
 }) => {
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const seller = (userName || getFullNameUser() || '').toUpperCase()
-    const cashRegister = (cashRegisterName || getCashRegisterName() || '').toUpperCase()
+    const cashRegister = (
+        cashRegisterName ||
+		getCashRegisterName() ||
+		''
+    ).toUpperCase()
     const data = {
         datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
         paymentType: saleType || VOUCHER_TYPE.TICKET,
@@ -48,15 +55,14 @@ export const generateDataToPrinterSaleTicket = ({
         discountExtra: formatNumberWithPoints(discountExtra || null, null),
         discountTotal: formatNumberWithPoints(discountTotal || null, null),
         customerDetail: customerDetail || null,
-        productList: products?.map(
-            (item) => {
-                return {
-                    name: item?.product?.name || item?.name,
-                    quantity: item?.quantity?.toString(),
-                    discount: formatNumberWithPoints(item?.discount || null, null),
-                    total: formatNumberWithPoints(item?.total, '')
-                }
-            }),
+        productList: products?.map((item) => {
+            return {
+                name: item?.product?.name || item?.name,
+                quantity: item?.quantity?.toString(),
+                discount: formatNumberWithPoints(item?.discount || null, null),
+                total: formatNumberWithPoints(item?.total, '')
+            }
+        }),
         userName: seller,
         cashRegisterName: cashRegister,
         openCashRegister
@@ -116,8 +122,8 @@ export const saveDataToPrinterSaleTicket = async ({
 
 export const fetchPrinterSaleTicket = async ({ data }) => {
     try {
-        return getData(`${PRINTER_TICKET_API_URL}`, POST, data, true)
-            .then(response => {
+        return getData(`${PRINTER_TICKET_API_URL}`, POST, data, true).then(
+            (response) => {
                 try {
                     if (response?.code !== 200) {
                         notify('❌ Ocurrió un error al imprimir la boleta.')
@@ -126,7 +132,8 @@ export const fetchPrinterSaleTicket = async ({ data }) => {
                     notify('❌ Ocurrió un error al imprimir la boleta.')
                     return null
                 }
-            })
+            }
+        )
     } catch {
         return null
     }
@@ -148,18 +155,17 @@ export const fetchPrinterSupplierTicket = async ({
             company_name: companyName || '',
             company_rut: companyRut || ''
         },
-        products: products?.map(
-            (item) => {
-                return {
-                    name: item?.product?.name || item?.name,
-                    request: item?.request
-                }
-            })
+        products: products?.map((item) => {
+            return {
+                name: item?.product?.name || item?.name,
+                request: item?.request
+            }
+        })
     }
 
     try {
-        return getData(`${PRINTER_SUPPLIER_TICKET_API_URL}`, POST, data, true)
-            .then(response => {
+        return getData(`${PRINTER_SUPPLIER_TICKET_API_URL}`, POST, data, true).then(
+            (response) => {
                 try {
                     if (response?.code !== 200) {
                         notify('❌ Ocurrió un error al imprimir el ticket de proveedor.')
@@ -168,7 +174,8 @@ export const fetchPrinterSupplierTicket = async ({
                     notify('❌ Ocurrió un error al imprimir el ticket de proveedor.')
                     return null
                 }
-            })
+            }
+        )
     } catch {
         return null
     }

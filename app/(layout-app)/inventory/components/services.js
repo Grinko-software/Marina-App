@@ -21,14 +21,16 @@ export default function BarcodeImg ({ elementRef, onSuccessful, notify }) {
 }
 export const sendPrintToPrinter = (imgBase64, onSuccessful, notify) => {
     try {
-        getData(PRINTER_BARCODE_API_URL, POST, { barcode: imgBase64 }, true).then(response => {
-            if (response?.code === 200) {
-                notify('✅ Código impreso con éxito!')
-            } else {
-                notify('❌ Error al imprimir!')
+        getData(PRINTER_BARCODE_API_URL, POST, { barcode: imgBase64 }, true).then(
+            (response) => {
+                if (response?.code === 200) {
+                    notify('✅ Código impreso con éxito!')
+                } else {
+                    notify('❌ Error al imprimir!')
+                }
+                onSuccessful()
             }
-            onSuccessful()
-        })
+        )
     } catch (err) {
         notify('❌ Error al imprimir!')
         onSuccessful()
@@ -36,6 +38,6 @@ export const sendPrintToPrinter = (imgBase64, onSuccessful, notify) => {
 }
 
 export const productCreated = ({ listInventory, code }) => {
-    const result = listInventory.find(item => item?.code === code)
+    const result = listInventory.find((item) => item?.code === code)
     return result
 }

@@ -3,7 +3,7 @@ import { Card, Skeleton } from '@nextui-org/react'
 
 export default function LoadingCard () {
     return (
-        <Card className='animation-fade-in p-1' shadow="sm">
+        <Card className="animation-fade-in p-1" shadow="sm">
             <Skeleton className="rounded-lg">
                 <div className="h-24 rounded-lg bg-default-300"></div>
             </Skeleton>

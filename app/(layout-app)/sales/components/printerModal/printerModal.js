@@ -1,7 +1,19 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody, Image, Input, useDisclosure } from '@nextui-org/react'
+import {
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Card,
+    CardBody,
+    Image,
+    Input,
+    useDisclosure
+} from '@nextui-org/react'
 import salePrintStore from './store'
 
 export default function SalePrinterModal () {
@@ -42,26 +54,26 @@ export default function SalePrinterModal () {
     return (
         <>
             <Modal
-                size='5xl'
-                className='h-[23rem]'
+                size="5xl"
+                className="h-[23rem]"
                 isOpen={isOpen}
-                backdrop='blur'
+                backdrop="blur"
                 onClose={() => onClose}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
-                <ModalContent className='overflow-hidden space-y-[2.5rem]'>
+                <ModalContent className="overflow-hidden space-y-[2.5rem]">
                     <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 text-[2rem]">
-                        <h4 className='flex flex-col items-center'>
+                        <h4 className="flex flex-col items-center">
                             {'¿Desesa imprimir comprobante de venta?'}
                         </h4>
                     </ModalHeader>
-                    <div className='flex flex-col items-center'>
-                        <div className='flex flex-row space-x-3 '>
+                    <div className="flex flex-col items-center">
+                        <div className="flex flex-row space-x-3 ">
                             <Button
                                 color="danger"
                                 variant="flat"
-                                className='text-[1.5rem] w-[17rem] h-[8rem]'
+                                className="text-[1.5rem] w-[17rem] h-[8rem]"
                                 onClick={() => {
                                     onCancelHandler()
                                 }}
@@ -71,19 +83,22 @@ export default function SalePrinterModal () {
                             <Button
                                 className="bg-blue-500 text-primary-50 text-[1.5rem] w-[17rem] h-[8rem]"
                                 variant="flat"
-                                onClick={() => { onDowndloadVoucher() }}
+                                onClick={() => {
+                                    onDowndloadVoucher()
+                                }}
                             >
                                 {'Descargar pdf'}
                             </Button>
                             <Button
                                 className="bg-green-500 text-primary-50 text-[1.5rem] w-[17rem] h-[8rem]"
-                                onClick={() => { onSubmitHandler() }}
+                                onClick={() => {
+                                    onSubmitHandler()
+                                }}
                             >
                                 {'Imprimir comprobante'}
                             </Button>
                         </div>
                     </div>
-
                 </ModalContent>
             </Modal>
         </>

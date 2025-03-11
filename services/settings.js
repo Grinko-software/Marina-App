@@ -8,14 +8,13 @@ import { getToken } from '@/services/account'
 
 export const GetPostMachines = async () => {
     try {
-        return await fetch(GET_POST_MACHINE,
-            {
-                method: 'GET',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
+        return await fetch(GET_POST_MACHINE, {
+            method: 'GET',
+            headers: new Headers({
+                Authorization: 'Bearer ' + getToken(),
+                'Content-Type': 'application/x-www-form-urlencoded'
+            })
+        }).then((response) => {
             try {
                 if (response?.status === 204) {
                     return response
@@ -32,14 +31,13 @@ export const GetPostMachines = async () => {
 
 export const GetCashRegister = async () => {
     try {
-        return await fetch(GET_CASH_REGISTER,
-            {
-                method: 'GET',
-                headers: new Headers({
-                    Authorization: 'Bearer ' + getToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
-            }).then(response => {
+        return await fetch(GET_CASH_REGISTER, {
+            method: 'GET',
+            headers: new Headers({
+                Authorization: 'Bearer ' + getToken(),
+                'Content-Type': 'application/x-www-form-urlencoded'
+            })
+        }).then((response) => {
             try {
                 if (response?.status === 204) {
                     return response

@@ -1,4 +1,9 @@
-import { fetchGetUsers, fetchCreateUser, fetchUpdateUser, resetUserPassword } from '@/services/users'
+import {
+    fetchGetUsers,
+    fetchCreateUser,
+    fetchUpdateUser,
+    resetUserPassword
+} from '@/services/users'
 
 export const requestUserList = async () => {
     try {
@@ -8,7 +13,12 @@ export const requestUserList = async () => {
     }
 }
 
-export const requestCreateUser = async ({ name, lastName, email, password }) => {
+export const requestCreateUser = async ({
+    name,
+    lastName,
+    email,
+    password
+}) => {
     try {
         return fetchCreateUser({ name, lastName, email, password })
     } catch (error) {
@@ -16,9 +26,25 @@ export const requestCreateUser = async ({ name, lastName, email, password }) => 
     }
 }
 
-export const requestUpdateUser = async ({ id, name, lastName, email, password, notify, onSuccess }) => {
+export const requestUpdateUser = async ({
+    id,
+    name,
+    lastName,
+    email,
+    password,
+    notify,
+    onSuccess
+}) => {
     try {
-        return fetchUpdateUser({ id, name, lastName, email, password, notify, onSuccess })
+        return fetchUpdateUser({
+            id,
+            name,
+            lastName,
+            email,
+            password,
+            notify,
+            onSuccess
+        })
     } catch (error) {
         console.log(error)
     }

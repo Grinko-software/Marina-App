@@ -10,14 +10,22 @@ const useAccountingEventsStore = create((set) => ({
         try {
             set({ loading: true })
             setTimeout(() => {
-                getData(`${INDICATORS_ACCOUNTING_EVENT}` + '?limit=' + limitPage + '&offset=' + currentPage).then((data) => {
-                    set({
-                        data: data?.data?.response_events,
-                        totalpage: data?.data?.total_page
+                getData(
+                    `${INDICATORS_ACCOUNTING_EVENT}` +
+						'?limit=' +
+						limitPage +
+						'&offset=' +
+						currentPage
+                )
+                    .then((data) => {
+                        set({
+                            data: data?.data?.response_events,
+                            totalpage: data?.data?.total_page
+                        })
                     })
-                }).catch((error) => {
-                    console.debug(error)
-                })
+                    .catch((error) => {
+                        console.debug(error)
+                    })
                 set({ loading: false })
             }, [2000])
         } catch (e) {

@@ -20,12 +20,14 @@ const NoPermissions = ({ loading }) => {
                     )}
 
                 <div className="text-2xl font-bold text-gray-800">
-                    {loading ? 'Cargando permisos...' : 'No tienes permisos para ingresar a éste módulo.'}
+                    {loading
+                        ? 'Cargando permisos...'
+                        : 'No tienes permisos para ingresar a éste módulo.'}
                 </div>
 
                 {!loading && (
                     <div className="text-lg font-bold text-gray-600">
-                        Contacta a tu administrador para solicitar permisos.
+						Contacta a tu administrador para solicitar permisos.
                     </div>
                 )}
             </div>
@@ -58,7 +60,10 @@ export default function Page ({ params }) {
 
     const getModulePermission = async (moduleKey) => {
         setLoadingPermission(true)
-        const permission = await getUserPermissionByModuleKey({ id: idUser, moduleKey })
+        const permission = await getUserPermissionByModuleKey({
+            id: idUser,
+            moduleKey
+        })
         setHasModule(permission)
         setLoadingPermission(false)
     }
@@ -90,11 +95,23 @@ export default function Page ({ params }) {
         }
     }, [moduleSelected, hasModule, isAdmin])
 
-    return <section className='flex flex-1 h-full'>
-        {!hasModule && !isAdmin
-            ? <NoPermissions loading={loadingPermission}/>
-            : isAuthRequered
-                ? <RequireAdminComponent moduleName={moduleSelected?.name} isAdmin={isAdmin} setIsAdmin={setIsAdmin}/>
-                : contentModule}
-    </section>
+    return (
+        <section className="">
+            {!hasModule && !isAdmin
+                ? (
+                    <NoPermissions loading={loadingPermission} />
+                )
+                : isAuthRequered
+                    ? (
+                        <RequireAdminComponent
+                            moduleName={moduleSelected?.name}
+                            isAdmin={isAdmin}
+                            setIsAdmin={setIsAdmin}
+                        />
+                    )
+                    : (
+                        contentModule
+                    )}
+        </section>
+    )
 }

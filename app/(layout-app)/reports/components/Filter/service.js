@@ -1,4 +1,10 @@
-import { fetchGetReportsSales, fetchGetReportsByCategoty, fetchGetReportsIndicators, fetchGetReportsSalesTypes, fetchGetReportsCriticalStock } from '@/services/reports'
+import {
+    fetchGetReportsSales,
+    fetchGetReportsByCategoty,
+    fetchGetReportsIndicators,
+    fetchGetReportsSalesTypes,
+    fetchGetReportsCriticalStock
+} from '@/services/reports'
 import { getMoment } from '@/utils/date'
 export const equivalentDateUnit = {
     daily: 'day',
@@ -100,7 +106,11 @@ export const requestDataSales = async (from, rangeType, periodQuantity) => {
         console.log(error)
     }
 }
-export const requestDataByCategory = async (from, rangeType, periodQuantity) => {
+export const requestDataByCategory = async (
+    from,
+    rangeType,
+    periodQuantity
+) => {
     try {
         return fetchGetReportsByCategoty({
             periodStart: from,
@@ -112,7 +122,11 @@ export const requestDataByCategory = async (from, rangeType, periodQuantity) => 
     }
 }
 
-export const requestDataIndicators = async (from, rangeType, periodQuantity) => {
+export const requestDataIndicators = async (
+    from,
+    rangeType,
+    periodQuantity
+) => {
     try {
         return fetchGetReportsIndicators({
             periodStart: from,
@@ -136,7 +150,11 @@ export const requestDatSalesTypes = async (from, rangeType, periodQuantity) => {
     }
 }
 
-export const requestDataCriticalStore = async (from, rangeType, periodQuantity) => {
+export const requestDataCriticalStore = async (
+    from,
+    rangeType,
+    periodQuantity
+) => {
     try {
         return fetchGetReportsCriticalStock({
             periodStart: from,
