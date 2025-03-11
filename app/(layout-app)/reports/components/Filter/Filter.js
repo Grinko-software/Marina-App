@@ -27,7 +27,7 @@ const FilterItem = ({ title, children }) => {
     </div>
 }
 
-export default function Filter () {
+export default function Filter ({ loading, setLoading }) {
     const [filterKeyIsOpen, setFilterKeyIsOpen] = useState(true)
     const [isFirstSearch, setIsFirstSearch] = useState(true)
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
@@ -45,7 +45,6 @@ export default function Filter () {
         if (valueFrom === undefined && valueTo === undefined) {
             onChange(from, to)
         } else if (valueFrom && valueTo) {
-            console.log('setting')
             const periodCount = valueTo?.diff(valueFrom, 'days') + 1
             const periodStart = valueFrom?.format()
             setFromDate(periodStart)
@@ -60,6 +59,7 @@ export default function Filter () {
     // const { setRangeType, setFromDate, setToDate } = useFilterStore()
 
     const requestDataReports = async () => {
+        setLoading(true)
         const state = useFilterStore.getState()
 
         const periodStart = state?.fromDate
@@ -92,7 +92,7 @@ export default function Filter () {
         updatePeriodIndicators(dataIndicators?.data)
         updateAreaChart(dataSalesTypes?.data)
         updateCriticalStore(dataCriticalStore?.data)
-
+        setLoading(false)
         setFilterKeyIsOpen(false)
     }
     useEffect(() => {
@@ -116,7 +116,6 @@ export default function Filter () {
             <Card className='w-full overflow-hidden'>
                 <CardBody className='flex flex-row gap-5'>
                     <Accordion
-
                         expandedKeys={selectedKeys}
                         selectedKeys={selectedKeys}
                         isCompact
