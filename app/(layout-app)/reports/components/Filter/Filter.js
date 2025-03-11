@@ -16,6 +16,7 @@ import useFilterStore from './store'
 import useReportsStore from '../store'
 import useRangeDateStore from './RangeDatePicker/store'
 import useDateTypeStore from './DateTypeSelector/store'
+import DateTypeSelector from './DateTypeSelector/DateTypeSelector'
 import {
     requestDatSalesTypes,
     requestDataByCategory,
@@ -42,6 +43,7 @@ export default function Filter () {
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
 
     const { fromDate, setFromDate, toDate, setPeriodQuantity } = useFilterStore()
+    const dateTypeState = useFilterStore()
 
     const { valueFrom, valueTo } = useRangeDateStore()
     const {
