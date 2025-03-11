@@ -72,9 +72,12 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
         if (!targeProduct) {
             setNewProductData(defaultState)
         } else {
-            if (targeProduct?.taxFree === null) { setIsTaxFree(false) } else {
+            if (targeProduct?.taxFree === null) {
+                setIsTaxFree(false)
+            } else {
                 setIsTaxFree(targeProduct?.taxFree)
             }
+            setNewProductData(targeProduct)
         }
     }, [targeProduct])
 
@@ -270,7 +273,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                             onValueChange={
                                                 (value) => {
                                                     setIsTaxFree(value)
-                                                    handleInputChange({ field: 'tax_free', value, isCode: true })
+                                                    handleInputChange({ field: 'taxFree', value, isCode: true })
                                                 }
                                             }>
                                             Producto exento de iva

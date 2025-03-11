@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import locale from 'antd/locale/es_ES'
 import 'dayjs/locale/es-us'
 import dayjs from 'dayjs'
-import DateTypeSelector from './DateTypeSelector/DateTypeSelector'
+/* import DateTypeSelector from './DateTypeSelector/DateTypeSelector' */
 import useDateTypeStore from './DateTypeSelector/store'
 import RangeDatePicker from './RangeDatePicker/RangeDatePicker'
 import useFilterStore from './store'
@@ -34,24 +34,23 @@ export default function Filter () {
     const dateTypeState = useDateTypeStore((state) => state)
     const rangeDateState = useRangeDateStore((state) => state)
 
-    const { valueFrom, valueTo } = useRangeDateStore()
-    const { data: reportsData, updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore, updateTable } = useReportsStore()
+    const { valueFrom, valueTo, onChange } = useRangeDateStore()
+    const { updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore, updateTable } = useReportsStore()
     const { value: rangeType } = useDateTypeStore()
     const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
     useEffect(() => {
-        let from = moment.utc(getMoment(today().startOf('day').add(-6, 'day'), 'YYYY-MM-DD'))
-        let to = moment.utc(getMoment(today()))
-
-        if (valueFrom || valueTo) {
-            from = moment.utc(moment(valueFrom)?.startOf('day'))
-            to = moment.utc(moment(valueTo)?.endOf('day').utc())
+        const from = moment.utc(getMoment(today().startOf('day').add(-6, 'day'), 'YYYY-MM-DD'))
+        const to = moment.utc(getMoment(today()))
+        if (valueFrom === undefined && valueTo === undefined) {
+            onChange(from, to)
+        } else if (valueFrom && valueTo) {
+            console.log('setting')
+            const periodCount = valueTo?.diff(valueFrom, 'days') + 1
+            const periodStart = valueFrom?.format()
+            setFromDate(periodStart)
+            setPeriodQuantity(periodCount)
         }
-
-        const periodCount = to?.diff(from, 'days') + 1
-        const periodStart = from?.format()
-        setFromDate(periodStart)
-        setPeriodQuantity(periodCount)
     }, [valueFrom, valueTo])
 
     useEffect(() => {
@@ -107,18 +106,11 @@ export default function Filter () {
     useEffect(() => {
         const state = useFilterStore.getState()
         const periodStart = state?.fromDate
-        if (isFirstSearch && periodStart) {
+        if (isFirstSearch && periodStart && valueFrom && valueTo) {
             requestDataReports()
             setIsFirstSearch(false)
         }
-    }, [isFirstSearch, useFilterStore.getState()])
-
-    useEffect(() => {
-    }, [selectedKeys])
-
-    useEffect(() => {
-    }, [reportsData])
-
+    }, [isFirstSearch, valueFrom, valueTo])
     return <section>
         <ConfigProvider locale={locale}>
             <Card className='w-full overflow-hidden'>
@@ -142,13 +134,13 @@ export default function Filter () {
                             }
                         >
                             <div className='flex flex-row gap-5 items-end'>
-                                <FilterItem title={'Tipo de rango'}>
-                                    <DateTypeSelector {...dateTypeState} /* setRangeType={setRangeType} *//>
-                                </FilterItem>
+                                {/* <FilterItem title={'Tipo de rango'}>
+                                    <DateTypeSelector {...dateTypeState}/>
+                                </FilterItem> */}
                                 <FilterItem title={'Rango de búsqueda'}>
-                                    <section className='w-full flex'>
+                                    <div className='w-full flex'>
                                         <RangeDatePicker {...dateTypeState} {...rangeDateState}/>
-                                    </section>
+                                    </div>
                                 </FilterItem>
                                 <Button className='mr-auto ' onClick={() => requestDataReports()}>
                                     {'Buscar'}
