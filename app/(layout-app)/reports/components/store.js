@@ -7,6 +7,8 @@ const useReportsStore = create((set) => ({
     areaChart: undefined,
     table: undefined,
     criticalStore: undefined,
+    loading: true,
+    setLoading: (value) => set({ loading: value }),
     updatePieChart: (value) => {
         set({ pieChart: value })
     },

@@ -41,14 +41,7 @@ import { FaCamera } from 'react-icons/fa'
 import { isMobileDevice } from '@/utils/agent'
 import useScannerStore from '@/stores/scanner'
 import Image from '@/components/ui/Image'
-export const InputComponent = ({
-    title,
-    type,
-    placeholder,
-    isPrice,
-    isBarCode,
-    ...rest
-}) => {
+export const InputComponent = ({ title, type, placeholder, isPrice, isBarCode, ...rest }) => {
     return (
         <Input
             autoFocus={!!isBarCode}

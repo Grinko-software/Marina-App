@@ -1,5 +1,11 @@
 import { create } from 'zustand'
 
+const today = new Date()
+today.setHours(0, 0, 0, 0)
+
+const oneWeekAgo = new Date(today)
+oneWeekAgo.setDate(today.getDate() - 7)
+
 const useFilterStore = create((set) => ({
     fromDate: undefined,
     toDate: undefined,

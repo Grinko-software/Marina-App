@@ -76,10 +76,10 @@ export default function PayDetailed ({
     }, [])
 
     useEffect(() => {
-        if (totalPay) {
+        if (isOpen && totalPay && !totalValue) {
             setTotalValue(totalPay)
         }
-    }, [openModal, totalPay])
+    }, [isOpen, totalPay, totalValue])
 
     useEffect(() => {
         if (totalValue >= 0 && payDetailed >= 0) {
@@ -253,25 +253,21 @@ export default function PayDetailed ({
                             </p>
                         </div>
                     </ModalBody>
-                    <ModalFooter className="justify-center">
-                        {isSuccessCompleted
-                            ? <div>
-                                <Button
-                                    color="danger"
-                                    variant="shadow"
-                                    className="w-[18rem] h-[6rem] text-2xl font-extrabold"
-                                    onClick={() => {
-                                        finishSale()
-                                    }}
-                                >
-									FINALIZAR
-                                </Button>
-                            </div>
-                            : (
-                                <div className="space-x-3">
-                                    <Button
-                                        variant="shadow"
-                                        className=" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
+                    <ModalFooter className='justify-center'>
+                        {
+                            isSuccessCompleted
+                                ? <div>
+                                    <Button color="danger" variant="shadow" className="w-[18rem] h-[6rem] text-2xl font-extrabold"
+                                        onClick={() => {
+                                            finishSale()
+                                            setTotalValue(null)
+                                        }}
+                                    >
+                                        FINALIZAR
+                                    </Button>
+                                </div>
+                                : <div className='space-x-3'>
+                                    <Button variant="shadow" className =" bg-green-500 text-primary-50 w-[18rem] h-[6rem] text-2xl font-extrabold "
                                         isDisabled={isDisableButtonPay}
                                         onClick={() => {
                                             generateSale()
@@ -296,12 +292,13 @@ export default function PayDetailed ({
                                             setPaymentTarget(listSalesActives, saleIdActive, null)
                                             setPayDetailed(null)
                                             onClose()
+                                            setTotalValue(null)
                                         }}
                                     >
 									CANCELAR
                                     </Button>
                                 </div>
-                            )}
+                        }
                     </ModalFooter>
                 </ModalContent>
             </Modal>

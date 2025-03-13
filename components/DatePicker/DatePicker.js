@@ -10,6 +10,9 @@ export default function CustomDatePicker ({
 }) {
     const dateInputRef = useRef(null)
     const [isFocused, setIsFocused] = useState(false)
+    const formattedValue = value
+        ? new Date(value).toISOString().split('T')[0] // Ensures YYYY-MM-DD format
+        : ''
 
     return (
         <div className={`flex flex-col w-full bg-[#f4f4f4] rounded-[12px] ${height} relative shadow dark:bg-[#27272A]`}>
@@ -27,7 +30,7 @@ export default function CustomDatePicker ({
                 <input
                     type="date"
                     ref={dateInputRef}
-                    value={value}
+                    value={formattedValue || ''}
                     min={minDate}
                     onFocus={() => {
                         setIsFocused(true)
@@ -35,9 +38,7 @@ export default function CustomDatePicker ({
                     onBlur={() => {
                         setIsFocused(false)
                     }}
-                    onChange={(e) => {
-                        onChange(e.target.value)
-                    }}
+                    onChange={(e) => { onChange(new Date(e.target.value)) }}
                     className="w-full px-3 py-2 h-5 text-[16px] text-gray-500 dark:text-gray-400 bg-transparent border border-x-transparent border-t-transparent border-b-transparent focus:border-b-transparent"
                 />
                 {/*  <style>{`

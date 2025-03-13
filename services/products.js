@@ -2,38 +2,41 @@
 import { PRODUCT_API_URL } from '@/settings/constants'
 import { DELETE, getData, PUT } from './http'
 
-export const updateProduct = async ({
-    id,
-    name,
-    cost_price,
-    sale_price,
-    net_price,
-    image,
-    code,
-    category_id,
-    stock_type_id,
-    stock,
-    stock_min,
-    tax_free,
-    notify
-}) => {
+export const updateProduct = async (
+    {
+        id,
+        name,
+        cost_price,
+        sale_price,
+        net_price,
+        image,
+        code,
+        category_id,
+        stock_type_id,
+        stock,
+        stock_min,
+        tax_free,
+        taxFree,
+        notify
+    }) => {
     try {
-        const queryParams = new URLSearchParams({
-            id: id || '',
-            name: name || '',
-            cost_price: cost_price || '',
-            sale_price: sale_price || '',
-            net_price: net_price || '',
-            image: image || '',
-            code: code || '',
-            product_category_id: category_id || '',
-            stock_type_id: stock_type_id || '',
-            stock: stock || '',
-            stock_min: stock_min || '',
-            tax_free
-        })
-        return getData(`${PRODUCT_API_URL}?${queryParams}`, PUT).then(
-            (response) => {
+        const queryParams = new URLSearchParams(
+            {
+                id: id || '',
+                name: name || '',
+                cost_price: cost_price || '',
+                sale_price: sale_price || '',
+                net_price: net_price || '',
+                image: image || '',
+                code: code || '',
+                product_category_id: category_id || '',
+                stock_type_id: stock_type_id || '',
+                stock: stock || '',
+                stock_min: stock_min || '',
+                tax_free: tax_free || taxFree
+            })
+        return getData(`${PRODUCT_API_URL}?${queryParams}`, PUT)
+            .then(response => {
                 try {
                     if (response?.code === 200) {
                         notify('✅ Producto actualizado con exito!')
@@ -46,7 +49,7 @@ export const updateProduct = async ({
                     return null
                 }
             }
-        )
+            )
     } catch {
         return null
     }

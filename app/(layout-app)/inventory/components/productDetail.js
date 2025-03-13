@@ -100,6 +100,7 @@ export default function ProductDetail ({
             } else {
                 setIsTaxFree(targeProduct?.taxFree)
             }
+            setNewProductData(targeProduct)
         }
     }, [targeProduct])
 
