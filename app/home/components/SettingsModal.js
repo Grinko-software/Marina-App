@@ -1,16 +1,8 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
-import {
-    Modal,
-    Checkbox,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Button,
-    Divider
-} from '@nextui-org/react'
+import { Checkbox } from '@nextui-org/checkbox'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react'
 import useSettingsStore, { DEFAULT_SELECTED } from './../../../stores/settings'
 
 export default function SettingModal ({ isOpen, onClose }) {
@@ -91,11 +83,10 @@ export default function SettingModal ({ isOpen, onClose }) {
                                         <Checkbox
                                             key={index}
                                             isSelected={isSelected}
-                                            onClick={() => {
+                                            onChange={() => {
                                                 setSelectedPostMachine(item)
                                             }}
-                                            color="danger"
-                                        >
+                                            color="danger">
                                             {item?.serial_number || item?.label}
                                         </Checkbox>
                                     )
@@ -112,11 +103,8 @@ export default function SettingModal ({ isOpen, onClose }) {
                                             <Checkbox
                                                 key={index2}
                                                 isSelected={isCashRegistrySelected}
-                                                onClick={() => {
-                                                    setSelectedCashRegister(cashRegister)
-                                                }}
-                                                color="danger"
-                                            >
+                                                onChange={() => { setSelectedCashRegister(cashRegister) }}
+                                                color="danger">
                                                 {cashRegister?.name || cashRegister?.label}
                                             </Checkbox>
                                         )
