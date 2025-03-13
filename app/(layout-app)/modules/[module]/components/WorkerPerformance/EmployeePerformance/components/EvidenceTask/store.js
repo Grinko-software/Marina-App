@@ -33,12 +33,13 @@ const useStoreEvidenceStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     }, */
-    clearStore: () => set({
-        name: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            name: null,
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useStoreEvidenceStore

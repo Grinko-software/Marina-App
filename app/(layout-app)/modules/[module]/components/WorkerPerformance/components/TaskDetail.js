@@ -1,6 +1,15 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Tabs, Tab } from '@nextui-org/react'
+import {
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Tabs,
+    Tab
+} from '@nextui-org/react'
 import TaskScoreInput, { TaskScore } from './TaskDetailScore'
 import { TASK_STATES, fetchRateTask } from '@/services/task'
 import useFilterStore from '../store'
@@ -8,13 +17,22 @@ import { getMoment } from '@/utils/date'
 import { Image } from 'antd'
 
 const ItemDetail = ({ label, value, component }) => {
-    return <div className="flex justify-between p-2 border-b border-gray-300 gap-5">
-        <span className="font-bold">{label?.toUpperCase()}:</span>
-        {component || <span className="text-justify">{value?.toUpperCase() || '-'}</span>}
-    </div>
+    return (
+        <div className="flex justify-between p-2 border-b border-gray-300 gap-5">
+            <span className="font-bold">{label?.toUpperCase()}:</span>
+            {component || (
+                <span className="text-justify">{value?.toUpperCase() || '-'}</span>
+            )}
+        </div>
+    )
 }
 
-export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {} }) {
+export default function TaskDetail ({
+    isOpen,
+    onClose,
+    data = {},
+    filterData = {}
+}) {
     const [detailItemsData, setDetailItemsData] = useState({
         items: [],
         imagesInit: [],
@@ -38,7 +56,11 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
     }
 
     const onRateTask = async (rate, feedback) => {
-        await fetchRateTask({ taskId: data?.id, taskRate: rate, feedbackRate: feedback })
+        await fetchRateTask({
+            taskId: data?.id,
+            taskRate: rate,
+            feedbackRate: feedback
+        })
         closeModal()
     }
 
@@ -69,20 +91,16 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
             ]
 
             if (data.feedback) {
-                detailData.push(
-                    {
-                        label: 'Comentarios',
-                        value: data?.feedback
-                    }
-                )
+                detailData.push({
+                    label: 'Comentarios',
+                    value: data?.feedback
+                })
             }
             if (data.rate) {
-                detailData.push(
-                    {
-                        label: 'Evaluación',
-                        component: <TaskScore score={data.rate}/>
-                    }
-                )
+                detailData.push({
+                    label: 'Evaluación',
+                    component: <TaskScore score={data.rate} />
+                })
             }
             setDetailItemsData({
                 items: detailData,
@@ -94,9 +112,14 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
 
     return (
         <>
-            <div className="flex flex-wrap gap-3 w-max h-max">
-            </div>
-            <Modal isDismissable={false} backdrop="blur" isOpen={isOpen} onClose={closeModal} size={'4xl'} closeButton={<></>} >
+            <Modal
+                isDismissable={false}
+                backdrop="blur"
+                isOpen={isOpen}
+                onClose={closeModal}
+                size={'4xl'}
+                closeButton={<></>}
+            >
                 <ModalContent>
                     {() => (
                         <>
@@ -104,32 +127,41 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                 {data?.name?.toUpperCase()}
                             </ModalHeader>
                             <ModalBody>
-                                {
-                                    ratingView
-                                        ? <TaskScoreInput
+                                {ratingView
+                                    ? (
+                                        <TaskScoreInput
                                             rate={rate}
                                             onRateChange={setRate}
                                             feedbackRate={feedbackRate}
                                             setFeedbackRate={setFeedbackRate}
                                         />
-                                        : <div className='space-y-5'>
+                                    )
+                                    : (
+                                        <div className="space-y-5">
                                             <div>
                                                 {detailItemsData.items.map((item, index) => (
-                                                    <ItemDetail key={index} label={item.label} value={item.value} component={item.component} />
+                                                    <ItemDetail
+                                                        key={index}
+                                                        label={item.label}
+                                                        value={item.value}
+                                                        component={item.component}
+                                                    />
                                                 ))}
                                             </div>
-                                            {
-                                                (detailItemsData.imagesInit.length || detailItemsData.imagesFinish.length)
-                                                    ? <div className='flex flex-col items-center mx-auto'>
+                                            {detailItemsData.imagesInit.length ||
+										detailItemsData.imagesFinish.length
+                                                ? (
+                                                    <div className="flex flex-col items-center mx-auto">
                                                         <Tabs
                                                             aria-label="Images"
                                                             size="md"
-                                                            className='mx-auto py-2'
+                                                            className="mx-auto py-2"
                                                             selectedKey={imagesTab}
                                                             onSelectionChange={setImagesTab}
                                                             classNames={{
                                                                 cursor: 'bg-green-400 dark:bg-green-400',
-                                                                tabContent: 'group-data-[selected=true]:text-primary-50'
+                                                                tabContent:
+															'group-data-[selected=true]:text-primary-50'
                                                             }}
                                                             items={[
                                                                 {
@@ -146,7 +178,7 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                                         >
                                                             {(item) => (
                                                                 <Tab key={item.id} title={item.label}>
-                                                                    <div className='flex flex-row flex-wrap justify-center gap-5 overflow-y-auto max-h-[25rem]'>
+                                                                    <div className="flex flex-row flex-wrap justify-center gap-5 overflow-y-auto max-h-[25rem]">
                                                                         {item.images.map((item, index) => (
                                                                             <Image
                                                                                 key={index}
@@ -159,61 +191,76 @@ export default function TaskDetail ({ isOpen, onClose, data = {}, filterData = {
                                                                                 src={item}
                                                                             />
                                                                         ))}
-                                                                        {
-                                                                            !item.images.length &&
-                                                                    <p className="text-lg uppercase font-semibold m-3">No hay imágenes para mostrar</p>
-                                                                        }
+                                                                        {!item.images.length && (
+                                                                            <p className="text-lg uppercase font-semibold m-3">
+																		No hay imágenes para mostrar
+                                                                            </p>
+                                                                        )}
                                                                     </div>
                                                                 </Tab>
                                                             )}
                                                         </Tabs>
                                                     </div>
-                                                    : <></>
-                                            }
+                                                )
+                                                : (
+                                                    <></>
+                                                )}
                                         </div>
-                                }
+                                    )}
                             </ModalBody>
-                            <ModalFooter className='justify-center'>
+                            <ModalFooter className="justify-center">
                                 <Button
                                     color={ratingView ? 'default' : 'danger'}
                                     variant="shadow"
-                                    className="w-[12rem] h-[4rem] text-xl font-extrabold" onClick={() => {
+                                    className="w-[12rem] h-[4rem] text-xl font-extrabold"
+                                    onClick={() => {
                                         if (ratingView) {
                                             setRatingView(false)
                                         } else {
                                             closeModal()
                                         }
-                                    }}>
+                                    }}
+                                >
                                     {ratingView ? 'Volver' : 'Cerrar'}
                                 </Button>
-                                {
-                                    data?.stateKey === TASK_STATES.READY_TO_EVALUATE
-                                        ? ratingView
-                                            ? <Button
-                                                color="success"
-                                                variant="shadow"
-                                                className="w-[12rem] h-[4rem] text-xl font-extrabold"
-                                                onClick={() => {
-                                                    onRateTask(rate, feedbackRate)
-                                                }}
-                                            >
-                                                Calificar
-                                            </Button>
-                                            : <Button
-                                                color="default"
-                                                variant="shadow"
-                                                className="w-[12rem] h-[4rem] text-xl font-extrabold"
-                                                onClick={() => {
-                                                    setRatingView(true)
-                                                }}
-                                                isDisabled={data?.stateKey !== TASK_STATES.READY_TO_EVALUATE}
-                                            >
-                                                Calificar
-                                            </Button>
-                                        : editView
-                                            ? <></>
-                                            : <></>
-                                }
+                                {data?.stateKey === TASK_STATES.READY_TO_EVALUATE
+                                    ? (
+                                        ratingView
+                                            ? (
+                                                <Button
+                                                    color="success"
+                                                    variant="shadow"
+                                                    className="w-[12rem] h-[4rem] text-xl font-extrabold"
+                                                    onClick={() => {
+                                                        onRateTask(rate, feedbackRate)
+                                                    }}
+                                                >
+											Calificar
+                                                </Button>
+                                            )
+                                            : (
+                                                <Button
+                                                    color="default"
+                                                    variant="shadow"
+                                                    className="w-[12rem] h-[4rem] text-xl font-extrabold"
+                                                    onClick={() => {
+                                                        setRatingView(true)
+                                                    }}
+                                                    isDisabled={
+                                                        data?.stateKey !== TASK_STATES.READY_TO_EVALUATE
+                                                    }
+                                                >
+											Calificar
+                                                </Button>
+                                            )
+                                    )
+                                    : editView
+                                        ? (
+                                            <></>
+                                        )
+                                        : (
+                                            <></>
+                                        )}
                             </ModalFooter>
                         </>
                     )}

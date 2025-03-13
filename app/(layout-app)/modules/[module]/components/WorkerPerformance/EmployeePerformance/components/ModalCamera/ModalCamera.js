@@ -22,10 +22,13 @@ export default function ModalCamera ({ images, setImages }) {
     }
 
     return (
-        <div className='flex flex-col items-center justify-center gap-5'>
+        <div className="flex flex-col items-center justify-center gap-5">
             <div className="grid grid-cols-2 gap-4">
                 {images?.map((img, index) => (
-                    <div key={index} className="rounded-lg flex flex-col items-center space-y-2 p-2 border-2 border-gray-300 border-dashed hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <div
+                        key={index}
+                        className="rounded-lg flex flex-col items-center space-y-2 p-2 border-2 border-gray-300 border-dashed hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    >
                         <ImageComponent
                             id={`image-camera-${index}`}
                             src={img}
@@ -44,7 +47,8 @@ export default function ModalCamera ({ images, setImages }) {
                 ))}
             </div>
             <Button
-                className='bg-emerald-600 dark:bg-emerald-600 font-semibold' color='primary'
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold"
+                color="primary"
                 onClick={handleOpenCamera}
                 startContent={<BiCamera size={25} />}
             >

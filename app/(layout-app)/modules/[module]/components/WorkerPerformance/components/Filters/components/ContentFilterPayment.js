@@ -1,16 +1,29 @@
 /* eslint-disable no-unused-vars */
 'use client'
 
-import { Autocomplete, AutocompleteItem, Button, DatePicker } from '@nextui-org/react'
+import {
+    Autocomplete,
+    AutocompleteItem,
+    Button,
+    DatePicker
+} from '@nextui-org/react'
 import useFilterStorePayment from '../storePayment'
 import CustomDatePicker from '@/components/DatePicker/DatePicker'
 
-export default function ContentFilterPayment ({ users, isMobile = false, onClose = () => {} }) {
+export default function ContentFilterPayment ({
+    users,
+    isMobile = false,
+    onClose = () => {}
+}) {
     const {
-        selectionUser, setSelectionUser,
-        fromDate, setFromDate,
-        toDate, setToDate,
-        loading, requestData
+        selectionUser,
+        setSelectionUser,
+        fromDate,
+        setFromDate,
+        toDate,
+        setToDate,
+        loading,
+        requestData
     } = useFilterStorePayment()
 
     const requestPaymentList = () => {
@@ -19,7 +32,8 @@ export default function ContentFilterPayment ({ users, isMobile = false, onClose
         }
         return requestData({ userId: selectionUser, fromDate, toDate })
     }
-    const isDisabled = fromDate === null || toDate === null || selectionUser === null
+    const isDisabled =
+		fromDate === null || toDate === null || selectionUser === null
     return (
         <div className="w-full flex flex-col gap-4  md:max-h-7   md:gap-5 md:flex-row md:items-center ">
             <div className="flex flex-col gap-4 md:flex-row md:gap-5 md:items-center">
@@ -33,7 +47,7 @@ export default function ContentFilterPayment ({ users, isMobile = false, onClose
                         onSelectionChange={(value) => setSelectionUser(value)}
                         allowsEmptyCollection={false}
                         isClearable={true}
-                        className='h-full md:min-h-7'
+                        className="h-full md:min-h-7"
                     >
                         {(item) => (
                             <AutocompleteItem key={item.value}>
@@ -51,21 +65,21 @@ export default function ContentFilterPayment ({ users, isMobile = false, onClose
                     />
                 </div>
                 <div className="w-full md:max-w-xs">
-                    <CustomDatePicker
-                        label="Hasta"
-                        value={toDate}
-                        onChange={setToDate}
-                    />
+                    <CustomDatePicker label="Hasta" value={toDate} onChange={setToDate} minDate={fromDate} />
                 </div>
             </div>
 
             {/* Botones */}
 
-            <Button isDisabled={isDisabled} onClick={requestPaymentList} isLoading={loading}
-                className='bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase ' color='primary'>
-                    Buscar
+            <Button
+                isDisabled={isDisabled}
+                onClick={requestPaymentList}
+                isLoading={loading}
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase h-auto "
+                color="primary"
+            >
+				Buscar
             </Button>
-
         </div>
     )
 }

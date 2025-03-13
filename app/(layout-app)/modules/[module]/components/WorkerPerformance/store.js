@@ -7,20 +7,24 @@ const useFilterStore = create((set) => ({
     loading: false,
     totalpage: undefined,
     setLoading: (value) => set({ loading: value }),
-    requestData: ({ taskTypeId, taskStateId, userId }) => {
+    requestData: ({
+        taskTypeId, taskStateId, userId, fromDate,
+        toDate
+    }) => {
         try {
             set({ loading: true })
-            requestTaskList({ taskTypeId, taskStateId, userId })
+            requestTaskList({ taskTypeId, taskStateId, userId, fromDate, toDate })
                 .then((data) => {
                     const itemsData = data?.data?.map((item) => {
                         let stateKey = null
                         const taskUser = item?.user
                             ? {
+                                createdAt: item?.createdAt,
                                 id: item?.user?.ID,
                                 name: item?.user?.name,
                                 last_name: item?.user?.last_name,
                                 email: item?.user?.email
-                            }
+							  }
                             : null
                         const taskCompletion = item?.task_completion
                             ? {
@@ -29,10 +33,11 @@ const useFilterStore = create((set) => ({
                                 employeeId: item?.task_completion?.employee_id,
                                 description: item?.task_completion?.description,
                                 completionDate: item?.task_completion?.CompletionDate,
-                                images: item?.task_completion?.img?.map((item) => {
-                                    return item?.url
-                                }) || null
-                            }
+                                images:
+										item?.task_completion?.img?.map((item) => {
+										    return item?.url
+										}) || null
+							  }
                             : null
                         const taskInitation = item?.task_initation
                             ? {
@@ -41,10 +46,11 @@ const useFilterStore = create((set) => ({
                                 employeeId: item?.task_initation?.employee_id,
                                 description: item?.task_initation?.description,
                                 initationDate: item?.task_initation?.CompletionDate,
-                                images: item?.task_initation?.img?.map((item) => {
-                                    return item?.url
-                                }) || null
-                            }
+                                images:
+										item?.task_initation?.img?.map((item) => {
+										    return item?.url
+										}) || null
+							  }
                             : null
 
                         const taskStateId = item.state_task_id
@@ -61,6 +67,7 @@ const useFilterStore = create((set) => ({
                             name: item.name,
                             description: item.description,
                             dateLimit: item.date_limit,
+                            createdAt: item?.createdAt,
 
                             // -
                             taskInitationId: item.task_initation_id,
@@ -99,9 +106,11 @@ const useFilterStore = create((set) => ({
                     set({
                         data: itemsData
                     })
-                }).catch((error) => {
+                })
+                .catch((error) => {
                     console.debug(error)
-                }).finally(() => {
+                })
+                .finally(() => {
                     set({ loading: false })
                 })
         } catch (e) {

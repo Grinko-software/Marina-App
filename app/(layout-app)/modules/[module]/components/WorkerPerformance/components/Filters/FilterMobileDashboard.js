@@ -9,16 +9,15 @@ import {
     ModalBody,
     ModalContent,
     ModalFooter,
-    ModalHeader,
-    useDisclosure
+    ModalHeader
+
 } from '@nextui-org/react'
 import ContentFilterPayment from './components/ContentFilterPayment'
-export default function FilterMobilePayment ({ users }) {
-    const { isOpen, onClose, onOpen } = useDisclosure()
+export default function FilterMobileDashboard ({ content, isOpen, onClose, onOpen }) {
     return (
         <>
             <Button
-                className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase"
+                className="bg-emerald-600 dark:bg-emerald-600 font-semibold uppercase w-full"
                 color="primary"
                 onClick={() => {
                     // add section
@@ -44,11 +43,7 @@ export default function FilterMobilePayment ({ users }) {
                     </ModalHeader>
                     <div className="max-h-[calc(100vh-16rem)] overflow-y-scroll flex flex-col items-center justify-center w-full px-6 gap-10">
                         {/* Coomment */}
-                        <ContentFilterPayment
-                            users={users}
-                            isMobile={true}
-                            onClose={onClose}
-                        />
+                        {content}
                     </div>
                 </ModalContent>
             </Modal>

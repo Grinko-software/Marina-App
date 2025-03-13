@@ -1,6 +1,17 @@
-import { fetchGetTasks, fetchStartTaskByEmployee, fetchGetTaskByEmployee, fetchCompleteTaskByEmployee, getTaskStateById, uploadImageTaskByEmployee } from '@/services/task'
+import {
+    fetchGetTasks,
+    fetchStartTaskByEmployee,
+    fetchGetTaskByEmployee,
+    fetchCompleteTaskByEmployee,
+    getTaskStateById,
+    uploadImageTaskByEmployee
+} from '@/services/task'
 export const getGeneralTasks = ({ stateId }) => {
-    return fetchGetTasks({ userId: null, taskTypeId: null, taskStateId: stateId })
+    return fetchGetTasks({
+        userId: null,
+        taskTypeId: null,
+        taskStateId: stateId
+    })
 }
 export const getTasksByEmployee = ({ employeeID }) => {
     return fetchGetTaskByEmployee({ employeeID })
@@ -11,7 +22,11 @@ export const completeTask = ({ taskId, employeeId, description }) => {
 export const startTask = ({ taskId, employeeId, description }) => {
     return fetchStartTaskByEmployee({ taskId, employeeId, description })
 }
-export const uploadImageTaskEmployee = ({ taskId, employeeId, description }) => {
+export const uploadImageTaskEmployee = ({
+    taskId,
+    employeeId,
+    description
+}) => {
     return uploadImageTaskByEmployee({ taskId, employeeId, description })
 }
 export const parseTaskByEmployee = ({ data }) => {
@@ -35,6 +50,7 @@ export const getStateTask = ({ task }) => {
     return getTaskStateById(task.state_task_id)
 }
 
-export const getIdTask = ({ tasks, stateNames }) => { // TO DO
+export const getIdTask = ({ tasks, stateNames }) => {
+    // TO DO
     return tasks?.find((task) => task.name === stateNames)?.id || null
 }

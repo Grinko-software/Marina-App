@@ -5,7 +5,15 @@ import { getDataModelUsers, requestUserList } from '../service'
 import { isMobileDevice } from '@/utils/agent'
 import useFilterStorePayment from '../components/Filters/storePayment'
 import FilterPayment from '../components/Filters/FilterPayment'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner } from '@nextui-org/react'
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    Spinner
+} from '@nextui-org/react'
 const ViewPayment = () => {
     const [isMobile, setIsMobile] = useState(true)
     const [users, setUsers] = useState([])
@@ -22,29 +30,33 @@ const ViewPayment = () => {
             // center: true
         }
     ]
-    const renderCell = useCallback((data, columnKey) => {
-        const cellValue = data[columnKey]
-        switch (columnKey) {
-        case 'name':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
-                </div>
-            )
-        case 'rating':
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
-                </div>
-            )
-        default:
-            return (
-                <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
-                </div>
-            )
-        }
-    }, [data])
+    const renderCell = useCallback(
+        (data, columnKey) => {
+            const cellValue = data[columnKey]
+            switch (columnKey) {
+            case 'name':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                    </div>
+                )
+            case 'rating':
+                return (
+                    <div className="flex flex-row">
+                        <p className="text-yellow-400">{'★'}</p>
+                        <p className="text-bold text-sm capitalize dark:text-white">{` ${cellValue}`}</p>
+                    </div>
+                )
+            default:
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                    </div>
+                )
+            }
+        },
+        [data]
+    )
     useEffect(() => {
         requestUserList().then((data) => {
             if (data) {
@@ -57,21 +69,31 @@ const ViewPayment = () => {
     }, [])
 
     return (
-        <div className='h-full w-full  md:mt-2'>
-            <FilterPayment isMobile={isMobile} users={users}/>
-            <div className='mt-[15rem] md:mt-7'>
+        <div className="h-full w-full mt-0 md:mt-2">
+            <FilterPayment isMobile={isMobile} users={users} />
+            <div className="mt-[11rem] md:mt-7">
                 <Table isHeaderSticky>
                     <TableHeader columns={columns}>
                         {(column) => (
-                            <TableColumn key={column.key} className={column.center ? 'text-center' : ''}>
+                            <TableColumn
+                                key={column.key}
+                                className={column.center ? 'text-center' : ''}
+                            >
                                 {column.label}
                             </TableColumn>
                         )}
                     </TableHeader>
-                    <TableBody isLoading={loading} items={data || []} emptyContent={'No hay tareas asociadas'} loadingContent={ <Spinner></Spinner>}>
+                    <TableBody
+                        isLoading={loading}
+                        items={data || []}
+                        emptyContent={'No hay tareas asociadas'}
+                        loadingContent={<Spinner></Spinner>}
+                    >
                         {(item) => (
                             <TableRow key={item.key}>
-                                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                {(columnKey) => (
+                                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                )}
                             </TableRow>
                         )}
                     </TableBody>

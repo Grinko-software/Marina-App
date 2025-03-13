@@ -18,32 +18,46 @@ const useSupplierFormStore = create((set) => ({
     complete: false,
     setLoading: (value) => set({ loading: value }),
     setError: (value) => set({ error: value }),
-    requestCreate: async (name, description, taskType, userTask, dateTask, notify, idUser, isAdmin) => {
+    requestCreate: async (
+        name,
+        description,
+        taskType,
+        userTask,
+        dateTask,
+        notify,
+        idUser,
+        isAdmin,
+        requestTaskList
+    ) => {
         set({ loading: true, error: null, complete: false })
         // has requered values
-        const missingRequeredValues = (
-            !name ||
-            !description ||
-            !taskType ||
-            //! userTask ||
-            !dateTask
-        )
+        const missingRequeredValues =
+			!name ||
+			!description ||
+			!taskType ||
+			//! userTask ||
+			!dateTask
         const userIdtask = isAdmin ? userTask : idUser
         if (missingRequeredValues) {
             set({ loading: false, error: 'Rellena todos los campos necesarios' })
             return
         }
         try {
-            const [data] = await Promise.all([requestCreateTask({
-                name,
-                description,
-                taskType: Number(taskType),
-                userTask: userIdtask ? Number(userIdtask) : null,
-                dateTask: getMoment(dateTask).format('YYYY-MM-DD')
-            })])
+            const [data] = await Promise.all([
+                requestCreateTask({
+                    name,
+                    description,
+                    taskType: Number(taskType),
+                    userTask: userIdtask ? Number(userIdtask) : null,
+                    dateTask: getMoment(dateTask).format('YYYY-MM-DD')
+                })
+            ])
             set({ loading: false, error: null, complete: true })
             if (data?.code === 200) {
                 notify('✅ Tarea creada con éxito!')
+                if (requestTaskList) {
+                    requestTaskList() // Update task list to reflect the new task
+                }
             } else {
                 notify('❌ La tarea no fue creada con éxito, intenta otra vez!')
             }
@@ -51,17 +65,18 @@ const useSupplierFormStore = create((set) => ({
             set({ loading: false, error: err, complete: true })
         }
     },
-    clearStore: () => set({
-        name: null,
-        description: null,
-        taskType: null,
-        difficultType: null,
-        userTask: null,
-        dateTask: null,
-        loading: false,
-        error: false,
-        complete: false
-    })
+    clearStore: () =>
+        set({
+            name: null,
+            description: null,
+            taskType: null,
+            difficultType: null,
+            userTask: null,
+            dateTask: null,
+            loading: false,
+            error: false,
+            complete: false
+        })
 }))
 
 export default useSupplierFormStore

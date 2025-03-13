@@ -4,10 +4,19 @@ import { CSS } from '@dnd-kit/utilities'
 import { useState, useEffect } from 'react'
 import CardTask from './Card'
 
-export default function Draggable ({ id, taskTitle, taskPriority, taskDescription, imageAlt, imageUrl, children }) {
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-        id
-    })
+export default function Draggable ({
+    id,
+    taskTitle,
+    taskPriority,
+    taskDescription,
+    imageAlt,
+    imageUrl,
+    children
+}) {
+    const { attributes, listeners, setNodeRef, transform, isDragging } =
+		useDraggable({
+		    id
+		})
 
     const [style, setStyle] = useState({
         transform: 'translate3d(0, 0, 0)'
@@ -25,9 +34,7 @@ export default function Draggable ({ id, taskTitle, taskPriority, taskDescriptio
             style={style}
             {...listeners}
             {...attributes}
-            className={`${
-                isDragging ? 'absolute z-50' : 'relative'
-            }`}
+            className={`${isDragging ? 'absolute z-50' : 'relative'}`}
         >
             <button className="w-full h-full">
                 <CardTask
