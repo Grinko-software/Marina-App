@@ -1,15 +1,19 @@
 'use client'
+import moment from 'moment-timezone'
 import { Accordion, AccordionItem, Button, Card, CardBody } from '@nextui-org/react'
 import { ConfigProvider } from 'antd'
 import React, { useEffect, useState } from 'react'
-
+import { getMoment, today } from '@/utils/date'
 import locale from 'antd/locale/es_ES'
 import 'dayjs/locale/es-us'
 import dayjs from 'dayjs'
+/* import DateTypeSelector from './DateTypeSelector/DateTypeSelector' */
+import useDateTypeStore from './DateTypeSelector/store'
+/* import RangeDatePicker from './RangeDatePicker/RangeDatePicker' */
 import useFilterStore from './store'
 import useReportsStore from '../store'
+import useRangeDateStore from './RangeDatePicker/store'
 import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators, requestDataCriticalStore, requestDataSales } from './service'
-import CustomDatePicker from '@/components/DatePicker/DatePicker'
 
 dayjs.locale('es')
 
@@ -22,13 +26,71 @@ const FilterItem = ({ title, children }) => {
     </div>
 }
 
-export default function Filter () {
+export default function Filter ({ loading, setLoading }) {
     const [filterKeyIsOpen, setFilterKeyIsOpen] = useState(true)
     const [isFirstSearch, setIsFirstSearch] = useState(true)
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
-    const { updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore, updateTable, setLoading } = useReportsStore()
-    const { fromDate, setFromDate, toDate, setToDate, periodQuantity, setPeriodQuantity, periodRange } = useFilterStore()
+    const { valueFrom, valueTo, onChange } = useRangeDateStore()
+    const { updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore, updateTable } = useReportsStore()
+    const { value: rangeType } = useDateTypeStore()
+    const { setRangeType, setFromDate, setPeriodQuantity } = useFilterStore()
 
+    useEffect(() => {
+        const from = moment.utc(getMoment(today().startOf('day').add(-6, 'day'), 'YYYY-MM-DD'))
+        const to = moment.utc(getMoment(today()))
+        if (valueFrom === undefined && valueTo === undefined) {
+            onChange(from, to)
+        } else if (valueFrom && valueTo) {
+            const periodCount = valueTo?.diff(valueFrom, 'days') + 1
+            const periodStart = valueFrom?.format()
+            setFromDate(periodStart)
+            setPeriodQuantity(periodCount)
+        }
+    }, [valueFrom, valueTo])
+
+    useEffect(() => {
+        setRangeType(rangeType)
+    }, [rangeType])
+
+    // const { setRangeType, setFromDate, setToDate } = useFilterStore()
+
+    const requestDataReports = async () => {
+        setLoading(true)
+        const state = useFilterStore.getState()
+
+        const periodStart = state?.fromDate
+        const periodRange = 'Day' || state?.rangeType
+        const periodQuantity = state?.periodQuantity
+
+        const [dataReportSales, dataReportByCategory, dataIndicators, dataSalesTypes, dataCriticalStore] = await
+        Promise.all([requestDataSales(
+            periodStart,
+            periodRange,
+            periodQuantity
+        ),
+        requestDataByCategory(
+            periodStart,
+            periodRange,
+            periodQuantity
+        ), requestDataIndicators(
+            periodStart,
+            periodRange,
+            periodQuantity
+        ), requestDatSalesTypes(
+            periodStart,
+            periodRange,
+            periodQuantity
+        ), requestDataCriticalStore(
+        )])
+
+        updateTable(dataReportSales?.data)
+        updatePieChart(dataReportByCategory?.data)
+        updatePeriodIndicators(dataIndicators?.data)
+        updateAreaChart(dataSalesTypes?.data)
+        updateCriticalStore(dataCriticalStore?.data)
+        setLoading(false)
+        setFilterKeyIsOpen(false)
+    }
     useEffect(() => {
         if (filterKeyIsOpen) {
             setSelectedKeys(['filter'])
@@ -38,58 +100,18 @@ export default function Filter () {
     }, [filterKeyIsOpen])
 
     useEffect(() => {
-        requestDataReports()
-        setIsFirstSearch(false)
-    }, [isFirstSearch])
-
-    useEffect(() => {
-        if (fromDate && toDate) {
-            const differenceInTime = toDate.getTime() - fromDate.getTime()
-            const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24))
-            setPeriodQuantity(differenceInDays)
+        const state = useFilterStore.getState()
+        const periodStart = state?.fromDate
+        if (isFirstSearch && periodStart && valueFrom && valueTo) {
+            requestDataReports()
+            setIsFirstSearch(false)
         }
-    }, [fromDate, toDate])
-
-    const requestDataReports = async () => {
-        setLoading(true)
-        const [dataReportSales, dataReportByCategory, dataIndicators, dataSalesTypes, dataCriticalStore] = await
-        Promise.all(
-            [requestDataSales(
-                fromDate,
-                periodRange,
-                periodQuantity
-            ),
-            requestDataByCategory(
-                fromDate,
-                periodRange,
-                periodQuantity
-            ), requestDataIndicators(
-                fromDate,
-                periodRange,
-                periodQuantity
-            ), requestDatSalesTypes(
-                fromDate,
-                periodRange,
-                periodQuantity
-            ), requestDataCriticalStore(
-            )])
-
-        updateTable(dataReportSales?.data)
-        updatePieChart(dataReportByCategory?.data)
-        updatePeriodIndicators(dataIndicators?.data)
-        updateAreaChart(dataSalesTypes?.data)
-        updateCriticalStore(dataCriticalStore?.data)
-
-        setLoading(false)
-        setFilterKeyIsOpen(false)
-    }
-
+    }, [isFirstSearch, valueFrom, valueTo])
     return <section>
         <ConfigProvider locale={locale}>
             <Card className='w-full overflow-hidden'>
                 <CardBody className='flex flex-row gap-5'>
                     <Accordion
-
                         expandedKeys={selectedKeys}
                         selectedKeys={selectedKeys}
                         isCompact
@@ -107,19 +129,13 @@ export default function Filter () {
                             }
                         >
                             <div className='flex flex-row gap-5 items-end'>
-                                <FilterItem title={'Tipo de rango'}>
-                                    <CustomDatePicker
-                                        label="Desde"
-                                        value={fromDate}
-                                        onChange={setFromDate}
-                                    />
-                                </FilterItem>
+                                {/* <FilterItem title={'Tipo de rango'}>
+                                    <DateTypeSelector {...dateTypeState}/>
+                                </FilterItem> */}
                                 <FilterItem title={'Rango de búsqueda'}>
-                                    <CustomDatePicker
-                                        label="Hasta"
-                                        value={toDate}
-                                        onChange={setToDate}
-                                    />
+                                    <div className='w-full flex'>
+                                        {/*  <RangeDatePicker {...dateTypeState} {...rangeDateState}/> */}
+                                    </div>
                                 </FilterItem>
                                 <Button className='mr-auto ' onClick={() => requestDataReports()}>
                                     {'Buscar'}

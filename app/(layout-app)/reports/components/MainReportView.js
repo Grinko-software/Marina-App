@@ -148,7 +148,7 @@ const ReportView = () => {
     return (
         <>
             <section className='grid grid-cols-1 w-full gap-3'>
-                <Filter/>
+                <Filter loading={dataModelIndicatorLoading} setLoading={setDataModelIndicatorLoading}/>
                 <Swiper
                     className=''
                     modules={[Navigation, Pagination, Autoplay]}
@@ -190,11 +190,11 @@ const ReportView = () => {
                                         </div>
 
                                         <div className='col-span-2 w-full h-full'>
-                                            <PieChart data = {dataModelPieChart} isLoading={loading} />
+                                            <PieChart data = {dataModelPieChart} isLoading={dataModelIndicatorLoading} />
                                         </div>
                                     </section>
                                     <section className="col-span-2 mt-3 md:mt-0">
-                                        <AreaChart data = {dataModelSalesTypes} isLoading={loading} />
+                                        <AreaChart data = {dataModelSalesTypes} isLoading={dataModelIndicatorLoading} />
                                     </section>
                                 </section>
                             </section>
