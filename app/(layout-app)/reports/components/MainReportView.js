@@ -174,7 +174,7 @@ const ReportView = () => {
                                                 subUnit = {totalMoneyIndicator?.unit}
                                                 pct = {dataModelIndicator?.total_money_percent_indicator}
                                                 color={'green-400'}
-                                                isLoading ={loading}
+                                                isLoading ={dataModelIndicatorLoading}
                                             />
                                         </div>
                                         <div className='col-span-1 w-full h-full'>
@@ -185,7 +185,7 @@ const ReportView = () => {
                                                 subUnit = {''}
                                                 pct = {dataModelIndicator?.total_sales_percent_indicator}
                                                 color={'yellow-400'}
-                                                isLoading ={loading}
+                                                isLoading ={dataModelIndicatorLoading}
                                             />
                                         </div>
 
@@ -194,7 +194,7 @@ const ReportView = () => {
                                         </div>
                                     </section>
                                     <section className="col-span-2 mt-3 md:mt-0">
-                                        <AreaChart data = {dataModelSalesTypes} isLoading={dataModelIndicatorLoading} />
+                                        <AreaChart data={dataModelSalesTypes} isLoading={dataModelIndicatorLoading} />
                                     </section>
                                 </section>
                             </section>
