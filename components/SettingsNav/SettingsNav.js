@@ -209,7 +209,7 @@ export default function SettingsNav ({ isMobile }) {
                                 color="primary"
                                 radius="full"
                                 variant={'solid'}
-                                onClick={() => {
+                                onPress={() => {
                                     signOut()
                                 }}
                             >

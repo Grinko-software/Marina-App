@@ -24,12 +24,12 @@ export default function MobileNavBar () {
         { id: 'inventory', label: '📦 Inventario', route: '/inventory' },
         { id: 'modules', label: '🛠️ Módulos', route: '/modules' },
         { id: MODULES_KEYS.PERFORFANCE, label: '📊 Rendimiento', route: '/modules/performance' },
-        { id: 'login', label: '🚪 Cerrar sesión', route: '/' }
+        { id: 'login', label: '🚪 Cerrar sesión', route: '/login' }
     ]
 
     useEffect(() => {
         if (selected && selected !== moduleApplication) {
-            if (selected === 'login') {
+            if (selected === '/login') {
                 signOut()
             }
             router.push(selected)
@@ -61,7 +61,7 @@ export default function MobileNavBar () {
                                 transition-colors duration-200 text-gray-900 dark:text-white
                                 bg-gray-300 dark:bg-gray-700
                             `}
-                            onClick={() => {
+                            onPress={() => {
                                 setSelected(item?.route)
                             }}
                         >
