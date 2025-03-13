@@ -1,19 +1,20 @@
 'use client'
-import moment from 'moment-timezone'
 import { Accordion, AccordionItem, Button, Card, CardBody } from '@nextui-org/react'
 import { ConfigProvider } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { getMoment, today } from '@/utils/date'
+
 import locale from 'antd/locale/es_ES'
 import 'dayjs/locale/es-us'
 import dayjs from 'dayjs'
 /* import DateTypeSelector from './DateTypeSelector/DateTypeSelector' */
 import useDateTypeStore from './DateTypeSelector/store'
-/* import RangeDatePicker from './RangeDatePicker/RangeDatePicker' */
+import RangeDatePicker from './RangeDatePicker/RangeDatePicker'
 import useFilterStore from './store'
-import useReportsStore from '../store'
 import useRangeDateStore from './RangeDatePicker/store'
+import moment from 'moment-timezone'
+import useReportsStore from '../store'
 import { requestDatSalesTypes, requestDataByCategory, requestDataIndicators, requestDataCriticalStore, requestDataSales } from './service'
+import { getMoment, today } from '@/utils/date'
 
 dayjs.locale('es')
 
@@ -30,6 +31,9 @@ export default function Filter ({ loading, setLoading }) {
     const [filterKeyIsOpen, setFilterKeyIsOpen] = useState(true)
     const [isFirstSearch, setIsFirstSearch] = useState(true)
     const [selectedKeys, setSelectedKeys] = useState(['filter'])
+    const dateTypeState = useDateTypeStore((state) => state)
+    const rangeDateState = useRangeDateStore((state) => state)
+
     const { valueFrom, valueTo, onChange } = useRangeDateStore()
     const { updatePieChart, updatePeriodIndicators, updateAreaChart, updateCriticalStore, updateTable } = useReportsStore()
     const { value: rangeType } = useDateTypeStore()
@@ -134,7 +138,7 @@ export default function Filter ({ loading, setLoading }) {
                                 </FilterItem> */}
                                 <FilterItem title={'Rango de búsqueda'}>
                                     <div className='w-full flex'>
-                                        {/*  <RangeDatePicker {...dateTypeState} {...rangeDateState}/> */}
+                                        <RangeDatePicker {...dateTypeState} {...rangeDateState}/>
                                     </div>
                                 </FilterItem>
                                 <Button className='mr-auto ' onClick={() => requestDataReports()}>
