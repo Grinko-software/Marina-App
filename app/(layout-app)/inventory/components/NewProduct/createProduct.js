@@ -374,7 +374,7 @@ export default function CreateProduct (props) {
                             : null}
                         <Button
                             className=" bg-green-500 text-primary-50"
-                            onClick={() => {
+                            onPress={() => {
                                 requestCreateProduct(
                                     data,
                                     notify,

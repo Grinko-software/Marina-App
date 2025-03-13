@@ -5,7 +5,7 @@ import ImageComponent from 'next/image'
 import { useEffect, useState } from 'react'
 import useProductFormStore from './store'
 import html2canvas from 'html2canvas'
-
+import { notify } from '@/services/notify'
 export default function ProductImage ({ defaultImg, setImage }) {
     const [selectedImage, setSelectedImage] = useState(null)
     const [selectedImageBytes, setSelectedImageBytes] = useState(null)
@@ -45,34 +45,42 @@ export default function ProductImage ({ defaultImg, setImage }) {
         if (selectedImage) {
             const reader = new FileReader()
             reader.readAsDataURL(selectedImage)
-            reader.onload = async (e) => {
-                const img = new Image()
-                img.src = e.target.result
+            reader.onloadstart = (e) => {
+                const fileType = selectedImage.type
+                if (fileType !== 'image/png' && fileType !== 'image/jpeg') {
+                    removeSelectedImage()
+                    notify('❌ Solo se permiten formatos PNG o JPG')
+                } else {
+                    reader.onload = async (e) => {
+                        const img = new Image()
+                        img.src = e.target.result
 
-                img.onload = async () => {
-                    const maxWidth = 200
-                    const maxHeight = 200
+                        img.onload = async () => {
+                            const maxWidth = 200
+                            const maxHeight = 200
 
-                    let newWidth = img.width
-                    let newHeight = img.height
+                            let newWidth = img.width
+                            let newHeight = img.height
 
-                    if (img.width > maxWidth) {
-                        newWidth = maxWidth
-                        newHeight = (img.height * maxWidth) / img.width
+                            if (img.width > maxWidth) {
+                                newWidth = maxWidth
+                                newHeight = (img.height * maxWidth) / img.width
+                            }
+
+                            if (newHeight > maxHeight) {
+                                newHeight = maxHeight
+                                newWidth = (img.width * maxHeight) / img.height
+                            }
+
+                            html2canvas(document.getElementById('imageProduct'), {
+                                width: newWidth,
+                                height: newHeight
+                            }).then((canvas) => {
+                                const optimizedImageData = canvas.toDataURL('image/jpeg', 0.7)
+                                setOptimizedImage(optimizedImageData)
+                            })
+                        }
                     }
-
-                    if (newHeight > maxHeight) {
-                        newHeight = maxHeight
-                        newWidth = (img.width * maxHeight) / img.height
-                    }
-
-                    html2canvas(document.getElementById('imageProduct'), {
-                        width: newWidth,
-                        height: newHeight
-                    }).then((canvas) => {
-                        const optimizedImageData = canvas.toDataURL('image/jpeg', 0.7)
-                        setOptimizedImage(optimizedImageData)
-                    })
                 }
             }
         }
@@ -96,7 +104,7 @@ export default function ProductImage ({ defaultImg, setImage }) {
                             <Button
                                 color="danger"
                                 variant="faded"
-                                onClick={removeSelectedImage}
+                                onPress={removeSelectedImage}
                             >
                                 {'Borrar imagen'}
                             </Button>
@@ -122,7 +130,7 @@ export default function ProductImage ({ defaultImg, setImage }) {
                                     <span className="font-semibold">Subir imagen</span>.
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-								SVG, PNG, JPG
+								PNG o JPG
                                 </p>
                             </div>
                         </label>
