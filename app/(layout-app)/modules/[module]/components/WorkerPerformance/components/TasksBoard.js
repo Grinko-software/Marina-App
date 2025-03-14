@@ -99,7 +99,7 @@ export default function TasksBoard ({
                         } (${item?.items?.length || 0})`}</p>
 
                         {/* Contenido con scroll */}
-                        <div className="overflow-y-auto flex-grow space-y-2 scroll-smooth snap-y snap-mandatory">
+                        <div className="overflow-y-auto flex-grow space-y-2">
                             {renderItems(item.items)}
                         </div>
                     </div>
