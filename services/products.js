@@ -31,7 +31,7 @@ export const updateProduct = async (
                 code: code || '',
                 product_category_id: category_id || '',
                 stock_type_id: stock_type_id || '',
-                stock: stock || '',
+                stock: stock === 0 ? '0' : (stock || ''),
                 stock_min: stock_min || '',
                 tax_free: tax_free || taxFree
             })

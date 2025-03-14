@@ -84,7 +84,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     const handleInputChange = ({ field, value, isSalePrice, isCode }) => {
         const newProductValues = { ...newProductData, [field]: !isNaN(value) && !isCode ? parseInt(value) : value }
         if (isSalePrice) {
-            newProductValues.net_price = newProductValues?.price / 1.19
+            newProductValues.net_price = Math.round(value / 1.19)
         }
         setNewProductData(newProductValues)
     }
