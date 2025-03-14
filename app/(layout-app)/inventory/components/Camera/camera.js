@@ -71,12 +71,14 @@ export const Camera = ({
                         <div className="flex flex-col items-center justify-center h-[20rem] w-[20rem]">
                             <Scanner
                                 enabled={true}
-                                onResult={(text, result) => {
-                                    setResultCamera(text)
-                                    console.debug(text, result)
+                                onScan={(text, result) => {
+                                    if (text.length > 0) {
+                                        console.log(text[0].rawValue)
+                                        setResultCamera(text[0].rawValue)
+                                    }
                                 }}
-                                scanning={(value) => console.log(value)}
-                                onError={(error) => console.log(error?.message)}
+                                onError={(e) => console.log(e)}
+                                formats={['aztec', 'code_128', 'code_39', 'code_93', 'codabar', 'databar', 'databar_expanded', 'databar_limited', 'data_matrix', 'dx_film_edge', 'ean_13', 'ean_8', 'itf', 'maxi_code', 'micro_qr_code', 'pdf417', 'upc_a', 'upc_e']}
                             />
                         </div>
                     </div>

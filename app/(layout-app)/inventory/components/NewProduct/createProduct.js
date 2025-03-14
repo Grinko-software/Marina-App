@@ -183,7 +183,6 @@ export default function CreateProduct (props) {
         if (isSalePrice) {
             newFormValues.net_price = Math.round(value / 1.19)
         }
-        console.log(newFormValues)
         setFormData(newFormValues)
     }
 
