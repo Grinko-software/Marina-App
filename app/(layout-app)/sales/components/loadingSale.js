@@ -46,6 +46,7 @@ export default function LoadingSale ({
         setPayDetailed(null)
         onClose()
         setLoadingSale(false)
+        window.location.reload()
     }
     const handleButton = (value) => {
         setMethodPage(value)

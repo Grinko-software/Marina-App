@@ -23,11 +23,13 @@ export const getStateSaleMachine = (url) => {
             // Realiza la solicitud al endpoint
             getData(url)
                 .then((data) => {
+                    const statusPayment = data?.data?.paymentRequest?.status ? data?.data?.paymentRequest?.status.toUpperCase() : ''
+                    // console.log(statusPayment)
                     // Comprueba si el estado es confirmado
-                    if (data?.data?.paymentRequest?.status === 'COMPLETED') {
+                    if (statusPayment === 'COMPLETED') {
                         clearInterval(intervalId)
                         resolve(data)
-                    } else if (data?.data?.paymentRequest?.status === 'Canceled') {
+                    } else if (statusPayment === 'CANCELED') {
                         clearInterval(intervalId)
                         reject(new Error('Venta cancelada desde la máquina'))
                     }
