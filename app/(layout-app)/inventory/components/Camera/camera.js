@@ -3,29 +3,14 @@
 import { Scanner } from '@yudiel/react-qr-scanner'
 import {
     Button,
-    Divider,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownTrigger,
-    Input,
     Modal,
-    ModalBody,
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ScrollShadow,
-    Select,
-    SelectItem,
-    dropdown,
     useDisclosure
 } from '@nextui-org/react'
 import React, {
-    Suspense,
-    createRef,
-    useEffect,
-    useMemo,
-    useState
+    useEffect
 } from 'react'
 import { FaCamera } from 'react-icons/fa'
 import { productCreated } from '../services'
@@ -62,7 +47,7 @@ export const Camera = ({
                     className="bg-amber-400 dark:bg-amber-400 font-semibold"
                     color="danger"
                     variant="bordered"
-                    onClick={() => {
+                    onPress={() => {
                         // setResultCamera(null)
                         onOpen()
                     }}
@@ -99,7 +84,7 @@ export const Camera = ({
                         <Button
                             color="danger"
                             className="w-full"
-                            onClick={() => {
+                            onPress={() => {
                                 setResultCamera(null)
                                 setTargetProduct(null)
                                 setTargetProduct(null)
