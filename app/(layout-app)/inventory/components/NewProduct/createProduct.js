@@ -126,8 +126,9 @@ export default function CreateProduct (props) {
     const handleInputChange = ({ field, value, isSalePrice, isBool }) => {
         const newFormValues = { ...data, [field]: !isNaN(value) && !isBool ? parseInt(value) : value }
         if (isSalePrice) {
-            newFormValues.net_price = newFormValues?.sale_price / 1.19
+            newFormValues.net_price = Math.round(value / 1.19)
         }
+        console.log(newFormValues)
         setFormData(newFormValues)
     }
 
