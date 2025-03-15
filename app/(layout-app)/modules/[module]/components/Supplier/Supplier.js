@@ -20,7 +20,7 @@ export default function Supplier ({ params }) {
         <section className="w-full">
             <CreateSupplier />
             <section className="flex flex-row">
-                <SupplierInfo data={data} loading={loading} setTarget={setTarget} />
+                <SupplierInfo data={data} loading={loading} setTarget={setTarget} totalPages={data?.length || 0} />
                 <SupplierAssociation
                     target={target}
                     setTarget={setTarget}

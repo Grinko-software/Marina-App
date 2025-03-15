@@ -73,8 +73,8 @@ const SalesMenu = () => {
                         )}
                 </section>
                 <section className="flex flex-col w-[30%]">
-                    <section className="w-full flex justify-end">
-                        <section className="flex px-2 space-x-2 items-center bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
+                    <div className="w-full flex justify-end">
+                        <div className="flex px-2 space-x-2 items-center bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                             <Tabs
                                 aria-label="Options"
                                 items={listSalesActives}
@@ -102,8 +102,8 @@ const SalesMenu = () => {
                                     onClick={() => addNewSaleActive(listSalesActives)}
                                 />
                             </Button>
-                        </section>
-                    </section>
+                        </div>
+                    </div>
 
                     <SaleList
                         loadingSale={loadingSale} // loading al efectuar una venta

@@ -241,7 +241,7 @@ export default function SaleList (props) {
                     ? <Button
                         color="success"
                         variant="shadow"
-                        className="text-white mt-2 mb-2 h-[4rem] w-full font-bold text-2xl"
+                        className="text-white my-2 h-[4rem] w-full font-bold text-2xl"
                         onClick={() => {
                             // Verificar si se hizo primero el inicio de caja
                             handleButtonClick()

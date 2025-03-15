@@ -17,7 +17,7 @@ export default function LayoutApp ({ children }) {
     return (
         <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500   overflow-hidden touch-none fixed sm:overflow-auto">
             <motion.div
-                className="h-full flex flex-col gap-y-6 "
+                className="h-full flex flex-col gap-3 "
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{

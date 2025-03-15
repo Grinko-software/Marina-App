@@ -7,13 +7,15 @@ import {
     TableColumn,
     TableHeader,
     TableRow,
-    Button
+    Button,
+    Pagination
 } from '@nextui-org/react'
 import { useCallback, useEffect, useState } from 'react'
 
-export default function SupplierInfo ({ data, loading, setTarget }) {
+export default function SupplierInfo ({ data, loading, setTarget, totalPages }) {
     const [dataModel, setDataModel] = useState(null)
-
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 8
     const columns = [
         {
             key: 'supplierId',
@@ -79,7 +81,7 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
                 return (
                     <div className="flex flex-col">
                         <Button variant="flat" onPress={() => openTarget(data)}>
-								Detalles
+                                Detalles
                         </Button>
                     </div>
                 )
@@ -94,6 +96,8 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
         [dataModel]
     )
 
+    const paginatedData = dataModel?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
     return (
         <section className="w-full">
             {loading
@@ -102,7 +106,6 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
                     ? <section className="p-1 w-full gap-3">
                         <Table
                             isHeaderSticky
-                            // onSortChange={sortItems}
                             bottomContent={
                                 loading
                                     ? (
@@ -110,8 +113,21 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
                                             <Spinner>Cargando datos...</Spinner>
                                         </div>
                                     )
-                                    : null
+                                    : <div className="flex w-full justify-center">
+                                        <Pagination
+                                            isCompact
+                                            showControls
+                                            showShadow
+                                            color="default"
+                                            page={currentPage}
+                                            total={Math.ceil(dataModel.length / itemsPerPage)}
+                                            onChange={(page) => {
+                                                setCurrentPage(page)
+                                            }}
+                                        />
+                                    </div>
                             }
+
                         >
                             <TableHeader columns={columns}>
                                 {(column) => (
@@ -120,7 +136,7 @@ export default function SupplierInfo ({ data, loading, setTarget }) {
                                     </TableColumn>
                                 )}
                             </TableHeader>
-                            <TableBody items={dataModel || []}>
+                            <TableBody items={paginatedData || []}>
                                 {(item) => (
                                     <TableRow key={item.key}>
                                         {(columnKey) => (

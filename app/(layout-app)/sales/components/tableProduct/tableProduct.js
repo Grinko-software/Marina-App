@@ -235,7 +235,7 @@ export default function tableProducts (props) {
             <section className="flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450">
                 <section
                     style={{ scrollbarGutter: 'stable' }}
-                    className="w-full flex flex-wrap no-select custom-scrollbar h-[calc(100vh-17.5rem)] overflow-y-auto"
+                    className="w-full flex flex-wrap no-select custom-scrollbar h-[calc(100vh-16.7rem)] overflow-y-auto"
                 >
                     {loading && listInventory?.length < 0
                         ? (

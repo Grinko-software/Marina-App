@@ -23,6 +23,7 @@ import PrinterStatus from '../ui/PrinterStatus'
 import hubPrint from '@/app/(layout-app)/sales/components/store/connectionPrinter'
 
 export default function SettingsNav ({ isMobile }) {
+    const isHome = usePathname() === '/home'
     const notify = (text) => toast(text)
     const [userName, setUserName] = useState(null)
     const [admin, setAdmin] = useState(false)
@@ -89,19 +90,20 @@ export default function SettingsNav ({ isMobile }) {
             }
         }
         handleHealthCheck()
-        /*    setInterval(() => {
-            handleHealthCheck()
-        }, 30000) */
     }, [])
 
     return (
         <div>
             <Card
                 className={`${
-                    usePathname() !== '/home' ? 'bg-transparent shadow-none' : ''
+                    isHome ? '' : 'bg-transparent shadow-none'
                 } `}
             >
-                <CardHeader className="justify-between space-x-2">
+                <CardHeader
+                    className={`${
+                        isHome ? 'flex z-0 w-full items-center shrink-0 overflow-inherit color-inherit subpixel-antialiased rounded-t-large' : 'p-0'
+                    } justify-between space-x-2`}
+                >
                     <div
                         className={`${
                             usePathname() !== '/home' ? 'flex-row-reverse' : 'flex-row'

@@ -1,5 +1,5 @@
 import React from 'react'
 
 export default function LayoutApp ({ children }) {
-    return <div className="min-h-full w-full gap-3">{children}</div>
+    return <div className="pt-3 xl:pt-6">{children}</div>
 }
