@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardFooter, CardHeader } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import Image from './Image'
 
 export default function MainTittleCard (props) {
     const { title, footerMessage, imgSrc, route, disabled } = props

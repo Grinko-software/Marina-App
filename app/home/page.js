@@ -51,20 +51,20 @@ export default function Home () {
                                 disabled={salesDisabled}
                                 route="/sales"
                                 title="Ventas"
-                                imgSrc={sales}
+                                imgSrc={sales.src}
                                 footerMessage="Gestión eficiente para tu minimarket."
                             />
                             <MainTittleCard
                                 route="/inventory"
                                 title="Inventario"
-                                imgSrc={inventory}
+                                imgSrc={inventory.src}
                                 footerMessage="Optimiza existencias en tiempo real."
                                 // disabled={disabled}
                             />
                             <MainTittleCard
                                 route="/modules"
                                 title="Módulos"
-                                imgSrc={reports}
+                                imgSrc={reports.src}
                                 footerMessage="Herramientas para visualizar reportes y administrar tu sistema."
                                 // disabled={ salesDisabled}
                             />
