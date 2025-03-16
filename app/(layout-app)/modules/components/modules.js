@@ -43,7 +43,7 @@ export function Modules () {
             <CardHeader className="flex gap-3">
                 <p className="text-md font-bold">{'MÓDULOS'}</p>
             </CardHeader>
-            <CardBody>
+            <CardBody className=' h-[calc(100vh-15rem)] overflow-y-scroll xl:h-full xl:overflow-y-hidden '>
                 <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-1 w-full">
                     {modules?.map(
                         ({ key, path, name, description, content: component, icon }) => {

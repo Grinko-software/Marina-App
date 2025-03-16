@@ -133,7 +133,7 @@ const useAuthStore = create(
                     error: null,
                     idUser: null
                 })
-                // window.location.reload()
+                window.location.reload()
             }
         }),
         {
