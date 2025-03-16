@@ -1,14 +1,10 @@
 import useAuthStore from '@/stores/user'
 export const getToken = () => {
-    // const { token } = useAuthStore.getState()
-    const tokenLs = localStorage.getItem('token')
-    return tokenLs
-    // if (typeof window !== 'undefined') {
-    // const tokenLs = localStorage.getItem('token')
-    // return tokenLs
-    // }  else if (token) {
-    //    return token
-    // }
+    if (typeof localStorage !== 'undefined') {
+        const tokenLs = localStorage.getItem('token')
+        return tokenLs
+    }
+    return null
 }
 export const getIdUser = () => {
     const { idUser } = useAuthStore.getState()

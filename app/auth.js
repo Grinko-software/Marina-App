@@ -1,15 +1,13 @@
 'use client'
 import React, { useEffect } from 'react'
-import useAuthStore from '@/stores/user'
 import { useRouter } from 'next/navigation'
 import { updateTokenSystem } from '@/services/http'
-
+import { getToken } from '@/services/account'
 export default function Auth ({ pathname }) {
     const router = useRouter()
-    const token = useAuthStore((state) => state.token)
+    const token = getToken()
 
     useEffect(() => {
-        console.log(token)
         if (!token) {
             router.push('/login')
         } else if (pathname === '/') {
