@@ -49,11 +49,17 @@ const handleUnauthorized = async (url, method, data) => {
         setIsRefreshing(true)
 
         return refreshToken()
-            .then((newToken) => {
-                setToken(newToken?.data)
-                return makeRequest(url, method, data)
+            .then((response) => {
+                if (response?.data) {
+                    setToken(response?.data)
+                    return makeRequest(url, method, data)
+                } else {
+                    setToken(null)
+                    throw new Error('Error en token: ' + response.message)
+                }
             })
             .catch((error) => {
+                setToken(null)
                 throw new Error('Error renew Token: ' + error.message)
             })
             .finally(() => {
