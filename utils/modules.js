@@ -4,5 +4,6 @@ export const MODULES_KEYS = {
     EVENTS: 'accounting_events',
     USERS: 'users',
     PROVIDERS: 'providers',
-    PERFORFANCE: 'performance'
+    PERFORFANCE: 'performance',
+    SCHEDULE: 'schedule'
 }

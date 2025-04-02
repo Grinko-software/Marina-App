@@ -14,6 +14,8 @@ import Users from './[module]/components/Users/Users'
 import AccountingEvent from './[module]/components/AccountingEvents/AccountingEvents'
 import RootWorkPerformance from './[module]/components/WorkerPerformance'
 import { MODULES_KEYS } from '@/utils/modules'
+import Schedule from './[module]/components/Schedule/Schedule'
+import { IoCalendar } from 'react-icons/io5'
 
 export const modules = [
     {
@@ -30,8 +32,8 @@ export const modules = [
         path: 'reports',
         name: 'Reportes',
         description: 'Indicadores de ventas por periodos',
-        requireAdmin: true,
-        content: <ReportView />,
+        requireAdmin: false,
+        content: <ReportView/>,
         icon: <FaChartLine />
     },
     {
@@ -39,8 +41,8 @@ export const modules = [
         path: 'accounting',
         name: 'Eventos contables',
         description: 'Historial de todos los eventos contables',
-        requireAdmin: true,
-        content: <AccountingEvent />,
+        requireAdmin: false,
+        content: <AccountingEvent/>,
         icon: <MdAccountBalance />
     },
     {
@@ -48,8 +50,8 @@ export const modules = [
         path: 'users',
         name: 'Usuarios',
         description: 'Administración de usuarios/trabajadores',
-        requireAdmin: true,
-        content: <Users />,
+        requireAdmin: false,
+        content: <Users/>,
         icon: <FaUsersCog />
     },
     {
@@ -70,6 +72,15 @@ export const modules = [
         content: <RootWorkPerformance />,
         icon: <GiPodium />
     }
+/*     {
+        key: MODULES_KEYS.SCHEDULE,
+        path: 'schedule',
+        name: 'Turnos',
+        description: 'Calendario de turnos',
+        requireAdmin: false,
+        content: <Schedule/>,
+        icon: <IoCalendar />
+    } */
 ]
 
 export const getModuleName = ({ path: pathSearch }) => {
