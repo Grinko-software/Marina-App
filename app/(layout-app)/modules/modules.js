@@ -14,8 +14,8 @@ import Users from './[module]/components/Users/Users'
 import AccountingEvent from './[module]/components/AccountingEvents/AccountingEvents'
 import RootWorkPerformance from './[module]/components/WorkerPerformance'
 import { MODULES_KEYS } from '@/utils/modules'
-import Schedule from './[module]/components/Schedule/Schedule'
-import { IoCalendar } from 'react-icons/io5'
+// import Schedule from './[module]/components/Schedule/Schedule'
+// import { IoCalendar } from 'react-icons/io5'
 
 export const modules = [
     {
