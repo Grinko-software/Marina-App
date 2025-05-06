@@ -496,7 +496,8 @@ const useSalesStore = create(
                 onSuccessSale,
                 removeSale,
                 isCardPayment,
-                targetCustomer
+                targetCustomer,
+                onCancelSale = () => {}
             }) => {
                 set({ loadingSale: true, error: null })
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
@@ -609,7 +610,7 @@ const useSalesStore = create(
                                 } else {
                                     notify('❌ ' + errorsMachine.get(result?.data?.code))
                                     set({ loadingSale: false })
-                                    // setStateMachine(null)
+                                    onCancelSale()
                                 }
                             }
                         )

@@ -109,6 +109,9 @@ export default function PayDetailed ({
     const onSuccessSaleWithCard = () => {
         setPayment(false)
     }
+    const onCancelSale = () => {
+        setPayment(false)
+    }
     const finishSale = () => {
         setPayDetailed(null)
         setSearchInput(null)
@@ -139,7 +142,8 @@ export default function PayDetailed ({
                 removeSale,
                 targetCustomer,
                 isCardPayment: isCardPay,
-                onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash
+                onSuccessSale: isCardPay ? onSuccessSaleWithCard : onSuccessSaleWithCash,
+                onCancelSale
             })
         } else {
             createSaleVoucher({
