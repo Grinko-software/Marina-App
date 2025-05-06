@@ -11,6 +11,7 @@ import Barcode from '@/components/barcode'
 import Loading from '../loading'
 import { notify } from '@/services/notify'
 import Image from '@/components/ui/Image'
+import useAuthStore from '@/stores/user'
 export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, isMobile = false }) {
     const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
     const [edit, setEdit] = useState(false)
@@ -21,6 +22,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     const [image, setImage] = useState([])
     const [showBarcode, setShowBarcode] = useState(false)
     const [settingsBarCode, setSettingsBarCode] = useState(false)
+    const { isAdmin: isUserAdmin } = useAuthStore()
     const refBarcode = useRef(null)
 
     const defaultState = {
@@ -319,20 +321,24 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
 
                                     <section className='flex space-x-3'>
 
-                                        <Button color="danger" variant="bordered"
-                                            startContent={<DeleteIcon/>}
-                                            onClick={handleDeleteProduct}
-                                            isLoading={loadingDelete}>
-                                            {loadingDelete ? 'Eliminando' : 'Eliminar'}
-                                        </Button>
-                                        <Button className =" bg-blue-500 text-primary-50"
-                                            onClick={() => {
-                                                setEdit(true)
-                                            }}>
-                                            {'Editar'}
-                                        </Button>
+                                        {isUserAdmin
+                                            ? <>
+                                                <Button color="danger" variant="bordered"
+                                                    startContent={<DeleteIcon/>}
+                                                    onClick={handleDeleteProduct}
+                                                    isLoading={loadingDelete}>
+                                                    {loadingDelete ? 'Eliminando' : 'Eliminar'}
+                                                </Button>
+                                                <Button className =" bg-blue-500 text-primary-50"
+                                                    onClick={() => {
+                                                        setEdit(true)
+                                                    }}>
+                                                    {'Editar'}
+                                                </Button>
+                                            </>
+                                            : null}
                                         <Button color="danger" variant="light"
-                                            onClick={() => {
+                                            onPress={() => {
                                                 setEdit(false)
                                                 setTargetProduct(null)
                                                 onClose()

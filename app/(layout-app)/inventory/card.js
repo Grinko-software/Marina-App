@@ -29,7 +29,6 @@ export default function Card () {
     const { getData, error, loading, setLoading, data, triggerAction } = useStore(
         (state) => state
     )
-
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [targeProduct, setTargetProduct] = useState(null)
     const [selectedCategoryID, setSelectedCategoryID] = useState('24')
