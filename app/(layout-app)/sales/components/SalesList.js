@@ -101,7 +101,7 @@ export default function SaleList (props) {
     const handleButtonClick = () => {
         setLoadingHandleButtonClick(true)
         getStatus(selectedCashRegister?.ID).then((status) => {
-            if (status == null) {
+            if (status == null || status === false) {
                 notify(
                     '❌ Error: Se debe iniciar primero la caja para poder efectuar una venta!'
                 )
