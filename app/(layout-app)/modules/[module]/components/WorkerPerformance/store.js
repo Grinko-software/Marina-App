@@ -108,7 +108,7 @@ const useFilterStore = create((set) => ({
                     })
                 })
                 .catch((error) => {
-                    console.debug(error)
+                    console.log(error)
                 })
                 .finally(() => {
                     set({ loading: false })
