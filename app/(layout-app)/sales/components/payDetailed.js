@@ -122,6 +122,14 @@ export default function PayDetailed ({
     const generateSale = () => {
         setIsDisableButtonPay(true)
         const isCardPay = paymentTarget === 2
+        /* Tipos de comprobante */
+        // voucherTarget = 2 -> factura
+        // voucherTarget = 3 -> boleta
+        // voucherTarget = 1 -> ticket
+        /* Tipos de pago */
+        // paymentTarget = 1 -> efectivo
+        // paymentTarget = 2 -> tarjeta
+
         if (voucherTarget === 3) {
             createSaleTicket({
                 sales: listSalesActives,

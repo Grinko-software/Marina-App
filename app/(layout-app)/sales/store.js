@@ -617,8 +617,10 @@ const useSalesStore = create(
                         set({ loadingSale: false })
                         // setStateMachine(null)
                     }
-                } else if (isCardPayment) {
-                    await saveTicketOnDatabase({
+                    /* } else if (isCardPayment) {
+                    // agregamos la logica para mandar la factura hacia haulmer, pero no iria la logica hacia la maquina TUU, ya que el roro está usando la machian de santander para estos casos
+                    */
+                    /*  await saveTicketOnDatabase({
                         saleType,
                         listSales: saleProductsList,
                         totalPay,
@@ -636,7 +638,7 @@ const useSalesStore = create(
                             removeSale(sales, saleId)
                             set({ loadingSale: false })
                         }
-                    })
+                    }) */
                 } else {
                     try {
                         const dteBody = generateDTEBody({
