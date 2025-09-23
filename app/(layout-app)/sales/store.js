@@ -551,11 +551,21 @@ const useSalesStore = create(
                         const bodyPosMachine = {
                             device,
                             amount: totalPay,
-                            dteType: 33,
+                            dteType: 99, // 33: factura afecta y 34:factura excenta, lo vamos a dejar con 34 y luego tiramoshacia haulmer la factura nomas, vale HAULMER CTM
                             printVoucherOnApp: false,
                             extraData: {
+                                exemptAmount: totalPay,
                                 taxIdnValidation: '77426986-K',
-                                sourceName: 'Marina APP'
+                                sourceName: 'Marina APP',
+                                // Datos del cliente para la factura
+                                customerName: targetCustomer?.business_name,
+                                customerTaxIdn: targetCustomer?.rut,
+                                customerAddress: targetCustomer?.address,
+                                customerEmail: targetCustomer?.email,
+                                customerPhone: targetCustomer?.phone,
+                                giroEmisor: targetCustomer?.business_line || 'Comercio al por menor',
+                                comunaReceptor: targetCustomer?.commune,
+                                ciudadReceptor: targetCustomer?.region
                             }
                         }
                         setStateMachine('Enviando')
@@ -567,8 +577,86 @@ const useSalesStore = create(
                                     getStateSaleMachine(
                                         GET_STATE_SALE_POSMACHINE.replace(':id', idSale)
                                     )
-                                        .then((data) => {
-                                            getData(SALE_TICKET_CREATE, POST, body).then((result) => {
+                                        .then(async (machineData) => {
+                                            try {
+                                                const dteBody = generateDTEBody({
+                                                    discount: discountTotalPctg,
+                                                    isInvoice: true,
+                                                    targetCustomer,
+                                                    iva,
+                                                    netTotal,
+                                                    saleProductsList,
+                                                    totalPay,
+                                                    totalTaxFreePay
+                                                })
+                                                await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
+                                                    .then((data) => {
+                                                        if (data?.data?.TIMBRE) {
+                                                            const newBody = {
+                                                                ...body,
+                                                                invoice_number: data?.data?.FOLIO,
+                                                                stamp: data?.data?.TIMBRE
+                                                            }
+                                                            console.log(newBody)
+                                                            try {
+                                                                getData(SALE_TICKET_CREATE, POST, newBody).then(
+                                                                    (result) => {
+                                                                        set({ loadingSale: false })
+                                                                        if (result?.code === 200) {
+                                                                            console.log(result)
+                                                                            const stamp = data?.data?.TIMBRE
+                                                                            const folio = data?.data?.FOLIO // enviar
+                                                                            const printEnabled =
+														useSettingsStore.getState()?.printEnabled || true
+                                                                            if (printEnabled) {
+                                                                                saveDataToPrinterSaleTicket({
+                                                                                    saleType,
+                                                                                    products: saleProductsList,
+                                                                                    total: totalPay,
+                                                                                    stamp,
+                                                                                    folioNumber: folio,
+                                                                                    totalNet: netTotal,
+                                                                                    iva,
+                                                                                    cardDetail: machineData,
+                                                                                    totalTaxFree: totalTaxFreePay,
+                                                                                    discountExtra: totalDiscountExtra,
+                                                                                    discountOffers: totalDiscountOffers,
+                                                                                    customerDetail: targetCustomer,
+                                                                                    openCashRegister: true
+                                                                                })
+                                                                            }
+                                                                            // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
+                                                                            // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
+                                                                            notify('✅ Pago con éxito')
+                                                                            if (onSuccessSale) {
+                                                                                onSuccessSale()
+                                                                            }
+                                                                            removeSale(sales, saleId)
+                                                                            set({ loadingSale: false })
+                                                                        } else {
+                                                                            notify(
+                                                                                '❌ Problemas con el pago, intente efectuar el pago nuevamente'
+                                                                            )
+                                                                            set({ loadingSale: false })
+                                                                        }
+                                                                    }
+                                                                )
+                                                            } catch {
+                                                                set({ loadingSale: false })
+                                                            }
+                                                        } else {
+                                                            set({ loadingSale: false })
+                                                        }
+                                                    })
+                                                    .catch((error) => {
+                                                        const message = error?.message || 'Error en Haulmer'
+                                                        notify('❌ ' + message)
+                                                        set({ loadingSale: false })
+                                                    })
+                                            } catch {
+                                                set({ loadingSale: false })
+                                            }
+                                            /*   getData(SALE_TICKET_CREATE, POST, body).then((result) => {
                                                 set({ loadingSale: false })
                                                 if (result?.code === 200) {
                                                     const printEnabled =
@@ -599,7 +687,7 @@ const useSalesStore = create(
                                                     )
                                                     // setStateMachine(null)
                                                 }
-                                            })
+                                            }) */
                                         })
                                         .catch((error) => {
                                             notify('❌ Problemas con el pago con la tarjeta')
