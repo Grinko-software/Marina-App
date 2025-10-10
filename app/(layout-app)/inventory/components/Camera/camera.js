@@ -28,16 +28,7 @@ export const Camera = ({
 
     useEffect(() => {
         if (resultCamera) {
-            const findCode = productCreated({ listInventory, code: resultCamera })
-            if (findCode) {
-                notify('✅  Producto encontrado !')
-                setTargetProduct(findCode)
-                setOpenModal(false)
-            } else {
-                notify('❌ Este producto no se encuentra registrado!')
-                setOpenModal(true)
-            }
-            onClose()
+            console.log('Resultado Camara', resultCamera)
         }
     }, [resultCamera])
     return (
@@ -73,8 +64,19 @@ export const Camera = ({
                                 enabled={true}
                                 onScan={(text, result) => {
                                     if (text.length > 0) {
-                                        console.log(text[0].rawValue)
-                                        setResultCamera(text[0].rawValue)
+                                        const scannedCode = text[0].rawValue
+                                        console.log(scannedCode)
+
+                                        const findCode = productCreated({ listInventory, code: scannedCode })
+                                        if (findCode) {
+                                            notify('✅  Producto encontrado !')
+                                            setTargetProduct(findCode)
+                                            setOpenModal(false)
+                                        } else {
+                                            notify('❌ Este producto no se encuentra registrado!')
+                                            setOpenModal(true)
+                                        }
+                                        onClose()
                                     }
                                 }}
                                 onError={(e) => console.log(e)}
