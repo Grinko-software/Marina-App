@@ -28,7 +28,7 @@ export const Camera = ({
 
     useEffect(() => {
         if (resultCamera) {
-            console.log('Resultado Camara', resultCamera)
+            console.log('Resultado Camara: ', resultCamera)
         }
     }, [resultCamera])
     return (
