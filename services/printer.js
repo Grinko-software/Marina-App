@@ -16,6 +16,14 @@ export const VOUCHER_TYPE = {
     TICKET: 'ticket'
 }
 
+const mapperTypeVoucher = {
+    [VOUCHER_TYPE.VOUCHER]: VOUCHER_TYPE.VOUCHER,
+    [VOUCHER_TYPE.INVOICE]: VOUCHER_TYPE.INVOICE,
+    [VOUCHER_TYPE.TICKET]: VOUCHER_TYPE.TICKET,
+    factura: VOUCHER_TYPE.INVOICE,
+    boleta: VOUCHER_TYPE.TICKET
+}
+
 export const generateDataToPrinterSaleTicket = ({
     saleType,
     datetime,
@@ -34,6 +42,8 @@ export const generateDataToPrinterSaleTicket = ({
     cashRegisterName,
     openCashRegister = false
 }) => {
+    const paymentTypePrinter = mapperTypeVoucher[saleType] || VOUCHER_TYPE.TICKET
+
     const discountTotal = (discountOffers || 0) + (discountExtra || 0)
     const seller = (userName || getFullNameUser() || '').toUpperCase()
     const cashRegister = (
@@ -43,7 +53,7 @@ export const generateDataToPrinterSaleTicket = ({
     ).toUpperCase()
     const data = {
         datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
-        paymentType: saleType || VOUCHER_TYPE.TICKET,
+        paymentType: paymentTypePrinter,
         voucherNumber: formatNumberWithPoints(folioNumber || null) || null,
         stamp: stamp || null,
         total: formatNumberWithPoints(total, ''),
