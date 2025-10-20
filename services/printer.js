@@ -52,8 +52,8 @@ export const generateDataToPrinterSaleTicket = ({
 		''
     ).toUpperCase()
     const data = {
-        datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
         paymentType: paymentTypeToPrint,
+        datetime: (datetime || today()).format('DD-MM-YYYY HH:mm:ss'),
         voucherNumber: formatNumberWithPoints(folioNumber || null) || null,
         stamp: stamp || null,
         total: formatNumberWithPoints(total, ''),
