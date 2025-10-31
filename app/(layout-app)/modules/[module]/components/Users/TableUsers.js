@@ -137,7 +137,7 @@ export default function TableUsers ({ data, loading, setTarget }) {
 
     return (
         <section className="w-full">
-            <section className="p-1 w-full gap-3">
+            <section className='w-full max-h-[70vh] overflow-y-scroll'>
                 <Table isHeaderSticky>
                     <TableHeader columns={columns}>
                         {(column) => (
@@ -163,6 +163,7 @@ export default function TableUsers ({ data, loading, setTarget }) {
                             </TableRow>
                         )}
                     </TableBody>
+
                 </Table>
             </section>
         </section>
