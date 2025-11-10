@@ -3,11 +3,7 @@
 import {
     Button,
     Divider,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
     Checkbox,
-    DropdownTrigger,
     Input,
     Modal,
     ModalBody,
@@ -16,20 +12,14 @@ import {
     ModalHeader,
     Select,
     SelectItem,
-    dropdown,
     useDisclosure
 } from '@nextui-org/react'
 import React, {
-    Suspense,
-    createRef,
     useEffect,
-    useMemo,
     useState
 } from 'react'
 import ProductImage from './productImage'
-import BarcodeScanner from './scanner'
 import { generateProductCode } from '@/utils/barcode'
-import Barcosde from '@/components/barcode'
 import useProductFormStore from './store'
 import useInventoryStore from '../../store'
 import { notify } from '@/services/notify'
@@ -127,13 +117,14 @@ export default function CreateProduct (props) {
         loadingStock,
         loadingCategories,
         error,
-        setError,
         complete,
-        hasRequeredValues,
         clearStore
     } = useProductFormStore()
     const { listCategories, listStockTypes, listInventory } = useInventoryStore()
-
+    const onHandleClose = () => {
+        setResultCamera(null)
+        onClose()
+    }
     useEffect(() => {
         if (navigator) {
             const view = isMobileDevice()
@@ -165,7 +156,7 @@ export default function CreateProduct (props) {
     useEffect(() => {
         if (complete && !error) {
             clearStore()
-            onClose()
+            onHandleClose()
         }
     }, [complete, error])
 
@@ -212,7 +203,7 @@ export default function CreateProduct (props) {
                 size={'2xl'}
                 isOpen={isOpen}
                 backdrop="opaque"
-                onClose={() => onClose}
+                onClose={() => { onHandleClose() }}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
             >
@@ -390,10 +381,9 @@ export default function CreateProduct (props) {
                         <Button
                             color="danger"
                             variant="flat"
-                            onClick={() => {
-                                onClose()
+                            onPress={() => {
+                                onHandleClose()
                                 clearStore()
-                                // handleProductRequest(true, listInventory)
                             }}
                         >
 							Cerrar

@@ -39,7 +39,7 @@ export const Camera = ({
                     color="danger"
                     variant="bordered"
                     onPress={() => {
-                        // setResultCamera(null)
+                        setResultCamera(null)
                         onOpen()
                     }}
                     startContent={<FaCamera size={25} />}
@@ -71,8 +71,11 @@ export const Camera = ({
                                         if (findCode) {
                                             notify('✅  Producto encontrado !')
                                             setTargetProduct(findCode)
+                                            setResultCamera(null)
                                             setOpenModal(false)
                                         } else {
+                                            // si no encontramos el code, igual lo dejamos en el state para dejarlo guardado en el input del formulario como nuevo producto
+                                            setResultCamera(scannedCode)
                                             notify('❌ Este producto no se encuentra registrado!')
                                             setOpenModal(true)
                                         }

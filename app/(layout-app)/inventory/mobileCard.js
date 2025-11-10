@@ -67,6 +67,13 @@ export default function Card () {
     )
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
+    useEffect(() => {
+        if (resultCamera) {
+            setOpenModal(true)
+        } else {
+            setOpenModal(false)
+        }
+    }, [resultCamera])
 
     useEffect(() => {
         if (selectedCategoryID) {
