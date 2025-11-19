@@ -168,7 +168,7 @@ export const fetchPrinterSupplierTicket = async ({
         products: products?.map((item) => {
             return {
                 name: item?.product?.name || item?.name,
-                request: item?.request
+                request: Math.floor(item?.request || 0) // Convierte a int hacia ABAJO
             }
         })
     }
