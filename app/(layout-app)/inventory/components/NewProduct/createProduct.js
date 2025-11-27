@@ -98,7 +98,7 @@ export const InputComponent = ({
 }
 
 export default function CreateProduct (props) {
-    const { handleProductRequest, openModal, resultCamera, setResultCamera } =
+    const { handleProductRequest, openModal, resultCamera } =
 		props
     const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -122,7 +122,6 @@ export default function CreateProduct (props) {
     } = useProductFormStore()
     const { listCategories, listStockTypes, listInventory } = useInventoryStore()
     const onHandleClose = () => {
-        setResultCamera(null)
         onClose()
     }
     useEffect(() => {
