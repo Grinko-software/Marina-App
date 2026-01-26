@@ -25,7 +25,12 @@ export const Camera = ({
 }) => {
     const { listInventory } = useStore()
     const { isOpen, onClose, onOpen } = useDisclosure()
-
+    const onCloseData = () => {
+        setResultCamera(null)
+        setTargetProduct(null)
+        setTargetProduct(null)
+        onClose()
+    }
     useEffect(() => {
         if (resultCamera) {
             console.log('Resultado Camara: ', resultCamera)
@@ -87,15 +92,20 @@ export const Camera = ({
                             />
                         </div>
                     </div>
-                    <ModalFooter className="flex justify-between">
+                    <ModalFooter className="flex gap-1 flex-col">
+                        <Button
+                            color='success'
+                            className="w-full text-white"
+                            onPress={() => {
+                                onCloseData()
+                                setOpenModal(true)
+                            }}
+                        >{'Crear producto'}</Button>
                         <Button
                             color="danger"
                             className="w-full"
                             onPress={() => {
-                                setResultCamera(null)
-                                setTargetProduct(null)
-                                setTargetProduct(null)
-                                onClose()
+                                onCloseData()
                             }}
                         >
                             {'Cerrar'}
