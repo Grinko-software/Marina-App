@@ -23,10 +23,12 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/scrollbar'
 import useFilterStore from './Filter/store'
+import { isMobileDevice } from '@/utils/agent'
 
 const ReportView = () => {
     const { pieChart: dataPieChart, periodIndicators: dataIndicators, areaChart: dataSalesTypes, criticalStore: dataCriticalStore, table: dataSalesTable, loading } = useReportsStore()
     const { fromDate, setFromDate, toDate, setToDate } = useFilterStore()
+    const [isMobile, setIsMobile] = useState(true)
     const [dataModelPieChart, setDataModelPieChart] = useState(null)
     const [dataModelPieChartLoading, setDataModelPieChartLoading] =
 		useState(true)

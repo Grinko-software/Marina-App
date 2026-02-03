@@ -24,6 +24,8 @@ export default function MobileNavBar () {
         { id: 'inventory', label: '📦 Inventario', route: '/inventory' },
         { id: 'modules', label: '🛠️ Módulos', route: '/modules' },
         { id: MODULES_KEYS.PERFORFANCE, label: '📊 Rendimiento', route: '/modules/performance' },
+        { id: 'reports', label: '📈 Reportes', route: '/reports' },
+        { id: MODULES_KEYS.EVENTS, label: '💰 Contabilidad', route: '/modules/accounting' },
         { id: 'login', label: '🚪 Cerrar sesión', route: '/login' }
     ]
 

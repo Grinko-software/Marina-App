@@ -32,8 +32,8 @@ dayjs.locale('es')
 
 const FilterItem = ({ title, children }) => {
     return (
-        <div className="w-auto flex flex-col gap-2 min-w-[20rem]">
-            <h6>{title}:</h6>
+        <div className="w-full md:w-auto flex flex-col gap-2 md:min-w-[20rem]">
+            <h6 className="text-sm md:text-base font-medium">{title}:</h6>
             {children}
         </div>
     )
@@ -116,10 +116,10 @@ export default function Filter ({ loading, setLoading }) {
             setIsFirstSearch(false)
         }
     }, [isFirstSearch, valueFrom, valueTo])
-    return <section>
+    return <section className='px-0'>
         <ConfigProvider locale={locale}>
             <Card className='w-full overflow-hidden'>
-                <CardBody className='flex flex-row gap-5'>
+                <CardBody className='flex flex-row gap-3 md:gap-5 p-3 md:p-4'>
                     <Accordion
                         expandedKeys={selectedKeys}
                         selectedKeys={selectedKeys}
@@ -132,12 +132,12 @@ export default function Filter ({ loading, setLoading }) {
                             key={'filter'}
                             aria-label="Filtro de búsqueda" /* indicator={<IconBase />} */
                             title={
-                                <div className='font-bold'>
+                                <div className='font-bold text-sm md:text-base'>
                                     {'Filtro de búsqueda'}
                                 </div>
                             }
                         >
-                            <div className='flex flex-row gap-5 items-end'>
+                            <div className='flex flex-col md:flex-row gap-3 md:gap-5 items-stretch md:items-end'>
                                 {/* <FilterItem title={'Tipo de rango'}>
                                     <DateTypeSelector {...dateTypeState}/>
                                 </FilterItem> */}
@@ -146,7 +146,10 @@ export default function Filter ({ loading, setLoading }) {
                                         <RangeDatePicker {...dateTypeState} {...rangeDateState}/>
                                     </div>
                                 </FilterItem>
-                                <Button className='mr-auto ' onClick={() => requestDataReports()}>
+                                <Button
+                                    className='w-full md:w-auto md:mr-auto h-12 md:h-10 text-base font-semibold'
+                                    onClick={() => requestDataReports()}
+                                >
                                     {'Buscar'}
                                 </Button>
                             </div>

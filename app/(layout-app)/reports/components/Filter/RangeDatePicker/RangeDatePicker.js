@@ -24,15 +24,16 @@ const RangeDatePicker = (props) => {
     const { value: rangeType, valueFrom, valueTo, onChange } = props
 
     return (
-        <div>
+        <div className="w-full">
             <RangePicker
                 locale={locale}
-                className="flex-1"
+                className="flex-1 w-full"
                 picker={rangeType}
                 value={[dayjs(valueFrom), dayjs(valueTo)]}
                 onChange={(value) => {
                     onChange(moment(value?.[0].format()), moment(value?.[1].format()))
                 }}
+                style={{ width: '100%' }}
             />
         </div>
     )
