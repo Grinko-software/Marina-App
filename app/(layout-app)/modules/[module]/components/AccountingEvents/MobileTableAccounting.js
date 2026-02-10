@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
     Card,
     CardBody,
@@ -18,6 +18,7 @@ import moment from 'moment-timezone'
  * - Touch-friendly interactions
  * - Optimized for small screens
  * - Infinite scroll pagination
+ * - Auto-scroll to new items when loading more
  */
 export default function MobileTableAccounting ({
     data,
@@ -28,10 +29,15 @@ export default function MobileTableAccounting ({
 }) {
     const [dataModel, setDataModel] = useState([])
     const [page, setPage] = useState(0)
+    const [accumulatedData, setAccumulatedData] = useState([])
+    const [previousDataLength, setPreviousDataLength] = useState(0)
+    const firstNewItemRef = useRef(null)
+    const isFirstLoad = useRef(true)
 
+    // Accumulate data when loading more
     useEffect(() => {
         if (data?.length) {
-            const tableData = data.map((item) => {
+            const newTableData = data.map((item) => {
                 return {
                     key: item.accounting_event_id,
                     id: item.accounting_event_id,
@@ -49,9 +55,42 @@ export default function MobileTableAccounting ({
                 }
             })
 
-            setDataModel(tableData)
+            if (isFirstLoad.current || currentPage === 0) {
+                // First load or reset - replace all data
+                setAccumulatedData(newTableData)
+                isFirstLoad.current = false
+            } else {
+                // Loading more - append new data
+                setAccumulatedData(prev => {
+                    // Filter out duplicates by key
+                    const existingKeys = new Set(prev.map(item => item.key))
+                    const uniqueNewData = newTableData.filter(item => !existingKeys.has(item.key))
+                    return [...prev, ...uniqueNewData]
+                })
+            }
         }
-    }, [data])
+    }, [data, currentPage])
+
+    // Update dataModel when accumulated data changes
+    useEffect(() => {
+        setPreviousDataLength(dataModel.length)
+        setDataModel(accumulatedData)
+    }, [accumulatedData])
+
+    // Scroll to first new item after data loads
+    useEffect(() => {
+        if (!loading && dataModel.length > previousDataLength && previousDataLength > 0) {
+            // Wait a bit for DOM to update
+            setTimeout(() => {
+                if (firstNewItemRef.current) {
+                    firstNewItemRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    })
+                }
+            }, 100)
+        }
+    }, [loading, dataModel.length, previousDataLength])
 
     const getEventTypeColor = (eventType) => {
         switch (eventType) {
@@ -96,9 +135,10 @@ export default function MobileTableAccounting ({
 
     return (
         <div className="w-full space-y-3 px-2">
-            {dataModel.map((item) => (
+            {dataModel.map((item, index) => (
                 <Card
                     key={item.key}
+                    ref={index === previousDataLength ? firstNewItemRef : null}
                     className="dark:bg-secondary-400 bg-white shadow-md hover:shadow-lg transition-shadow"
                 >
                     <CardHeader className="flex justify-between items-start pb-0">
