@@ -7,7 +7,8 @@ import { useState, useEffect } from 'react'
  * @returns {boolean} - True if mobile, false otherwise
  */
 export function useIsMobile (breakpoint = 768) {
-    const [isMobile, setIsMobile] = useState(false)
+    // Initialize with null to handle SSR properly
+    const [isMobile, setIsMobile] = useState(null)
 
     useEffect(() => {
         const checkMobile = () => {
@@ -16,13 +17,23 @@ export function useIsMobile (breakpoint = 768) {
             setIsMobile(mobile)
         }
 
+        // Check immediately on mount
         checkMobile()
+
+        // Add resize listener
         window.addEventListener('resize', checkMobile)
 
         return () => window.removeEventListener('resize', checkMobile)
     }, [breakpoint])
 
-    return isMobile
+    // Return true for mobile devices during SSR/initial render
+    // This prevents flash of desktop content on mobile
+    if (isMobile === null && typeof window !== 'undefined') {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+               window.innerWidth < breakpoint
+    }
+
+    return isMobile ?? false
 }
 
 export default useIsMobile

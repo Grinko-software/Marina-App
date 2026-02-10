@@ -7,7 +7,7 @@ import {
 } from 'react-icons/fa'
 import { GiPodium } from 'react-icons/gi'
 import { MdAccountBalance } from 'react-icons/md'
-import ReportView from '../reports/components/MainReportView'
+import Reports from './[module]/components/Reports/Reports'
 import Sales from './[module]/components/Sales/Sales'
 import Supplier from './[module]/components/Supplier/Supplier'
 import Users from './[module]/components/Users/Users'
@@ -33,7 +33,7 @@ export const modules = [
         name: 'Reportes',
         description: 'Indicadores de ventas por periodos',
         requireAdmin: false,
-        content: <ReportView/>,
+        content: <Reports/>,
         icon: <FaChartLine />
     },
     {

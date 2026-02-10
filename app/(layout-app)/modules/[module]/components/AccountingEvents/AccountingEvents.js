@@ -4,6 +4,7 @@ import useAccountingEventsStore from './store'
 import TableAccounting from './TableAccounting'
 import MobileTableAccounting from './MobileTableAccounting'
 import useIsMobile from '@/hooks/use-is-mobile'
+import { Skeleton } from '@nextui-org/react'
 
 export default function Sales () {
     const { requestData, data, loading, totalpage } = useAccountingEventsStore()
@@ -14,6 +15,16 @@ export default function Sales () {
     useEffect(() => {
         requestData(limitPage, currentPage)
     }, [currentPage])
+
+    // Show loading skeleton while detecting device type
+    if (isMobile === null) {
+        return (
+            <section className="w-full p-4">
+                <Skeleton className="h-12 w-full rounded-lg mb-3" />
+                <Skeleton className="h-64 w-full rounded-lg" />
+            </section>
+        )
+    }
 
     return (
         <section className="w-full">
