@@ -90,10 +90,40 @@ export default function ConfirmModal (props) {
         onCloseTargetModal(true)
     }
 
+    const handleDelete = () => {
+        // Para tipo "Editar", solo ejecutar la acción
+        if (type === 'Editar') {
+            target()
+            return
+        }
+
+        // Para tipo "Eliminar", validar el nombre del producto
+        if (type === 'Eliminar') {
+            const isValid = value === productData?.name
+
+            if (!isValid) {
+                // Nombre no coincide - marcar como inválido y no continuar
+                setInvalid(true)
+                return
+            }
+
+            // Nombre válido - proceder con la eliminación
+            setInvalid(false)
+            close()
+        }
+    }
+
     useEffect(() => {
         setOpenModal(true)
         setProductData(product)
     }, [])
+
+    // Reset invalid state when user types
+    useEffect(() => {
+        if (value && invalid) {
+            setInvalid(false)
+        }
+    }, [value])
 
     return (
         <Modal
@@ -164,8 +194,7 @@ export default function ConfirmModal (props) {
                     <Button
                         color={`${type === 'Eliminar' ? 'danger' : 'warning'}`}
                         className="shadow-lg shadow-indigo-500/20"
-                        onPress={close}
-                        onClose={close}
+                        onPress={handleDelete}
                     >
 						Aceptar
                     </Button>
