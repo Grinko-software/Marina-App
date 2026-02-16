@@ -93,6 +93,8 @@ export default function ConfirmModal (props) {
     const handleDelete = () => {
         // Para tipo "Editar", solo ejecutar la acción
         if (type === 'Editar') {
+            setInvalid(false)
+            close()
             target()
             return
         }
