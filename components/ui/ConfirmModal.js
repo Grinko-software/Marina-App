@@ -13,7 +13,7 @@ import {
     deleteProduct,
     /* deleteProduct, */ updateProduct
 } from '@/services/products'
-import toast from 'react-hot-toast'
+import { notify } from '@/services/notify'
 
 export default function ConfirmModal (props) {
     const {
@@ -35,7 +35,6 @@ export default function ConfirmModal (props) {
     const { onClose } = useDisclosure()
     const [value, setValue] = React.useState('')
     const [invalid, setInvalid] = React.useState(false)
-    const notify = (text) => toast(text)
 
     const target = () => {
         const newValue = value
@@ -95,7 +94,6 @@ export default function ConfirmModal (props) {
         if (type === 'Editar') {
             setInvalid(false)
             close()
-            target()
             return
         }
 

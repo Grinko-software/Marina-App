@@ -12,9 +12,9 @@ const Toast = () => {
             }
             toastOptions={{
                 className: '',
-                duration: 10000,
+                duration: 2000,
                 success: {
-                    duration: 3000,
+                    duration: 2000,
                     theme: {
                         primary: 'green',
                         secondary: 'black'

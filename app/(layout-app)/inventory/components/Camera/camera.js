@@ -29,6 +29,7 @@ export const Camera = ({
         setResultCamera(null)
         setTargetProduct(null)
         setTargetProduct(null)
+        setOpenModal(false)
         onClose()
     }
     useEffect(() => {
@@ -106,6 +107,7 @@ export const Camera = ({
                             className="w-full"
                             onPress={() => {
                                 onCloseData()
+                                setOpenModal(false)
                             }}
                         >
                             {'Cerrar'}
