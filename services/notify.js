@@ -7,8 +7,19 @@ import { toast } from 'react-hot-toast'
  * @returns {string} Toast ID
  */
 export const notify = (text, options = {}) => {
-    return toast(text, {
+    const toastId = toast(text, {
         duration: 2000, // Default 2 seconds for mobile performance
+        style: {
+            touchAction: 'pan-y',
+            cursor: 'pointer',
+            userSelect: 'none'
+        },
+        // Make toast dismissible on click/touch
+        onClick: () => {
+            toast.dismiss(toastId)
+        },
         ...options
     })
+
+    return toastId
 }
