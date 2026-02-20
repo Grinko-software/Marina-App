@@ -98,8 +98,7 @@ export const InputComponent = ({
 }
 
 export default function CreateProduct (props) {
-    const { handleProductRequest, openModal, resultCamera } =
-		props
+    const { handleProductRequest, openModal, resultCamera, setOpenModal } = props
     const [isMobile, setIsMobile] = useState(true)
     const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -121,9 +120,15 @@ export default function CreateProduct (props) {
         clearStore
     } = useProductFormStore()
     const { listCategories, listStockTypes, listInventory } = useInventoryStore()
+
     const onHandleClose = () => {
         onClose()
+        // Reset openModal state in parent
+        if (setOpenModal) {
+            setOpenModal(false)
+        }
     }
+
     useEffect(() => {
         if (navigator) {
             const view = isMobileDevice()

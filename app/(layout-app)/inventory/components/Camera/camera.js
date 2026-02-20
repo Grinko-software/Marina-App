@@ -18,7 +18,7 @@ import useStore from '../../store'
 import { notify } from '@/services/notify'
 
 export const Camera = ({
-    setOpenModal,
+    setOpenCreateProductModal,
     setTargetProduct,
     resultCamera,
     setResultCamera
@@ -28,8 +28,6 @@ export const Camera = ({
     const onCloseData = () => {
         setResultCamera(null)
         setTargetProduct(null)
-        setTargetProduct(null)
-        setOpenModal(false)
         onClose()
     }
     useEffect(() => {
@@ -78,12 +76,12 @@ export const Camera = ({
                                             notify('✅  Producto encontrado !')
                                             setTargetProduct(findCode)
                                             setResultCamera(null)
-                                            setOpenModal(false)
+                                            setOpenCreateProductModal(false)
                                         } else {
                                             // si no encontramos el code, igual lo dejamos en el state para dejarlo guardado en el input del formulario como nuevo producto
                                             setResultCamera(scannedCode)
                                             notify('❌ Este producto no se encuentra registrado!')
-                                            setOpenModal(true)
+                                            setOpenCreateProductModal(true)
                                         }
                                         onClose()
                                     }
@@ -99,7 +97,7 @@ export const Camera = ({
                             className="w-full text-white"
                             onPress={() => {
                                 onCloseData()
-                                setOpenModal(true)
+                                setOpenCreateProductModal(true)
                             }}
                         >{'Crear producto'}</Button>
                         <Button
@@ -107,7 +105,7 @@ export const Camera = ({
                             className="w-full"
                             onPress={() => {
                                 onCloseData()
-                                setOpenModal(false)
+                                setOpenCreateProductModal(false)
                             }}
                         >
                             {'Cerrar'}

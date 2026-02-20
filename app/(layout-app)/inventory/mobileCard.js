@@ -37,7 +37,7 @@ export default function Card () {
     const [showMoreEnable, setShowMoreEnable] = useState(false)
     const [pageNumber, setPageNumber] = useState(1)
     const [lastInViewPort, setLastInViewPort] = useState(false)
-    const [openModal, setOpenModal] = useState(false)
+    const [openCreateProductModal, setOpenCreateProductModal] = useState(false)
     const [resultCamera, setResultCamera] = useState(null)
     const refShowMore = useRef(null)
     const onChange = (event) => {
@@ -67,11 +67,11 @@ export default function Card () {
     )
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
+
+    // Open CreateProduct modal when camera returns a result
     useEffect(() => {
         if (resultCamera) {
-            setOpenModal(true)
-        } else {
-            setOpenModal(false)
+            setOpenCreateProductModal(true)
         }
     }, [resultCamera])
 
@@ -217,12 +217,13 @@ export default function Card () {
                         resultCamera={resultCamera}
                         setResultCamera={setResultCamera}
                         setTargetProduct={setTargetProduct}
-                        setOpenModal={setOpenModal}
+                        setOpenCreateProductModal={setOpenCreateProductModal}
                     />
                     <CreateProduct
                         triggerAction={triggerAction}
                         handleProductRequest={handleProductRequest}
-                        openModal={openModal}
+                        openModal={openCreateProductModal}
+                        setOpenModal={setOpenCreateProductModal}
                         resultCamera={resultCamera}
                         setResultCamera={setResultCamera}
                     />
