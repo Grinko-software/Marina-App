@@ -40,8 +40,8 @@ export default function PaymentButton ({
                         className="flex flex-col border dark:border-secondary-200 w-44 h-44 bg-green-500"
                         isIconOnly
                         variant="solid"
-                        aria-label=""
-                        onClick={handleButton}
+                        aria-label={`Seleccionar método de pago ${title}`}
+                        onPress={handleButton}
                     >
                         {icon}
                         <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">
@@ -55,8 +55,8 @@ export default function PaymentButton ({
                         className="flex flex-col border border-primary-200 dark:border-secondary-200  w-44 h-44  dark:bg-secondary-500 bg-primary-50"
                         isIconOnly
                         variant="shadow"
-                        aria-label=""
-                        onClick={handleButton}
+                        aria-label={`Seleccionar método de pago ${title}`}
+                        onPress={handleButton}
                     >
                         {icon}
                         <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">

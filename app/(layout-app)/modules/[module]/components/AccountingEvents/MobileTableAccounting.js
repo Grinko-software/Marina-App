@@ -134,19 +134,19 @@ export default function MobileTableAccounting ({
     }
 
     return (
-        <div className="w-full space-y-3 px-2">
+        <div className="w-full space-y-2 px-1">
             {dataModel.map((item, index) => (
                 <Card
                     key={item.key}
                     ref={index === previousDataLength ? firstNewItemRef : null}
-                    className="dark:bg-secondary-400 bg-white shadow-md hover:shadow-lg transition-shadow"
+                    className="dark:bg-secondary-400 bg-white shadow-sm"
                 >
-                    <CardHeader className="flex justify-between items-start pb-0">
+                    <CardHeader className="flex justify-between items-start py-2 px-3 pb-1">
                         <div className="flex flex-col flex-1">
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                            <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">
                                 ID: {item.id}
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 leading-tight">
                                 {item.date}
                             </p>
                         </div>
@@ -154,19 +154,20 @@ export default function MobileTableAccounting ({
                             color={getEventTypeColor(item.eventType)}
                             size="sm"
                             variant="flat"
+                            className="h-6 min-h-6 px-2"
                         >
                             {item.eventType}
                         </Chip>
                     </CardHeader>
 
-                    <CardBody className="pt-2">
-                        <div className="space-y-2">
+                    <CardBody className="pt-1 pb-2 px-3">
+                        <div className="space-y-1.5">
                             {/* Amount */}
-                            <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
-                                <span className="text-sm text-gray-600 dark:text-gray-300">
+                            <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-1.5">
+                                <span className="text-xs text-gray-600 dark:text-gray-300">
                                     Monto
                                 </span>
-                                <span className="text-lg font-bold text-primary-400 dark:text-primary-200">
+                                <span className="text-base font-bold text-primary-400 dark:text-primary-200 leading-none">
                                     {item.totalFormatted}
                                 </span>
                             </div>
@@ -174,10 +175,10 @@ export default function MobileTableAccounting ({
                             {/* Cash Register */}
                             {item.cashRegisterName && (
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                                    <span className="text-xs text-gray-600 dark:text-gray-300">
                                         Caja
                                     </span>
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white text-right">
+                                    <span className="text-xs font-medium text-gray-900 dark:text-white text-right leading-tight">
                                         {item.cashRegisterName}
                                     </span>
                                 </div>
@@ -186,10 +187,10 @@ export default function MobileTableAccounting ({
                             {/* User */}
                             {item.userName && (
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                                    <span className="text-xs text-gray-600 dark:text-gray-300">
                                         Usuario
                                     </span>
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white text-right">
+                                    <span className="text-xs font-medium text-gray-900 dark:text-white text-right leading-tight">
                                         {item.userName}
                                     </span>
                                 </div>
@@ -197,11 +198,11 @@ export default function MobileTableAccounting ({
 
                             {/* Detail */}
                             {item.detail && item.detail !== '-' && (
-                                <div className="flex flex-col mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                                    <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                                <div className="flex flex-col mt-1.5 pt-1.5 border-t border-gray-200 dark:border-gray-700">
+                                    <span className="text-xs text-gray-600 dark:text-gray-300 mb-0.5">
                                         Detalle
                                     </span>
-                                    <span className="text-sm text-gray-900 dark:text-white">
+                                    <span className="text-xs text-gray-900 dark:text-white leading-tight">
                                         {item.detail}
                                     </span>
                                 </div>

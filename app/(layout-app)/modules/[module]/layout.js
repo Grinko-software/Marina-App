@@ -13,7 +13,7 @@ export default function LayoutApp (props) {
         }
     }, [])
     return isMobile
-        ? <div className="sticky top-0 z-20 rounded-lg w-full h-full overflow-y-scroll min-h-[75vh] max-h-[75vh]" >{children}</div>
+        ? <div className="w-full h-full min-h-0 overflow-hidden rounded-lg">{children}</div>
         : (
             <>
                 {/* Header Section */}
@@ -21,7 +21,7 @@ export default function LayoutApp (props) {
                     <Header module={module} />
                 </header>
                 {/* Main Content Section */}
-                <div className="">{children}</div>
+                <div className="w-full h-full min-h-0 overflow-hidden">{children}</div>
             </>
         )
 }

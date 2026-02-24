@@ -4,9 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { Header } from './header'
 import { motion } from 'framer-motion'
 import { isMobileDevice } from '@/utils/agent'
+import { usePathname } from 'next/navigation'
 
 export default function LayoutApp ({ children }) {
     const [isMobile, setIsMobile] = useState(true)
+    const pathname = usePathname()
+    const isFullHeightMobileRoute = pathname?.includes('/reports') || pathname?.includes('/modules/accounting')
 
     useEffect(() => {
         if (typeof navigator !== 'undefined') {
@@ -15,9 +18,12 @@ export default function LayoutApp ({ children }) {
     }, [])
 
     return (
-        <section className="w-screen h-screen bg-primary-200 dark:bg-secondary-500   overflow-hidden touch-none fixed sm:overflow-auto">
+        <section
+            className="w-screen h-[100dvh] min-h-[100svh] bg-primary-200 dark:bg-secondary-500 overflow-hidden touch-pan-y relative pb-[env(safe-area-inset-bottom)] sm:fixed sm:inset-0 sm:h-[100dvh] sm:overflow-auto"
+            style={{ minHeight: '100dvh' }}
+        >
             <motion.div
-                className="h-full flex flex-col gap-3 "
+                className="h-full min-h-0 flex flex-col gap-3 "
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
@@ -32,8 +38,8 @@ export default function LayoutApp ({ children }) {
                 </header>
 
                 {/* Main Content */}
-                <div className="flex-1 flex w-full overflow-hidden">
-                    <main className="flex-grow max-h-full overflow-hidden mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem]">
+                <div className="flex-1 min-h-0 flex w-full overflow-hidden">
+                    <main className={`flex-grow h-full min-h-0 ${isMobile && isFullHeightMobileRoute ? 'overflow-hidden' : 'overflow-y-auto'} sm:overflow-hidden mx-[1rem] xl:mx-[2rem] xlg:mx-[2rem]`}>
                         {children}
                     </main>
                 </div>

@@ -10,5 +10,5 @@ export default function LayoutApp (props) {
             setIsMobile(view)
         }
     }, [])
-    return isMobile ? <div className="pt-3">{children}</div> : <div className="xl:pt-6">{children}</div>
+    return isMobile ? <div className="pt-3 w-full h-full min-h-0 overflow-hidden">{children}</div> : <div className="xl:pt-6 w-full h-full min-h-0 overflow-hidden">{children}</div>
 }

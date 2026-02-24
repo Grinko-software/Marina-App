@@ -19,25 +19,29 @@ export default function Sales () {
     // Show loading skeleton while detecting device type
     if (isMobile === null) {
         return (
-            <section className="w-full p-4">
-                <Skeleton className="h-12 w-full rounded-lg mb-3" />
-                <Skeleton className="h-64 w-full rounded-lg" />
+            <section className="w-full h-full min-h-0 flex overflow-hidden">
+                <section className="w-full flex-1 h-full min-h-0 overflow-hidden p-4">
+                    <Skeleton className="h-12 w-full rounded-lg mb-3" />
+                    <Skeleton className="h-64 w-full rounded-lg" />
+                </section>
             </section>
         )
     }
 
     return (
-        <section className="w-full">
-            <section className="grid grid-cols w-full gap-3">
+        <section className="w-full h-full min-h-0 flex overflow-hidden">
+            <section className="w-full flex-1 h-full min-h-0 overflow-hidden grid grid-cols gap-3">
                 {isMobile
                     ? (
-                        <MobileTableAccounting
-                            data={data}
-                            loading={loading}
-                            totalpage={totalpage}
-                            setCurrentPage={setCurrentPage}
-                            currentPage={currentPage}
-                        />
+                        <section className="w-full h-full min-h-0 overflow-y-auto overflow-x-hidden pb-[calc(env(safe-area-inset-bottom)+2.5rem)]">
+                            <MobileTableAccounting
+                                data={data}
+                                loading={loading}
+                                totalpage={totalpage}
+                                setCurrentPage={setCurrentPage}
+                                currentPage={currentPage}
+                            />
+                        </section>
                     )
                     : (
                         <TableAccounting

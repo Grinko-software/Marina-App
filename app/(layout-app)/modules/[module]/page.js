@@ -96,7 +96,7 @@ export default function Page ({ params }) {
     }, [moduleSelected, hasModule, isAdmin])
 
     return (
-        <section className="">
+        <section className="w-full h-full min-h-0 overflow-hidden">
             {!hasModule && !isAdmin
                 ? (
                     <NoPermissions loading={loadingPermission} />

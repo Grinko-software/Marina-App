@@ -54,6 +54,7 @@ export default function Filter () {
                 <Card className="w-full overflow-hidden">
                     <CardBody className="flex flex-row gap-5">
                         <Accordion
+                            aria-label="Controles de filtros"
                             expandedKeys={selectedKeys}
                             selectedKeys={selectedKeys}
                             isCompact
@@ -106,7 +107,7 @@ export default function Filter () {
                                     </FilterItem>
                                     <Button
                                         className="mr-auto "
-                                        onClick={() => setFilterKeyIsOpen(false)}
+                                        onPress={() => setFilterKeyIsOpen(false)}
                                     >
                                         {'Buscar'}
                                     </Button>

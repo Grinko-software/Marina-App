@@ -1,18 +1,13 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
-import CardUi from '@/components/ui/Card'
-import {
-    useDisclosure,
-    Input,
-    ScrollShadow,
-    Skeleton
-} from '@nextui-org/react'
+import { useDisclosure, Input, Skeleton } from '@nextui-org/react'
+import { DefaultImageMarinaMarket } from '@/utils/image'
+import { roundValue } from '@/utils/number'
 import useInventoryStore from './store'
 import CreateProduct from './components/NewProduct/createProduct'
 import { SearchIcon } from '@/components/ui/SearchIcon'
 import ProductDetail from './components/productDetail'
-import LoadingCard from '@/components/ui/Loading'
 import TabsCustom from '@/components/ui/Tabs'
 import { useIsInViewport } from '@/utils/viewportObserver'
 import useScannerStore from '@/stores/scanner'
@@ -20,7 +15,29 @@ import useStore from './store/store'
 import { upgradeVersion } from '@/services/sync'
 import useSyncStore from '@/stores/common/sync'
 import Camera from './components/Camera/camera'
+import Image from '@/components/ui/Image'
 const LIMIT_PRODUCTS_VIEW = 50
+
+function ProductImage ({ src, alt }) {
+    const fallback = DefaultImageMarinaMarket()
+    const [imgSrc, setImgSrc] = useState(src?.length ? src : fallback)
+
+    useEffect(() => {
+        setImgSrc(src?.length ? src : fallback)
+    }, [src])
+
+    return (
+        <Image
+            src={imgSrc}
+            width={56}
+            height={56}
+            alt={alt || ''}
+            className="w-14 h-14 rounded-lg object-cover bg-slate-100 dark:bg-white shrink-0"
+            onError={() => setImgSrc(fallback)}
+        />
+    )
+}
+
 export default function Card () {
     const { getData, error, loading, setLoading, data, triggerAction } = useStore(
         (state) => state
@@ -68,7 +85,6 @@ export default function Card () {
     const [filteredList, setFilteredList] = useState([])
     useIsInViewport({ ref: refShowMore, setStatus: setLastInViewPort })
 
-    // Open CreateProduct modal when camera returns a result
     useEffect(() => {
         if (resultCamera) {
             setOpenCreateProductModal(true)
@@ -106,9 +122,8 @@ export default function Card () {
     useEffect(() => {
         if (
             lastInViewPort &&
-			pageNumber * LIMIT_PRODUCTS_VIEW < listInventoryComplete?.length
+            pageNumber * LIMIT_PRODUCTS_VIEW < listInventoryComplete?.length
         ) {
-            // notify('Cargando más productos...')
             setTimeout(() => {
                 setPageNumber(pageNumber + 1)
             }, 500)
@@ -197,41 +212,44 @@ export default function Card () {
         }
     }, [])
     return (
-        <section className="w-11/12 items-center touch-none fixed">
-            <section className="flex flex-col gap-2">
-                <div className="flex flex-row gap-1 justify-between">
+        <section className='w-11/12 touch-none fixed flex flex-col' style={{ height: 'calc(100dvh - 4.5rem)' }}>
+            <div className='flex flex-col gap-3 flex-1 min-h-0 pb-3'>
+
+                <div className='flex flex-row gap-2 items-center shrink-0'>
                     {loading
-                        ? (
-                            <section className="w-full">
-                                <Skeleton className="w-full rounded-lg bg-slate-600"></Skeleton>
-                            </section>
-                        )
-                        : (
+                        ? <div className="flex-1">
+                            <Skeleton className="w-full h-10 rounded-lg bg-slate-600"/>
+                        </div>
+                        : <div className="flex-1 min-w-0">
                             <TabsCustom
                                 items={listCategories}
                                 selectedKey={selectedCategoryID}
                                 onSelectionChange={setSelectedCategoryID}
                             />
-                        )}
-                    <Camera
-                        resultCamera={resultCamera}
-                        setResultCamera={setResultCamera}
-                        setTargetProduct={setTargetProduct}
-                        setOpenCreateProductModal={setOpenCreateProductModal}
-                    />
-                    <CreateProduct
-                        triggerAction={triggerAction}
-                        handleProductRequest={handleProductRequest}
-                        openModal={openCreateProductModal}
-                        setOpenModal={setOpenCreateProductModal}
-                        resultCamera={resultCamera}
-                        setResultCamera={setResultCamera}
-                    />
+                        </div>
+                    }
+                    <div className="flex gap-1 shrink-0">
+                        <Camera
+                            resultCamera={resultCamera}
+                            setResultCamera={setResultCamera}
+                            setTargetProduct={setTargetProduct}
+                            setOpenCreateProductModal={setOpenCreateProductModal}
+                        />
+                        <CreateProduct
+                            triggerAction={triggerAction}
+                            handleProductRequest={handleProductRequest}
+                            openModal={openCreateProductModal}
+                            setOpenModal={setOpenCreateProductModal}
+                            resultCamera={resultCamera}
+                            setResultCamera={setResultCamera}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <section className="flex flex-col p-2 shadow-md hover:shadow-lg bg-secondary-50 dark:bg-secondary-450 rounded-md ">
+
+                <div className="rounded-xl shadow-md bg-secondary-50 dark:bg-secondary-450 overflow-hidden flex flex-col flex-1 min-h-0">
+                    <div className="px-3 pt-3 pb-1 shrink-0">
                         <Input
-                            label="Busqueda"
+                            label="Búsqueda"
                             autoFocus
                             isClearable
                             radius="lg"
@@ -250,82 +268,78 @@ export default function Card () {
                                 ],
                                 innerWrapper: 'bg-transparent'
                             }}
-                            className="my-4 w-full"
                             placeholder="Toca para buscar un producto..."
                             startContent={
                                 <SearchIcon className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
                             }
                             onClear={() => setSearchInput('')}
                         />
-                        {loading
-                            ? (
-                                <div>
-                                    <ScrollShadow className="w-full pb-4">
-                                        <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1">
-                                            {listEmpty?.map((item, key) => (
-                                                <LoadingCard key={key} />
-                                            ))}
+                    </div>
+
+                    {loading
+                        ? <div style={{ scrollbarGutter: 'stable' }} className='flex-1 min-h-0 overflow-y-auto pb-3'>
+                            <div className="divide-y divide-black/5 dark:divide-white/5">
+                                {listEmpty?.map((_, key) => (
+                                    <div key={key} className="flex items-center gap-3 px-3 py-2.5">
+                                        <Skeleton className="w-14 h-14 rounded-lg shrink-0"/>
+                                        <div className="flex-1 space-y-2">
+                                            <Skeleton className="h-4 w-3/4 rounded"/>
+                                            <Skeleton className="h-3 w-1/4 rounded"/>
                                         </div>
-                                    </ScrollShadow>
-                                </div>
-                            )
-                            : searchInput
-                                ? (
-                                    <section className="h-full w-full">
-                                        <section
-                                            style={{ scrollbarGutter: 'stable' }}
-                                            className="max-h-[60vh] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start"
-                                        >
-                                            {filteredList?.map((item, index) => (
-                                                <div
-                                                    key={'productSearch' + index}
-                                                    className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0"
-                                                >
-                                                    <div className="mx-1 my-1 h-[90%] w-auto">
-                                                        <CardUi
-                                                            item={item}
-                                                            setTargetProduct={setTargetProduct}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            {!listInventory?.length
-                                                ? (
-                                                    <div>No hay productos</div>
-                                                )
-                                                : !filteredList.length && messageSearch
-                                                    ? (
-                                                        <div>{messageSearch}</div>
-                                                    )
-                                                    : null}
-                                        </section>
-                                    </section>
-                                )
-                                : (
-                                    <section
-                                        style={{ scrollbarGutter: 'stable' }}
-                                        className="max-h-[60vh] w-full overflow-y-auto flex flex-wrap snap-y snap-mandatory content-start"
-                                    >
-                                        {listInventory?.map((item, index) => (
-                                            <div
-                                                ref={
-                                                    index + 1 === listInventory.length && showMoreEnable
-                                                        ? refShowMore
-                                                        : null
-                                                }
-                                                key={'productList' + index}
-                                                className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 xlg:w-[12.5%] snap-start shrink-0"
+                                        <Skeleton className="w-10 h-5 rounded-full shrink-0"/>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        : searchInput
+                            ? <div style={{ scrollbarGutter: 'stable' }} className='flex-1 min-h-0 overflow-y-auto pb-3'>
+                                {filteredList.length
+                                    ? <div className="divide-y divide-black/5 dark:divide-white/5">
+                                        {filteredList.map((item, index) => (
+                                            <button
+                                                key={'productSearch' + index}
+                                                onClick={() => setTargetProduct(item)}
+                                                className="flex items-center gap-3 w-full px-3 py-2.5 text-left hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] transition-transform"
                                             >
-                                                <div className="mx-1 my-1">
-                                                    <CardUi item={item} setTargetProduct={setTargetProduct} />
+                                                <ProductImage src={item?.image} alt={item?.name}/>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-semibold text-sm truncate">{item?.name}</p>
+                                                    <p className="text-xs text-default-400 mt-0.5">${item?.price}</p>
                                                 </div>
-                                            </div>
+                                                <span className={`text-xs font-semibold rounded-full px-2 py-0.5 shrink-0 text-white ${item?.stock <= 0 ? 'bg-red-500' : 'bg-emerald-600'}`}>
+                                                    {item?.stock >= 100 ? '+99' : roundValue(item?.stock, 0, '-')}
+                                                </span>
+                                            </button>
                                         ))}
-                                    </section>
-                                )}
-                    </section>
+                                    </div>
+                                    : <p className="text-center text-default-400 py-6 text-sm px-4">{messageSearch}</p>
+                                }
+                            </div>
+                            : <div style={{ scrollbarGutter: 'stable' }} className='flex-1 min-h-0 overflow-y-auto pb-3'>
+                                <div className="divide-y divide-black/5 dark:divide-white/5">
+                                    {listInventory?.map((item, index) => (
+                                        <button
+                                            ref={index + 1 === listInventory.length && showMoreEnable ? refShowMore : null}
+                                            key={'productList' + index}
+                                            onClick={() => setTargetProduct(item)}
+                                            className="flex items-center gap-3 w-full px-3 py-2.5 text-left hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] transition-transform"
+                                        >
+                                            <ProductImage src={item?.image} alt={item?.name}/>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-sm truncate">{item?.name}</p>
+                                                <p className="text-xs text-default-400 mt-0.5">${item?.price}</p>
+                                            </div>
+                                            <span className={`text-xs font-semibold rounded-full px-2 py-0.5 shrink-0 text-white ${item?.stock <= 0 ? 'bg-red-500' : 'bg-emerald-600'}`}>
+                                                {item?.stock >= 100 ? '+99' : roundValue(item?.stock, 0, '-')}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                    }
                 </div>
-            </section>
+
+            </div>
             <ProductDetail
                 isMobile={true}
                 targeProduct={targeProduct}

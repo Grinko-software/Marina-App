@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
  * Custom hook to detect if the current device is mobile
  * Checks both user agent and screen width
  * @param {number} breakpoint - Width breakpoint for mobile (default: 768px)
- * @returns {boolean} - True if mobile, false otherwise
+ * @returns {boolean | null} - True if mobile, false if desktop, null while detecting
  */
 export function useIsMobile (breakpoint = 768) {
     // Initialize with null to handle SSR properly
@@ -26,14 +26,7 @@ export function useIsMobile (breakpoint = 768) {
         return () => window.removeEventListener('resize', checkMobile)
     }, [breakpoint])
 
-    // Return true for mobile devices during SSR/initial render
-    // This prevents flash of desktop content on mobile
-    if (isMobile === null && typeof window !== 'undefined') {
-        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
-               window.innerWidth < breakpoint
-    }
-
-    return isMobile ?? false
+    return isMobile
 }
 
 export default useIsMobile

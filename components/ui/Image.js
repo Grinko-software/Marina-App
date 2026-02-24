@@ -5,7 +5,8 @@ const Image = ({
     alt,
     width = '100%',
     height = 'auto',
-    className = ''
+    className = '',
+    ...rest
 }) => {
     return (
         <img
@@ -14,6 +15,7 @@ const Image = ({
             width={width}
             height={height}
             className={className}
+            {...rest}
         />
     )
 }

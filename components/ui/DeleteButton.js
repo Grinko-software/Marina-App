@@ -18,8 +18,8 @@ export default function DeleteButton ({ productId }) {
                 isIconOnly
                 color="danger"
                 variant="faded"
-                aria-label=""
-                onClick={handleButton}
+                aria-label="Eliminar producto"
+                onPress={handleButton}
             >
                 <DeleteIcon />
             </Button>

@@ -121,6 +121,7 @@ export default function Filter ({ loading, setLoading }) {
             <Card className='w-full overflow-hidden'>
                 <CardBody className='flex flex-row gap-3 md:gap-5 p-3 md:p-4'>
                     <Accordion
+                        aria-label="Controles de filtros"
                         expandedKeys={selectedKeys}
                         selectedKeys={selectedKeys}
                         isCompact
@@ -148,7 +149,7 @@ export default function Filter ({ loading, setLoading }) {
                                 </FilterItem>
                                 <Button
                                     className='w-full md:w-auto md:mr-auto h-12 md:h-10 text-base font-semibold'
-                                    onClick={() => requestDataReports()}
+                                    onPress={() => requestDataReports()}
                                 >
                                     {'Buscar'}
                                 </Button>

@@ -1,8 +1,8 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import Barcode from '@/assets/gifs/animation_barcode.json'
 import ErrordGif from '@/assets/gifs/animation_error.json'
-import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
 import useInventoryStore from '@/app/(layout-app)/inventory/store'
 import { Button, Input, Spinner } from '@nextui-org/react'
@@ -11,6 +11,8 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { roundValueWithMath } from '@/utils/number'
 import { DefaultImageMarinaMarket } from '@/utils/image'
 import Image from '../ui/Image'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 
 export default function ScannerProduct () {
     const [loading, setLoading] = useState(false)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
     Navbar,
     NavbarContent,
@@ -7,6 +7,14 @@ import {
     NavbarMenuItem,
     NavbarMenuToggle
 } from '@nextui-org/react'
+import {
+    FiBox,
+    FiGrid,
+    FiTrendingUp,
+    FiBarChart2,
+    FiBookOpen,
+    FiLogOut
+} from 'react-icons/fi'
 import { usePathname, useRouter } from 'next/navigation'
 import useAuthStore from '@/stores/user'
 import { MODULES_KEYS } from '@/utils/modules'
@@ -17,60 +25,75 @@ export default function MobileNavBar () {
     const pathname = usePathname()
     const router = useRouter()
 
-    const moduleApplication = pathname.replace('/', '')
-    const [selected, setSelected] = useState(moduleApplication)
-
     const menuItems = [
-        { id: 'inventory', label: '📦 Inventario', route: '/inventory' },
-        { id: 'modules', label: '🛠️ Módulos', route: '/modules' },
-        { id: MODULES_KEYS.PERFORFANCE, label: '📊 Rendimiento', route: '/modules/performance' },
-        { id: 'reports', label: '📈 Reportes', route: '/reports' },
-        { id: MODULES_KEYS.EVENTS, label: '💰 Contabilidad', route: '/modules/accounting' },
-        { id: 'login', label: '🚪 Cerrar sesión', route: '/login' }
+        { id: 'inventory', label: 'Inventario', route: '/inventory', icon: FiBox },
+        { id: 'modules', label: 'Módulos', route: '/modules', icon: FiGrid },
+        { id: MODULES_KEYS.PERFORFANCE, label: 'Rendimiento', route: '/modules/performance', icon: FiTrendingUp },
+        { id: 'reports', label: 'Reportes', route: '/reports', icon: FiBarChart2 },
+        { id: MODULES_KEYS.EVENTS, label: 'Contabilidad', route: '/modules/accounting', icon: FiBookOpen },
+        { id: 'login', label: 'Cerrar sesión', route: '/login', icon: FiLogOut }
     ]
 
-    useEffect(() => {
-        if (selected && selected !== moduleApplication) {
-            if (selected === '/login') {
-                signOut()
-            }
-            router.push(selected)
+    const activeRoute = useMemo(() => {
+        return menuItems.find((item) => {
+            if (item.route === '/login') return false
+            return pathname === item.route || pathname.startsWith(`${item.route}/`)
+        })?.route
+    }, [pathname])
+
+    const handleNavigation = (route) => {
+        if (route === pathname) {
             setIsMenuOpen(false)
+            return
         }
-    }, [selected])
+
+        if (route === '/login') {
+            signOut()
+        }
+
+        router.push(route)
+        setIsMenuOpen(false)
+    }
 
     return (
         <Navbar
             isMenuOpen={isMenuOpen}
             onMenuOpenChange={setIsMenuOpen}
-            className="bg-primary dark:bg-secondary-500 transition-all duration-300"
+            className="bg-primary/95 dark:bg-secondary-500/95 border-b border-default-200/40 backdrop-blur-md"
         >
-            {/* Botón de menú hamburguesa */}
-            <NavbarContent>
+            <NavbarContent className="sm:hidden" justify="start">
                 <NavbarMenuToggle
                     aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-                    className="sm:hidden transition-transform duration-200 ease-in-out text-gray-900 dark:text-white"
+                    className="text-gray-900 dark:text-gray-200 data-[hover=true]:bg-black/10 dark:data-[hover=true]:bg-white/10"
                 />
             </NavbarContent>
 
-            {/* Menú desplegable */}
-            <NavbarMenu className="flex flex-col gap-3 p-4 items-start bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg transition-all duration-300">
-                {menuItems?.map((item, index) => (
-                    <NavbarMenuItem key={item.id} className="w-full">
-                        <Button
-                            className={`
-                                w-full h-12 flex items-center justify-start px-4 font-semibold text-lg rounded-lg 
-                                transition-colors duration-200 text-gray-900 dark:text-white
-                                bg-gray-300 dark:bg-gray-700
-                            `}
-                            onPress={() => {
-                                setSelected(item?.route)
-                            }}
-                        >
-                            {item.label}
-                        </Button>
-                    </NavbarMenuItem>
-                ))}
+            <NavbarContent className="sm:hidden" justify="center">
+                <p className="text-sm font-semibold tracking-wide text-gray-900 dark:text-gray-200">Menú</p>
+            </NavbarContent>
+
+            <NavbarMenu className="gap-2 p-3 bg-background/95 dark:bg-content1/95 backdrop-blur-md">
+                {menuItems?.map((item) => {
+                    const isActive = activeRoute === item.route
+                    const isLogout = item.route === '/login'
+                    const Icon = item.icon
+
+                    return (
+                        <NavbarMenuItem key={item.id} className="w-full">
+                            <Button
+                                variant={isActive ? 'flat' : 'light'}
+                                color="default"
+                                className={`h-11 w-full justify-start gap-3 rounded-medium px-4 text-base font-medium text-gray-900 dark:text-gray-200 ${
+                                    isActive ? 'bg-gray-200 dark:bg-gray-700' : 'bg-transparent'
+                                } ${isLogout ? 'text-gray-700 dark:text-gray-300' : ''}`}
+                                onPress={() => handleNavigation(item.route)}
+                            >
+                                <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                                {item.label}
+                            </Button>
+                        </NavbarMenuItem>
+                    )
+                })}
             </NavbarMenu>
         </Navbar>
     )

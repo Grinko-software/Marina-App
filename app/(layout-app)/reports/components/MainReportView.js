@@ -191,7 +191,7 @@ const ReportView = () => {
                     modules={[Navigation, Pagination, Autoplay]}
                     slidesPerView={'auto'}
                     centeredSlides={true}
-                    Loop={true}
+                    loop={true}
                     autoplay={false}
                     scrollbar={{ draggable: true }}
                     pagination={{

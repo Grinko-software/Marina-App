@@ -14,6 +14,7 @@ import Image from '@/components/ui/Image'
 import useAuthStore from '@/stores/user'
 export default function ProductDetail ({ targeProduct, isOpen, onClose, setTargetProduct, isMobile = false }) {
     const { listCategories, listStockTypes, handleProductRequest, listInventory } = useInventoryStore()
+    const fallbackImageRef = useRef(DefaultImageMarinaMarket())
     const [edit, setEdit] = useState(false)
     const [type, setType] = useState(false)
     const [confirm, setConfirm] = useState(false)
@@ -22,6 +23,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
     const [image, setImage] = useState([])
     const [showBarcode, setShowBarcode] = useState(false)
     const [settingsBarCode, setSettingsBarCode] = useState(false)
+    const [imageSrc, setImageSrc] = useState(fallbackImageRef.current)
     const { isAdmin: isUserAdmin } = useAuthStore()
     const refBarcode = useRef(null)
 
@@ -108,6 +110,13 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
         }
     }, [targeProduct, edit])
 
+    useEffect(() => {
+        const validImage = typeof productData?.image === 'string' && productData.image.trim().length > 0
+            ? productData.image
+            : fallbackImageRef.current
+        setImageSrc(validImage)
+    }, [productData?.image])
+
     const handleDeleteProduct = () => {
         setLoadingDelete(true)
         setType('Eliminar')
@@ -149,17 +158,43 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
             <div className="flex flex-wrap gap-3">
             </div>
             <Modal
-                size={'3xl'}
+                size={isMobile ? 'full' : '3xl'}
                 isOpen={isOpen}
                 backdrop='opaque'
                 onClose={() => onClose}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
-                className='w-full'
             >
                 <ModalContent className=' overflow-y-scroll'>
                     <section>
-                        <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">{showBarcode ? 'Imprimiendo etiqueta' : 'Detalles del producto'}
+                        <ModalHeader className="flex items-center justify-between gap-2 text-primary-500 dark:text-primary-200">
+                            <span className="font-semibold">{showBarcode ? 'Imprimiendo etiqueta' : 'Detalles del producto'}</span>
+                            {isMobile && !showBarcode && (
+                                edit
+                                    ? <div className="flex gap-2 shrink-0">
+                                        <Button size="sm" className="bg-green-500 text-white" onClick={handleUpdateProduct} isLoading={loadingEdit}>
+                                            {loadingEdit ? '...' : 'Guardar'}
+                                        </Button>
+                                        <Button size="sm" color="danger" variant="light" onClick={handleCancelUpdateProduct}>
+                                            Cancelar
+                                        </Button>
+                                    </div>
+                                    : <div className="flex gap-1 shrink-0">
+                                        {isUserAdmin
+                                            ? <>
+                                                <Button size="sm" className="bg-blue-500 text-white" onClick={() => setEdit(true)}>
+                                                    Editar
+                                                </Button>
+                                                <Button size="sm" color="danger" isIconOnly variant="bordered" onClick={handleDeleteProduct} isLoading={loadingDelete}>
+                                                    <DeleteIcon/>
+                                                </Button>
+                                            </>
+                                            : null}
+                                        <Button size="sm" isIconOnly variant="light" onPress={() => { setEdit(false); setTargetProduct(null); onClose() }}>
+                                            ✕
+                                        </Button>
+                                    </div>
+                            )}
                         </ModalHeader>
                         {showBarcode
                             ? <ModalBody>
@@ -168,42 +203,84 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                             : <ModalBody>
                                 <section>
                                     <SectionProduct title={null}>
-                                        <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
-                                            <div className="flex-3">
-                                                {
-                                                    edit
+                                        {isMobile
+                                            ? <div className="flex gap-3 items-start my-2">
+                                                <div className="shrink-0">
+                                                    {edit
                                                         ? <ProductImage defaultImg={productData?.image} setImage={setImage}/>
-                                                        : <div className="rounded-lg flex items-center m-auto w-[250px] flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-
-                                                            <Image id='imageProduct'
-                                                                src={productData?.image?.length ? productData?.image : DefaultImageMarinaMarket()}
+                                                        : <Image
+                                                            id='imageProduct'
+                                                            src={imageSrc}
+                                                            alt="Image name"
+                                                            width={80}
+                                                            height={80}
+                                                            className="w-20 h-20 rounded-xl object-cover bg-slate-100 dark:bg-white"
+                                                            onError={() => {
+                                                                if (imageSrc !== fallbackImageRef.current) {
+                                                                    setImageSrc(fallbackImageRef.current)
+                                                                }
+                                                            }}
+                                                        />
+                                                    }
+                                                </div>
+                                                <div className="flex flex-1 flex-col gap-3 min-w-0">
+                                                    <InputComponent
+                                                        isBarCode={true}
+                                                        type="text"
+                                                        title="Codigo de barra"
+                                                        defaultValue={productData?.code}
+                                                        disabled={!edit}
+                                                        onValueChange={(value) => { handleInputChange({ field: 'code', value, isCode: true }) }}
+                                                    />
+                                                    <InputComponent
+                                                        type="text"
+                                                        title="Nombre"
+                                                        defaultValue={productData?.name}
+                                                        onValueChange={(value) => { handleInputChange({ field: 'name', value }) }}
+                                                        disabled={!edit}
+                                                    />
+                                                </div>
+                                            </div>
+                                            : <div className="my-4 items-center gap-4 grid grid-cols-1 md:grid-cols-2">
+                                                <div className="flex-3">
+                                                    {edit
+                                                        ? <ProductImage defaultImg={productData?.image} setImage={setImage}/>
+                                                        : <div className="rounded-lg flex items-center mx-auto w-full max-w-[250px] flex-col space-y-2 p-2 border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                            <Image
+                                                                id='imageProduct'
+                                                                src={imageSrc}
                                                                 alt="Image name"
                                                                 width={200}
                                                                 height={200}
+                                                                onError={() => {
+                                                                    if (imageSrc !== fallbackImageRef.current) {
+                                                                        setImageSrc(fallbackImageRef.current)
+                                                                    }
+                                                                }}
                                                             />
                                                         </div>
-                                                }
+                                                    }
+                                                </div>
+                                                <div className="flex flex-1 items-start flex-col w-full gap-4">
+                                                    <InputComponent
+                                                        isBarCode={true}
+                                                        type="text"
+                                                        title="Codigo de barra"
+                                                        defaultValue={productData?.code}
+                                                        disabled={!edit}
+                                                        onValueChange={(value) => { handleInputChange({ field: 'code', value, isCode: true }) }}
+                                                    />
+                                                    <InputComponent
+                                                        type="text"
+                                                        title="Nombre"
+                                                        defaultValue={productData?.name}
+                                                        onValueChange={(value) => { handleInputChange({ field: 'name', value }) }}
+                                                        disabled={!edit}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="flex flex-1 items-start flex-col w-full gap-4">
-                                                <InputComponent
-                                                    isBarCode={true}
-                                                    type="text"
-                                                    title="Codigo de barra"
-                                                    defaultValue={productData?.code}
-                                                    disabled={!edit}
-                                                    onValueChange={(value) => { handleInputChange({ field: 'code', value, isCode: true }) }}
-                                                />
-                                                <InputComponent
-                                                    type="text"
-                                                    title="Nombre"
-                                                    defaultValue={productData?.name}
-                                                    onValueChange={(value) => { handleInputChange({ field: 'name', value }) }}
-                                                    disabled={!edit}
-                                                />
-
-                                            </div>
-                                        </div>
-                                        <div className="my-4 flex items-center gap-4">
+                                        }
+                                        <div className="my-4 grid grid-cols-2 items-stretch gap-4">
 
                                             <SelectComponent
                                                 isRequired
@@ -228,7 +305,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                         </div>
                                     </SectionProduct>
                                     <SectionProduct title={'Precio'} showDivider>
-                                        <div className="my-4 flex items-center gap-4">
+                                        <div className="my-4 grid grid-cols-2 items-stretch gap-4">
                                             <InputComponent
                                                 type="number"
                                                 title="Precio costo"
@@ -250,7 +327,7 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                         </div>
                                     </SectionProduct>
                                     <SectionProduct title={'Stock'} showDivider>
-                                        <div className="my-4 flex items-center gap-4">
+                                        <div className="my-4 grid grid-cols-2 items-stretch gap-4">
                                             <InputComponent
                                                 type="number"
                                                 title="Stock mínimo"
@@ -283,28 +360,28 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                     </SectionProduct>
                                 </section>
                             </ModalBody>}
-                        {edit
-                            ? <ModalFooter>
-                                <Button className =" bg-green-500 text-primary-50"
-                                    onClick={handleUpdateProduct}
-                                    isLoading={loadingEdit}>
-                                    {loadingEdit ? 'Guardando' : 'Guardar'}
-                                </Button>
-                                <Button color="danger" variant="light"
-                                    onClick={handleCancelUpdateProduct}
-                                >
-                                    {'Cancelar'}
-                                </Button>
+                        {showBarcode
+                            ? <ModalFooter className='flex flex-col items-center'>
+                                <Loading/>
+                                {'Imprimiendo ... '}
                             </ModalFooter>
-                            : showBarcode
-                                ? <ModalFooter className='flex flex-col items-center'>
-                                    <Loading/>
-                                    {'Imprimiendo ... '}
-                                </ModalFooter>
-                                : <ModalFooter className='flex justify-between'>
-                                    {isMobile
-                                        ? null
-                                        : <section className='flex space-x-3'>
+                            : isMobile
+                                ? null
+                                : edit
+                                    ? <ModalFooter>
+                                        <Button className =" bg-green-500 text-primary-50"
+                                            onClick={handleUpdateProduct}
+                                            isLoading={loadingEdit}>
+                                            {loadingEdit ? 'Guardando' : 'Guardar'}
+                                        </Button>
+                                        <Button color="danger" variant="light"
+                                            onClick={handleCancelUpdateProduct}
+                                        >
+                                            {'Cancelar'}
+                                        </Button>
+                                    </ModalFooter>
+                                    : <ModalFooter className='flex justify-between'>
+                                        <section className='flex space-x-3'>
                                             <Button className =" bg-green-600 text-primary-50"
                                                 onClick={() => {
                                                     handlePrintBarCode('withName')
@@ -317,37 +394,37 @@ export default function ProductDetail ({ targeProduct, isOpen, onClose, setTarge
                                                 }}>
                                                 {'Imprimir código sin nombre'}
                                             </Button>
-                                        </section> }
+                                        </section>
 
-                                    <section className='flex space-x-3'>
+                                        <section className='flex space-x-3'>
 
-                                        {isUserAdmin
-                                            ? <>
-                                                <Button color="danger" variant="bordered"
-                                                    startContent={<DeleteIcon/>}
-                                                    onClick={handleDeleteProduct}
-                                                    isLoading={loadingDelete}>
-                                                    {loadingDelete ? 'Eliminando' : 'Eliminar'}
-                                                </Button>
-                                                <Button className =" bg-blue-500 text-primary-50"
-                                                    onClick={() => {
-                                                        setEdit(true)
-                                                    }}>
-                                                    {'Editar'}
-                                                </Button>
-                                            </>
-                                            : null}
-                                        <Button color="danger" variant="light"
-                                            onPress={() => {
-                                                setEdit(false)
-                                                setTargetProduct(null)
-                                                onClose()
-                                            }}
-                                        >
-                                            {'Cerrar'}
-                                        </Button>
-                                    </section>
-                                </ModalFooter>
+                                            {isUserAdmin
+                                                ? <>
+                                                    <Button color="danger" variant="bordered"
+                                                        startContent={<DeleteIcon/>}
+                                                        onClick={handleDeleteProduct}
+                                                        isLoading={loadingDelete}>
+                                                        {loadingDelete ? 'Eliminando' : 'Eliminar'}
+                                                    </Button>
+                                                    <Button className =" bg-blue-500 text-primary-50"
+                                                        onClick={() => {
+                                                            setEdit(true)
+                                                        }}>
+                                                        {'Editar'}
+                                                    </Button>
+                                                </>
+                                                : null}
+                                            <Button color="danger" variant="light"
+                                                onPress={() => {
+                                                    setEdit(false)
+                                                    setTargetProduct(null)
+                                                    onClose()
+                                                }}
+                                            >
+                                                {'Cerrar'}
+                                            </Button>
+                                        </section>
+                                    </ModalFooter>
                         }
                     </section>
                 </ModalContent>

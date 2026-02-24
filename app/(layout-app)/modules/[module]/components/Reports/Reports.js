@@ -14,7 +14,7 @@ export default function Reports () {
     // Show loading skeleton while detecting device type
     if (isMobile === null) {
         return (
-            <section className="w-full p-4">
+            <section className="w-full h-full min-h-0 overflow-hidden p-4">
                 <Skeleton className="h-20 w-full rounded-lg mb-4" />
                 <Skeleton className="h-40 w-full rounded-lg mb-4" />
                 <Skeleton className="h-40 w-full rounded-lg" />
@@ -23,7 +23,7 @@ export default function Reports () {
     }
 
     return (
-        <section className="w-full h-full">
+        <section className="w-full h-full min-h-0 overflow-hidden">
             {isMobile ? <MobileReportView /> : <ReportView />}
         </section>
     )

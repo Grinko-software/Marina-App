@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader, Skeleton } from '@nextui-org/react'
+import { formatter } from '@/utils/number'
 
 /**
  * Simple mobile-optimized area chart without ApexCharts
@@ -34,8 +35,8 @@ const MobileAreaChartSimple = ({ data, isLoading, title }) => {
 
         return {
             name: serie.name,
-            total: total.toFixed(2),
-            latest: latest.toFixed(2),
+            total,
+            latest,
             trend: parseFloat(trend)
         }
     })
@@ -89,7 +90,7 @@ const MobileAreaChartSimple = ({ data, isLoading, title }) => {
                                         Total
                                     </p>
                                     <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
-                                        ${serie.total}
+                                        {formatter.format(serie.total)}
                                     </p>
                                 </div>
                                 <div>
@@ -97,7 +98,7 @@ const MobileAreaChartSimple = ({ data, isLoading, title }) => {
                                         Último
                                     </p>
                                     <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
-                                        ${serie.latest}
+                                        {formatter.format(serie.latest)}
                                     </p>
                                 </div>
                             </div>
@@ -108,7 +109,7 @@ const MobileAreaChartSimple = ({ data, isLoading, title }) => {
                                     <div
                                         className="h-full rounded-full transition-all duration-300"
                                         style={{
-                                            width: `${Math.min((parseFloat(serie.latest) / parseFloat(seriesData.find(s => s.name === 'Total')?.latest || 1)) * 100, 100)}%`,
+                                            width: `${Math.min((serie.latest / (seriesData.find(s => s.name === 'Total')?.latest || 1)) * 100, 100)}%`,
                                             backgroundColor: color
                                         }}
                                     />

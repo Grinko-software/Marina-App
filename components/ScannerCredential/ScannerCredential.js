@@ -1,14 +1,16 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import QR from '@/assets/gifs/QR.json'
 import CompletedGif from '@/assets/gifs/animation_completed.json'
 import ErrordGif from '@/assets/gifs/animation_error.json'
-import Lottie from 'lottie-react'
 import useScannerStore from '@/stores/scanner'
 import useAuthStore from '@/stores/user'
 import { Button, Input, Spinner } from '@nextui-org/react'
 import AlertMessage from '../ui/AlertMessage'
 import { FaUnlockAlt } from 'react-icons/fa'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 
 const TIMEOUT = 1500
 const TIMEOUT_SCAN = 500

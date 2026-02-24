@@ -35,6 +35,7 @@ const MobileReportView = () => {
     const [dataModelSalesTypes, setDataModelSalesTypes] = useState(null)
     const [dataModelSalesTypesLoading, setDataModelSalesTypesLoading] = useState(true)
     const [totalMoneyIndicator, setTotalMoneyIndicator] = useState({})
+    const [selectedTab, setSelectedTab] = useState('overview')
 
     // Process pie chart data
     useEffect(() => {
@@ -169,9 +170,9 @@ const MobileReportView = () => {
     }, [dataSalesTypes])
 
     return (
-        <div className="w-full h-full flex flex-col overflow-hidden">
+        <div className="w-full h-full min-h-0 flex flex-col overflow-hidden overscroll-none pb-[env(safe-area-inset-bottom)]">
             {/* Filter Section */}
-            <div className="px-2 pt-2 sm:pt-3 pb-2 flex-shrink-0">
+            <div className="px-2 pt-2 pb-1.5 flex-shrink-0 sticky top-0 z-20 bg-primary-200 dark:bg-secondary-500 border-b ">
                 <Filter
                     loading={dataModelIndicatorLoading}
                     setLoading={setDataModelIndicatorLoading}
@@ -179,56 +180,76 @@ const MobileReportView = () => {
             </div>
 
             {/* Tabbed Content with Scroll */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden gap-2">
                 <Tabs
                     aria-label="Report sections"
-                    variant="underlined"
+                    size="md"
+                    fullWidth
+                    selectedKey={selectedTab}
+                    onSelectionChange={(key) => setSelectedTab(String(key))}
+                    className="w-full shrink-0 px-2 py-1"
                     classNames={{
-                        tabList: 'gap-1.5 sm:gap-2 w-full relative rounded-none p-0 border-b border-divider sticky top-0 bg-white dark:bg-gray-900 z-10 px-2',
-                        cursor: 'w-full bg-primary',
-                        tab: 'max-w-fit px-2 sm:px-3 h-11 sm:h-12',
-                        tabContent: 'group-data-[selected=true]:text-primary text-[10px] sm:text-xs',
-                        panel: 'w-full p-0',
-                        base: 'w-full p-0 flex'
+                        cursor: 'bg-green-400 dark:bg-green-400',
+                        tabContent: 'group-data-[selected=true]:text-primary-50 text-gray-700 dark:text-gray-200 font-semibold text-[12px]'
                     }}
                 >
-                    {/* Overview Tab */}
                     <Tab
                         key="overview"
                         title={
-                            <div className="flex items-center gap-2">
-                                <span>📊</span>
+                            <div className="flex items-center justify-center w-full">
                                 <span>Resumen</span>
                             </div>
                         }
-                    >
-                        <div className="w-full px-2 sm:px-3 py-3 sm:py-4 space-y-2.5 sm:space-y-3">
-                            {/* Key Indicators - Mobile Optimized */}
-                            <div className="grid grid-cols-1 gap-2.5 sm:gap-3">
-                                <MobileInfoCard
-                                    title="Ingresos"
-                                    value={totalMoneyIndicator?.value || '0'}
-                                    unit="$"
-                                    subUnit={totalMoneyIndicator?.unit || ''}
-                                    trend={dataModelIndicator?.total_money_percent_indicator}
-                                    trendLabel="Ingresos vs. período anterior"
-                                    color="green-400"
-                                    isLoading={dataModelIndicatorLoading}
-                                />
-                                <MobileInfoCard
-                                    title="Ventas"
-                                    value={dataModelIndicator?.total_sales || '0'}
-                                    unit=""
-                                    subUnit=""
-                                    trend={dataModelIndicator?.total_sales_percent_indicator}
-                                    trendLabel="Ventas vs. período anterior"
-                                    color="yellow-400"
-                                    isLoading={dataModelIndicatorLoading}
-                                />
+                    />
+                    <Tab
+                        key="trends"
+                        title={
+                            <div className="flex items-center justify-center w-full">
+                                <span>Tendencias</span>
+                            </div>
+                        }
+                    />
+                    <Tab
+                        key="stock"
+                        title={
+                            <div className="flex items-center justify-center w-full">
+                                <span>Stock</span>
+                            </div>
+                        }
+                    />
+                </Tabs>
+
+                <div className="w-full flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-2 pt-0 pb-[calc(env(safe-area-inset-bottom)+3.75rem)]">
+                    {selectedTab === 'overview' && (
+                        <div className="space-y-2.5">
+                            <div className="grid grid-cols-1 gap-2.5">
+                                <div className="rounded-xl border  bg-white dark:bg-secondary-450 shadow-sm p-1">
+                                    <MobileInfoCard
+                                        title="Ingresos"
+                                        value={totalMoneyIndicator?.value || '0'}
+                                        unit="$"
+                                        subUnit={totalMoneyIndicator?.unit || ''}
+                                        trend={dataModelIndicator?.total_money_percent_indicator}
+                                        trendLabel="Ingresos vs. período anterior"
+                                        color="green-400"
+                                        isLoading={dataModelIndicatorLoading}
+                                    />
+                                </div>
+                                <div className="rounded-xl border bg-white dark:bg-secondary-450 shadow-sm p-1">
+                                    <MobileInfoCard
+                                        title="Ventas"
+                                        value={dataModelIndicator?.total_sales || '0'}
+                                        unit=""
+                                        subUnit=""
+                                        trend={dataModelIndicator?.total_sales_percent_indicator}
+                                        trendLabel="Ventas vs. período anterior"
+                                        color="yellow-400"
+                                        isLoading={dataModelIndicatorLoading}
+                                    />
+                                </div>
                             </div>
 
-                            {/* Pie Chart - Mobile Optimized */}
-                            <div className="w-full">
+                            <div className="w-full rounded-xl border bg-white dark:bg-secondary-450 shadow-sm p-1">
                                 <MobilePieChartSimple
                                     data={dataModelPieChart}
                                     isLoading={dataModelPieChartLoading}
@@ -236,42 +257,20 @@ const MobileReportView = () => {
                                 />
                             </div>
                         </div>
-                    </Tab>
+                    )}
 
-                    {/* Sales Trends Tab */}
-                    <Tab
-                        key="trends"
-                        title={
-                            <div className="flex items-center gap-2">
-                                <span>📈</span>
-                                <span>Tendencias</span>
-                            </div>
-                        }
-                    >
-                        <div className="w-full px-2 sm:px-3 py-3 sm:py-4 space-y-3 sm:space-y-4">
+                    {selectedTab === 'trends' && (
+                        <div className="space-y-3">
                             <MobileAreaChartSimple
                                 data={dataModelSalesTypes}
                                 isLoading={dataModelSalesTypesLoading}
                                 title="Ventas por Tipo de Pago"
                             />
                         </div>
-                    </Tab>
+                    )}
 
-                    {/* Stock Tab */}
-                    <Tab
-                        key="stock"
-                        title={
-                            <div className="flex items-center gap-2">
-                                <span>📦</span>
-                                <span>Stock</span>
-                            </div>
-                        }
-                    >
-                        <div className="w-full px-2 sm:px-3 py-3 sm:py-4">
-                            <StockTable />
-                        </div>
-                    </Tab>
-                </Tabs>
+                    {selectedTab === 'stock' && <StockTable />}
+                </div>
             </div>
         </div>
     )

@@ -1,6 +1,8 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable no-unused-vars */
+'use client'
 import React, { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import {
     Modal,
     ModalContent,
@@ -11,13 +13,14 @@ import {
     Input,
     Text
 } from '@nextui-org/react'
-import Lottie from 'lottie-react'
 import useInvoiceStore from './invoice/store'
 import useMachineStore from './store/machine'
 import cardloading from '@/assets/gifs/card-loading.json'
 import useSalesStore from '../store'
 import { CreditIcon } from '@/components/ui/CreditIcon'
 import toast from 'react-hot-toast'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 export default function LoadingSale ({
     isOpen,
     onClose,

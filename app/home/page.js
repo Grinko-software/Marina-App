@@ -32,10 +32,18 @@ export default function Home () {
     }, [disabled])
 
     return (
-        <section className="bg-primary-300 dark:bg-secondary-500 sm:mx-10">
+        <section className="bg-primary-300 dark:bg-secondary-500 min-h-screen sm:mx-10">
             <Auth />
             <div>
                 <main>
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="flex justify-center px-4 pt-4 sm:pt-6"
+                    >
+                        <SettingsNav isMobile={salesDisabled}/>
+                    </motion.div>
                     <div className="sm:mt-36 sm:mr-0 sm:ml-0 mt-4">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.5 }}
@@ -79,7 +87,6 @@ export default function Home () {
                             }}
                             className="flex sm:flex-col-reverse sm:m-0 m-4  items-center sm:items-end sm:x-5"
                         >
-                            <SettingsNav isMobile={salesDisabled} />
                         </motion.div>
                     </div>
                 </main>

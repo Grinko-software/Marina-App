@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import {
     Input,
     Checkbox,
@@ -13,7 +14,6 @@ import {
 } from '@nextui-org/react'
 import credit from '@/assets/images/registryBox.png'
 import InitCashReconciliationCard from '../../ui/InitCashReconciliationCard'
-import Lottie from 'lottie-react'
 import QR from '@/assets/gifs/QR.json'
 import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
@@ -25,6 +25,8 @@ import { today } from '@/utils/date'
 import useAuthStore from '@/stores/user'
 import useScannerStore from '@/stores/scanner'
 import ScannerCredential from '@/components/ScannerCredential/ScannerCredential'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 export default function InitCashCounting ({
     isOpen,
     onClose,

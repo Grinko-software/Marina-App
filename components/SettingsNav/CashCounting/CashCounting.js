@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import {
     Modal,
     ModalContent,
@@ -16,7 +17,6 @@ import cash from '@/assets/images/cash.jpeg'
 import PaymentOfMoney from '@/assets/images/paymentOfMoney.jpeg'
 import CashReconciliationCard from '../../ui/CashReconciliationCard'
 import QR from '@/assets/gifs/QR.json'
-import Lottie from 'lottie-react'
 import useCashBalanceStore from '../store'
 import useSettingsStore from '@/stores/settings'
 import { getCashRegister } from '@/services/cashRegister'
@@ -27,6 +27,8 @@ import useAuthStore from '@/stores/user'
 import { today } from '@/utils/date'
 import ScannerCredential from '@/components/ScannerCredential/ScannerCredential'
 import useScannerStore from '@/stores/scanner'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 
 const CashCounting = ({ isOpen, onClose, setStatusCashRegister }) => {
     const notify = (text) => toast(text)
