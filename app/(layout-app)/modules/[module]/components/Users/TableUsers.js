@@ -19,8 +19,18 @@ const colorMap = {
 }
 
 const typesMap = {
-    EMPLOYEE: 'EMPLEADO',
-    ADMIN: 'ADMINISTRADOR'
+    EMPLOYEE: 'empleado',
+    ADMIN: 'administrador'
+}
+
+const toLowerText = (value) => `${value ?? ''}`.toLowerCase()
+
+const capitalizeFirstLetter = (value) => {
+    const normalizedValue = toLowerText(value).trim()
+
+    if (!normalizedValue) return ''
+
+    return `${normalizedValue.charAt(0).toUpperCase()}${normalizedValue.slice(1)}`
 }
 
 export default function TableUsers ({ data, loading, setTarget }) {
@@ -37,21 +47,21 @@ export default function TableUsers ({ data, loading, setTarget }) {
         },
         {
             key: 'email',
-            label: 'Correo'
+            label: 'correo'
         },
         {
             key: 'type',
-            label: 'Tipo de usuario',
+            label: 'tipo de usuario',
             center: true
         },
         {
             key: 'hasCredential',
-            label: 'Credencial',
+            label: 'credencial',
             center: true
         },
         {
             key: 'actions',
-            label: 'Acciones',
+            label: 'acciones',
             center: true
         }
     ]
@@ -71,13 +81,19 @@ export default function TableUsers ({ data, loading, setTarget }) {
             case 'name':
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                        <p className="text-bold text-sm dark:text-white">{capitalizeFirstLetter(cellValue)}</p>
+                    </div>
+                )
+            case 'lastName':
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm dark:text-white">{capitalizeFirstLetter(cellValue)}</p>
                     </div>
                 )
             case 'rut':
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                        <p className="text-bold text-sm dark:text-white">{toLowerText(cellValue)}</p>
                     </div>
                 )
             case 'type':
@@ -93,7 +109,7 @@ export default function TableUsers ({ data, loading, setTarget }) {
                                         content: 'text-white'
                                     }}
                                 >
-                                    {typesMap[data.type?.toUpperCase()]}
+                                    {toLowerText(typesMap[data.type?.toUpperCase()])}
                                 </Chip>
                             }
                         </p>
@@ -111,7 +127,7 @@ export default function TableUsers ({ data, loading, setTarget }) {
                                     content: 'text-white'
                                 }}
                             >
-                                {cellValue ? 'ASIGNADA' : 'NO ASIGNADA'}
+                                {cellValue ? 'asignada' : 'no asignada'}
                             </Chip>
                         </p>
                     </div>
@@ -120,14 +136,14 @@ export default function TableUsers ({ data, loading, setTarget }) {
                 return (
                     <div className="flex flex-col">
                         <Button variant="flat" onPress={() => openTarget(data)}>
-								Detalles
+							detalles
                         </Button>
                     </div>
                 )
             default:
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize dark:text-white">{`${cellValue}`}</p>
+                        <p className="text-bold text-sm dark:text-white">{toLowerText(cellValue)}</p>
                     </div>
                 )
             }
