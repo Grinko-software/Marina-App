@@ -52,9 +52,9 @@ const SalesMenu = () => {
         }
     }, [saleIdActive, listSalesActives, useSalesStore.getState()])
     return (
-        <section className="h-full w-full flex md:flex-col">
-            <div className="flex h-full w-full space-x-2">
-                <section className="w-full flex-1 h-full">
+        <section className="h-full w-full flex">
+            <div className="flex h-full w-full gap-2">
+                <section className="flex-1 min-w-0 h-full">
                     {payment
                         ? (
                             <PayPage
@@ -72,7 +72,7 @@ const SalesMenu = () => {
                             />
                         )}
                 </section>
-                <section className="flex flex-col w-[30%]">
+                <section className="flex flex-col w-[30%] h-full flex-shrink-0">
                     <div className="w-full flex justify-end">
                         <div className="flex px-2 space-x-2 items-center bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
                             <Tabs

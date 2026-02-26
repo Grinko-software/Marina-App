@@ -169,10 +169,9 @@ export default function tableProducts (props) {
     }, [])
 
     return (
-        <section className="animation-fade-in  w-full flex flex-col">
+        <section className="animation-fade-in w-full h-full flex flex-col">
             <div
-                style={{ scrollbarGutter: 'stable', scrollbarWidth: 0 }}
-                className="rounded-t-[12px] top-[0px] overflow-x-auto overflow-y-hidden flex items-center w-[8rem] s:w-[14rem] sm:w-[20rem] md:w-full"
+                className="rounded-t-[12px] overflow-x-auto overflow-y-hidden flex items-center w-full"
             >
                 {loadingCategories
                     ? <section className="pt-3 px-3  flex bg-secondary-50 rounded-t-[12px] dark:bg-secondary-450">
@@ -232,11 +231,8 @@ export default function tableProducts (props) {
                         </Tabs>
                     )}
             </div>
-            <section className="flex-1 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450">
-                <section
-                    style={{ scrollbarGutter: 'stable' }}
-                    className="w-full flex flex-wrap no-select custom-scrollbar h-[calc(100vh-16.7rem)] overflow-y-auto"
-                >
+            <section className="flex-1 min-h-0 rounded-xl rounded-tl-[0px] p-[1rem] bg-secondary-50 dark:bg-secondary-450 flex flex-col">
+                <section className="flex-1 min-h-0 w-full flex flex-wrap no-select custom-scrollbar overflow-y-auto content-start">
                     {loading && listInventory?.length < 0
                         ? (
                             <div className="gap-4 grid grid-cols-2 md:grid-cols-5 p-1 w-full">
@@ -245,33 +241,23 @@ export default function tableProducts (props) {
                                 ))}
                             </div>
                         )
-                        : (
-                            <section
-                                style={{ scrollbarGutter: 'stable' }}
-                                className="w-full flex flex-wrap h-[calc(100vh-20rem)]  no-select custom-scrollbar overflow-y-auto content-start snap-mandatory snap-y"
-                            >
-                                {(filteredList.length ? filteredList : listInventory)?.length > 0
-                                    ? (filteredList.length ? filteredList : listInventory)?.map(
-                                        (item, index) => (
-                                            <div
-                                                key={'productList' + index}
-                                                className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6"
-                                            >
-                                                <div className="h-full p-2">
-                                                    <CardUi
-                                                        className
-                                                        key={index}
-                                                        item={item}
-                                                        index={index}
-                                                        isFromSales={true}
-                                                        setTargetProduct={setTargetProduct}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )
-								  )
-                                    : null}
-                            </section>
+                        : (filteredList.length ? filteredList : listInventory)?.map(
+                            (item, index) => (
+                                <div
+                                    key={'productList' + index}
+                                    className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6"
+                                >
+                                    <div className="h-full p-2">
+                                        <CardUi
+                                            key={index}
+                                            item={item}
+                                            index={index}
+                                            isFromSales={true}
+                                            setTargetProduct={setTargetProduct}
+                                        />
+                                    </div>
+                                </div>
+                            )
                         )}
                 </section>
             </section>
