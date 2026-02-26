@@ -17,7 +17,7 @@ export default function RootLayout ({ children }) {
                 />
                 <title>Marina Market App</title>
             </head>
-            <body className={inter.className + ' h-screen flex overscroll-hidden'}>
+            <body className={inter.className + ' h-dvh flex overflow-hidden overscroll-none'}>
                 <Providers>{children}</Providers>
             </body>
         </html>
