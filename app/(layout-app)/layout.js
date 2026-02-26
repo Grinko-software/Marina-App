@@ -1,14 +1,17 @@
 'use client'
 import { Navigation } from '@/components/navigation/Navigation'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Header } from './header'
 import { motion } from 'framer-motion'
 import { isMobileDevice } from '@/utils/agent'
 import { usePathname } from 'next/navigation'
+import { Spinner } from '@nextui-org/react'
 
 export default function LayoutApp ({ children }) {
     const [isMobile, setIsMobile] = useState(true)
+    const [isNavigating, setIsNavigating] = useState(false)
     const pathname = usePathname()
+    const prevPathname = useRef(pathname)
     const isFullHeightMobileRoute = pathname?.includes('/reports') || pathname?.includes('/modules/accounting')
 
     useEffect(() => {
@@ -16,6 +19,19 @@ export default function LayoutApp ({ children }) {
             setIsMobile(isMobileDevice())
         }
     }, [])
+
+    useEffect(() => {
+        const handleStart = () => setIsNavigating(true)
+        window.addEventListener('navigation-start', handleStart)
+        return () => window.removeEventListener('navigation-start', handleStart)
+    }, [])
+
+    useEffect(() => {
+        if (prevPathname.current !== pathname) {
+            setIsNavigating(false)
+            prevPathname.current = pathname
+        }
+    }, [pathname])
 
     return (
         <section
@@ -36,6 +52,13 @@ export default function LayoutApp ({ children }) {
                 <header className="sticky top-0 z-20 bg-primary-200 dark:bg-secondary-500 h-[60px] flex-shrink-0">
                     <Header />
                 </header>
+
+                {/* Navigation loading overlay */}
+                {isNavigating && (
+                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-primary-200/80 dark:bg-secondary-500/80 backdrop-blur-sm">
+                        <Spinner size="lg" color="success" />
+                    </div>
+                )}
 
                 {/* Main Content */}
                 <div className="flex-1 min-h-0 flex w-full overflow-hidden">

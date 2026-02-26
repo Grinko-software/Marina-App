@@ -21,9 +21,11 @@ const LIMIT_PRODUCTS_VIEW = 50
 function ProductImage ({ src, alt }) {
     const fallback = DefaultImageMarinaMarket()
     const [imgSrc, setImgSrc] = useState(src?.length ? src : fallback)
+    const [errored, setErrored] = useState(false)
 
     useEffect(() => {
         setImgSrc(src?.length ? src : fallback)
+        setErrored(false)
     }, [src])
 
     return (
@@ -33,7 +35,12 @@ function ProductImage ({ src, alt }) {
             height={56}
             alt={alt || ''}
             className="w-14 h-14 rounded-lg object-cover bg-slate-100 dark:bg-white shrink-0"
-            onError={() => setImgSrc(fallback)}
+            onError={() => {
+                if (!errored) {
+                    setErrored(true)
+                    setImgSrc(fallback)
+                }
+            }}
         />
     )
 }

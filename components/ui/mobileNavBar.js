@@ -51,6 +51,7 @@ export default function MobileNavBar () {
             signOut()
         }
 
+        window.dispatchEvent(new CustomEvent('navigation-start'))
         router.push(route)
         setIsMenuOpen(false)
     }

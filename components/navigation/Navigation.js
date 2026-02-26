@@ -56,7 +56,12 @@ export function Navigation () {
                 aria-label="Options"
                 items={tabs}
                 selectedKey={selected}
-                onSelectionChange={setSelected}
+                onSelectionChange={(key) => {
+                    if (key !== selected) {
+                        window.dispatchEvent(new CustomEvent('navigation-start'))
+                    }
+                    setSelected(key)
+                }}
                 // disabledKeys={['reports']}
             >
                 {(item) => (
