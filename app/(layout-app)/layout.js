@@ -21,16 +21,22 @@ export default function LayoutApp ({ children }) {
     }, [])
 
     useEffect(() => {
-        const handleStart = () => setIsNavigating(true)
+        let timeout
+        const handleStart = () => {
+            setIsNavigating(true)
+            clearTimeout(timeout)
+            timeout = setTimeout(() => setIsNavigating(false), 3000)
+        }
         window.addEventListener('navigation-start', handleStart)
-        return () => window.removeEventListener('navigation-start', handleStart)
+        return () => {
+            window.removeEventListener('navigation-start', handleStart)
+            clearTimeout(timeout)
+        }
     }, [])
 
     useEffect(() => {
-        if (prevPathname.current !== pathname) {
-            setIsNavigating(false)
-            prevPathname.current = pathname
-        }
+        setIsNavigating(false)
+        prevPathname.current = pathname
     }, [pathname])
 
     return (
