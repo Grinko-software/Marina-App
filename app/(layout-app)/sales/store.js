@@ -1062,7 +1062,7 @@ const useSalesStore = create(
                                             if (printEnabled) {
                                                 saveDataToPrinterSaleTicket({
                                                     saleType,
-                                                    products: saleProductsList,
+                                                    products: cashSaleItem,
                                                     total: cashAmount,
                                                     stamp: data?.data?.TIMBRE,
                                                     folioNumber: data?.data?.FOLIO,
