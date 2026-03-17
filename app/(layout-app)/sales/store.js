@@ -8,10 +8,7 @@ import {
     CREATE_PAYMENT_POSMACHINE,
     GET_STATE_SALE_POSMACHINE
 } from '@/settings/constants'
-import { fetchPost } from '@/services/sales'
-import { getData, GET, POST } from '@/services/http'
-import { generatePdfDocument } from './components/voucher/services'
-import { today } from '@/utils/date'
+import { getData, POST } from '@/services/http'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
 import {
     getStateSaleMachine,
@@ -969,6 +966,183 @@ const useSalesStore = create(
 
                 set({ loadingSale: false })
                 // setStateMachine(null)
+            },
+            createSaleMixed: async ({
+                sales,
+                saleId,
+                notify,
+                onSuccessSale,
+                removeSale,
+                cashAmount,
+                cardAmount
+            }) => {
+                set({ loadingSale: true, error: null })
+                const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
+                const sale = sales[saleIndex]
+                const saleType = VOUCHER_TYPE.VOUCHER
+
+                const saleProductsList = sale?.saleProductsList
+
+                const discountTotalPctg = sale?.discountPctg
+                    ? sale?.discountPctg >= 0 && sale?.discountPctg <= 100
+                        ? sale?.discountPctg / 100
+                        : null
+                    : null
+                const totalDiscountExtra = sale?.discount
+                const totalPay = discountTotalPctg
+                    ? sale?.totalPrice - totalDiscountExtra
+                    : sale?.totalPrice
+
+                const totalTaxFreePay = sale?.totalTaxFree || 0
+                const totalWithOutTaxFree = totalPay - totalTaxFreePay
+                const netTotal = roundValueWithMath(totalWithOutTaxFree / 1.19, 0, 0)
+                const iva = totalWithOutTaxFree - netTotal
+
+                const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
+                const cashRegister = getCashRegister()
+                const body = {
+                    is_done: true,
+                    sales_receipt: saleProductsList?.map((item) => ({
+                        product_id: item?.product?.id,
+                        quantity: item?.quantity,
+                        total_price: item?.total,
+                        total_discount: item?.discount
+                    })),
+                    payment_type_id: 7,
+                    voucher_type_id: 1,
+                    cash_register_id: cashRegister?.ID,
+                    user_id: getIdUser(),
+                    total: totalPay
+                }
+
+                const device = getDeviceTuu()
+
+                const finalizeSale = async ({ cardData = null, hasCash = false }) => {
+                    try {
+                        // La boleta se emite solo por la porción en efectivo.
+                        // El TUU genera su propio DTE por la porción de tarjeta.
+                        const cashTaxFreePay = totalTaxFreePay > 0
+                            ? roundValueWithMath(totalTaxFreePay * (cashAmount / totalPay), 0, 0)
+                            : 0
+                        const cashWithOutTaxFree = cashAmount - cashTaxFreePay
+                        const cashNetTotal = roundValueWithMath(cashWithOutTaxFree / 1.19, 0, 0)
+                        const cashIva = cashWithOutTaxFree - cashNetTotal
+
+                        // Item sintético para que el Detalle calce con los totales del efectivo.
+                        // Haulmer valida sum(MontoItem) contra MntTotal del Encabezado.
+                        const cashSaleItem = [{
+                            product: { name: 'PAGO EFECTIVO - MIXTO', price: cashAmount, taxFree: false },
+                            quantity: 1,
+                            discount: 0,
+                            total: cashAmount
+                        }]
+
+                        const dteBody = generateDTEBody({
+                            discount: null,
+                            isInvoice: false,
+                            iva: cashIva,
+                            netTotal: cashNetTotal,
+                            saleProductsList: cashSaleItem,
+                            totalPay: cashAmount,
+                            totalTaxFreePay: cashTaxFreePay
+                        })
+                        await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
+                            .then((data) => {
+                                if (data?.data?.TIMBRE) {
+                                    const newBody = {
+                                        ...body,
+                                        invoice_number: data?.data?.FOLIO,
+                                        stamp: data?.data?.TIMBRE
+                                    }
+                                    getData(SALE_TICKET_CREATE, POST, newBody).then((result) => {
+                                        set({ loadingSale: false })
+                                        if (result?.code === 200) {
+                                            const printEnabled =
+                                                useSettingsStore.getState()?.printEnabled || true
+                                            if (printEnabled) {
+                                                saveDataToPrinterSaleTicket({
+                                                    saleType,
+                                                    products: saleProductsList,
+                                                    total: cashAmount,
+                                                    stamp: data?.data?.TIMBRE,
+                                                    folioNumber: data?.data?.FOLIO,
+                                                    totalNet: cashNetTotal,
+                                                    iva: cashIva,
+                                                    totalTaxFree: cashTaxFreePay,
+                                                    discountExtra: totalDiscountExtra,
+                                                    discountOffers: totalDiscountOffers,
+                                                    cardDetail: cardData,
+                                                    openCashRegister: hasCash
+                                                })
+                                            }
+                                            notify('✅ Pago mixto con éxito')
+                                            if (onSuccessSale) onSuccessSale()
+                                            removeSale(sales, saleId)
+                                        } else {
+                                            notify('❌ Problemas al guardar la venta, pero el cobro fue efectuado')
+                                        }
+                                    })
+                                } else {
+                                    set({ loadingSale: false })
+                                }
+                            })
+                            .catch((error) => {
+                                notify('❌ ' + (error?.message || 'Error en Haulmer'))
+                                set({ loadingSale: false })
+                            })
+                    } catch {
+                        set({ loadingSale: false })
+                    }
+                }
+
+                const hasCash = cashAmount > 0
+
+                if (device) {
+                    try {
+                        const bodyPosMachine = {
+                            device,
+                            amount: cardAmount,
+                            dteType: 48,
+                            printVoucherOnApp: false,
+                            extraData: {
+                                taxIdnValidation: '77426986-K',
+                                sourceName: 'Marina APP'
+                            }
+                        }
+                        setStateMachine('Enviando')
+                        await getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(
+                            (result) => {
+                                if (result?.code === 200 && result?.data?.paymentRequestId) {
+                                    setStateMachine('Pendiente')
+                                    const idSale = result?.data?.paymentRequestId
+                                    getStateSaleMachine(
+                                        GET_STATE_SALE_POSMACHINE.replace(':id', idSale)
+                                    )
+                                        .then(async (cardData) => {
+                                            setStateMachine(null)
+                                            await finalizeSale({ cardData, hasCash })
+                                        })
+                                        .catch(() => {
+                                            notify('❌ Problemas con el pago con tarjeta')
+                                            set({ loadingSale: false })
+                                            setStateMachine(null)
+                                        })
+                                } else {
+                                    notify('❌ ' + errorsMachine.get(result?.data?.code))
+                                    set({ loadingSale: false })
+                                    setStateMachine(null)
+                                }
+                            }
+                        )
+                    } catch {
+                        set({ loadingSale: false })
+                    }
+                } else {
+                    // Sin dispositivo TUU: la tarjeta se cobra manualmente en terminal externo
+                    await finalizeSale({ cardData: null, hasCash })
+                }
+
+                set({ loadingSale: false })
             },
             /* Add discount */
             addDiscountSale: (listSalesActives, saleIdActive, value, cleanForm) => {

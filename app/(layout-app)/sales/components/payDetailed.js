@@ -8,14 +8,14 @@ import {
     ModalBody,
     ModalFooter,
     Button,
-    Input,
-    Text
+    Input
 } from '@nextui-org/react'
 import { notify } from '@/services/notify'
 import { formatter } from '@/utils/number'
 import useSalesStore from '../store'
 import InvoiceDetailed from './invoice/invoice'
 import useInvoiceStore from './invoice/store'
+import MixedPaymentModal from './MixedPaymentModal'
 export default function PayDetailed ({
     payment,
     setPayment,
@@ -45,13 +45,15 @@ export default function PayDetailed ({
         removeSale,
         createSaleTicket,
         createSaleInvoice,
-        createSaleVoucher
+        createSaleVoucher,
+        createSaleMixed
     } = useSalesStore()
 
     const [totalValue, setTotalValue] = useState(null)
     const [changeValue, setChangeValue] = useState(null)
     const [isSuccessCompleted, setIsSuccessCompleted] = useState(null)
     const [isDisableButtonPay, setIsDisableButtonPay] = useState(null)
+    const [openMixedModal, setOpenMixedModal] = useState(false)
 
     useEffect(() => {
         if (paymentTarget === 1) {
@@ -62,6 +64,8 @@ export default function PayDetailed ({
             setPaymentTarget(listSalesActives, saleIdActive, paymentTarget)
             generateSale()
             setPaymentTarget(listSalesActives, saleIdActive, null)
+        } else if (paymentTarget === 7) {
+            setOpenMixedModal(true)
         }
     }, [paymentTarget])
     useEffect(() => {
@@ -108,6 +112,21 @@ export default function PayDetailed ({
     }
     const onSuccessSaleWithCard = () => {
         setPayment(false)
+    }
+    const handleMixedPayment = ({ cashAmount, cardAmount }) => {
+        createSaleMixed({
+            sales: listSalesActives,
+            saleId: saleIdActive,
+            notify,
+            removeSale,
+            cashAmount,
+            cardAmount,
+            onSuccessSale: () => {
+                setOpenMixedModal(false)
+                setPaymentTarget(listSalesActives, saleIdActive, null)
+                setPayment(false)
+            }
+        })
     }
     const finishSale = () => {
         setPayDetailed(null)
@@ -314,6 +333,16 @@ export default function PayDetailed ({
                 openModal={openModal}
                 setOpenModal={setOpenModal}
                 setVoucherTargetValue={setVoucherTargetValue}
+            />
+            <MixedPaymentModal
+                isOpen={openMixedModal}
+                onClose={() => {
+                    setOpenMixedModal(false)
+                    setPaymentTarget(listSalesActives, saleIdActive, null)
+                }}
+                totalPay={totalPay}
+                onConfirm={handleMixedPayment}
+                loadingSale={loadingSale}
             />
         </section>
     )

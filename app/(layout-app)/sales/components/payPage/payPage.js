@@ -18,7 +18,7 @@ import useInvoiceStore from '../invoice/store'
 import useInventoryStore from '@/app/(layout-app)/inventory/store'
 import { MdPrint } from 'react-icons/md'
 import useSettingsStore from '@/stores/settings'
-import { TbDeviceMobileDollar } from 'react-icons/tb'
+import { TbDeviceMobileDollar, TbArrowsExchange } from 'react-icons/tb'
 export default function PayPage (props) {
     const { getData, error, loading, setLoading, data, triggerAction } = useStore(
         (state) => state
@@ -229,9 +229,13 @@ export default function PayPage (props) {
                                                         ? (
                                                             <CreditIcon />
                                                         )
-                                                        : (
-                                                            <TbDeviceMobileDollar size={80} />
-                                                        )
+                                                        : pay?.id === 7
+                                                            ? (
+                                                                <TbArrowsExchange size={80} />
+                                                            )
+                                                            : (
+                                                                <TbDeviceMobileDollar size={80} />
+                                                            )
                                             }
                                             title={pay?.name}
                                             paymentTarget={paymentTarget}
