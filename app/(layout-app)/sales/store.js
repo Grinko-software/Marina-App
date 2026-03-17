@@ -155,20 +155,21 @@ const useSalesStore = create(
                     }
                 } else {
                     if (!searhProduct) {
+                        const quantitySale =
+							product?.stockTypeId === 1
+							    ? parseFloat(units)
+							    : Math.round(parseFloat(units))
                         const currentTotal = roundValueWithMath(
-                            product?.price * parseFloat(units),
+                            product?.price * quantitySale,
                             0,
                             0
                         )
                         const total = roundPrice(currentTotal) || currentTotal
-                        let quantitySale = total / product?.price
-                        quantitySale =
-							roundValueWithMath(quantitySale * 100000, 5, 0) / 100000
                         listSales = [
                             ...listSales,
                             {
                                 product,
-                                quantity: parseFloat(quantitySale),
+                                quantity: quantitySale,
                                 discount: 0,
                                 total
                             }
@@ -177,20 +178,22 @@ const useSalesStore = create(
                         const newList = listSales?.filter(
                             (item) => item?.product?.id !== product?.id
                         )
+                        const newQuantity = searhProduct?.quantity + units
+                        const quantitySale =
+							product?.stockTypeId === 1
+							    ? newQuantity
+							    : Math.round(newQuantity)
                         const currentTotal = roundValueWithMath(
-                            product?.price * (searhProduct?.quantity + units),
+                            product?.price * quantitySale,
                             0,
                             0
                         )
                         const total = roundPrice(currentTotal) || currentTotal
-                        let quantitySale = total / product?.price
-                        quantitySale =
-							roundValueWithMath(quantitySale * 100000, 5, 0) / 100000
                         listSales = [
                             ...newList,
                             {
                                 product,
-                                quantity: parseFloat(quantitySale),
+                                quantity: quantitySale,
                                 discount: 0,
                                 total
                             }
