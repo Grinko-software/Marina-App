@@ -323,7 +323,7 @@ const useSalesStore = create(
 							            taxIdnValidation: '77426986-K',
 							            sourceName: 'Marina APP'
 							        }
-								  }
+							    }
 							    : {
 							        device,
 							        amount: totalPay,
@@ -333,7 +333,7 @@ const useSalesStore = create(
 							            taxIdnValidation: '77426986-K',
 							            sourceName: 'Marina APP'
 							        }
-								  }
+							    }
                         setStateMachine('Enviando')
                         await getData(CREATE_PAYMENT_POSMACHINE, POST, bodyPosMachine).then(
                             (result) => {
@@ -563,7 +563,8 @@ const useSalesStore = create(
                                 customerAddress: targetCustomer?.address,
                                 customerEmail: targetCustomer?.email,
                                 customerPhone: targetCustomer?.phone,
-                                giroEmisor: targetCustomer?.business_line || 'Comercio al por menor',
+                                giroEmisor:
+									targetCustomer?.business_line || 'Comercio al por menor',
                                 comunaReceptor: targetCustomer?.commune,
                                 ciudadReceptor: targetCustomer?.region
                             }
@@ -589,7 +590,11 @@ const useSalesStore = create(
                                                     totalPay,
                                                     totalTaxFreePay
                                                 })
-                                                await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
+                                                await createSaleOnHaulmer(
+                                                    GET_DOCUMENT_HAULMER,
+                                                    POST,
+                                                    dteBody
+                                                )
                                                     .then((data) => {
                                                         if (data?.data?.TIMBRE) {
                                                             const newBody = {
@@ -607,7 +612,8 @@ const useSalesStore = create(
                                                                             const stamp = data?.data?.TIMBRE
                                                                             const folio = data?.data?.FOLIO // enviar
                                                                             const printEnabled =
-														useSettingsStore.getState()?.printEnabled || true
+																				useSettingsStore.getState()
+																				    ?.printEnabled || true
                                                                             if (printEnabled) {
                                                                                 saveDataToPrinterSaleTicket({
                                                                                     saleType,
@@ -649,7 +655,8 @@ const useSalesStore = create(
                                                         }
                                                     })
                                                     .catch((error) => {
-                                                        const message = error?.message || 'Error en Haulmer'
+                                                        const message =
+															error?.message || 'Error en Haulmer'
                                                         notify('❌ ' + message)
                                                         set({ loadingSale: false })
                                                     })
@@ -1001,22 +1008,16 @@ const useSalesStore = create(
                 const netTotal = roundValueWithMath(totalWithOutTaxFree / 1.19, 0, 0)
                 const iva = totalWithOutTaxFree - netTotal
 
-                const totalDiscountOffers = getTotalDiscountOffers({ products: saleProductsList })
+                const totalDiscountOffers = getTotalDiscountOffers({
+                    products: saleProductsList
+                })
                 const cashRegister = getCashRegister()
-                const body = {
-                    is_done: true,
-                    sales_receipt: saleProductsList?.map((item) => ({
-                        product_id: item?.product?.id,
-                        quantity: item?.quantity,
-                        total_price: item?.total,
-                        total_discount: item?.discount
-                    })),
-                    payment_type_id: 7,
-                    voucher_type_id: 1,
-                    cash_register_id: cashRegister?.ID,
-                    user_id: getIdUser(),
-                    total: totalPay
-                }
+                const salesReceipt = saleProductsList?.map((item) => ({
+                    product_id: item?.product?.id,
+                    quantity: item?.quantity,
+                    total_price: item?.total,
+                    total_discount: item?.discount
+                }))
 
                 const device = getDeviceTuu()
 
@@ -1024,21 +1025,36 @@ const useSalesStore = create(
                     try {
                         // La boleta se emite solo por la porción en efectivo.
                         // El TUU genera su propio DTE por la porción de tarjeta.
-                        const cashTaxFreePay = totalTaxFreePay > 0
-                            ? roundValueWithMath(totalTaxFreePay * (cashAmount / totalPay), 0, 0)
-                            : 0
+                        const cashTaxFreePay =
+							totalTaxFreePay > 0
+							    ? roundValueWithMath(
+							        totalTaxFreePay * (cashAmount / totalPay),
+							        0,
+							        0
+							    )
+							    : 0
                         const cashWithOutTaxFree = cashAmount - cashTaxFreePay
-                        const cashNetTotal = roundValueWithMath(cashWithOutTaxFree / 1.19, 0, 0)
+                        const cashNetTotal = roundValueWithMath(
+                            cashWithOutTaxFree / 1.19,
+                            0,
+                            0
+                        )
                         const cashIva = cashWithOutTaxFree - cashNetTotal
 
                         // Item sintético para que el Detalle calce con los totales del efectivo.
                         // Haulmer valida sum(MontoItem) contra MntTotal del Encabezado.
-                        const cashSaleItem = [{
-                            product: { name: 'PAGO EFECTIVO - MIXTO', price: cashAmount, taxFree: false },
-                            quantity: 1,
-                            discount: 0,
-                            total: cashAmount
-                        }]
+                        const cashSaleItem = [
+                            {
+                                product: {
+                                    name: 'PAGO EFECTIVO - MIXTO',
+                                    price: cashAmount,
+                                    taxFree: false
+                                },
+                                quantity: 1,
+                                discount: 0,
+                                total: cashAmount
+                            }
+                        ]
 
                         const dteBody = generateDTEBody({
                             discount: null,
@@ -1052,39 +1068,75 @@ const useSalesStore = create(
                         await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
                             .then((data) => {
                                 if (data?.data?.TIMBRE) {
-                                    const newBody = {
-                                        ...body,
+                                    // Crear dos registros separados para que el cierre de caja cuadre:
+                                    // 1. Registro de efectivo
+                                    const cashBody = {
+                                        is_done: true,
+                                        sales_receipt: salesReceipt,
+                                        payment_type_id: 1,
+                                        voucher_type_id: 1,
+                                        cash_register_id: cashRegister?.ID,
+                                        user_id: getIdUser(),
+                                        total: cashAmount,
                                         invoice_number: data?.data?.FOLIO,
                                         stamp: data?.data?.TIMBRE
                                     }
-                                    getData(SALE_TICKET_CREATE, POST, newBody).then((result) => {
-                                        set({ loadingSale: false })
-                                        if (result?.code === 200) {
-                                            const printEnabled =
-                                                useSettingsStore.getState()?.printEnabled || true
-                                            if (printEnabled) {
-                                                saveDataToPrinterSaleTicket({
-                                                    saleType,
-                                                    products: cashSaleItem,
-                                                    total: cashAmount,
-                                                    stamp: data?.data?.TIMBRE,
-                                                    folioNumber: data?.data?.FOLIO,
-                                                    totalNet: cashNetTotal,
-                                                    iva: cashIva,
-                                                    totalTaxFree: cashTaxFreePay,
-                                                    discountExtra: totalDiscountExtra,
-                                                    discountOffers: totalDiscountOffers,
-                                                    cardDetail: cardData,
-                                                    openCashRegister: hasCash
-                                                })
+                                    // 2. Registro de tarjeta
+                                    const cardBody = {
+                                        is_done: true,
+                                        sales_receipt: salesReceipt,
+                                        payment_type_id: 2,
+                                        voucher_type_id: 1,
+                                        cash_register_id: cashRegister?.ID,
+                                        user_id: getIdUser(),
+                                        total: cardAmount,
+                                        invoice_number: data?.data?.FOLIO,
+                                        stamp: data?.data?.TIMBRE
+                                    }
+
+                                    getData(SALE_TICKET_CREATE, POST, cashBody).then(
+                                        (cashResult) => {
+                                            if (cashResult?.code === 200) {
+                                                getData(SALE_TICKET_CREATE, POST, cardBody).then(
+                                                    (cardResult) => {
+                                                        set({ loadingSale: false })
+                                                        if (cardResult?.code === 200) {
+                                                            const printEnabled =
+																useSettingsStore.getState()?.printEnabled ||
+																true
+                                                            if (printEnabled) {
+                                                                saveDataToPrinterSaleTicket({
+                                                                    saleType,
+                                                                    products: cashSaleItem,
+                                                                    total: cashAmount,
+                                                                    stamp: data?.data?.TIMBRE,
+                                                                    folioNumber: data?.data?.FOLIO,
+                                                                    totalNet: cashNetTotal,
+                                                                    iva: cashIva,
+                                                                    totalTaxFree: cashTaxFreePay,
+                                                                    discountExtra: totalDiscountExtra,
+                                                                    discountOffers: totalDiscountOffers,
+                                                                    cardDetail: cardData,
+                                                                    openCashRegister: hasCash
+                                                                })
+                                                            }
+                                                            notify('✅ Pago mixto con éxito')
+                                                            if (onSuccessSale) onSuccessSale()
+                                                            removeSale(sales, saleId)
+                                                        } else {
+                                                            notify(
+                                                                '❌ Problemas al guardar la venta de tarjeta, pero el cobro fue efectuado'
+                                                            )
+                                                        }
+                                                    }
+                                                )
+                                            } else {
+                                                notify(
+                                                    '❌ Problemas al guardar la venta de efectivo, pero el cobro fue efectuado'
+                                                )
                                             }
-                                            notify('✅ Pago mixto con éxito')
-                                            if (onSuccessSale) onSuccessSale()
-                                            removeSale(sales, saleId)
-                                        } else {
-                                            notify('❌ Problemas al guardar la venta, pero el cobro fue efectuado')
                                         }
-                                    })
+                                    )
                                 } else {
                                     set({ loadingSale: false })
                                 }

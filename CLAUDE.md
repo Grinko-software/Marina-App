@@ -18,7 +18,7 @@ npm run format:fix   # Auto-fix formatting
 - **Framework:** Next.js 13.5 with App Router, React 18.3, TypeScript path aliases (@/*)
 - **UI:** NextUI + Tailwind CSS + Material Tailwind + Framer Motion
 - **State:** Zustand with localStorage persistence
-- **HTTP:** Axios with OAuth interceptor + custom fetch wrapper with token refresh
+- **HTTP:** fetch
 - **Hardware:** SerialPort for thermal printers, Quagga2/QR scanner for barcodes
 
 ## Architecture
@@ -31,7 +31,7 @@ Zustand stores in `/stores/` are domain-separated (user.js, payment.js, category
 
 ### API Layer
 - All API endpoints are defined in `settings/constants.js`
-- **Dual HTTP system:** `services/http.js` provides Axios-based constants (GET/POST/PUT/DELETE/PATCH) used by service files; `utils/http.js` provides a native fetch wrapper with automatic token refresh on 401 and request queuing
+- **Dual HTTP system:** `services/http.js` provides constants (GET/POST/PUT/DELETE/PATCH) used by service files; `utils/http.js` provides a native fetch wrapper with automatic token refresh on 401 and request queuing
 - Services in `/services/` use `getData()`/`getDataMultiple()` from `services/http.js`
 - Base API: `https://marina-market-api-prod-693121331853.us-central1.run.app`
 - Local printer service: `http://localhost:8090/escpos/`

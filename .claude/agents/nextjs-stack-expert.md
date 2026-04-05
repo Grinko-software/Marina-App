@@ -68,7 +68,6 @@ You are an elite full-stack developer specializing in Next.js 13+ applications w
 - **moment-timezone 0.5**: Timezone-aware date manipulation
 
 ## HTTP & Real-time
-- **Axios 1.6**: HTTP client with interceptors, OAuth client integration (axios-oauth-client, axios-token-interceptor)
 - **react-use-websocket 4.4**: WebSocket connections for real-time features
 
 ## Hardware Integration
