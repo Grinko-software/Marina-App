@@ -1079,7 +1079,8 @@ const useSalesStore = create(
                                         user_id: getIdUser(),
                                         total: cashAmount,
                                         invoice_number: data?.data?.FOLIO,
-                                        stamp: data?.data?.TIMBRE
+                                        stamp: data?.data?.TIMBRE,
+                                        is_unique_payment: false
                                     }
                                     // 2. Registro de tarjeta
                                     const cardBody = {
@@ -1091,7 +1092,8 @@ const useSalesStore = create(
                                         user_id: getIdUser(),
                                         total: cardAmount,
                                         invoice_number: data?.data?.FOLIO,
-                                        stamp: data?.data?.TIMBRE
+                                        stamp: data?.data?.TIMBRE,
+                                        is_unique_payment: true
                                     }
 
                                     getData(SALE_TICKET_CREATE, POST, cashBody).then(
@@ -1175,6 +1177,7 @@ const useSalesStore = create(
                                     )
                                         .then(async (cardData) => {
                                             setStateMachine(null)
+                                            await new Promise((resolve) => setTimeout(resolve, 2000))
                                             await finalizeSale({ cardData, hasCash })
                                         })
                                         .catch(() => {
