@@ -606,6 +606,7 @@ const useSalesStore = create(
                                                             try {
                                                                 getData(SALE_TICKET_CREATE, POST, newBody).then(
                                                                     (result) => {
+                                                                        setStateMachine(null)
                                                                         set({ loadingSale: false })
                                                                         if (result?.code === 200) {
                                                                             console.log(result)
@@ -634,23 +635,23 @@ const useSalesStore = create(
                                                                             // generatePdfDocument({ listSales: saleProductsList, totalPay, stamp, netTotal, iva, totalTaxFree: totalTaxFreePay, discountPctg: discount, targetCustomer })
                                                                             // window.open(resultDtemite?.LinkPDF, 'Boleta.pdf')
                                                                             notify('✅ Pago con éxito')
-                                                                            if (onSuccessSale) {
+                                                                            if (onSuccessSale) { // REVISAR
                                                                                 onSuccessSale()
                                                                             }
                                                                             removeSale(sales, saleId)
-                                                                            set({ loadingSale: false })
                                                                         } else {
                                                                             notify(
                                                                                 '❌ Problemas con el pago, intente efectuar el pago nuevamente'
                                                                             )
-                                                                            set({ loadingSale: false })
                                                                         }
                                                                     }
                                                                 )
                                                             } catch {
+                                                                setStateMachine(null)
                                                                 set({ loadingSale: false })
                                                             }
                                                         } else {
+                                                            setStateMachine(null)
                                                             set({ loadingSale: false })
                                                         }
                                                     })
@@ -658,9 +659,11 @@ const useSalesStore = create(
                                                         const message =
 															error?.message || 'Error en Haulmer'
                                                         notify('❌ ' + message)
+                                                        setStateMachine(null)
                                                         set({ loadingSale: false })
                                                     })
                                             } catch {
+                                                setStateMachine(null)
                                                 set({ loadingSale: false })
                                             }
                                             /*   getData(SALE_TICKET_CREATE, POST, body).then((result) => {
@@ -698,19 +701,19 @@ const useSalesStore = create(
                                         })
                                         .catch((error) => {
                                             notify('❌ Problemas con el pago con la tarjeta')
+                                            setStateMachine(null)
                                             set({ loadingSale: false })
-                                            // setStateMachine(null)
                                         })
                                 } else {
                                     notify('❌ ' + errorsMachine.get(result?.data?.code))
+                                    setStateMachine(null)
                                     set({ loadingSale: false })
-                                    // setStateMachine(null)
                                 }
                             }
                         )
                     } catch {
+                        setStateMachine(null)
                         set({ loadingSale: false })
-                        // setStateMachine(null)
                     }
                     /* } else if (isCardPayment) {
                     // agregamos la logica para mandar la factura hacia haulmer, pero no iria la logica hacia la maquina TUU, ya que el roro está usando la machian de santander para estos casos

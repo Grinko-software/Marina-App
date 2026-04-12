@@ -216,7 +216,7 @@ export default function PayPage (props) {
                                     </section>
                                 )
                                 : (
-                                    listPayments?.map((pay) => (
+                                    listPayments?.filter((pay) => pay?.id !== 7)?.map((pay) => (// TODO: FILTRO PAGO MIXTO
                                         <PaymentButton
                                             key={pay?.id}
                                             id={pay?.id}
