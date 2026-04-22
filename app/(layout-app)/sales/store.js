@@ -215,12 +215,19 @@ const useSalesStore = create(
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const listSales = sales[saleIndex].saleProductsList
 
-                const newList = listSales?.filter(
-                    (item) => item?.product?.id !== productId
-                )
+                // Decrement by 1 if qty > 1; remove the row entirely only when qty reaches 0.
+                const newList = listSales?.reduce((acc, item) => {
+                    if (item?.product?.id !== productId) {
+                        acc.push(item)
+                    } else if (item.quantity > 1) {
+                        const newQuantity = item.quantity - 1
+                        const newTotal = Math.round(item.product.price * newQuantity)
+                        acc.push({ ...item, quantity: newQuantity, total: newTotal })
+                    }
+                    return acc
+                }, [])
 
                 sales[saleIndex].saleProductsList = newList
-                /* No puede remover productos en la vista de los pagos */
                 set({ listSalesActives: sales })
             },
             /*
