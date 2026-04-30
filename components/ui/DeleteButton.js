@@ -9,6 +9,7 @@ export default function DeleteButton ({ productId }) {
         const sales = useSalesStore.getState().listSalesActives
         const saleId = useSalesStore.getState().saleIdActive
         useSalesStore.getState().removeProduct(sales, saleId, productId)
+        document.activeElement?.blur()
     }
 
     return (
