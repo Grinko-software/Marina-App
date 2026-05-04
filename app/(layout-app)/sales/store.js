@@ -509,6 +509,7 @@ const useSalesStore = create(
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const sale = sales[saleIndex]
                 const saleType = VOUCHER_TYPE.INVOICE
+                const customerId = targetCustomer?.ID // add new values to generated print invoice
 
                 const saleProductsList = sale?.saleProductsList
                 const paymentTarget = sale?.paymentTarget
@@ -549,7 +550,8 @@ const useSalesStore = create(
                     voucher_type_id: 2,
                     cash_register_id: cashRegister?.ID,
                     user_id: getIdUser(),
-                    total: totalPay
+                    total: totalPay,
+                    customer_id: customerId
                 }
 
                 const device = getDeviceTuu()

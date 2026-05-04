@@ -23,6 +23,7 @@ export default function SaleDetail (params) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isLoading, setIsLoading] = useState(false)
     const [dataModel, setDataModel] = useState(null)
+    const [customerInfo, setCustomerInfo] = useState(null)
     const [info, setInfo] = useState(null)
     const { requestSaleDetail } = useLastSalesStore()
     const { downdloadVoucher } = salePrintStore()
@@ -39,6 +40,7 @@ export default function SaleDetail (params) {
             fetchData()
         } else {
             setDataModel(null)
+            setCustomerInfo(null)
             closeModal()
         }
     }, [targetValue])
@@ -65,6 +67,10 @@ export default function SaleDetail (params) {
             }
         })
         setDataModel(modelData || null)
+        if (data?.data?.customer) {
+            setCustomerInfo(data?.data?.customer)
+        }
+
         setIsLoading(false)
     }
 
@@ -84,7 +90,8 @@ export default function SaleDetail (params) {
                 stamp: info?.stamp,
                 voucherNumber: info?.invoice_number,
                 folioNumber: info?.invoice_number,
-                saleType: info?.VoucherType?.name // boleta ticket o factura
+                saleType: info?.VoucherType?.name, // boleta ticket o factura
+                customerDetail: customerInfo
             })
 
             fetchPrinterSaleTicket({ data: dataToPrint })
@@ -109,7 +116,8 @@ export default function SaleDetail (params) {
             stamp: info?.stamp,
             voucherNumber: info?.invoice_number,
             folioNumber: info?.invoice_number,
-            saleType: info?.VoucherType?.name // boleta ticket o factura
+            saleType: info?.VoucherType?.name, // boleta ticket o factura
+            customerDetail: customerInfo
         })
 
         downdloadVoucher({ printBodyLastSale: data })
