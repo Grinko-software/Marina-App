@@ -45,7 +45,7 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const [discount, setDiscount] = useState(null)
     const [messageError, setMessageError] = useState(null)
     const [searchInput, setSearchInput] = useState('')
-    const discountShortcuts = [10, 20, 30, 40, 50]
+    const discountShortcuts = [10,15, 20,25, 30,35,40,45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
     const handleInputChange = (value) => {
         if (value >= 0 && value <= 100) {
             setSearchInput(value)
