@@ -1,39 +1,28 @@
 /* eslint-disable no-unused-vars */
 'use client'
 import React, {
-    Suspense,
-    createRef,
     useEffect,
     useMemo,
     useState
 } from 'react'
 import {
     Button,
-    Divider,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownTrigger,
     Input,
     Modal,
     ModalBody,
     ModalContent,
     ModalFooter,
     ModalHeader,
-    Select,
-    SelectItem,
-    dropdown,
     useDisclosure
 } from '@nextui-org/react'
-import toast from 'react-hot-toast'
 import useStore from './store'
 import useInventoryStore from '../../store'
-import { BiSolidCategory } from 'react-icons/bi'
+import { BiSolidCategory, BiPlus, BiSearch } from 'react-icons/bi'
 import { isMobileDevice } from '@/utils/agent'
 import { notify } from '@/services/notify'
 import { DeleteIcon } from '@/components/ui/DeleteIcon'
+
 export default function CreateCategory () {
-    const [sectionCreateCategory, setSectionCreateCategory] = useState(false)
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [openModal, setOpenModal] = useState(false)
     const [type, setType] = useState('Eliminar')
@@ -41,6 +30,8 @@ export default function CreateCategory () {
     const [value, setValue] = useState('')
     const [invalid, setInvalid] = useState(false)
     const [isMobile, setIsMobile] = useState(true)
+    const [search, setSearch] = useState('')
+
     const {
         deleteCategory,
         error,
@@ -68,6 +59,7 @@ export default function CreateCategory () {
             complete
         })
     )
+
     const { handlCategoriesRequest, listCategories } = useInventoryStore(
         ({ handlCategoriesRequest, listCategories }) => ({
             handlCategoriesRequest,
@@ -75,39 +67,14 @@ export default function CreateCategory () {
         })
     )
 
-    const DeleteCard = ({ item }) => {
-        const { label, id } = item
-        const [loadingDelete, setLoadingDelete] = useState(false)
-
-        const handleOpenModalConfirmm = (item) => {
-            // setLoadingDelete(true)
-            setOpenModal(true)
-            setTarget(item)
-            // deleteCategory({ id, notify, deleteAction })
-        }
-
-        return (
-            <div className="flex gap-2 flex-row w-full items-center border rounded-xl pr-2">
-                <section className="flex-1 flex gap-2 flex-wrap p-4">
-                    <div className="flex flex-1 min-w-[8rem] flex-col">
-                        <span className="text-md">{label?.toUpperCase()}</span>
-                    </div>
-                    <div className="flex flex-1 min-w-[8rem] flex-col"></div>
-                    <div className="flex flex-1 min-w-[8rem] flex-col"></div>
-                </section>
-                <Button
-                    className=""
-                    isLoading={loadingDelete}
-                    variant="flat"
-                    color="danger"
-                    isIconOnly
-                    onClick={() => handleOpenModalConfirmm(item)}
-                >
-                    {!loadingDelete ? <DeleteIcon /> : null}
-                </Button>
-            </div>
+    const filteredCategories = useMemo(() => {
+        if (!listCategories) return []
+        if (!search.trim()) return listCategories
+        return listCategories.filter(item =>
+            item.label.toLowerCase().includes(search.toLowerCase())
         )
-    }
+    }, [listCategories, search])
+
     const deleteAction = () => {
         setOpenModal(false)
         setTarget(null)
@@ -115,8 +82,8 @@ export default function CreateCategory () {
         setInvalid(false)
         handlCategoriesRequest()
         clearStore()
-        onClose()
     }
+
     const handleDeleteCategory = (id) => {
         setOpenModal(true)
         deleteCategory({ id, notify, deleteAction })
@@ -126,28 +93,34 @@ export default function CreateCategory () {
         if (value === target?.label) {
             setInvalid(false)
             handleDeleteCategory(id)
-            // delete
         } else {
             setInvalid(true)
         }
     }
+
     const close = () => {
         setOpenModal(false)
     }
+
+    const handleCreate = () => {
+        if (name?.trim()) {
+            requestCreateCategory(name, notify)
+        }
+    }
+
     useEffect(() => {
         if (navigator) {
-            const view = isMobileDevice()
-            setIsMobile(view)
+            setIsMobile(isMobileDevice())
         }
     }, [])
 
     useEffect(() => {
         if (complete && !error) {
             clearStore()
-            onClose()
             handlCategoriesRequest()
         }
     }, [complete, error])
+
     return (
         <section>
             <header className="flex justify-end">
@@ -160,114 +133,117 @@ export default function CreateCategory () {
                     {isMobile ? '' : 'CATEGORÍAS'}
                 </Button>
             </header>
+
             <Modal
                 size={'2xl'}
                 isOpen={isOpen}
                 backdrop="opaque"
-                onClose={() => onClose}
+                onClose={onClose}
                 scrollBehavior={'inside'}
                 closeButton={<></>}
                 id="modal-category"
             >
-                {sectionCreateCategory
-                    ? <ModalContent>
-                        <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
-							Nueva categoría
-                        </ModalHeader>
-                        <ModalBody>
-                            <section className="mt-3 space-y-2">
-                                <div className="my-4 flex items-center gap-4">
-                                    <Input
-                                        autoFocus={true}
-                                        type="text"
-                                        variant={'underlined'}
-                                        label={''}
-                                        labelPlacement={'outside'}
-                                        placeholder={'Ingrese el nombre de la categoría'}
-                                        onValueChange={(value) => {
-                                            setName(value)
-                                        }}
-                                    />
-                                </div>
-                            </section>
-                        </ModalBody>
-                        <ModalFooter>
-                            {error
-                                ? (
-                                    <div className="flex mx-5 self-center">
-                                        <h1>{error}</h1>
-                                    </div>
-                                )
-                                : null}
-                            <Button
-                                className=" bg-green-500 text-primary-50"
-                                onClick={() => {
-                                    requestCreateCategory(name, notify)
-                                }}
-                            >
-								Crear
-                            </Button>
-                            <Button
-                                color="danger"
-                                variant="flat"
-                                onClick={() => {
-                                    onClose()
-                                    clearStore()
-                                }}
-                            >
-								Cerrar
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                    : (
-                        <ModalContent>
-                            <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200">
+                <ModalContent>
+                    <ModalHeader className="flex items-center justify-between gap-2">
+                        <span className="text-primary-500 dark:text-primary-200 font-semibold">
 							Categorías
-                            </ModalHeader>
-                            <ModalBody>
-                                <section className="flex flex-col gap-2">
-                                    {listCategories?.length
-                                        ? (
-                                            listCategories.map((item) => {
-                                                return <DeleteCard key={item.id} item={item} />
-                                            })
-                                        )
-                                        : (
-                                            <div>No se encuentran categorías</div>
-                                        )}
-                                </section>
-                            </ModalBody>
-                            <ModalFooter>
-                                {error
-                                    ? (
-                                        <div className="flex mx-5 self-center">
-                                            <h1>{error}</h1>
+                        </span>
+                        <span className="text-sm text-default-400 font-normal">
+                            {listCategories?.length ?? 0} en total
+                        </span>
+                    </ModalHeader>
+
+                    <ModalBody className="gap-3">
+                        <div className="sticky top-0 z-10 bg-content1 flex flex-col gap-3 pb-2">
+                            <div className="flex gap-2 items-center">
+                                <Input
+                                    autoFocus
+                                    variant="bordered"
+                                    placeholder="Nueva categoría..."
+                                    value={name}
+                                    onValueChange={setName}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+                                    classNames={{ base: 'flex-1' }}
+                                />
+                                <Button
+                                    isIconOnly
+                                    className="bg-emerald-600 text-white shrink-0"
+                                    onClick={handleCreate}
+                                    title="Agregar categoría"
+                                >
+                                    <BiPlus size={20} />
+                                </Button>
+                            </div>
+
+                            {error && (
+                                <p className="text-danger text-sm px-1">{error}</p>
+                            )}
+
+                            <Input
+                                variant="flat"
+                                placeholder="Buscar categoría..."
+                                value={search}
+                                onValueChange={setSearch}
+                                startContent={<BiSearch className="text-default-400" size={18} />}
+                            />
+                        </div>
+
+                        {filteredCategories.length
+                            ? (
+                                <div className="grid grid-cols-2 gap-2">
+                                    {filteredCategories.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="flex items-center justify-between px-3 py-2 rounded-xl border border-default-200 hover:border-default-400 transition-colors group"
+                                        >
+                                            <span className="capitalize text-sm font-medium truncate flex-1">
+                                                {item.label?.toLowerCase()}
+                                            </span>
+                                            <Button
+                                                isIconOnly
+                                                size="sm"
+                                                variant="light"
+                                                color="danger"
+                                                className="opacity-40 group-hover:opacity-100 transition-opacity shrink-0 ml-1"
+                                                onClick={() => {
+                                                    setOpenModal(true)
+                                                    setTarget(item)
+                                                }}
+                                            >
+                                                <DeleteIcon />
+                                            </Button>
                                         </div>
-                                    )
-                                    : null}
-                                <Button
-                                    className=" bg-green-500 text-primary-50"
-                                    onClick={() => {
-                                        setSectionCreateCategory(true)
-                                    // requestCreateCategory(name, notify)
-                                    }}
-                                >
-								Crear
-                                </Button>
-                                <Button
-                                    color="danger"
-                                    variant="flat"
-                                    onClick={() => {
-                                        onClose()
-                                        clearStore()
-                                    }}
-                                >
-								Cerrar
-                                </Button>
-                            </ModalFooter>
-                        </ModalContent>
-                    )}
+                                    ))}
+                                </div>
+                            )
+                            : (
+                                <div className="flex flex-col items-center justify-center py-10 text-default-400">
+                                    <BiSolidCategory size={40} className="mb-2 opacity-30" />
+                                    <p className="text-sm">
+                                        {search.trim()
+                                            ? 'No se encontró ninguna categoría'
+                                            : 'No hay categorías creadas'}
+                                    </p>
+                                </div>
+                            )}
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button
+                            color="danger"
+                            variant="flat"
+                            onClick={() => {
+                                onClose()
+                                clearStore()
+                                setSearch('')
+                            }}
+                        >
+							Cerrar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
             </Modal>
+
             <Modal
                 backdrop="opaque"
                 isOpen={openModal}
@@ -283,7 +259,7 @@ export default function CreateCategory () {
                     header: `${
                         type === 'Eliminar'
                             ? 'border-b-[1px] border-[#C70039]'
-                            : ' border-b-[1px] border-[#ffd700]'
+                            : 'border-b-[1px] border-[#ffd700]'
                     }`,
                     footer: `${
                         type === 'Eliminar'
@@ -302,7 +278,7 @@ export default function CreateCategory () {
                             ? (
                                 <div className="flex flex-col justify-between mx-10 gap-4">
                                     <p>
-									Se eliminará la categoría :
+										Se eliminará la categoría:
                                         <p className="font-bold">{target?.label}</p>
                                     </p>
                                     <p>Para confirmar, debes ingresar el nombre de la categoría</p>
@@ -321,7 +297,7 @@ export default function CreateCategory () {
                             : (
                                 <div className="flex flex-col justify-between mx-10 gap-4">
                                     <p>
-									Se modificara la categoría:
+										Se modificara la categoría:
                                         <p className="font-bold">{target?.label}</p>
                                     </p>
                                     <p>¿Esta seguro que desea modificar la categoría?</p>

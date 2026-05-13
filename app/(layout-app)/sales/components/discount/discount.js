@@ -14,17 +14,12 @@ import {
     ModalFooter,
     Button,
     Input,
-    Text,
-    Table,
-    TableHeader,
-    TableColumn,
-    TableBody,
-    TableRow,
-    TableCell
+    Chip
 } from '@nextui-org/react'
 
 import useSalesStore from '../../store'
 import AlertMessage from '@/components/ui/AlertMessage'
+
 export const SectionInput = ({ title, children, showDivider, className }) => {
     return (
         <section className={'mt-3 space-y-2' + className}>
@@ -34,6 +29,7 @@ export const SectionInput = ({ title, children, showDivider, className }) => {
         </section>
     )
 }
+
 export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const {
         listSalesActives,
@@ -46,6 +42,7 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
     const [messageError, setMessageError] = useState(null)
     const [searchInput, setSearchInput] = useState('')
     const discountShortcuts = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
+
     const handleInputChange = (value) => {
         if (value >= 0 && value <= 100) {
             setSearchInput(value)
@@ -55,16 +52,20 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
             setSearchInput('')
         }
     }
+
     const cleanForm = () => {
         setSearchInput('')
         setMessageError(null)
     }
+
     const createDiscount = () => {
         addDiscountSale(listSalesActives, saleIdActive, searchInput, cleanForm)
     }
+
     const removeDiscount = () => {
         removeDiscountSale(listSalesActives, saleIdActive)
     }
+
     useEffect(() => {
         const saleIndex = listSalesActives?.findIndex(
             (sale) => sale.id === saleIdActive
@@ -72,13 +73,14 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
         const saleActive = listSalesActives[saleIndex]
         setSaleActive(saleActive)
     }, [])
+
     useEffect(() => {
         setDiscount(saleActive?.discount)
     }, [saleActive])
+
     return (
         <Modal
-            size="5xl"
-            className="h-8/12 w-full"
+            size="lg"
             isOpen={openModal}
             backdrop="opaque"
             scrollBehavior={'inside'}
@@ -87,108 +89,114 @@ export default function Discount ({ openModal, setOpenModal, handleButton }) {
             {saleActive ? (
                 <ModalContent>
                     {() => (
-                        <section>
-                            <ModalHeader className="flex flex-col items-center  text-primary-500 dark:text-primary-200 ml-[3.5rem]">
-                                <section className="flex flex-col items-center py-[2rem]">
-                                    {' '}
-                                    <h5 className="text-4xl font-bold leading-none text-gray-900 dark:text-white">
-										Agregar Descuento (%)
-                                    </h5>{' '}
-                                </section>
+                        <>
+                            <ModalHeader className="flex flex-col items-center gap-2 pt-6 pb-3">
+                                <h5 className="text-2xl font-bold text-gray-900 dark:text-white">
+									Agregar Descuento
+                                </h5>
+                                {discount && (
+                                    <Chip color="warning" variant="flat" size="sm">
+										Descuento actual: {discount}%
+                                    </Chip>
+                                )}
                             </ModalHeader>
-                            <ModalBody className="flex flex-col items-center h-full space-y-[4rem]">
-                                <section className="flex flex-col items-center px-[4rem]">
-                                    <section className="flex flex-row w-full space-x-3">
-                                        {discountShortcuts?.map((e, index) => (
-                                            <Button
-                                                key={index}
-                                                variant="shadow"
-                                                className={`${
-                                                    searchInput === e
-                                                        ? ' bg-green-700  text-white'
-                                                        : ' bg-green-500 text-white'
-                                                } max-w-full lg:min-w-[10rem]  h-[8rem] font-extrabold text-3xl`}
-                                                onClick={() => handleInputChange(e)}
-                                            >
-                                                {e + ' %'}
-                                            </Button>
-                                        ))}
-                                    </section>
-                                </section>
 
-                                <section className="w-full flex flex-col items-center">
-                                    <Slider
-                                        label=""
-                                        color="success"
-                                        size="lg"
-                                        step={10}
-                                        marks={[
-                                            {
-                                                value: 20,
-                                                label: '20%'
-                                            },
-                                            {
-                                                value: 50,
-                                                label: '50%'
-                                            },
-                                            {
-                                                value: 80,
-                                                label: '80%'
-                                            }
-                                        ]}
-                                        value={searchInput}
-                                        defaultValue={searchInput}
-                                        className="w-full px-[4rem]"
-                                        onChangeEnd={(value) => {
-                                            handleInputChange(value)
-                                        }}
-                                    />
-                                </section>
-                                {messageError ? (
-                                    <div className="w-full">
-                                        <AlertMessage message={messageError} />
-                                    </div>
-                                ) : null}
+                            <ModalBody className="gap-5 px-6">
+                                <div className="flex items-center justify-center py-2">
+                                    <span
+                                        className={`text-7xl font-extrabold tracking-tight transition-colors ${
+                                            searchInput ? 'text-green-500' : 'text-default-200'
+                                        }`}
+                                    >
+                                        {searchInput ? `${searchInput}%` : '—'}
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-6 gap-2">
+                                    {discountShortcuts.map((e, index) => (
+                                        <Button
+                                            key={index}
+                                            variant={searchInput === e ? 'solid' : 'bordered'}
+                                            color={searchInput === e ? 'success' : 'default'}
+                                            size="sm"
+                                            className="font-bold"
+                                            onClick={() => handleInputChange(e)}
+                                        >
+                                            {e}%
+                                        </Button>
+                                    ))}
+                                </div>
+
+                                <Slider
+                                    color="success"
+                                    size="md"
+                                    step={5}
+                                    minValue={0}
+                                    maxValue={100}
+                                    marks={[
+                                        { value: 25, label: '25%' },
+                                        { value: 50, label: '50%' },
+                                        { value: 75, label: '75%' }
+                                    ]}
+                                    value={searchInput || 0}
+                                    className="w-full"
+                                    onChangeEnd={(value) => handleInputChange(value)}
+                                />
+
+                                <Input
+                                    type="number"
+                                    variant="bordered"
+                                    label="Valor personalizado"
+                                    placeholder="0 – 100"
+                                    min={0}
+                                    max={100}
+                                    value={searchInput === '' ? '' : String(searchInput)}
+                                    onValueChange={(v) => handleInputChange(Number(v))}
+                                    endContent={
+                                        <span className="text-default-400 text-sm">%</span>
+                                    }
+                                />
+
+                                {messageError && (
+                                    <AlertMessage message={messageError} />
+                                )}
                             </ModalBody>
-                            <ModalFooter className="flex flex-col items-center h-full mt-[2rem]">
-                                <section className="flex flex-row space-x-3">
+
+                            <ModalFooter className="gap-3 pb-6">
+                                <Button
+                                    color="danger"
+                                    variant="flat"
+                                    className="flex-1"
+                                    onClick={() => handleButton()}
+                                >
+									Cerrar
+                                </Button>
+                                {discount ? (
                                     <Button
-                                        color="danger"
-                                        className="text-2xl h-[5rem] w-[15rem]"
+                                        className="flex-1 bg-green-500 text-white"
                                         onClick={() => {
                                             handleButton()
+                                            removeDiscount()
                                         }}
                                     >
-										Cerrar
+										Quitar Descuento
                                     </Button>
-                                    {discount ? (
-                                        <Button
-                                            className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
-                                            isDisabled={messageError}
-                                            onClick={() => {
-                                                handleButton()
-                                                removeDiscount()
-                                            }}
-                                        >
-                                            {'Quitar Descuento '}
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            className=" bg-green-500 text-primary-50 text-2xl h-[5rem] w-[15rem]"
-                                            isDisabled={messageError}
-                                            onClick={() => {
-                                                handleButton()
-                                                createDiscount()
-                                            }}
-                                        >
-                                            {searchInput
-                                                ? 'Aplicar ' + searchInput + '% DSC.'
-                                                : 'Aplica un DSC.'}
-                                        </Button>
-                                    )}
-                                </section>
+                                ) : (
+                                    <Button
+                                        className="flex-1 bg-green-500 text-white"
+                                        isDisabled={!searchInput || !!messageError}
+                                        onClick={() => {
+                                            handleButton()
+                                            createDiscount()
+                                        }}
+                                    >
+                                        {searchInput
+                                            ? `Aplicar ${searchInput}% DSC.`
+                                            : 'Seleccionar descuento'}
+                                    </Button>
+                                )}
                             </ModalFooter>
-                        </section>
+                        </>
                     )}
                 </ModalContent>
             ) : (
