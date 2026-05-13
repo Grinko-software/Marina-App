@@ -69,45 +69,27 @@ const useInvoiceStore = create(
                 console.error(error)
             }
         },
-        triggetgetCustomers: () => {
-            set({ loading: true, error: null })
-            try {
-                getData(CUSTOMER_API_URL, GET)
-                    .then((result) => {
-                        set({ loadingCustomer: true })
-                        if (result?.data) {
-                            set({
-                                customers: result?.data?.map((e) => {
-                                    return {
-                                        meta: e?.business_name + ' ' + e?.rut,
-                                        ...e
-                                    }
-                                })
-                            })
-                        }
-                        set({ loadingCustomer: false })
-                    })
-                    .catch((error) => {
-                        console.debug(error)
-                        set({ loadingCustomer: false })
-                    })
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        getCustomers: (result) => {
+        triggetgetCustomers: () => useInvoiceStore.getState().getCustomers(),
+        getCustomers: () => {
             set({ loadingCustomer: true })
-            if (result?.data) {
-                set({
-                    customers: result?.data?.map((e) => {
-                        return {
-                            meta: e?.business_name + ' ' + e?.rut,
-                            ...e
-                        }
-                    })
+            getData(CUSTOMER_API_URL, GET)
+                .then((result) => {
+                    if (result?.data) {
+                        set({
+                            customers: result.data.map((e) => ({
+                                id: e.ID,
+                                name: e.business_name,
+                                meta: `${e.business_name} ${e.rut}`,
+                                ...e
+                            }))
+                        })
+                    }
+                    set({ loadingCustomer: false })
                 })
-            }
-            set({ loadingCustomer: false })
+                .catch((error) => {
+                    console.debug(error)
+                    set({ loadingCustomer: false })
+                })
         }
     }),
     {
