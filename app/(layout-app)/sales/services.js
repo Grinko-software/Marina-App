@@ -243,10 +243,10 @@ export const generateDTEBody = ({
                             NmbItem: item?.product?.name,
                             QtyItem: quantityItem,
                             PrcItem: discount
-                                ? priceItem - priceItem * discount
+                                ? roundValueWithMath(priceItem - priceItem * discount, 0, 0)
                                 : priceItem,
                             MontoItem: discount
-                                ? totalItem - totalItem * discount
+                                ? roundValueWithMath(totalItem - totalItem * discount, 0, 0)
                                 : totalItem
                         }
                     } else {
@@ -255,10 +255,10 @@ export const generateDTEBody = ({
                             NmbItem: item?.product?.name,
                             QtyItem: quantityItem,
                             PrcItem: discount
-                                ? priceItem - priceItem * discount
+                                ? roundValueWithMath(priceItem - priceItem * discount, 0, 0)
                                 : priceItem,
                             MontoItem: discount
-                                ? totalItem - totalItem * discount
+                                ? roundValueWithMath(totalItem - totalItem * discount, 0, 0)
                                 : totalItem
                         }
                     }

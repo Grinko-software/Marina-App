@@ -281,7 +281,7 @@ const useSalesStore = create(
                     : null
                 const totalDiscountExtra = sale?.discount
                 const totalPay = discountTotalPctg
-                    ? sale?.totalPrice - totalDiscountExtra
+                    ? roundValueWithMath(sale?.totalPrice - totalDiscountExtra, 0, 0)
                     : sale?.totalPrice // add general discount
 
                 const totalTaxFreePay = sale?.totalTaxFree || 0
@@ -521,7 +521,7 @@ const useSalesStore = create(
                     : null
                 const totalDiscountExtra = sale?.discount
                 const totalPay = discountTotalPctg
-                    ? sale?.totalPrice - totalDiscountExtra
+                    ? roundValueWithMath(sale?.totalPrice - totalDiscountExtra, 0, 0)
                     : sale?.totalPrice // add general discount
 
                 const totalTaxFreePay = sale?.totalTaxFree || 0
@@ -852,7 +852,7 @@ const useSalesStore = create(
                     : null
                 const totalDiscountExtra = sale?.discount
                 const totalPay = discountTotalPctg
-                    ? sale?.totalPrice - totalDiscountExtra
+                    ? roundValueWithMath(sale?.totalPrice - totalDiscountExtra, 0, 0)
                     : sale?.totalPrice // add general discount
 
                 const totalTaxFreePay = sale?.totalTaxFree || 0
@@ -932,7 +932,7 @@ const useSalesStore = create(
                     : null
                 const totalDiscountExtra = sale?.discount
                 const totalPay = discountTotalPctg
-                    ? sale?.totalPrice - totalDiscountExtra
+                    ? roundValueWithMath(sale?.totalPrice - totalDiscountExtra, 0, 0)
                     : sale?.totalPrice // add general discount
 
                 const totalTaxFreePay = sale?.totalTaxFree || 0
@@ -1012,7 +1012,7 @@ const useSalesStore = create(
                     : null
                 const totalDiscountExtra = sale?.discount
                 const totalPay = discountTotalPctg
-                    ? sale?.totalPrice - totalDiscountExtra
+                    ? roundValueWithMath(sale?.totalPrice - totalDiscountExtra, 0, 0)
                     : sale?.totalPrice
 
                 const totalTaxFreePay = sale?.totalTaxFree || 0

@@ -13,6 +13,7 @@ import useSalesStore from '../../store'
 import usePaymentStore from '@/stores/payment'
 import useVocuherStore from '@/stores/voucher'
 import Discount from '../discount/discount'
+import { formatterNumber } from '@/utils/number'
 import useStore from './store/store'
 import useInvoiceStore from '../invoice/store'
 import useInventoryStore from '@/app/(layout-app)/inventory/store'
@@ -117,11 +118,10 @@ export default function PayPage (props) {
                                 startContent={<BiSolidOffer size={25} />}
                             >
                                 {activeSale?.discount
-                                    ? '$' +
-									  activeSale?.discount +
-									  ' DSC. aplicado (' +
-									  activeSale?.discountPctg +
-									  '%)'
+                                    ? formatterNumber(activeSale?.discount) +
+                                      ' DSC. aplicado (' +
+                                      activeSale?.discountPctg +
+                                      '%)'
                                     : ' Agregar Descuento'}
                             </Button>
                         </div>
