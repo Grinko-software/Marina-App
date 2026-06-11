@@ -43,7 +43,7 @@ const structSaleEmpty = () => {
 
 const useSalesStore = create(
     persist(
-        (set) => ({
+        (set, get) => ({
             loadingSale: false,
             error: null,
             units: 1,
@@ -234,7 +234,8 @@ const useSalesStore = create(
             Borra la venta y si solo hay una venta, crea una venta vacía
 
             */
-            removeSale: (sales, saleId) => {
+            removeSale: (sales, _saleId) => {
+                const saleId = get().saleIdActive
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const newSaleList = sales?.filter((sale) => sale.id !== saleId)
                 if (newSaleList?.length) {
