@@ -1081,77 +1081,52 @@ const useSalesStore = create(
                         await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
                             .then((data) => {
                                 if (data?.data?.TIMBRE) {
-                                    // Crear dos registros separados para que el cierre de caja cuadre:
-                                    // 1. Registro de efectivo
-                                    const cashBody = {
+                                    const body = {
                                         is_done: true,
                                         sales_receipt: salesReceipt,
-                                        payment_type_id: 1,
+                                        payment_type_id: 7,
                                         voucher_type_id: 1,
                                         cash_register_id: cashRegister?.ID,
                                         user_id: getIdUser(),
-                                        total: cashAmount,
+                                        total: totalPay,
                                         invoice_number: data?.data?.FOLIO,
                                         stamp: data?.data?.TIMBRE,
-                                        is_unique_payment: false
-                                    }
-                                    // 2. Registro de tarjeta
-                                    const cardBody = {
-                                        is_done: true,
-                                        sales_receipt: salesReceipt,
-                                        payment_type_id: 2,
-                                        voucher_type_id: 1,
-                                        cash_register_id: cashRegister?.ID,
-                                        user_id: getIdUser(),
-                                        total: cardAmount,
-                                        invoice_number: data?.data?.FOLIO,
-                                        stamp: data?.data?.TIMBRE,
-                                        is_unique_payment: true
+                                        sale_payments: {
+                                            cash_amount: cashAmount,
+                                            debit_credit_amount: cardAmount,
+                                            transfer_amount: 0,
+                                            is_combined_payment: true
+                                        }
                                     }
 
-                                    getData(SALE_TICKET_CREATE, POST, cashBody).then(
-                                        (cashResult) => {
-                                            if (cashResult?.code === 200) {
-                                                getData(SALE_TICKET_CREATE, POST, cardBody).then(
-                                                    (cardResult) => {
-                                                        set({ loadingSale: false })
-                                                        if (cardResult?.code === 200) {
-                                                            const printEnabled =
-																useSettingsStore.getState()?.printEnabled ||
-																true
-                                                            if (printEnabled) {
-                                                                saveDataToPrinterSaleTicket({
-                                                                    saleType,
-                                                                    products: cashSaleItem,
-                                                                    total: cashAmount,
-                                                                    stamp: data?.data?.TIMBRE,
-                                                                    folioNumber: data?.data?.FOLIO,
-                                                                    totalNet: cashNetTotal,
-                                                                    iva: cashIva,
-                                                                    totalTaxFree: cashTaxFreePay,
-                                                                    discountExtra: totalDiscountExtra,
-                                                                    discountOffers: totalDiscountOffers,
-                                                                    cardDetail: cardData,
-                                                                    openCashRegister: hasCash
-                                                                })
-                                                            }
-                                                            notify('✅ Pago mixto con éxito')
-                                                            if (onSuccessSale) onSuccessSale()
-                                                            removeSale(sales, saleId)
-                                                        } else {
-                                                            notify(
-                                                                '❌ Problemas al guardar la venta de tarjeta, pero el cobro fue efectuado'
-                                                            )
-                                                        }
-                                                    }
-                                                )
-                                            } else {
-                                                notify(
-                                                    '❌ Problemas al guardar la venta de efectivo, pero el cobro fue efectuado'
-                                                )
+                                    getData(SALE_TICKET_CREATE, POST, body).then((result) => {
+                                        set({ loadingSale: false })
+                                        if (result?.code === 200) {
+                                            const printEnabled =
+                                                useSettingsStore.getState()?.printEnabled || true
+                                            if (printEnabled) {
+                                                saveDataToPrinterSaleTicket({
+                                                    saleType,
+                                                    products: cashSaleItem,
+                                                    total: cashAmount,
+                                                    stamp: data?.data?.TIMBRE,
+                                                    folioNumber: data?.data?.FOLIO,
+                                                    totalNet: cashNetTotal,
+                                                    iva: cashIva,
+                                                    totalTaxFree: cashTaxFreePay,
+                                                    discountExtra: totalDiscountExtra,
+                                                    discountOffers: totalDiscountOffers,
+                                                    cardDetail: cardData,
+                                                    openCashRegister: hasCash
+                                                })
                                             }
+                                            notify('✅ Pago mixto con éxito')
+                                            if (onSuccessSale) onSuccessSale()
+                                            removeSale(sales, saleId)
+                                        } else {
+                                            notify('❌ Problemas al guardar la venta mixta, pero el cobro fue efectuado')
                                         }
-                                    )
+                                    })
                                 } else {
                                     set({ loadingSale: false })
                                 }
