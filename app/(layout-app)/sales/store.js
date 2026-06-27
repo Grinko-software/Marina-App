@@ -5,10 +5,11 @@ import { create } from 'zustand'
 import {
     GET_DOCUMENT_HAULMER,
     SALE_TICKET_CREATE,
+    SALE_TICKET_STAMP,
     CREATE_PAYMENT_POSMACHINE,
     GET_STATE_SALE_POSMACHINE
 } from '@/settings/constants'
-import { getData, POST } from '@/services/http'
+import { getData, POST, PATCH } from '@/services/http'
 import { roundPrice, roundValueWithMath } from '@/utils/number'
 import {
     getStateSaleMachine,
@@ -1034,7 +1035,9 @@ const useSalesStore = create(
 
                 const device = getDeviceTuu()
 
-                const finalizeSale = async ({ cardData = null, hasCash = false }) => {
+                const finalizeSale = async ({ cardData = null, hasCash = false, voucherTarget = 1 }) => {
+                    /* saber si es boleta, factura o ticker */
+                    const isTicket = voucherTarget === 3
                     try {
                         // La boleta se emite solo por la porción en efectivo.
                         // El TUU genera su propio DTE por la porción de tarjeta.
@@ -1068,6 +1071,32 @@ const useSalesStore = create(
                                 total: cashAmount
                             }
                         ]
+                        /* Si el voucher_type_id es ticket no deberiamos ir al SII, ya que  */
+                        const body = {
+                            is_done: true,
+                            sales_receipt: salesReceipt,
+                            payment_type_id: 7,
+                            voucher_type_id: voucherTarget,
+                            cash_register_id: cashRegister?.ID,
+                            user_id: getIdUser(),
+                            total: totalPay,
+                            sale_payments: {
+                                cash_amount: cashAmount,
+                                debit_credit_amount: cardAmount,
+                                transfer_amount: 0,
+                                is_combined_payment: true
+                            }
+                        }
+
+                        const saleResult = await getData(SALE_TICKET_CREATE, POST, body)
+                        if (saleResult?.code !== 200) {
+                            notify('❌ Venta mixta no registrada, pero el cobro fue efectuado')
+                            set({ loadingSale: false })
+                            if (onSuccessSale) onSuccessSale()
+                            return
+                        }
+
+                        const registeredSaleId = saleResult?.data?.id
 
                         const dteBody = generateDTEBody({
                             discount: null,
@@ -1078,65 +1107,76 @@ const useSalesStore = create(
                             totalPay: cashAmount,
                             totalTaxFreePay: cashTaxFreePay
                         })
-                        await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
-                            .then((data) => {
-                                if (data?.data?.TIMBRE) {
-                                    const body = {
-                                        is_done: true,
-                                        sales_receipt: salesReceipt,
-                                        payment_type_id: 7,
-                                        voucher_type_id: 1,
-                                        cash_register_id: cashRegister?.ID,
-                                        user_id: getIdUser(),
-                                        total: totalPay,
-                                        invoice_number: data?.data?.FOLIO,
-                                        stamp: data?.data?.TIMBRE,
-                                        sale_payments: {
-                                            cash_amount: cashAmount,
-                                            debit_credit_amount: cardAmount,
-                                            transfer_amount: 0,
-                                            is_combined_payment: true
-                                        }
-                                    }
-
-                                    getData(SALE_TICKET_CREATE, POST, body).then((result) => {
-                                        set({ loadingSale: false })
-                                        if (result?.code === 200) {
-                                            const printEnabled =
-                                                useSettingsStore.getState()?.printEnabled || true
-                                            if (printEnabled) {
-                                                saveDataToPrinterSaleTicket({
-                                                    saleType,
-                                                    products: cashSaleItem,
-                                                    total: cashAmount,
-                                                    stamp: data?.data?.TIMBRE,
-                                                    folioNumber: data?.data?.FOLIO,
-                                                    totalNet: cashNetTotal,
-                                                    iva: cashIva,
-                                                    totalTaxFree: cashTaxFreePay,
-                                                    discountExtra: totalDiscountExtra,
-                                                    discountOffers: totalDiscountOffers,
-                                                    cardDetail: cardData,
-                                                    openCashRegister: hasCash
-                                                })
-                                            }
-                                            notify('✅ Pago mixto con éxito')
-                                            if (onSuccessSale) onSuccessSale()
-                                            removeSale(sales, saleId)
-                                        } else {
-                                            notify('❌ Problemas al guardar la venta mixta, pero el cobro fue efectuado')
-                                        }
+                        /* NO VA AL SII */
+                        if (isTicket) {
+                            try {
+                                const printEnabled =
+                                    useSettingsStore.getState()?.printEnabled || true
+                                if (printEnabled) {
+                                    saveDataToPrinterSaleTicket({
+                                        saleType,
+                                        products: cashSaleItem,
+                                        total: cashAmount,
+                                        stamp: '-',
+                                        folioNumber: '-',
+                                        totalNet: cashNetTotal,
+                                        iva: cashIva,
+                                        totalTaxFree: cashTaxFreePay,
+                                        discountExtra: totalDiscountExtra,
+                                        discountOffers: totalDiscountOffers,
+                                        cardDetail: cardData,
+                                        openCashRegister: hasCash
                                     })
-                                } else {
-                                    set({ loadingSale: false })
                                 }
-                            })
-                            .catch((error) => {
-                                notify('❌ ' + (error?.message || 'Error en Haulmer'))
-                                set({ loadingSale: false })
-                            })
+                                notify('✅ Pago mixto con éxito')
+                            } catch {
+                                notify('⚠️ Venta registrada pero sin boleta. Reintentar DTE.')
+                            }
+                        } else {
+                            try {
+                                const data = await createSaleOnHaulmer(GET_DOCUMENT_HAULMER, POST, dteBody)
+                                if (data?.data?.TIMBRE) {
+                                    await getData(
+                                        SALE_TICKET_STAMP.replace(':id', registeredSaleId),
+                                        PATCH,
+                                        {
+                                            stamp: data.data.TIMBRE,
+                                            invoice_number: data.data.FOLIO
+                                        }
+                                    )
+                                    const printEnabled =
+                                    useSettingsStore.getState()?.printEnabled || true
+                                    if (printEnabled) {
+                                        saveDataToPrinterSaleTicket({
+                                            saleType,
+                                            products: cashSaleItem,
+                                            total: cashAmount,
+                                            stamp: data?.data?.TIMBRE,
+                                            folioNumber: data?.data?.FOLIO,
+                                            totalNet: cashNetTotal,
+                                            iva: cashIva,
+                                            totalTaxFree: cashTaxFreePay,
+                                            discountExtra: totalDiscountExtra,
+                                            discountOffers: totalDiscountOffers,
+                                            cardDetail: cardData,
+                                            openCashRegister: hasCash
+                                        })
+                                    }
+                                    notify('✅ Pago mixto con éxito')
+                                } else {
+                                    notify('⚠️ Venta registrada pero sin boleta. Reintentar DTE.')
+                                }
+                            } catch {
+                                notify('⚠️ Venta registrada pero sin boleta. Reintentar DTE.')
+                            }
+                        }
+
+                        set({ loadingSale: false })
+                        if (onSuccessSale) onSuccessSale()
+                        removeSale(sales, saleId)
                     } catch {
                         set({ loadingSale: false })
+                        if (onSuccessSale) onSuccessSale()
                     }
                 }
 
@@ -1160,18 +1200,19 @@ const useSalesStore = create(
                                 if (result?.code === 200 && result?.data?.paymentRequestId) {
                                     setStateMachine('Pendiente')
                                     const idSale = result?.data?.paymentRequestId
-                                    getStateSaleMachine(
+                                    return getStateSaleMachine(
                                         GET_STATE_SALE_POSMACHINE.replace(':id', idSale)
                                     )
                                         .then(async (cardData) => {
                                             setStateMachine(null)
                                             await new Promise((resolve) => setTimeout(resolve, 2000))
-                                            await finalizeSale({ cardData, hasCash })
+                                            await finalizeSale({ cardData, hasCash, voucherTarget: sale.voucherTarget })
                                         })
                                         .catch(() => {
                                             notify('❌ Problemas con el pago con tarjeta')
                                             set({ loadingSale: false })
                                             setStateMachine(null)
+                                            if (onSuccessSale) onSuccessSale()
                                         })
                                 } else {
                                     notify('❌ ' + errorsMachine.get(result?.data?.code))
@@ -1185,7 +1226,7 @@ const useSalesStore = create(
                     }
                 } else {
                     // Sin dispositivo TUU: la tarjeta se cobra manualmente en terminal externo
-                    await finalizeSale({ cardData: null, hasCash })
+                    await finalizeSale({ cardData: null, hasCash, voucherTarget: sale.voucherTarget })
                 }
 
                 set({ loadingSale: false })

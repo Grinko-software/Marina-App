@@ -1,5 +1,7 @@
 export const BASE_MARKET_API_URL =
 	'https://marina-market-api-prod-693121331853.us-central1.run.app'
+/* export const BASE_MARKET_API_URL =
+	'http://localhost:8080' */
 // export const BASE_MARKET_API_URL = 'https://marina-market-api-dev-llhboxpn4q-uc.a.run.app'
 
 // AUTH
@@ -29,6 +31,7 @@ export const PRODUCT_OFFER = '/product/offer'
 
 // Creat list
 export const SALE_TICKET_CREATE = '/sale-ticket/create'
+export const SALE_TICKET_STAMP = '/sale-ticket/:id/stamp'
 
 // DTEMITE ENDPOINTS
 export const GET_DOCUMENT_HAULMER = '/dte'
