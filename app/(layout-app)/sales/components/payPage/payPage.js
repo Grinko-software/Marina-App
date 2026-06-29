@@ -43,7 +43,7 @@ export default function PayPage (props) {
     const { voucher, getVoucherType } = useVocuherStore()
     const { customers, getCustomers } = useInvoiceStore()
     const [activeSale, setActiveSale] = useState(null)
-    const { listSalesActives, saleIdActive } = useSalesStore()
+    const { listSalesActives, saleIdActive, loadingSale } = useSalesStore()
     const listEmpty = new Array(2).fill(null)
     const listEmpty3 = new Array(3).fill(null)
     const handleButton = () => {
@@ -240,6 +240,7 @@ export default function PayPage (props) {
                                             title={pay?.name}
                                             paymentTarget={paymentTarget}
                                             setPaymentTarget={setPaymentTarget}
+                                            isDisabled={loadingSale}
                                         />
                                     ))
                                 )}

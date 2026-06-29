@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     Modal,
     ModalContent,
@@ -29,9 +29,11 @@ export default function MixedPaymentModal ({
     loadingSale
 }) {
     const [cashAmount, setCashAmount] = useState(0)
+    const submittingRef = useRef(false)
 
     useEffect(() => {
         if (isOpen) setCashAmount(0)
+        if (!isOpen) submittingRef.current = false
     }, [isOpen])
 
     const cardAmount = Math.max(0, totalPay - cashAmount)
@@ -163,7 +165,11 @@ export default function MixedPaymentModal ({
                         className="flex-1 h-16 text-2xl font-black bg-green-500 text-white"
                         isDisabled={!isValid}
                         isLoading={loadingSale}
-                        onPress={() => onConfirm({ cashAmount, cardAmount })}
+                        onPress={() => {
+                            if (submittingRef.current) return
+                            submittingRef.current = true
+                            onConfirm({ cashAmount, cardAmount })
+                        }}
                     >
 						PAGAR
                     </Button>

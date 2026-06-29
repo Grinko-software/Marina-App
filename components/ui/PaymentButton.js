@@ -12,7 +12,8 @@ export default function PaymentButton ({
     paymentTarget,
     setPaymentTarget,
     voucherTarget,
-    setVoucherTarget
+    setVoucherTarget,
+    isDisabled
 }) {
     const handleButton = () => {
         if (setPaymentTarget) {
@@ -42,6 +43,7 @@ export default function PaymentButton ({
                         variant="solid"
                         aria-label={`Seleccionar método de pago ${title}`}
                         onPress={handleButton}
+                        isDisabled={isDisabled}
                     >
                         {icon}
                         <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">
@@ -57,6 +59,7 @@ export default function PaymentButton ({
                         variant="shadow"
                         aria-label={`Seleccionar método de pago ${title}`}
                         onPress={handleButton}
+                        isDisabled={isDisabled}
                     >
                         {icon}
                         <p className="dark:text-white/60 text-black uppercase  text-xl font-bold ">

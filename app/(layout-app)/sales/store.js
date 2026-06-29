@@ -251,14 +251,16 @@ const useSalesStore = create(
                 }
             },
             setPaymentTarget: (sales, saleId, value) => {
-                const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
-                sales[saleIndex].paymentTarget = value
-                set({ listSalesActives: sales })
+                const newSales = sales.map((sale) =>
+                    sale.id === saleId ? { ...sale, paymentTarget: value } : sale
+                )
+                set({ listSalesActives: newSales })
             },
             setVoucherTarget: (sales, saleId, value) => {
-                const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
-                sales[saleIndex].voucherTarget = value
-                set({ listSalesActives: sales })
+                const newSales = sales.map((sale) =>
+                    sale.id === saleId ? { ...sale, voucherTarget: value } : sale
+                )
+                set({ listSalesActives: newSales })
             },
             createSaleVoucher: async ({
                 sales,
@@ -268,6 +270,7 @@ const useSalesStore = create(
                 removeSale,
                 isCardPayment
             }) => {
+                if (get().loadingSale) return
                 set({ loadingSale: true, error: null })
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const sale = sales[saleIndex]
@@ -507,6 +510,7 @@ const useSalesStore = create(
                 isCardPayment,
                 targetCustomer
             }) => {
+                if (get().loadingSale) return
                 set({ loadingSale: true, error: null })
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const sale = sales[saleIndex]
@@ -839,6 +843,7 @@ const useSalesStore = create(
                 removeSale,
                 isCardPayment
             }) => {
+                if (get().loadingSale) return
                 set({ loadingSale: true, error: null })
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const sale = sales[saleIndex]
@@ -1000,6 +1005,7 @@ const useSalesStore = create(
                 cashAmount,
                 cardAmount
             }) => {
+                if (get().loadingSale) return
                 set({ loadingSale: true, error: null })
                 const saleIndex = sales?.findIndex((sale) => sale.id === saleId)
                 const sale = sales[saleIndex]
