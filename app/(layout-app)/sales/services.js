@@ -15,6 +15,30 @@ export const getTotalDiscountOffers = ({ products }) => {
     return totalDiscount
 }
 
+export const applyGlobalDiscount = (value, discount) =>
+    discount ? roundValueWithMath(value - value * discount, 0, 0) : value
+
+export const getItemTotalAfterOfferDiscount = (item) =>
+    roundValueWithMath(
+        item?.discount > 0 ? item?.total - item?.discount : item?.total,
+        0,
+        0
+    )
+
+export const reconcileLastLineRounding = (detalle, expectedNetTotal, field) => {
+    if (!detalle?.length) return detalle
+    const sum = detalle.reduce((accumulator, line) => accumulator + line[field], 0)
+    const remainder = expectedNetTotal - sum
+    if (remainder === 0) return detalle
+    const lastIndex = detalle.length - 1
+    detalle[lastIndex] = {
+        ...detalle[lastIndex],
+        PrcItem: detalle[lastIndex].PrcItem + remainder,
+        MontoItem: detalle[lastIndex].MontoItem + remainder
+    }
+    return detalle
+}
+
 export const getStateSaleMachine = (url) => {
     return new Promise((resolve, reject) => {
         let limitTime = 0
@@ -204,21 +228,24 @@ export const generateDTEBody = ({
 					  }
             },
             Detalle: isInvoice
-                ? saleProductsList?.map((item, index) => {
-                    const totalItem = roundValueWithMath(
-                        item?.discount > 0 ? item?.total - item?.discount : item?.total,
-                        0,
-                        0
-                    )
-                    const netMontoItem = roundValueWithMath(totalItem / 1.19, 0, 0)
-                    return {
-                        NroLinDet: index + 1,
-                        NmbItem: item?.product?.name + ' X ' + item?.quantity,
-                        QtyItem: 1,
-                        PrcItem: netMontoItem,
-                        MontoItem: netMontoItem
-                    }
-				  })
+                ? reconcileLastLineRounding(
+                    saleProductsList?.map((item, index) => {
+                        const totalItem = applyGlobalDiscount(
+                            getItemTotalAfterOfferDiscount(item),
+                            discount
+                        )
+                        const netMontoItem = roundValueWithMath(totalItem / 1.19, 0, 0)
+                        return {
+                            NroLinDet: index + 1,
+                            NmbItem: item?.product?.name + ' X ' + item?.quantity,
+                            QtyItem: 1,
+                            PrcItem: netMontoItem,
+                            MontoItem: netMontoItem
+                        }
+                    }),
+                    netTotal,
+                    'MontoItem'
+				  )
                 : saleProductsList?.map((item, index) => {
                     let indexTaxFree = 0
                     const priceItem =
@@ -229,11 +256,7 @@ export const generateDTEBody = ({
 							        0
 								  )
 							    : roundValueWithMath(item?.product?.price, 0, 0)
-                    const totalItem = roundValueWithMath(
-                        item?.discount > 0 ? item?.total - item?.discount : item?.total,
-                        0,
-                        0
-                    )
+                    const totalItem = getItemTotalAfterOfferDiscount(item)
                     const quantityItem = item?.quantity
                     if (item?.product?.taxFree) {
                         indexTaxFree++
@@ -242,24 +265,16 @@ export const generateDTEBody = ({
                             IndExe: indexTaxFree,
                             NmbItem: item?.product?.name,
                             QtyItem: quantityItem,
-                            PrcItem: discount
-                                ? roundValueWithMath(priceItem - priceItem * discount, 0, 0)
-                                : priceItem,
-                            MontoItem: discount
-                                ? roundValueWithMath(totalItem - totalItem * discount, 0, 0)
-                                : totalItem
+                            PrcItem: applyGlobalDiscount(priceItem, discount),
+                            MontoItem: applyGlobalDiscount(totalItem, discount)
                         }
                     } else {
                         return {
                             NroLinDet: index + 1,
                             NmbItem: item?.product?.name,
                             QtyItem: quantityItem,
-                            PrcItem: discount
-                                ? roundValueWithMath(priceItem - priceItem * discount, 0, 0)
-                                : priceItem,
-                            MontoItem: discount
-                                ? roundValueWithMath(totalItem - totalItem * discount, 0, 0)
-                                : totalItem
+                            PrcItem: applyGlobalDiscount(priceItem, discount),
+                            MontoItem: applyGlobalDiscount(totalItem, discount)
                         }
                     }
 				  })
