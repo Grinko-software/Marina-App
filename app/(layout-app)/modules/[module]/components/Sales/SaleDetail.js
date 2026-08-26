@@ -132,21 +132,21 @@ export default function SaleDetail (params) {
                 backdrop="opaque"
                 onClose={closeModal}
             >
-                <ModalContent className="overflow-hidden py-10">
-                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 text-[2rem]">
-                        <h4 className="flex flex-col items-center">
+                <ModalContent className="overflow-hidden py-6 sm:py-10">
+                    <ModalHeader className="flex flex-col gap-1 text-primary-500 dark:text-primary-200 text-xl sm:text-[2rem]">
+                        <h4 className="flex flex-col items-center text-center">
                             {'¿Desesa re-imprimir comprobante de venta?'}
                         </h4>
                     </ModalHeader>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center px-4">
                         {isLoading
                             ? (
                                 <Spinner>Cargando boleta...</Spinner>
                             )
                             : (
-                                <div className="flex flex-row gap-2">
+                                <div className="flex w-full max-w-md flex-col gap-2 sm:w-auto sm:flex-row">
                                     <Button
-                                        className="bg-blue-500 text-primary-50 text-[1.5rem] w-[17rem] h-[8rem]"
+                                        className="h-16 w-full text-base text-primary-50 sm:h-[8rem] sm:w-[17rem] sm:text-[1.5rem] bg-blue-500"
                                         onPress={() => {
                                             onDowndloadVoucher()
                                         }}
@@ -154,7 +154,7 @@ export default function SaleDetail (params) {
                                         {'Descargar'}
                                     </Button>
                                     <Button
-                                        className="bg-green-500 text-primary-50 text-[1.5rem] w-[17rem] h-[8rem]"
+                                        className="hidden h-16 w-full text-base text-primary-50 md:inline-flex md:h-[8rem] md:w-[17rem] md:text-[1.5rem] bg-green-500"
                                         onPress={() => {
                                             printTicket()
                                         }}
