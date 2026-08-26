@@ -329,7 +329,7 @@ export default function TableSales ({
                     </p>
                 )}
                 {dataModel.map((item) => (
-                    <Card key={item.key} shadow="sm">
+                    <Card key={item.key} shadow="sm" className="shrink-0">
                         <CardBody className="gap-2">
                             <div className="flex items-start justify-between gap-2">
                                 <p className="text-xs text-default-400">
