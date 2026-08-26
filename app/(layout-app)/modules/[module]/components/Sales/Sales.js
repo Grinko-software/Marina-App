@@ -16,8 +16,8 @@ export default function Sales ({ params }) {
     }, [currentPage])
 
     return (
-        <section className="w-full">
-            <section className="grid grid-cols w-full gap-3">
+        <section className="w-full h-full min-h-0 flex flex-col">
+            <section className="flex flex-col w-full gap-3 h-full min-h-0">
                 <div className="sm:hidden">
                     <SaleDetail
                         openModalToPrint={openModalToPrint}
